@@ -1,0 +1,23 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: "yrkesskade-skjema"
+  namespace: "yrkesskade"
+  labels:
+    "team": "yrkesskade"
+spec:
+  image: {{image}}
+  port: 3000
+  ingresses:
+    - "https://yrkesskade-skjema.labs.nais.io"
+  liveness:
+    path: "internal/isAlive"
+    initialDelay: 20
+    timeout: 60
+  readiness:
+    path: "internal/isReady"
+    initialDelay: 20
+    timeout: 60
+  replicas:
+    min: 2
+    max: 2

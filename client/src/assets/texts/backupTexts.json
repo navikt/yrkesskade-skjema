@@ -1,0 +1,42 @@
+{
+  "NB": {
+    "indexTitle": "Her kan du registrere yrkesskade",
+    "indexDescription": "Norsk - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla elit erat, commodo eu vulputate et, faucibus eu risus. Pellentesque eget lorem dolor. Vivamus non neque luctus, egestas nulla eget, interdum odio. Morbi et egestas tortor, id tristique dolor. Praesent porttitor vestibulum lorem, quis consequat neque aliquam sit amet. Sed vitae faucibus nisl, in laoreet ex. Ut iaculis nisl ante, fermentum elementum mi molestie vel. Aliquam maximus ligula at lobortis tincidunt. Nullam ac odio suscipit, accumsan nibh et, tincidunt lacus. Morbi ac semper nunc. Vivamus est nisl, vulputate vel lacus eget, lobortis semper odio.",
+    "successTitle": "Din skademelding er nå sendt",
+    "form.label.serviceStartDate": "Tjenestegjøring startdato",
+    "form.label.serviceEndDate": "Tjenestegjøring sluttdato",
+    "form.label.ssn": "Den skadelidtes fødselsnummer",
+    "form.label.lastname": "Den skadelidtes etternavn",
+    "form.label.firstname": "Den skadelidtes fornavn",
+    "form.label.positionType": "Tilknytning til virksomheten",
+    "form.label.orgnum": "Arbeidsgivers organisasjonsnummer",
+    "form.label.departmentInfo": "Tjenestegjørende avdelingens navn og kontaktopplysninger",
+    "form.label.accidentPeriod": "Ulykkesdato/periode",
+    "form.label.accidentTime": "Ulykkestidspunkt",
+    "form.label.death": "Har skaden medført død",
+    "form.label.injuredBodypart": "Oppgi skadet kroppsdel",
+    "form.label.injuryType": "Angi skadens art",
+    "form.label.doctorContacted": "Ble lege kontaktet i forbindelse med ulykken",
+    "form.label.mandatoryService": "Under pålagt tjeneste",
+    "form.label.accidentPlace": "Hvor inntraff ulykken",
+    "form.label.accidentPlaceDescription": "Nærmere beskrivelse av ulykkesstedet",
+    "form.label.accidentCause": "Årsak til ulykken",
+    "form.label.accidentBackground": "Informasjon om bakgrunn for ulykken",
+    "form.label.feltmessigForhold": "Manøver feltmessige forhold",
+    "form.label.accidentDescription": "Utfyllende beskrivelse"
+  },
+  "EN": {
+    "indexTitle": "Register your injury report here",
+    "indexDescription": "Engelsk - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla elit erat, commodo eu vulputate et, faucibus eu risus. Pellentesque eget lorem dolor. Vivamus non neque luctus, egestas nulla eget, interdum odio. Morbi et egestas tortor, id tristique dolor. Praesent porttitor vestibulum lorem, quis consequat neque aliquam sit amet. Sed vitae faucibus nisl, in laoreet ex. Ut iaculis nisl ante, fermentum elementum mi molestie vel. Aliquam maximus ligula at lobortis tincidunt. Nullam ac odio suscipit, accumsan nibh et, tincidunt lacus. Morbi ac semper nunc. Vivamus est nisl, vulputate vel lacus eget, lobortis semper odio.",
+    "successTitle": "Your injury report is now sent",
+    "form.label.serviceStartDate": "Service start date",
+    "form.label.serviceEndDate": "Service end date"
+  },
+  "SE": {
+    "indexTitle": "samisk - Her kan du registrere yrkesskade",
+    "indexDescription": "Samisk - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla elit erat, commodo eu vulputate et, faucibus eu risus. Pellentesque eget lorem dolor. Vivamus non neque luctus, egestas nulla eget, interdum odio. Morbi et egestas tortor, id tristique dolor. Praesent porttitor vestibulum lorem, quis consequat neque aliquam sit amet. Sed vitae faucibus nisl, in laoreet ex. Ut iaculis nisl ante, fermentum elementum mi molestie vel. Aliquam maximus ligula at lobortis tincidunt. Nullam ac odio suscipit, accumsan nibh et, tincidunt lacus. Morbi ac semper nunc. Vivamus est nisl, vulputate vel lacus eget, lobortis semper odio.",
+    "successTitle": "Samisk - Din skademelding er nå sendt",
+    "form.label.serviceStartDate": "Samisk - Tjenestegjøring startdato",
+    "form.label.serviceEndDate": "Samisk - Tjenestegjøring sluttdato"
+  }
+}
