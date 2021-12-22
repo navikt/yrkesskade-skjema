@@ -22,7 +22,7 @@ interface IProps {
 }
 
 const Home = (props: IProps) => {
-  const {register, handleSubmit, formState: { errors },} = useForm<ISimpleForm>();
+  const {register, handleSubmit} = useForm<ISimpleForm>();
   let navigate = useNavigate();
   const handlePrev = () => {
     navigate("https://nav.no");
