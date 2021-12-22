@@ -25,24 +25,19 @@ app.get("/api/hello", (req, res) => {
   res.send({ message: "Hello" });
 });
 
-app.get(
-  `/api/skademeldinger`,
+app.post(`/api/skademelding`,
   async (req: any, res: any) => {
-    const response = await axios.get('https://yrkesskade-melding-api.dev.intern.nav.no/api/midlertidig/skademeldinger');
-    // tslint:disable-next-line:no-console
-    console.log('apikall', response);
-    return res.json(response.data);
+    // console.log(req.body);
+    if(req.body) {
+      const response = await axios.post('https://yrkesskade-melding-api.dev.intern.nav.no/api/midlertidig/skademeldinger', {
+        "skademelding": req.body
+      })
+      // console.log(response.data)
+      return res.json(response.data);
+    } else {
+      res.json({status: 500, message: 'Noe er fel'})
+    }
   });
-
-// app.post(`/api/skademelding`,
-//   (req: any, res: any) => {
-//     axios.post('https://yrkesskade-melding-api.dev.intern.nav.no/api/midlertidig/skademeldinger', {
-//       "skademelding": {
-//         "fodselsnummer": "696969420",
-//         "navn": "Jarand"
-//       }
-//     })
-//   });
 
   app.get(`${config.BASE_PATH}/*`, (req: any, res: any) =>
   getHtmlWithDecorator(`${BUILD_PATH}/index.html`)

@@ -1,28 +1,37 @@
 import React from "react";
 import "./Home.less";
-import FormInfo from '../../components/Forms/Info';
-import { Heading, ContentContainer, Grid, Cell, Button } from "@navikt/ds-react";
+import FormInfo from "../../components/Forms/Info";
+import {
+  Heading,
+  ContentContainer,
+  Grid,
+  Cell,
+  Button,
+} from "@navikt/ds-react";
 // import getTexts from '../../utils/getTexts.js';
-import { useForm } from "react-hook-form";
-import {useNavigate} from 'react-router-dom';
+import { useForm, SubmitHandler } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 interface ISimpleForm {
-  fornavn: string,
-  etternavn: string,
-  fødselsnummer: number
+  fornavn: string | undefined;
+  etternavn: string | undefined;
+  fødselsnummer: number | undefined;
+}
+interface IProps {
+  passFormData: (data: ISimpleForm) => void;
 }
 
-const Home = () => {
+const Home = (props: IProps) => {
+  const {register, handleSubmit, formState: { errors },} = useForm<ISimpleForm>();
   let navigate = useNavigate();
-  const {
-    handleSubmit,
-  } = useForm<ISimpleForm>();
   const handlePrev = () => {
-    navigate('https://nav.no');
-  }
-  const onSubmit = () => {
-    navigate('oppsumering');
-  }
+    navigate("https://nav.no");
+  };
+  const onSubmit: SubmitHandler<ISimpleForm> = (data) => {
+    props.passFormData(data);
+    navigate("oppsumering");
+  };
+
   return (
     <>
       <ContentContainer>
@@ -34,17 +43,17 @@ const Home = () => {
             </Heading>
           </Cell>
           <Cell xs={12} sm={6} lg={4}>
-            <FormInfo />
+              <FormInfo register={register}/>
           </Cell>
           <Cell xs={12} sm={12} lg={12}>
-          <div className="buttonSection">
-        <Button variant="tertiary" onClick={handlePrev}>
-          Avbryt
-        </Button>
-        <Button variant="primary" onClick={handleSubmit(onSubmit)}>
-          Gå videre
-        </Button>
-      </div>
+            <div className="buttonSection">
+              <Button variant="tertiary" onClick={handlePrev}>
+                Avbryt
+              </Button>
+              <Button variant="primary" onClick={handleSubmit(onSubmit)}>
+                Gå videre
+              </Button>
+            </div>
           </Cell>
         </Grid>
       </ContentContainer>

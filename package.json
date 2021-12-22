@@ -25,10 +25,13 @@
   },
   "homepage": "https://github.com/navikt/yrkesskade-saksbehandling#readme",
   "dependencies": {
+    "@hookform/resolvers": "^2.8.5",
     "@navikt/nav-dekoratoren-moduler": "^1.6.9",
     "axios": "^0.24.0",
     "cors": "^2.8.5",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "js-cookie": "^3.0.1",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
