@@ -1,6 +1,7 @@
 import React from "react";
 import "./Home.less";
 import FormInfo from "../../components/Forms/Info";
+import FormTest from "../../components/Forms/Testus";
 import {
   Heading,
   ContentContainer,
@@ -16,6 +17,7 @@ interface ISimpleForm {
   fornavn: string | undefined;
   etternavn: string | undefined;
   fødselsnummer: number | undefined;
+  test: string | undefined
 }
 interface IProps {
   passFormData: (data: ISimpleForm) => void;
@@ -42,10 +44,11 @@ const Home = (props: IProps) => {
               Send inn din yrkesskade
             </Heading>
           </Cell>
-          <Cell xs={12} sm={6} lg={4}>
+          <Cell xs={12} sm={6} lg={4} className="grid-centered--lg">
               <FormInfo register={register}/>
+              <FormTest register={register}/>
           </Cell>
-          <Cell xs={12} sm={12} lg={12}>
+          <Cell xs={12} sm={12} lg={6} className="grid-centered--lg">
             <div className="buttonSection">
               <Button variant="tertiary" onClick={handlePrev}>
                 Avbryt
