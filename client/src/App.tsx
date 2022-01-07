@@ -11,7 +11,6 @@ interface ISimpleForm {
   fornavn: string | undefined;
   etternavn: string | undefined;
   fødselsnummer: number | undefined;
-  test: string | undefined
 }
 
 const App = () => {

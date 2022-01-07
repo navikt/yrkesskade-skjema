@@ -26,6 +26,8 @@
   "homepage": "https://github.com/navikt/yrkesskade-saksbehandling#readme",
   "dependencies": {
     "@hookform/resolvers": "^2.8.5",
+    "@navikt/bedriftsmeny": "^3.5.2",
+    "@navikt/ds-icons": "^0.7.1",
     "@navikt/nav-dekoratoren-moduler": "^1.6.9",
     "axios": "^0.24.0",
     "cors": "^2.8.5",

@@ -10,7 +10,6 @@ interface ISimpleForm {
   fornavn: string | undefined;
   etternavn: string | undefined;
   fødselsnummer: number | undefined;
-  test: string | undefined;
 }
 interface IProps {
   data?: ISimpleForm | undefined;
@@ -40,8 +39,7 @@ const Summary = (props: IProps) => {
           {props?.data?.etternavn ? props.data.etternavn : ""}
           <br />
           <span>Fødselsdato: </span>{" "}
-          {props?.data?.fødselsnummer ? props.data.fødselsnummer : ""}<br />
-          <span>Test: </span> {props?.data?.test ? props.data.test : ""}
+          {props?.data?.fødselsnummer ? props.data.fødselsnummer : ""}
         </Cell>
         <Cell xs={12} lg={6} className="grid-centered--lg">
           <Button onClick={handleSending}>Send inn</Button>

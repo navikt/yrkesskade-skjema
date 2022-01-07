@@ -1,14 +1,17 @@
 import React from "react";
 import "./Home.less";
+// import Bedriftsmeny from '@navikt/bedriftsmeny';
+import InjuryForm from "../../components/Forms/Injury";
+import TimeframeForm from "../../components/Forms/Timeframe";
+import AccidentForm from "../../components/Forms/Accident";
 import FormInfo from "../../components/Forms/Info";
-import FormTest from "../../components/Forms/Testus";
 import {
-  Heading,
   ContentContainer,
   Grid,
   Cell,
   Button,
 } from "@navikt/ds-react";
+import SystemHeader from "../../components/SystemHeader";
 // import getTexts from '../../utils/getTexts.js';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -17,7 +20,6 @@ interface ISimpleForm {
   fornavn: string | undefined;
   etternavn: string | undefined;
   fødselsnummer: number | undefined;
-  test: string | undefined
 }
 interface IProps {
   passFormData: (data: ISimpleForm) => void;
@@ -35,18 +37,15 @@ const Home = (props: IProps) => {
   };
 
   return (
-    <>
       <ContentContainer>
+        {/* <Bedriftsmeny /> */}
+        <SystemHeader />
         <Grid>
-          <Cell xs={12}>
-            <Heading size="2xlarge" className="pageTitle">
-              {/* {getTexts('indexTitle')} */}
-              Send inn din yrkesskade
-            </Heading>
-          </Cell>
           <Cell xs={12} sm={6} lg={4} className="grid-centered--lg">
               <FormInfo register={register}/>
-              <FormTest register={register}/>
+              <InjuryForm />
+              <TimeframeForm />
+              <AccidentForm />
           </Cell>
           <Cell xs={12} sm={12} lg={6} className="grid-centered--lg">
             <div className="buttonSection">
@@ -60,23 +59,6 @@ const Home = (props: IProps) => {
           </Cell>
         </Grid>
       </ContentContainer>
-      {/* <Heading size="2xlarge" className="pageTitle">
-        {getTexts('indexTitle')}
-        Send inn din yrkesskade
-      </Heading>
-  */}
-      {/* <GuidePanel poster> */}
-      {/* {getTexts( "indexDescription")} */}
-      {/* daba */}
-      {/* </GuidePanel> */}
-      {/* <SkjemaGruppe
-        className="loginForm"
-        legend="For å sende inn skademelding må du logge deg på. Foreløpig ingen innlogg"
-      >
-        <Input placeholder="Innmelders ID" type="number" bredde="L" />
-        <Hovedknapp onClick={handleLoginSubmit}>Logg inn</Hovedknapp>
-      </SkjemaGruppe> */}
-    </>
   );
 };
 export default Home;

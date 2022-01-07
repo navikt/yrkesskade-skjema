@@ -5,6 +5,7 @@ import {
   Cell,
   Button,
 } from "@navikt/ds-react";
+import SystemHeader from "../../components/SystemHeader";
 import getTexts from "../../utils/getTexts";
 import { useNavigate } from "react-router-dom";
 
@@ -15,6 +16,7 @@ export default function Info() {
   };
   return (
     <ContentContainer>
+      <SystemHeader />
       <Grid>
         <Cell xs={12}>
           <Heading size="2xlarge" className="pageTitle">
