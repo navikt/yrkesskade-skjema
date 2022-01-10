@@ -5,7 +5,10 @@ import {
   injuryType,
 } from "../../../assets/injuryEnums";
 
-const InjuryForm = () => {
+interface IProps {
+  register: any;
+}
+const InjuryForm = ({ register }: IProps) => {
   const [value, setValue] = useState("");
   return (
     <>

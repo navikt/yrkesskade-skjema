@@ -1,12 +1,15 @@
 import {useState} from 'react';
 import {Select, TextField, Fieldset, RadioGroup, Radio} from '@navikt/ds-react';
-const TimeframeForm = () => {
+interface IProps {
+  register: any;
+}
+const TimeframeForm = ({ register }: IProps) => {
   const [timeframe, setTimeframe] = useState("");
   return (
     <>
     <Fieldset legend="Når skjedde ulykken som skal meldes?">
-      <TextField hideLabel label="Dato for ulykken" description="DD.MM.ÅÅÅÅ"/>
-      <TextField hideLabel label="Klokkeslett for ulykken" description="00:00"/>
+      <TextField label="Dato for ulykken" description="DD.MM.ÅÅÅÅ"/>
+      <TextField label="Klokkeslett for ulykken" description="00:00"/>
       <RadioGroup legend>
         <Radio value="Ukjent">Ukjent</Radio>
         <Radio value="Over en periode">Over en periode</Radio>

@@ -6,15 +6,10 @@ import Summary from "./pages/Summary";
 import Receipt from "./pages/Receipt";
 import Error from "./pages/Receipt";
 import { Route, Routes } from "react-router-dom";
-
-interface ISimpleForm {
-  fornavn: string | undefined;
-  etternavn: string | undefined;
-  fødselsnummer: number | undefined;
-}
+import {IGeneralForm} from './Interfaces/generalForm';
 
 const App = () => {
-  const [formdata, setFormdata] = useState<ISimpleForm | undefined>(undefined);
+  const [formdata, setFormdata] = useState<IGeneralForm | undefined>(undefined);
   return (
     <Routes>
       <Route path="yrkesskade/">
