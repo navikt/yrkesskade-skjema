@@ -1,5 +1,5 @@
 {
-  "name": "yrkesskade-saksbehandling",
+  "name": "yrkesskade-skjema",
   "version": "1.0.0",
   "description": "",
   "main": "server.ts",
@@ -11,28 +11,30 @@
     "server": "nodemon --verbose --watch \"server\" --ext \"ts,json\" --exec ts-node server/server.ts",
     "client": "cd client && yarn start && cd ..",
     "dev": "concurrently \"yarn run client\" \"yarn run server\"",
-    "docker": "yarn build-prod && docker build -t saksbehandling .",
-    "docker-run": "docker run -dp 3000:3000 saksbehandling"
+    "docker": "yarn build-prod && docker build -t skjema .",
+    "docker-run": "docker run -dp 3000:3000 skjema"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/navikt/yrkesskade-saksbehandling.git"
+    "url": "git+https://github.com/navikt/yrkesskade-skjema.git"
   },
   "author": "Team Yrkesskade",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/navikt/yrkesskade-saksbehandling/issues"
+    "url": "https://github.com/navikt/yrkesskade-skjema/issues"
   },
-  "homepage": "https://github.com/navikt/yrkesskade-saksbehandling#readme",
+  "homepage": "https://github.com/navikt/yrkesskade-skjema#readme",
   "dependencies": {
     "@hookform/resolvers": "^2.8.5",
     "@navikt/bedriftsmeny": "^3.5.2",
     "@navikt/ds-icons": "^0.7.1",
     "@navikt/nav-dekoratoren-moduler": "^1.6.9",
+    "@types/ramda": "^0.27.62",
     "axios": "^0.24.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "js-cookie": "^3.0.1",
+    "ramda": "^0.27.2",
     "yup": "^0.32.11"
   },
   "devDependencies": {

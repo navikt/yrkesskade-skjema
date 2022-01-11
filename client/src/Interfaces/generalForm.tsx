@@ -1,5 +1,5 @@
 export interface IGeneralForm {
-  innmelder: ISender;
+  innmelder?: ISender;
   skadelidt: IInjured;
   skade: IInjury;
   hendelsesfakta: IAccident;
@@ -15,15 +15,15 @@ export interface ISender {
 
 export interface IInjured {
   foedselsnummer: string | undefined;
-  navn: string | undefined;
+  navn?: string | undefined;
   arbeidsforhold: IInjuredEmployment;
 }
 
 export interface IInjuredEmployment {
-  organisasjonsnummer: string | undefined;
-  navn: string | undefined;
+  organisasjonsnummer?: string | undefined;
+  navn?: string | undefined;
   stillingstittel: string | undefined;
-  yrke: string | undefined;
+  yrke?: string | undefined;
   rolletype: string | undefined;
 }
 
@@ -32,30 +32,30 @@ export interface IInjury {
   legeKontaktet: string | undefined;
   skadeartTabellC: string | undefined;
   kroppsdelTabellD: string | undefined;
-  antattSykefravaerTabellH: string | undefined;
+  antattSykefravaerTabellH?: string | undefined;
 }
 
 export interface IAccident {
   tid: IAccidentTime;
-  naarSkjeddeUlykken: string | undefined;
-  naarSkjeddeUlykkenFritekst: string | undefined;
+  naarSkjeddeUlykken?: string | undefined;
+  naarSkjeddeUlykkenFritekst?: string | undefined;
   hvorSkjeddeUlykken: string | undefined;
-  ulykkessted: IAccidentPlace;
+  ulykkessted?: IAccidentPlace;
   typeUlykkeTabellA: string | undefined;
   bakgrunnsaarsakTabellB: string | undefined;
   utfyllendeBeskrivelse: string | undefined;
-  utloesendeFaktorTabellE: string | undefined;
-  arbeidsplassbeskrivelseTabellF: string | undefined;
-  arbeidsforholdsavvikTabellG: string | undefined;
+  utloesendeFaktorTabellE?: string | undefined;
+  arbeidsplassbeskrivelseTabellF?: string | undefined;
+  arbeidsforholdsavvikTabellG?: string | undefined;
 }
 
 export interface IAccidentTime {
   dato: string | undefined;
   tidspunkt: string | undefined;
-  periode: IAccidentTimePeriod;
+  periode?: IAccidentTimePeriod;
   ukjent: boolean | undefined;
   tidstype: string | undefined;
-  tidstypeAnnet: string | undefined;
+  tidstypeAnnet?: string | undefined;
 }
 export interface IAccidentTimePeriod {
   fra: string | undefined;
@@ -63,5 +63,5 @@ export interface IAccidentTimePeriod {
 }
 export interface IAccidentPlace {
   sammeSomArbeidsgiversAdresse: boolean | undefined;
-  adresse: string | undefined;
+  adresse?: string | undefined;
 }

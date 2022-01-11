@@ -53,10 +53,13 @@ const InjuryForm = ({ register, errors }: IProps) => {
 
       <button>Legg til flere skader</button>
 
-      <RadioGroup legend="Har lege blitt kontaktet?">
-        <Radio value="Ja">Ja</Radio>
-        <Radio value="Nei">Nei</Radio>
-        <Radio value="Vet ikke">Vet ikke</Radio>
+      <RadioGroup legend="Har lege blitt kontaktet?" error={
+          errors?.skade?.legeKontaktet &&
+          "Dette feltet er påkrevd"
+        }>
+        <Radio {...register("skade.legeKontaktet", {required: true })} value="Ja">Ja</Radio>
+        <Radio {...register("skade.legeKontaktet", {required: true })} value="Nei">Nei</Radio>
+        <Radio {...register("skade.legeKontaktet", {required: true })} value="Vet ikke">Vet ikke</Radio>
       </RadioGroup>
       <Textarea
         label="Utfyllende beskrivelse"
