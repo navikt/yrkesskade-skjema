@@ -44,15 +44,14 @@ const Home = (props: IProps) => {
         {/* <Bedriftsmeny /> */}
         <SystemHeader />
         <Grid>
-          <Cell xs={12} sm={6} lg={4} className="grid-centered--lg">
-              {/* <FormInfo register={register}/> */}
-              <CompanyForm register={register}/>
-              <TimeframeForm register={register}/>
+          <Cell xs={12} sm={6} lg={6} className="grid-centered--lg">
+              <CompanyForm errors={errors} register={register}/>
+              <TimeframeForm errors={errors} register={register}/>
               <InjuredForm errors={errors} register={register}/>
-              <AccidentForm register={register}/>
-              <InjuryForm register={register}/>
+              <AccidentForm errors={errors} register={register}/>
+              <InjuryForm errors={errors} register={register}/>
           </Cell>
-          <Cell xs={12} sm={12} lg={6} className="grid-centered--lg">
+          <Cell xs={12} sm={12} className="grid-centered--lg">
             <div className="buttonSection">
               <Button variant="tertiary" onClick={handlePrev}>
                 Avbryt

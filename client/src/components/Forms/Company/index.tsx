@@ -2,6 +2,7 @@ import { RadioGroup, Radio } from "@navikt/ds-react";
 
 interface IProps {
   register: any;
+  errors: any;
 }
 const CompanyForm = ({ register }: IProps) => {
   return (

@@ -1,17 +1,17 @@
 export interface IGeneralForm {
-  // innmelder: ISender;
+  innmelder: ISender;
   skadelidt: IInjured;
   skade: IInjury;
   hendelsesfakta: IAccident;
 }
 
-// export interface ISender {
-//   foedselsnummer: number | undefined;
-//   navn: string | undefined;
-//   paaVegneAvOrgnr: string | undefined;
-//   innmelderrolle: string | undefined;
-//   altinnrolle: string | undefined;
-// }
+export interface ISender {
+  foedselsnummer: number | undefined;
+  navn: string | undefined;
+  paaVegneAvOrgnr: string | undefined;
+  innmelderrolle: string | undefined;
+  altinnrolle: string | undefined;
+}
 
 export interface IInjured {
   foedselsnummer: string | undefined;
@@ -50,10 +50,12 @@ export interface IAccident {
 }
 
 export interface IAccidentTime {
+  dato: string | undefined;
   tidspunkt: string | undefined;
   periode: IAccidentTimePeriod;
   ukjent: boolean | undefined;
   tidstype: string | undefined;
+  tidstypeAnnet: string | undefined;
 }
 export interface IAccidentTimePeriod {
   fra: string | undefined;
