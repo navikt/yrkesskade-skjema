@@ -4,7 +4,7 @@ import NotFound from "./pages/404";
 import Info from "./pages/Info";
 import Summary from "./pages/Summary";
 import Receipt from "./pages/Receipt";
-import Error from "./pages/Receipt";
+import Error from "./pages/Error";
 import { Route, Routes } from "react-router-dom";
 import {IGeneralForm} from './Interfaces/generalForm';
 
