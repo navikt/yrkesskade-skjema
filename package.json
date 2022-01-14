@@ -12,7 +12,9 @@
     "client": "cd client && yarn start && cd ..",
     "dev": "concurrently \"yarn run client\" \"yarn run server\"",
     "docker": "yarn build-prod && docker build -t skjema .",
-    "docker-run": "docker run -dp 3000:3000 skjema"
+    "docker-run": "docker run -dp 3000:3000 skjema",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "repository": {
     "type": "git",
