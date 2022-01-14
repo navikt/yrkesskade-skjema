@@ -6,21 +6,6 @@ on:
       - main # deploy-dev.yml har egen cypress test
 
 jobs:
-  build:
-    name: "build"
-    runs-on: "ubuntu-18.04"
-    steps:
-      - uses: "actions/checkout@v2"
-      - uses: "actions/setup-node@v2"
-        with:
-          node-version: "14"
-          cache: "yarn"
-      - name: "install server dependencies Yarn"
-        # if: "steps.cache-server-node-modules.outputs.cache-hit != 'true'"
-        run: "yarn install --frozen-lockfile"
-      - name: "install dependencies Yarn"
-        run: "yarn install --frozen-lockfile"
-        working-directory: "client"
   cypress-run:
     runs-on: ubuntu-latest
     steps:
@@ -29,5 +14,5 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
-          start: yarn dev
+          start: npm run dev
           wait-on: 'http://localhost:3001'

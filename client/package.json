@@ -27,9 +27,7 @@
     "start": "PORT=3001 craco start",
     "build": "craco build && mv build ..",
     "test": "craco test",
-    "eject": "craco eject",
-    "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "eject": "craco eject"
   },
   "eslintConfig": {
     "extends": [
@@ -50,7 +48,6 @@
     ]
   },
   "devDependencies": {
-    "cypress": "^9.2.1",
     "less": "^4.1.2"
   }
 }
