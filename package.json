@@ -12,7 +12,9 @@
     "client": "cd client && yarn start && cd ..",
     "dev": "concurrently \"yarn run client\" \"yarn run server\"",
     "docker": "yarn build-prod && docker build -t skjema .",
-    "docker-run": "docker run -dp 3000:3000 skjema"
+    "docker-run": "docker run -dp 3000:3000 skjema",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "repository": {
     "type": "git",
@@ -48,6 +50,7 @@
     "@types/node": "^16.11.12",
     "@vercel/ncc": "^0.31.1",
     "concurrently": "^6.4.0",
+    "cypress": "^9.2.1",
     "nodemon": "^2.0.15",
     "rimraf": "^3.0.2",
     "ts-node": "^10.4.0",
