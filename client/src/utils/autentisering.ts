@@ -23,7 +23,7 @@ export const autentiseringsInterceptor = () => {
           console.log(error);
 
             if (er401Feil(error)) {
-                window.location.href = getLoginUrl();
+              //  window.location.href = getLoginUrl();
             } else {
                 throw error;
             }
