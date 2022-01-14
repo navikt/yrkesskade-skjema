@@ -6,11 +6,14 @@ import Summary from "./pages/Summary";
 import Receipt from "./pages/Receipt";
 import Error from "./pages/Error";
 import { Route, Routes } from "react-router-dom";
-import { IGeneralForm } from './Interfaces/generalForm';
+import { IGeneralForm} from './Interfaces/generalForm';
+import { InnloggetProvider } from './context/InnloggetContext';
 
 const App = () => {
   const [formdata, setFormdata] = useState<IGeneralForm | undefined>(undefined);
+
   return (
+    <InnloggetProvider>
       <Routes>
         <Route path="yrkesskade/">
           <Route index element={<Info />} />
@@ -23,6 +26,7 @@ const App = () => {
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
+    </InnloggetProvider>
   );
 };
 
