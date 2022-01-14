@@ -14,9 +14,11 @@ jobs:
       - name: "install server dependencies Yarn"
         # if: "steps.cache-server-node-modules.outputs.cache-hit != 'true'"
         run: "yarn client install --frozen-lockfile"
+        uses: cypress-io/github-action@v2
       - name: "install client dependencies Yarn"
         run: "yarn install --frozen-lockfile"
         working-directory: "client"
+        uses: cypress-io/github-action@v2
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
