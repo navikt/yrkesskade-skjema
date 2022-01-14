@@ -1,3 +1,4 @@
 export const endpointUrls = {
-  innlogget: '**/yrkesskade/innlogget'
+  innlogget: '**/yrkesskade/innlogget',
+  skademelding: '**/skademelding'
 };

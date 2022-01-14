@@ -53,10 +53,10 @@ const Home = (props: IProps) => {
           </Cell>
           <Cell xs={12} sm={12} className="grid-centered--lg">
             <div className="buttonSection">
-              <Button variant="tertiary" onClick={handlePrev}>
+              <Button variant="tertiary" onClick={handlePrev} data-testid="form-cancel">
                 Avbryt
               </Button>
-              <Button variant="primary" onClick={handleSubmit(onSubmit)}>
+              <Button variant="primary" onClick={handleSubmit(onSubmit)} data-testid="form-continue">
                 Gå videre
               </Button>
             </div>
