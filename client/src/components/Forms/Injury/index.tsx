@@ -1,33 +1,49 @@
 import { useState } from "react";
 import { Select, RadioGroup, Radio, Textarea } from "@navikt/ds-react";
-import {
-  injuredBodypart,
-  injuryType,
-} from "../../../assets/injuryEnums";
+import { injuredBodypart, injuryType } from "../../../assets/injuryEnums";
 
-const InjuryForm = () => {
+interface IProps {
+  register: any;
+  errors: any;
+}
+const InjuryForm = ({ register, errors }: IProps) => {
   const [value, setValue] = useState("");
   return (
     <>
-      <Select label="Hvor på kroppen er skaden">
+      <Select
+        label="Hvor på kroppen er skaden"
+        {...register("skade.kroppsdelTabellD", {
+          required: true,
+        })}
+        error={
+          errors?.skade?.kroppsdelTabellD &&
+          "Dette feltet er påkrevd"
+        }
+      >
         <option value="">Velg</option>
         {(
           Object.keys(injuredBodypart) as Array<keyof typeof injuredBodypart>
         ).map((key) => {
           return (
-            <option key={key} value={key}>
+            <option key={key} value={injuredBodypart[key]}>
               {injuredBodypart[key]}
             </option>
           );
         })}
       </Select>
 
-      <Select label="Hva slags skade er det">
+      <Select label="Hva slags skade er det"  {...register("skade.skadeartTabellC", {
+          required: true,
+        })}
+        error={
+          errors?.skade?.skadeartTabellC &&
+          "Dette feltet er påkrevd"
+        }>
         <option value="">Velg</option>
         {(Object.keys(injuryType) as Array<keyof typeof injuryType>).map(
           (key) => {
             return (
-              <option key={key} value={key}>
+              <option key={key} value={injuryType[key]}>
                 {injuryType[key]}
               </option>
             );
@@ -37,15 +53,18 @@ const InjuryForm = () => {
 
       <button>Legg til flere skader</button>
 
-      <RadioGroup legend="Har lege blitt kontaktet?">
-        <Radio value="Ja">Ja</Radio>
-        <Radio value="Nei">Nei</Radio>
-        <Radio value="Vet ikke">Vet ikke</Radio>
+      <RadioGroup legend="Har lege blitt kontaktet?" error={
+          errors?.skade?.legeKontaktet &&
+          "Dette feltet er påkrevd"
+        }>
+        <Radio {...register("skade.legeKontaktet", {required: true })} value="Ja">Ja</Radio>
+        <Radio {...register("skade.legeKontaktet", {required: true })} value="Nei">Nei</Radio>
+        <Radio {...register("skade.legeKontaktet", {required: true })} value="Vet ikke">Vet ikke</Radio>
       </RadioGroup>
-
       <Textarea
         label="Utfyllende beskrivelse"
-        description={<TextareaDescription/>}
+        description={<TextareaDescription />}
+        {...register("hendelsesfakta.utfyllendeBeskrivelse")}
         value={value}
         maxLength={1000}
         onChange={(e) => setValue(e.target.value)}

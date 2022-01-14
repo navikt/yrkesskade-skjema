@@ -4,7 +4,9 @@ import "./Home.less";
 import InjuryForm from "../../components/Forms/Injury";
 import TimeframeForm from "../../components/Forms/Timeframe";
 import AccidentForm from "../../components/Forms/Accident";
-import FormInfo from "../../components/Forms/Info";
+import CompanyForm from "../../components/Forms/Company";
+import InjuredForm from "../../components/Forms/Injured";
+// import FormInfo from "../../components/Forms/Info";
 import {
   ContentContainer,
   Grid,
@@ -15,23 +17,24 @@ import SystemHeader from "../../components/SystemHeader";
 // import getTexts from '../../utils/getTexts.js';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import {IGeneralForm} from '../../Interfaces/generalForm';
 
-interface ISimpleForm {
-  fornavn: string | undefined;
-  etternavn: string | undefined;
-  fødselsnummer: number | undefined;
-}
+// interface ISimpleForm {
+//   fornavn: string | undefined;
+//   etternavn: string | undefined;
+//   fødselsnummer: number | undefined;
+// }
 interface IProps {
-  passFormData: (data: ISimpleForm) => void;
+  passFormData: (data: IGeneralForm) => void;
 }
 
 const Home = (props: IProps) => {
-  const {register, handleSubmit} = useForm<ISimpleForm>();
+  const {register, handleSubmit, formState: { errors },} = useForm<IGeneralForm>();
   let navigate = useNavigate();
   const handlePrev = () => {
     navigate("https://nav.no");
   };
-  const onSubmit: SubmitHandler<ISimpleForm> = (data) => {
+  const onSubmit: SubmitHandler<IGeneralForm> = (data) => {
     props.passFormData(data);
     navigate("oppsumering");
   };
@@ -41,13 +44,14 @@ const Home = (props: IProps) => {
         {/* <Bedriftsmeny /> */}
         <SystemHeader />
         <Grid>
-          <Cell xs={12} sm={6} lg={4} className="grid-centered--lg">
-              <FormInfo register={register}/>
-              <InjuryForm />
-              <TimeframeForm />
-              <AccidentForm />
+          <Cell xs={12} sm={6} lg={6} className="grid-centered--lg">
+              <CompanyForm errors={errors} register={register}/>
+              <TimeframeForm errors={errors} register={register}/>
+              <InjuredForm errors={errors} register={register}/>
+              <AccidentForm errors={errors} register={register}/>
+              <InjuryForm errors={errors} register={register}/>
           </Cell>
-          <Cell xs={12} sm={12} lg={6} className="grid-centered--lg">
+          <Cell xs={12} sm={12} className="grid-centered--lg">
             <div className="buttonSection">
               <Button variant="tertiary" onClick={handlePrev}>
                 Avbryt

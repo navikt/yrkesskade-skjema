@@ -1,24 +1,28 @@
-// import React, { useEffect, useState } from "react";
-// import "./Sak.less";
-import { Heading, Button, ContentContainer, Grid, Cell } from "@navikt/ds-react";
-// import { SkjemaGruppe, Input } from "nav-frontend-skjema";
-// import { Hovedknapp } from "nav-frontend-knapper";
+import './summary.less';
+import {
+  Heading,
+  Button,
+  ContentContainer,
+  Grid,
+  Cell,
+} from "@navikt/ds-react";
+import SystemHeader from "../../components/SystemHeader"
+import HendelsesfaktaSummary from "../../components/Summary/Hendelsesfakta"
+import InnmelderSummary from "../../components/Summary/Innmelder"
+import SkadelidtSummary from "../../components/Summary/Skadelidt"
+import SkadeSummary from "../../components/Summary/Skade"
 import { useNavigate } from "react-router-dom";
 // import getTexts from '../../utils/getTexts.js';
 import axios from "axios";
-interface ISimpleForm {
-  fornavn: string | undefined;
-  etternavn: string | undefined;
-  fødselsnummer: number | undefined;
-}
+import { IGeneralForm } from "../../Interfaces/generalForm";
 interface IProps {
-  data?: ISimpleForm | undefined;
+  data?: IGeneralForm | undefined;
 }
-const Summary = (props: IProps) => {
+const Summary = ({ data }: IProps) => {
   const navigate = useNavigate();
   const handleSending = async () => {
     try {
-      await axios.post("/api/skademelding", { ...props.data });
+      await axios.post("/api/skademelding", { ...data });
       navigate("/yrkesskade/skjema/kvittering");
     } catch {
       navigate("/yrkesskade/skjema/feilmelding");
@@ -26,22 +30,20 @@ const Summary = (props: IProps) => {
   };
   return (
     <ContentContainer>
+      <SystemHeader />
       <Grid>
         <Cell xs={12}>
           <Heading size="2xlarge" className="pageTitle">
             Oppsumering
           </Heading>
         </Cell>
-        <Cell xs={12} lg={6} className="grid-centered--lg">
-          <span>Fornavn: </span>
-          {props?.data?.fornavn ? props.data.fornavn : ""} <br />
-          <span>Etternavn: </span>{" "}
-          {props?.data?.etternavn ? props.data.etternavn : ""}
-          <br />
-          <span>Fødselsdato: </span>{" "}
-          {props?.data?.fødselsnummer ? props.data.fødselsnummer : ""}
+        <Cell xs={12} lg={12} className="grid-centered--lg">
+        <InnmelderSummary innmelder={data?.innmelder}/>
+        <SkadelidtSummary skadelidt={data?.skadelidt}/>
+        <SkadeSummary skade={data?.skade}/>
+        <HendelsesfaktaSummary hendelsesfakta={data?.hendelsesfakta}/>
         </Cell>
-        <Cell xs={12} lg={6} className="grid-centered--lg">
+        <Cell xs={12} lg={12} className="grid-centered--lg">
           <Button onClick={handleSending}>Send inn</Button>
         </Cell>
       </Grid>

@@ -1,75 +1,67 @@
-export default interface IGeneralForm {
-avsender: ISender,
-skadelidt: IInjured,
-skade: IInjury,
-hendelsesfakta: IAccident
+export interface IGeneralForm {
+  innmelder?: ISender;
+  skadelidt: IInjured;
+  skade: IInjury;
+  hendelsesfakta: IAccident;
 }
 
-interface ISender {
-  id: number;
-  navn: string;
-  avsenderrolle: string;
+export interface ISender {
+  foedselsnummer: number | undefined;
+  navn: string | undefined;
+  paaVegneAvOrgnr: string | undefined;
+  innmelderrolle: string | undefined;
+  altinnrolle: string | undefined;
 }
 
-interface IInjured {
-  fodselsnummer: number;
-  navn: string;
-  telefonnummer: number;
-  tilknytning: string;
-  arbeidsgiver: IEmployer;
-  stillingstittel: string;
-  yrke: string;
+export interface IInjured {
+  foedselsnummer: string | undefined;
+  navn?: string | undefined;
+  arbeidsforhold: IInjuredEmployment;
 }
 
-interface IEmployer {
-  organisasjonsnummer: number;
-  navn: string;
-  telefonnummer: number;
-  andreInvolverteVirksomheter: number[];
-  forsikringsselskap: string;
+export interface IInjuredEmployment {
+  organisasjonsnummer?: string | undefined;
+  navn?: string | undefined;
+  stillingstittel: string | undefined;
+  yrke?: string | undefined;
+  rolletype: string | undefined;
 }
 
-interface IPolice {
-  meldtPolitiet: boolean;
-  politidistrikt: string;
+export interface IInjury {
+  alvorlighetsgrad: string | undefined;
+  legeKontaktet: string | undefined;
+  skadeartTabellC: string | undefined;
+  kroppsdelTabellD: string | undefined;
+  antattSykefravaerTabellH?: string | undefined;
 }
 
-interface IInjury {
-  alvorlighetsgrad: string;
-  legeKontaktet: boolean;
-  skadeartTabellC: string;
-  kroppsdelTabellD: string;
-  antattSykefravarTabellH: string;
-  politiinformasjon: IPolice;
+export interface IAccident {
+  tid: IAccidentTime;
+  naarSkjeddeUlykken?: string | undefined;
+  naarSkjeddeUlykkenFritekst?: string | undefined;
+  hvorSkjeddeUlykken: string | undefined;
+  ulykkessted?: IAccidentPlace;
+  typeUlykkeTabellA: string | undefined;
+  bakgrunnsaarsakTabellB: string | undefined;
+  utfyllendeBeskrivelse: string | undefined;
+  utloesendeFaktorTabellE?: string | undefined;
+  arbeidsplassbeskrivelseTabellF?: string | undefined;
+  arbeidsforholdsavvikTabellG?: string | undefined;
 }
 
-interface IAccidentPlace {
-    sammeSomArbeidsgiversAdresse: boolean,
-    adresse: {
-      gatenavn: string,
-      husnummer: number,
-      postnummer: number,
-      sted: string,
-      land: string
-    },
-    koordinater: {
-      lengdegrad: number,
-      breddegrad:number
-    }
+export interface IAccidentTime {
+  dato: string | undefined;
+  tidspunkt: string | undefined;
+  periode?: IAccidentTimePeriod;
+  ukjent: boolean | undefined;
+  tidstype: string | undefined;
+  tidstypeAnnet?: string | undefined;
 }
-
-interface IAccident {
-  ulykkestidspunkt: Date,
-  hvorSkjeddeUlykken: string,
-  trafikkulykke: boolean,
-  narmereBeskrivelseUlykkessted: string,
-  narmereBeskrivelseHendelsesforlop: string,
-  ulykkesarsakTabellA: string,
-  bakgrunnsarsakTabellB: string,
-  utlosendeFaktorTabellE: string,
-  arbeidsplassbeskrivelseTabellF: string,
-  arbeidsforholdsavvikTabellG: string,
-  ulykkessted: IAccidentPlace,
-  naarInntraffUlykken: string
+export interface IAccidentTimePeriod {
+  fra: string | undefined;
+  til: string | undefined;
 }
-
+export interface IAccidentPlace {
+  sammeSomArbeidsgiversAdresse: boolean | undefined;
+  adresse?: string | undefined;
+}

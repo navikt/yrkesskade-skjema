@@ -1,22 +1,16 @@
 import { useState } from 'react';
-import Home from './pages/Home';
-import NotFound from './pages/404';
-import Info from './pages/Info';
-import Summary from './pages/Summary';
-import Receipt from './pages/Receipt';
-import Error from './pages/Receipt';
-import { Route, Routes } from 'react-router-dom';
+import Home from "./pages/Home";
+import NotFound from "./pages/404";
+import Info from "./pages/Info";
+import Summary from "./pages/Summary";
+import Receipt from "./pages/Receipt";
+import Error from "./pages/Error";
+import { Route, Routes } from "react-router-dom";
+import { IGeneralForm } from './Interfaces/generalForm';
 import { InnloggetProvider } from './context/InnloggetContext';
 
-interface ISimpleForm {
-  fornavn: string | undefined;
-  etternavn: string | undefined;
-  fødselsnummer: number | undefined;
-}
-
 const App = () => {
-  const [formdata, setFormdata] = useState<ISimpleForm | undefined>(undefined);
-
+  const [formdata, setFormdata] = useState<IGeneralForm | undefined>(undefined);
   return (
     <InnloggetProvider>
       <Routes>
