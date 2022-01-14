@@ -1,12 +1,12 @@
 ingresses:
-- "https://yrkesskade-skjema.dev.intern.nav.no"
+- "https://yrkesskade-skjema.dev.nav.no"
 env:
 - name: DECORATOR_URL
   value: "https://dekoratoren.dev.nav.no"
 - name: DECORATOR_ENV
   value: "dev"
 - name: APP_INGRESS
-  value: "https://yrkesskade-skjema.dev.intern.nav.no"
+  value: "https://yrkesskade-skjema.dev.nav.no"
 - name: LOGIN_URL
   value: https://loginservice.dev.nav.no/login?redirect=
 - name: NODE_ENV
