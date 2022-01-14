@@ -4,7 +4,7 @@ import axios, { AxiosError } from "axios";
 const er401Feil = (error: AxiosError) => (error?.response?.status === 401);
 
 const getLoginUrl = () => {
-    return `/yrkesskade/redirect-til-login?redirect=${window.location.origin}/yrkesskade`;
+    return `/yrkesskade/redirect-til-login?redirect=${window.location.origin}/yrkesskade/`;
 };
 
 export enum InnloggetStatus {
