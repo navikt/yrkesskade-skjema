@@ -8,8 +8,8 @@ const CompanyForm = ({ register }: IProps) => {
   return (
     <>
       <RadioGroup legend="Er dette bedriften du melder for?">
-        <Radio value="Ja">Ja</Radio>
-        <Radio value="Nei">Nei</Radio>
+        <Radio value="Ja" data-testid="company-option-yes">Ja</Radio>
+        <Radio value="Nei" data-testid="company-option-no">Nei</Radio>
       </RadioGroup>
     </>
   );
