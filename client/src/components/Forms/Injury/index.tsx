@@ -19,6 +19,7 @@ const InjuryForm = ({ register, errors }: IProps) => {
           errors?.skade?.kroppsdelTabellD &&
           "Dette feltet er påkrevd"
         }
+        data-testid="injury-body-location-options"
       >
         <option value="">Velg</option>
         {(
@@ -38,7 +39,9 @@ const InjuryForm = ({ register, errors }: IProps) => {
         error={
           errors?.skade?.skadeartTabellC &&
           "Dette feltet er påkrevd"
-        }>
+        }
+        data-testid="injury-type-options"
+        >
         <option value="">Velg</option>
         {(Object.keys(injuryType) as Array<keyof typeof injuryType>).map(
           (key) => {
@@ -57,9 +60,9 @@ const InjuryForm = ({ register, errors }: IProps) => {
           errors?.skade?.legeKontaktet &&
           "Dette feltet er påkrevd"
         }>
-        <Radio {...register("skade.legeKontaktet", {required: true })} value="Ja">Ja</Radio>
-        <Radio {...register("skade.legeKontaktet", {required: true })} value="Nei">Nei</Radio>
-        <Radio {...register("skade.legeKontaktet", {required: true })} value="Vet ikke">Vet ikke</Radio>
+        <Radio {...register("skade.legeKontaktet", {required: true })} value="Ja" data-testid="injury-medical-contacted-yes-option">Ja</Radio>
+        <Radio {...register("skade.legeKontaktet", {required: true })} value="Nei" data-testid="injury-medical-contacted-no-option">Nei</Radio>
+        <Radio {...register("skade.legeKontaktet", {required: true })} value="Vet ikke" data-testid="injury-medical-contacted-unknown-option">Vet ikke</Radio>
       </RadioGroup>
       <Textarea
         label="Utfyllende beskrivelse"
@@ -68,6 +71,7 @@ const InjuryForm = ({ register, errors }: IProps) => {
         value={value}
         maxLength={1000}
         onChange={(e) => setValue(e.target.value)}
+        data-testid="injury-additional-information"
       />
     </>
   );

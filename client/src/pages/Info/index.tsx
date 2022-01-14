@@ -25,7 +25,7 @@ export default function Info() {
         </Cell>
         <Cell xs={12} sm={12} lg={12}>
           <div className="buttonSection">
-            <Button variant="primary" onClick={handleForward}>
+            <Button variant="primary" onClick={handleForward} data-testid="start-innmelding">
               Start innmelding
             </Button>
           </div>

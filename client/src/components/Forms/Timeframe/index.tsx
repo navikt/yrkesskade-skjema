@@ -20,6 +20,7 @@ const TimeframeForm = ({ register, errors }: IProps) => {
           error={errors?.hendelsesfakta?.tid?.dato && "Dette feltet er påkrevd"}
           label="Dato for ulykken"
           description="DD.MM.ÅÅÅÅ"
+          data-testid="timeframe-when-date"
         />
 
         <TextField
@@ -29,6 +30,7 @@ const TimeframeForm = ({ register, errors }: IProps) => {
           }
           label="Klokkeslett for ulykken"
           description="00:00"
+          data-testid="timeframe-when-time"
         />
 
         <RadioGroup
@@ -37,12 +39,13 @@ const TimeframeForm = ({ register, errors }: IProps) => {
             errors?.hendelsesfakta?.tid?.ukjent && "Dette feltet er påkrevd"
           }
         >
-          <Radio {...register("hendelsesfakta.tid.ukjent")} value="Ukjent">
+          <Radio {...register("hendelsesfakta.tid.ukjent")} value="Ukjent" data-testid="timeframe-when-unknown">
             Ukjent
           </Radio>
           <Radio
             {...register("hendelsesfakta.tid.ukjent")}
             value="Over en periode"
+            data-testid="timeframe-when-over-period"
           >
             Over en periode
           </Radio>
@@ -58,6 +61,7 @@ const TimeframeForm = ({ register, errors }: IProps) => {
           setTimeframe(e.target.value);
         }}
         label="Innenfor hvilket tidsrom inntraff skaden?"
+        data-testid="timeframe-period-options"
       >
         <option value="">Velg</option>
         <option value="I avtalt arbeidstid">I avtalt arbeidstid</option>
@@ -71,7 +75,7 @@ const TimeframeForm = ({ register, errors }: IProps) => {
         <option value="Under redningsarbeid, vakthold eller redningsøvelse">
           Under redningsarbeid, vakthold eller redningsøvelse
         </option>
-        <option value="Annet">Annet</option>
+        <option value="Annet" data-testid="timeframe-period-option-other">Annet</option>
       </Select>
 
       {timeframe === "Annet" && (
@@ -82,6 +86,7 @@ const TimeframeForm = ({ register, errors }: IProps) => {
             "Dette feltet er påkrevd"
           }
           label="Annet"
+          data-testid="timeframe-period-option-other-text"
         />
       )}
     </>

@@ -17,6 +17,7 @@ const AccidentForm = ({ register, errors }: IProps) => {
           errors?.skade?.alvorlighetsgrad &&
           "Dette feltet er påkrevd"
         }
+        data-testid="accident-severity-options"
       >
         <option value="">Velg</option>
         <option value="Veldig">Veldig</option>
@@ -34,6 +35,7 @@ const AccidentForm = ({ register, errors }: IProps) => {
           errors?.hendelsesfakta?.hvorSkjeddeUlykken &&
           "Dette feltet er påkrevd"
         }
+        data-testid="accident-location-options"
       >
         <option value="1">Ja</option>
         <option value="0">Nei</option>
@@ -45,6 +47,7 @@ const AccidentForm = ({ register, errors }: IProps) => {
         error={
           errors?.hendelsesfakta?.typeUlykkeTabellA && "Dette feltet er påkrevd"
         }
+        data-testid="accident-reason-options"
       >
         <option value="">Velg</option>
         {(Object.keys(accidentType) as Array<keyof typeof accidentType>).map(
@@ -64,6 +67,7 @@ const AccidentForm = ({ register, errors }: IProps) => {
         error={
           errors?.hendelsesfakta?.bakgrunnsaarsakTabellB && "Dette feltet er påkrevd"
         }
+        data-testid="accident-background-options"
       >
         <option value="">Velg</option>
         {(

@@ -13,6 +13,7 @@ const InjuredForm = ({ register, errors }: IProps) => {
           required: true,
         })}
         error={errors?.skadelidt?.arbeidsforhold?.rolletype && "Dette feltet er påkrevd"}
+        data-testid="injured-role-options"
       >
         <option value="">Velg</option>
         <option value="Rolle">Rolle</option>
@@ -23,6 +24,7 @@ const InjuredForm = ({ register, errors }: IProps) => {
           required: true,
         })}
         error={errors?.skadelidt?.arbeidsforhold?.stillingstittel && "Dette feltet er påkrevd"}
+        data-testid="injured-position"
       />
 
       <TextField
@@ -34,6 +36,7 @@ const InjuredForm = ({ register, errors }: IProps) => {
         label="Fyll ut fødselsnummer på den skadelidte"
         type="number"
         error={errors?.skadelidt?.foedselsnummer && "Dette feltet er påkrevd"}
+        data-testid="injured-id-number"
       />
     </>
   );
