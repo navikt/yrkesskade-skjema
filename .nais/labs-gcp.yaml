@@ -21,3 +21,6 @@ spec:
   replicas:
     min: 2
     max: 2
+  env:
+    - name: NODE_ENV
+      value: labs-gcp

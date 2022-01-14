@@ -103,3 +103,6 @@ build
 
 # TernJS port file
 .tern-port
+
+# OS Specific files
+.DS_Store

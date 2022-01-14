@@ -5,5 +5,13 @@ env:
   value: "https://dekoratoren.dev.nav.no"
 - name: DECORATOR_ENV
   value: "dev"
+- name: APP_INGRESS
+  value: "https://yrkesskade-skjema.dev.intern.nav.no"
+- name: LOGIN_URL
+  value: https://loginservice.dev.nav.no/login?redirect=
+- name: NODE_ENV
+  value: dev
+- name: TOKENX_AUDIENCE
+  value: "dev-gcp:yrkesskade:yrkesskade-melding-api"
 externals:
   - "dekoratoren.dev.nav.no"
