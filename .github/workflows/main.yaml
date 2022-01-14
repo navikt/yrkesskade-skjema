@@ -6,6 +6,18 @@ on:
 env:
   "IMAGE": "ghcr.io/${{ github.repository }}:${{ github.sha }}"
 jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          build: yarn build-prod
+          start: yarn dev
+          wait-on: 'http://localhost:3001'
+
   "build":
     name: "build"
     runs-on: "ubuntu-18.04"
@@ -36,6 +48,7 @@ jobs:
           "password": "${{ secrets.GITHUB_TOKEN }}"
       - name: "Build and push the Docker image"
         run: "docker build --pull --tag ${IMAGE} . && docker push ${IMAGE}"
+
   "deployAppToDev":
     name: "Deploy app to dev"
     needs: "build"
@@ -49,6 +62,7 @@ jobs:
           "CLUSTER": "dev-gcp"
           "RESOURCE": ".nais/nais.yaml"
           "VARS": ".nais/dev.yaml"
+
   "deployAlertsToDev":
     name: "Deploy alerts to dev"
     needs: "build"
