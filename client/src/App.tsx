@@ -24,7 +24,7 @@ const App = () => {
       step: 2,
       text: 'Om innmelder',
       done: false,
-      active: false,
+      active: true,
     },
     {
       step: 3,

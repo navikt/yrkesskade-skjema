@@ -11,10 +11,36 @@ const StepIndicator = ({ steps }: IProps) => {
     <div className="Stepcontainer">
       <section className="step-indicator">
         {steps.map((step) => (
-          <div key={step.step} className={`step step${step.step}`}>
-            <div className="step-icon">{step.step}</div>
-            <BodyShort>{step.text}</BodyShort>
-          </div>
+          <>
+            <div
+              key={step.step}
+              className={`step step${step.step} ${
+                step.active ? 'active' : ''
+              } ${step.done ? 'done' : ''}`}
+            >
+              <div
+                className={`step-icon ${step.active ? 'active' : ''} ${
+                  step.done ? 'done' : ''
+                }`}
+              >
+                {step.step}
+              </div>
+              <BodyShort
+                className={`${step.active ? 'active' : ''} ${
+                  step.done ? 'done' : ''
+                }`}
+              >
+                {step.text}
+              </BodyShort>
+            </div>
+            {steps.length > step.step && (
+              <div
+                className={`indicator-line ${step.active ? 'active' : ''} ${
+                  step.done ? 'done' : ''
+                }`}
+              />
+            )}
+          </>
         ))}
         {/* <div className="step step1 done">
           <div className="step-icon">1</div>
