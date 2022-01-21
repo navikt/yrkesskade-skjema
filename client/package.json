@@ -49,6 +49,7 @@
     ]
   },
   "devDependencies": {
+    "constate": "^3.3.0",
     "less": "^4.1.2"
   }
 }
