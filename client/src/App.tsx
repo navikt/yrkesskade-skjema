@@ -8,24 +8,27 @@ import Error from "./pages/Error";
 import { Route, Routes } from "react-router-dom";
 import { IGeneralForm} from './Interfaces/generalForm';
 import { InnloggetProvider } from './context/InnloggetContext';
+import { FeatureTogglesProvider } from './context/FeatureTogglesContext';
 
 const App = () => {
   const [formdata, setFormdata] = useState<IGeneralForm | undefined>(undefined);
 
   return (
     <InnloggetProvider>
-      <Routes>
-        <Route path="yrkesskade/">
-          <Route index element={<Info />} />
-          <Route path="skjema">
-            <Route index element={<Home passFormData={setFormdata} />} />
-            <Route path="oppsumering" element={<Summary data={formdata} />} />
-            <Route path="kvittering" element={<Receipt />} />
-            <Route path="feilmelding" element={<Error />} />
+      <FeatureTogglesProvider>
+        <Routes>
+          <Route path="yrkesskade/">
+            <Route index element={<Info />} />
+            <Route path="skjema">
+              <Route index element={<Home passFormData={setFormdata} />} />
+              <Route path="oppsumering" element={<Summary data={formdata} />} />
+              <Route path="kvittering" element={<Receipt />} />
+              <Route path="feilmelding" element={<Error />} />
+            </Route>
           </Route>
-        </Route>
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </FeatureTogglesProvider>
     </InnloggetProvider>
   );
 };

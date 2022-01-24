@@ -26,8 +26,6 @@ const [InnloggetProvider, useInnloggetContext] = createUseContext(() => {
     return axios
       .get(`/yrkesskade/innlogget`)
       .then((ressurs) => {
-        console.log(ressurs);
-
         if (ressurs.status === 200) {
           setInnloggetStatus(InnloggetStatus.INNLOGGET);
         } else {
