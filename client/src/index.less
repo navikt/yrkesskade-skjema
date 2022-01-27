@@ -14,10 +14,18 @@ code {
     monospace;
 }
 
-.grid-centered--lg {
-  @media screen and (min-width: 960px) {
-    grid-column-start: 4;
-    grid-column-end: 10;
+// .cellContentContainer {
+//   max-width: 520px;
+// }
+.spacer {
+  margin: 24px 0 !important;
+}
+.pageNumberTitle {
+  position: relative;
+  &:before {
+    content: attr(data-number)'.';
+    position: absolute;
+    left: 0;
+    transform: translate3d(-150%, 0,0);
   }
 }
-

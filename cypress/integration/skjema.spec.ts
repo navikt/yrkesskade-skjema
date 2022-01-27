@@ -38,7 +38,7 @@ describe('Skjema innsending', (): void => {
     timeframeForm.timeframePeriodOptions().select('I avtalt arbeidstid');
 
     // info om skadelydte
-    injuredForm.roleOptions().select('Rolle');
+    // injuredForm.roleOptions().select('Rolle');
     injuredForm.position().type('Tastaturkriger');
     injuredForm.idNumber().type('01011050433');
 

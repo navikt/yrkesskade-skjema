@@ -1,13 +1,15 @@
-import { Select, TextField } from "@navikt/ds-react";
+import { TextField, Select } from '@navikt/ds-react';
+import stillingstitler from '../../../assets/stillingstitler';
+// import Select from 'react-select';
 interface IProps {
   register: any;
   errors: any;
 }
 const InjuredForm = ({ register, errors }: IProps) => {
-  console.log(errors);
+  // console.log(errors);
   return (
     <>
-      <Select
+      {/* <Select
         label="Hva er den skadeliteds rolle"
         {...register("skadelidt.arbeidsforhold.rolletype", {
           required: true,
@@ -17,25 +19,48 @@ const InjuredForm = ({ register, errors }: IProps) => {
       >
         <option value="">Velg</option>
         <option value="Rolle">Rolle</option>
+      </Select> */}
+
+      <Select
+        label="Hva er den skadeliteds rolle"
+        {...register('skadelidt.arbeidsforhold.stillingstittel', {
+          required: true,
+        })}
+        error={
+          errors?.skadelidt?.arbeidsforhold?.stillingstittel &&
+          'Dette feltet er påkrevd'
+        }
+        data-testid="injured-position"
+        className="spacer"
+      >
+        <option value="">Velg</option>
+        {stillingstitler.map((title, index) => {
+          return (
+            <option key={index} value={title.value}>
+              {title.label}
+            </option>
+          );
+        })}
       </Select>
-      <TextField
+      {/* <TextField
         label="Hva er skadeliteds stilling"
         {...register("skadelidt.arbeidsforhold.stillingstittel", {
           required: true,
         })}
         error={errors?.skadelidt?.arbeidsforhold?.stillingstittel && "Dette feltet er påkrevd"}
         data-testid="injured-position"
-      />
+      /> */}
 
       <TextField
-        {...register("skadelidt.foedselsnummer", {
+      className="spacer"
+        {...register('skadelidt.foedselsnummer', {
           required: true,
           minLength: 11,
           maxLength: 11,
         })}
         label="Fyll ut fødselsnummer på den skadelidte"
         type="number"
-        error={errors?.skadelidt?.foedselsnummer && "Dette feltet er påkrevd"}
+        error={errors?.skadelidt?.foedselsnummer && 'Dette feltet er påkrevd'}
         data-testid="injured-id-number"
       />
     </>

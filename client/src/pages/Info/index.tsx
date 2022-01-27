@@ -4,20 +4,26 @@ import {
   Grid,
   Cell,
   Button,
+  BodyLong,
+  Alert,
+  Link,
 } from '@navikt/ds-react';
 import SystemHeader from '../../components/SystemHeader';
 // import getTexts from '../../utils/getTexts';
 import { useNavigate } from 'react-router-dom';
 import StepIndicator from '../../components/StepIndicator';
 
-import {ISteps} from '../../Interfaces/steps';
+import { ISteps } from '../../Interfaces/steps';
 interface IProps {
   steps: ISteps;
+  // updateStep: (data: { step: number; higher: Boolean }) => void;
+  increaseStep: () => void;
 }
 
-const Info = ({ steps }: IProps) => {
+const Info = ({ steps, increaseStep }: IProps) => {
   const navigate = useNavigate();
   const handleForward = () => {
+    increaseStep();
     navigate('/yrkesskade/skjema');
   };
   return (
@@ -25,16 +31,67 @@ const Info = ({ steps }: IProps) => {
       <SystemHeader />
       <Grid>
         <Cell xs={12} lg={2}></Cell>
-        <Cell xs={12} lg={6}>
-          <Heading size="2xlarge">1. Innledning</Heading>
-          <div className="buttonSection">
-            <Button
-              variant="primary"
-              onClick={handleForward}
-              data-testid="start-innmelding"
-            >
-              Start innmelding
-            </Button>
+        <Cell xs={12} lg={5}>
+          <div className="cellContentContainer">
+            <div>
+              <Heading
+                size="2xlarge"
+                className="pageNumberTitle spacer"
+                data-number="1"
+              >
+                Innledning
+              </Heading>
+              <BodyLong className="spacer">
+                Kort intro om hva du er i gang med å søke om nå. Kort intro om
+                hva du er i gang med å søke om nå. Kort intro om hva du er i
+                gang med å søke om nå.{' '}
+              </BodyLong>
+              <Link
+                className="spacer"
+                href="https://google.com"
+                target="_BLANK"
+              >
+                Les om plikter du har som arbeidsgiver (åpnes i nytt vindu)
+              </Link>
+            </div>
+            <div>
+              <Heading size="large">
+                Jeg skal laste ned “Første side til saken din
+              </Heading>
+              <BodyLong className="spacer">
+                Hvis du ikke skal sende inn søknad, men...
+              </BodyLong>
+              <Link href="https://google.com" className="spacer">
+                Gå tilbake til papirskjema
+              </Link>
+            </div>
+            <div>
+              <Heading size="large">Slik sender du digital innmelding</Heading>
+              <BodyLong className="spacer">
+                Det tar ca x minutter å gjennomføre innmeldingen. Det kan hende
+                at vi trenger mer dokumentasjon når vi skal behandle
+                innmeldingen. Da gir vi beskjed til den skadelidte/spesialist.
+              </BodyLong>
+              <Alert variant="info" className="spacer">
+                <Heading size="small">Vi henter:</Heading>
+                <ul>
+                  <li>Personinformasjon om deg og dine ansatte.</li>
+                  <li>Inntektsinformasjon fra Skatteetaten.</li>
+                </ul>
+                <Link href="https://google.com">
+                  Slik behandler vi personopplysningene dine
+                </Link>
+              </Alert>
+            </div>
+            <div className="buttonSection">
+              <Button
+                variant="primary"
+                onClick={handleForward}
+                data-testid="start-innmelding"
+              >
+                Start innmelding
+              </Button>
+            </div>
           </div>
         </Cell>
         <Cell xs={12} sm={12} lg={2}>

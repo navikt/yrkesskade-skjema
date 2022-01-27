@@ -11,6 +11,7 @@ const InjuryForm = ({ register, errors }: IProps) => {
   return (
     <>
       <Select
+      className="spacer"
         label="Hvor på kroppen er skaden"
         {...register("skade.kroppsdelTabellD", {
           required: true,
@@ -36,6 +37,7 @@ const InjuryForm = ({ register, errors }: IProps) => {
       <Select label="Hva slags skade er det"  {...register("skade.skadeartTabellC", {
           required: true,
         })}
+        className="spacer"
         error={
           errors?.skade?.skadeartTabellC &&
           "Dette feltet er påkrevd"
@@ -59,12 +61,14 @@ const InjuryForm = ({ register, errors }: IProps) => {
       <RadioGroup legend="Har lege blitt kontaktet?" error={
           errors?.skade?.legeKontaktet &&
           "Dette feltet er påkrevd"
-        }>
+        }
+        className="spacer">
         <Radio {...register("skade.legeKontaktet", {required: true })} value="Ja" data-testid="injury-medical-contacted-yes-option">Ja</Radio>
         <Radio {...register("skade.legeKontaktet", {required: true })} value="Nei" data-testid="injury-medical-contacted-no-option">Nei</Radio>
         <Radio {...register("skade.legeKontaktet", {required: true })} value="Vet ikke" data-testid="injury-medical-contacted-unknown-option">Vet ikke</Radio>
       </RadioGroup>
       <Textarea
+      className="spacer"
         label="Utfyllende beskrivelse"
         description={<TextareaDescription />}
         {...register("hendelsesfakta.utfyllendeBeskrivelse")}

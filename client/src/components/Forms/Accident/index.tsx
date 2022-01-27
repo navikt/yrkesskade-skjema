@@ -9,6 +9,7 @@ const AccidentForm = ({ register, errors }: IProps) => {
   return (
     <>
       <Select
+      className="spacer"
         {...register("skade.alvorlighetsgrad", {
           required: true,
         })}
@@ -24,6 +25,7 @@ const AccidentForm = ({ register, errors }: IProps) => {
       </Select>
 
       <Select
+      className="spacer"
         label="Skjedde ulykken på arbeidsplassen?"
         {...register(
           "hendelsesfakta.hvorSkjeddeUlykken",
@@ -42,6 +44,7 @@ const AccidentForm = ({ register, errors }: IProps) => {
       </Select>
 
       <Select
+      className="spacer"
         label="Hva var årsaken til ulykken"
         {...register("hendelsesfakta.typeUlykkeTabellA", { required: true })}
         error={
@@ -62,6 +65,7 @@ const AccidentForm = ({ register, errors }: IProps) => {
       </Select>
 
       <Select
+      className="spacer"
         label="Hva var bakgrunnen for ulykken"
         {...register("hendelsesfakta.bakgrunnsaarsakTabellB", { required: true })}
         error={

@@ -21,6 +21,7 @@ const TimeframeForm = ({ register, errors }: IProps) => {
           label="Dato for ulykken"
           description="DD.MM.ÅÅÅÅ"
           data-testid="timeframe-when-date"
+          className="spacer"
         />
 
         <TextField
@@ -31,9 +32,11 @@ const TimeframeForm = ({ register, errors }: IProps) => {
           label="Klokkeslett for ulykken"
           description="00:00"
           data-testid="timeframe-when-time"
+          // className="spacer"
         />
 
         <RadioGroup
+        // className="spacer"
           legend
           error={
             errors?.hendelsesfakta?.tid?.ukjent && "Dette feltet er påkrevd"
@@ -53,6 +56,7 @@ const TimeframeForm = ({ register, errors }: IProps) => {
       </Fieldset>
 
       <Select
+      className="spacer"
         {...register("hendelsesfakta.tid.tidstype", { required: true })}
         error={
           errors?.hendelsesfakta?.tid?.tidstype && "Dette feltet er påkrevd"
@@ -80,6 +84,7 @@ const TimeframeForm = ({ register, errors }: IProps) => {
 
       {timeframe === "Annet" && (
         <TextField
+        className="spacer"
           {...register("hendelsesfakta.tid.tidstypeAnnet")}
           error={
             errors?.hendelsesfakta?.tid?.tidstypeAnnet &&
