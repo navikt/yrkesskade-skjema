@@ -46,11 +46,11 @@ const Home = ({ passFormData, steps, decreaseStep, increaseStep }: IProps) => {
   //   navigate('oppsumering');
   // };
 
-  const timeframeFromFields = [
-    { name: 'hendelsesfakta.tid.dato', shouldFocus: true },
-    { name: 'hendelsesfakta.tid.tidspunkt', shouldFocus: true },
-    { name: 'hendelsesfakta.tid.tidstype', shouldFocus: true },
-  ];
+  // const timeframeFromFields = [
+  //   { name: 'hendelsesfakta.tid.dato', shouldFocus: true },
+  //   { name: 'hendelsesfakta.tid.tidspunkt', shouldFocus: true },
+  //   { name: 'hendelsesfakta.tid.tidstype', shouldFocus: true },
+  // ];
 
   return (
     <ContentContainer>
