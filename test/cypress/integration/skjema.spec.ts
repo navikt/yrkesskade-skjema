@@ -1,5 +1,6 @@
 import { companyForm } from "../support/selectors/company-form.selectors";
 import { info } from "../support/selectors/info.selectors";
+import { general } from "../support/selectors/general-form.selector";
 import { timeframeForm } from "../support/selectors/timeframe-form.selector";
 import { endpointUrls } from "../support/utils/endpointUrls";
 import { network } from "../support/utils/network";
@@ -32,15 +33,24 @@ describe('Skjema innsending', (): void => {
     companyForm.companyOptionYes().click();
     companyForm.companyOptionNo().click();
 
+    // Gå til neste steg
+    general.nextStep().click();
+
     // velg tidspunkt
     timeframeForm.timeframeWhenDate().type(injuryTime.format('DD.MM.YYYY'));
     timeframeForm.timeframeWhenTime().type(injuryTime.format('HH:mm'));
     timeframeForm.timeframePeriodOptions().select('I avtalt arbeidstid');
 
+    // Gå til neste steg
+    general.nextStep().click();
+
     // info om skadelydte
     // injuredForm.roleOptions().select('Rolle');
     injuredForm.position().type('Tastaturkriger');
     injuredForm.idNumber().type('01011050433');
+
+    // Gå til neste steg
+    general.nextStep().click();
 
     // info om ulykken
     accidentForm.severityOptions().select('Veldig');
@@ -48,10 +58,16 @@ describe('Skjema innsending', (): void => {
     accidentForm.reasonOptions().select('Støt/treff av gjenstand');
     accidentForm.backgroundOptions().select('Manglende merking, varsling, skilting');
 
+    // Gå til neste steg
+    general.nextStep().click();
+
     // info om skaden
     injuryForm.bodylocationOptions().select('Øye, venstre');
     injuryForm.injuryTypeOptions().select('Tap av legemsdel');
     injuryForm.medicalContacted.noOption().click();
+
+    // Gå til neste steg
+    general.nextStep().click();
 
     // send inn skjema
     homeForm.continue().click();

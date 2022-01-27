@@ -184,6 +184,7 @@ const ButtonGroup = ({ increaseStep, triggers, trigger }: IButtonProps) => {
   return (
     <>
       <Button
+        data-testid="neste-steg"
         onClick={async () => {
           if (triggers && triggers.length > 0) {
             const result = await trigger(...triggers);
