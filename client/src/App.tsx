@@ -10,6 +10,7 @@ import { IGeneralForm } from './Interfaces/generalForm';
 import { ISteps } from './Interfaces/steps';
 
 import { InnloggetProvider } from './context/InnloggetContext';
+import { FeatureTogglesProvider } from './context/FeatureTogglesContext';
 
 const App = () => {
   const navigate = useNavigate();
@@ -63,34 +64,33 @@ const App = () => {
 
   const increaseStep = () => {
     let newSteps = { ...steps, currentStep: steps.currentStep + 1 };
-    for (let i = 0; i < newSteps.currentStep -1; i++) {
+    for (let i = 0; i < newSteps.currentStep - 1; i++) {
       newSteps.details[i].done = true;
       newSteps.details[i].active = false;
     }
     newSteps.details[newSteps.currentStep - 1].active = true;
-    if(newSteps.currentStep === 7) {
+    if (newSteps.currentStep === 7) {
       navigate('/yrkesskade/skjema/oppsumering');
     }
-    if(newSteps.currentStep === 8) {
+    if (newSteps.currentStep === 8) {
       navigate('/yrkesskade/skjema/kvittering');
     }
     setSteps(newSteps);
   };
   const decreaseStep = () => {
-
     let newSteps = { ...steps, currentStep: steps.currentStep - 1 };
     for (let i = newSteps.details.length; i >= newSteps.currentStep; i--) {
-      console.log(i-1)
-      console.log(newSteps.details[i-1]);
-      newSteps.details[i-1].done = false;
-      newSteps.details[i-1].active = false;
+      console.log(i - 1);
+      console.log(newSteps.details[i - 1]);
+      newSteps.details[i - 1].done = false;
+      newSteps.details[i - 1].active = false;
     }
     newSteps.details[newSteps.currentStep - 1].active = true;
     console.log(newSteps);
-    if(newSteps.currentStep === 1) {
+    if (newSteps.currentStep === 1) {
       navigate('/yrkesskade');
     }
-    if(newSteps.currentStep === 7) {
+    if (newSteps.currentStep === 7) {
       navigate('/yrkesskade/skjema/oppsumering');
     }
     setSteps(newSteps);
@@ -98,40 +98,45 @@ const App = () => {
 
   return (
     <InnloggetProvider>
-      <Routes>
-        <Route path="yrkesskade/">
-          {steps.currentStep === 1 && (
-            <Route
-              index
-              element={<Info increaseStep={increaseStep} steps={steps} />}
-              // element={<Info steps={steps} />}
-            />
-          )}
-          <Route path="skjema">
-            {steps.currentStep >= 2 && steps.currentStep <= 6 && (
+      <FeatureTogglesProvider>
+        <Routes>
+          <Route path="yrkesskade/">
+            {steps.currentStep === 1 && (
               <Route
                 index
-                element={
-                  <Home
-                    passFormData={setFormdata}
-                    steps={steps}
-                    increaseStep={increaseStep}
-                    decreaseStep={decreaseStep}
-                  />
-                }
+                element={<Info increaseStep={increaseStep} steps={steps} />}
+                // element={<Info steps={steps} />}
               />
             )}
-            {steps.currentStep === 7 && (
-              <Route path="oppsumering" element={<Summary data={formdata} />} />
-            )}
-            {steps.currentStep === 8 && (
-              <Route path="kvittering" element={<Receipt />} />
-            )}
-            <Route path="feilmelding" element={<Error />} />
+            <Route path="skjema">
+              {steps.currentStep >= 2 && steps.currentStep <= 6 && (
+                <Route
+                  index
+                  element={
+                    <Home
+                      passFormData={setFormdata}
+                      steps={steps}
+                      increaseStep={increaseStep}
+                      decreaseStep={decreaseStep}
+                    />
+                  }
+                />
+              )}
+              {steps.currentStep === 7 && (
+                <Route
+                  path="oppsumering"
+                  element={<Summary data={formdata} />}
+                />
+              )}
+              {steps.currentStep === 8 && (
+                <Route path="kvittering" element={<Receipt />} />
+              )}
+              <Route path="feilmelding" element={<Error />} />
+            </Route>
           </Route>
-        </Route>
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </FeatureTogglesProvider>
     </InnloggetProvider>
   );
 };
