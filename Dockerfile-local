@@ -1,0 +1,11 @@
+FROM node:16-alpine
+
+ENV NODE_ENV local
+
+COPY . .
+
+COPY /build ./build
+
+CMD ["yarn", "dev"]
+
+EXPOSE 3000 3001
