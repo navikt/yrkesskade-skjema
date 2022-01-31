@@ -1,20 +1,23 @@
 import { useState } from 'react';
-import Home from './pages/Home';
 import NotFound from './pages/404';
 import Info from './pages/Info';
 import Summary from './pages/Summary';
 import Receipt from './pages/Receipt';
 import Error from './pages/Error';
-import { Route, Routes, useNavigate } from 'react-router-dom';
-import { IGeneralForm } from './Interfaces/generalForm';
+import CompanyFormPage from './pages/Form/Company';
+import TimeframeFormPage from './pages/Form/Timeframe';
+import InjuryFormPage from './pages/Form/Injury';
+import InjuredFormPage from './pages/Form/Injured';
+import AccidentFormPage from './pages/Form/Accident';
+import { Route, Routes } from 'react-router-dom';
 import { ISteps } from './Interfaces/steps';
+import { StateMachineProvider, createStore } from 'little-state-machine';
 
 import { InnloggetProvider } from './context/InnloggetContext';
 import { FeatureTogglesProvider } from './context/FeatureTogglesContext';
 
 const App = () => {
-  const navigate = useNavigate();
-  const [formdata, setFormdata] = useState<IGeneralForm | undefined>(undefined);
+  createStore({}, { name: 'formdata'});
   const [steps, setSteps] = useState<ISteps>({
     totalSteps: 8,
     currentStep: 1,
@@ -69,12 +72,6 @@ const App = () => {
       newSteps.details[i].active = false;
     }
     newSteps.details[newSteps.currentStep - 1].active = true;
-    if (newSteps.currentStep === 7) {
-      navigate('/yrkesskade/skjema/oppsumering');
-    }
-    if (newSteps.currentStep === 8) {
-      navigate('/yrkesskade/skjema/kvittering');
-    }
     setSteps(newSteps);
   };
   const decreaseStep = () => {
@@ -86,30 +83,72 @@ const App = () => {
       newSteps.details[i - 1].active = false;
     }
     newSteps.details[newSteps.currentStep - 1].active = true;
-    console.log(newSteps);
-    if (newSteps.currentStep === 1) {
-      navigate('/yrkesskade');
-    }
-    if (newSteps.currentStep === 7) {
-      navigate('/yrkesskade/skjema/oppsumering');
-    }
     setSteps(newSteps);
   };
 
   return (
     <InnloggetProvider>
       <FeatureTogglesProvider>
-        <Routes>
-          <Route path="yrkesskade/">
-            {steps.currentStep === 1 && (
+        <StateMachineProvider>
+          <Routes>
+            <Route path="yrkesskade/">
               <Route
                 index
                 element={<Info increaseStep={increaseStep} steps={steps} />}
                 // element={<Info steps={steps} />}
               />
-            )}
-            <Route path="skjema">
-              {steps.currentStep >= 2 && steps.currentStep <= 6 && (
+              <Route path="skjema">
+                <Route
+                  path="innmelder"
+                  element={
+                    <CompanyFormPage
+                      steps={steps}
+                      increaseStep={increaseStep}
+                      decreaseStep={decreaseStep}
+                    />
+                  }
+                />
+                <Route
+                  path="tidsrom"
+                  element={
+                    <TimeframeFormPage
+                      steps={steps}
+                      increaseStep={increaseStep}
+                      decreaseStep={decreaseStep}
+                    />
+                  }
+                />
+                <Route
+                  path="skadelidt"
+                  element={
+                    <InjuredFormPage
+                      steps={steps}
+                      increaseStep={increaseStep}
+                      decreaseStep={decreaseStep}
+                    />
+                  }
+                />
+                <Route
+                  path="ulykken"
+                  element={
+                    <AccidentFormPage
+                      steps={steps}
+                      increaseStep={increaseStep}
+                      decreaseStep={decreaseStep}
+                    />
+                  }
+                />
+                <Route
+                  path="skaden"
+                  element={
+                    <InjuryFormPage
+                      steps={steps}
+                      increaseStep={increaseStep}
+                      decreaseStep={decreaseStep}
+                    />
+                  }
+                />
+                {/* {steps.currentStep >= 2 && steps.currentStep <= 6 && (
                 <Route
                   index
                   element={
@@ -121,21 +160,29 @@ const App = () => {
                     />
                   }
                 />
-              )}
-              {steps.currentStep === 7 && (
+              )} */}
+                {/* {steps.currentStep === 7 && ( */}
                 <Route
                   path="oppsumering"
-                  element={<Summary data={formdata} />}
+                  element={
+                    <Summary
+                      // data={formdata}
+                      steps={steps}
+                      increaseStep={increaseStep}
+                      decreaseStep={decreaseStep}
+                    />
+                  }
                 />
-              )}
-              {steps.currentStep === 8 && (
+                {/* )}
+              {steps.currentStep === 8 && ( */}
                 <Route path="kvittering" element={<Receipt />} />
-              )}
-              <Route path="feilmelding" element={<Error />} />
+                {/* )} */}
+                <Route path="feilmelding" element={<Error />} />
+              </Route>
             </Route>
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </StateMachineProvider>
       </FeatureTogglesProvider>
     </InnloggetProvider>
   );

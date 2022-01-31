@@ -22,7 +22,7 @@ const InjuredForm = ({ register, errors }: IProps) => {
       </Select> */}
 
       <Select
-        label="Hva er den skadeliteds rolle"
+        label="Hva er skadeliteds stilling"
         {...register('skadelidt.arbeidsforhold.stillingstittel', {
           required: true,
         })}

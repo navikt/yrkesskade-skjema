@@ -24,7 +24,7 @@ const Info = ({ steps, increaseStep }: IProps) => {
   const navigate = useNavigate();
   const handleForward = () => {
     increaseStep();
-    navigate('/yrkesskade/skjema');
+    navigate('/yrkesskade/skjema/innmelder');
   };
   return (
     <ContentContainer>

@@ -16,6 +16,7 @@
     "craco": "^0.0.3",
     "craco-less": "^1.20.0",
     "http-proxy-middleware": "^2.0.1",
+    "little-state-machine": "^4.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.22.2",
