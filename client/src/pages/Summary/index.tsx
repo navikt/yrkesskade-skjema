@@ -16,21 +16,26 @@ import SystemHeader from '../../components/SystemHeader';
 import { useNavigate } from 'react-router-dom';
 // import getTexts from '../../utils/getTexts.js';
 import axios from 'axios';
-import { IGeneralForm } from '../../Interfaces/generalForm';
+// import { IGeneralForm } from '../../Interfaces/generalForm';
 import StepIndicator from '../../components/StepIndicator';
+import formUpdateAction from '../../State/formUpdateAction';
 
 import { ISteps } from '../../Interfaces/steps';
+
+import { useStateMachine } from 'little-state-machine';
 interface IProps {
-  data?: IGeneralForm | undefined;
+  // data?: IGeneralForm | undefined;
   steps: ISteps;
   increaseStep: () => void;
   decreaseStep: () => void;
 }
-const Summary = ({ data, steps, increaseStep, decreaseStep }: IProps) => {
+const Summary = ({ steps, increaseStep, decreaseStep }: IProps) => {
+  const { state } = useStateMachine({ formUpdateAction });
+  console.log(state);
   const navigate = useNavigate();
   const handleSending = async () => {
     try {
-      await axios.post('/api/skademelding', { ...data });
+      await axios.post('/api/skademelding', { state });
       increaseStep();
     } catch {
       navigate('/yrkesskade/skjema/feilmelding');
