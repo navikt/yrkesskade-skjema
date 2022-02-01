@@ -52,9 +52,9 @@ const InjuryFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
             <Heading
               size="2xlarge"
               className="pageNumberTitle spacer"
-              data-number="2"
+              data-number="6"
             >
-              Om innmelder
+              Om skaden
             </Heading>
             <InjuryForm errors={errors} register={register} />
             <Button onClick={handleSubmit(onSubmit)}>Neste steg</Button>
