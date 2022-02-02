@@ -31,6 +31,7 @@ const TimeframeFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
     register,
     handleSubmit,
     formState: { errors },
+    control
   } = useForm();
 
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ const TimeframeFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
             >
               Tid og dato
             </Heading>
-            <TimeframeForm errors={errors} register={register} />
+            <TimeframeForm errors={errors} register={register} control={control}/>
             <Button onClick={handleSubmit(onSubmit)}>Neste steg</Button>
           </div>
         </Cell>

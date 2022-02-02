@@ -40,7 +40,7 @@ app.post(`/api/skademelding`, async (req: any, res: any) => {
     const response = await axios.post(
       'https://yrkesskade-melding-api.dev.intern.nav.no/api/midlertidig/skademeldinger',
       {
-        skademelding: req.body,
+        skademelding: req.body.data,
       },
       // {
       //   headers: {

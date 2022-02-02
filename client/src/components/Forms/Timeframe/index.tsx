@@ -1,33 +1,54 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Select,
   TextField,
   Fieldset,
   RadioGroup,
   Radio,
-} from "@navikt/ds-react";
+  Label
+} from '@navikt/ds-react';
+import DatePicker from 'react-datepicker';
+import { Controller } from 'react-hook-form';
+
+import "./timeframeForm.less";
+
 interface IProps {
   register: any;
   errors: any;
+  control: any;
 }
-const TimeframeForm = ({ register, errors }: IProps) => {
-  const [timeframe, setTimeframe] = useState("");
+const TimeframeForm = ({ register, errors, control }: IProps) => {
+  const [timeframe, setTimeframe] = useState('');
   return (
     <>
       <Fieldset legend="Når skjedde ulykken som skal meldes?">
-        <TextField
+        {/* <TextField
           {...register("hendelsesfakta.tid.dato", { required: true })}
           error={errors?.hendelsesfakta?.tid?.dato && "Dette feltet er påkrevd"}
           label="Dato for ulykken"
           description="DD.MM.ÅÅÅÅ"
           data-testid="timeframe-when-date"
           className="spacer"
+        /> */}
+        <div className="spacer">
+        <Label>Dato for ulykken</Label>
+        <Controller
+          name="hendelsesfakta.tid.dato"
+          control={control}
+          render={({ field }) => (
+            <DatePicker
+            className="navds-text-field__input navds-body-short navds-body-medium"
+              onChange={(date) => field.onChange(date)}
+              selected={field.value}
+            />
+         )}
         />
+        </div>
 
         <TextField
-          {...register("hendelsesfakta.tid.tidspunkt", { required: true })}
+          {...register('hendelsesfakta.tid.tidspunkt', { required: true })}
           error={
-            errors?.hendelsesfakta?.tid?.tidspunkt && "Dette feltet er påkrevd"
+            errors?.hendelsesfakta?.tid?.tidspunkt && 'Dette feltet er påkrevd'
           }
           label="Klokkeslett for ulykken"
           description="00:00"
@@ -36,17 +57,21 @@ const TimeframeForm = ({ register, errors }: IProps) => {
         />
 
         <RadioGroup
-        // className="spacer"
+          // className="spacer"
           legend
           error={
-            errors?.hendelsesfakta?.tid?.ukjent && "Dette feltet er påkrevd"
+            errors?.hendelsesfakta?.tid?.ukjent && 'Dette feltet er påkrevd'
           }
         >
-          <Radio {...register("hendelsesfakta.tid.ukjent")} value="Ukjent" data-testid="timeframe-when-unknown">
+          <Radio
+            {...register('hendelsesfakta.tid.ukjent')}
+            value="Ukjent"
+            data-testid="timeframe-when-unknown"
+          >
             Ukjent
           </Radio>
           <Radio
-            {...register("hendelsesfakta.tid.ukjent")}
+            {...register('hendelsesfakta.tid.ukjent')}
             value="Over en periode"
             data-testid="timeframe-when-over-period"
           >
@@ -56,10 +81,10 @@ const TimeframeForm = ({ register, errors }: IProps) => {
       </Fieldset>
 
       <Select
-      className="spacer"
-        {...register("hendelsesfakta.tid.tidstype", { required: true })}
+        className="spacer"
+        {...register('hendelsesfakta.tid.tidstype', { required: true })}
         error={
-          errors?.hendelsesfakta?.tid?.tidstype && "Dette feltet er påkrevd"
+          errors?.hendelsesfakta?.tid?.tidstype && 'Dette feltet er påkrevd'
         }
         onChange={(e) => {
           setTimeframe(e.target.value);
@@ -79,16 +104,18 @@ const TimeframeForm = ({ register, errors }: IProps) => {
         <option value="Under redningsarbeid, vakthold eller redningsøvelse">
           Under redningsarbeid, vakthold eller redningsøvelse
         </option>
-        <option value="Annet" data-testid="timeframe-period-option-other">Annet</option>
+        <option value="Annet" data-testid="timeframe-period-option-other">
+          Annet
+        </option>
       </Select>
 
-      {timeframe === "Annet" && (
+      {timeframe === 'Annet' && (
         <TextField
-        className="spacer"
-          {...register("hendelsesfakta.tid.tidstypeAnnet")}
+          className="spacer"
+          {...register('hendelsesfakta.tid.tidstypeAnnet')}
           error={
             errors?.hendelsesfakta?.tid?.tidstypeAnnet &&
-            "Dette feltet er påkrevd"
+            'Dette feltet er påkrevd'
           }
           label="Annet"
           data-testid="timeframe-period-option-other-text"
