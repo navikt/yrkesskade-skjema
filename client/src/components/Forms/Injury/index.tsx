@@ -56,7 +56,7 @@ const InjuryForm = ({ register, errors }: IProps) => {
         )}
       </Select>
 
-      <button>Legg til flere skader</button>
+      {/* <button>Legg til flere skader</button> */}
 
       <RadioGroup legend="Har lege blitt kontaktet?" error={
           errors?.skade?.legeKontaktet &&

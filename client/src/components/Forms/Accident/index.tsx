@@ -1,5 +1,6 @@
 import { Select } from "@navikt/ds-react";
 import { accidentType, accidentBackground } from "../../../assets/injuryEnums";
+import alvorlighetsgrad from '../../../assets/alvorlighetsgrad';
 
 interface IProps {
   register: any;
@@ -21,7 +22,13 @@ const AccidentForm = ({ register, errors }: IProps) => {
         data-testid="accident-severity-options"
       >
         <option value="">Velg</option>
-        <option value="Veldig">Veldig</option>
+        {alvorlighetsgrad.map((title, index) => {
+          return (
+            <option key={index} value={title.value}>
+              {title.label}
+            </option>
+          );
+        })}
       </Select>
 
       <Select

@@ -148,35 +148,17 @@ const App = () => {
                     />
                   }
                 />
-                {/* {steps.currentStep >= 2 && steps.currentStep <= 6 && (
-                <Route
-                  index
-                  element={
-                    <Home
-                      passFormData={setFormdata}
-                      steps={steps}
-                      increaseStep={increaseStep}
-                      decreaseStep={decreaseStep}
-                    />
-                  }
-                />
-              )} */}
-                {/* {steps.currentStep === 7 && ( */}
                 <Route
                   path="oppsumering"
                   element={
                     <Summary
-                      // data={formdata}
                       steps={steps}
                       increaseStep={increaseStep}
                       decreaseStep={decreaseStep}
                     />
                   }
                 />
-                {/* )}
-              {steps.currentStep === 8 && ( */}
-                <Route path="kvittering" element={<Receipt />} />
-                {/* )} */}
+                <Route path="kvittering" element={<Receipt steps={steps}/>} />
                 <Route path="feilmelding" element={<Error />} />
               </Route>
             </Route>

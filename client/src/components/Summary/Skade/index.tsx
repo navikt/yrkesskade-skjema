@@ -1,34 +1,29 @@
-import { isNil } from "ramda";
-import { Label,BodyShort } from "@navikt/ds-react";
+// import { isNil } from "ramda";
+import { Label,BodyShort, BodyLong } from "@navikt/ds-react";
 interface IProps {
-  skade: any;
+  data: any;
 }
-const SkadeSummary = ({ skade }: IProps) => {
-  console.log(skade);
-  if (!isNil(skade)) {
+const SkadeSummary = ({ data }: IProps) => {
     return (
         <div className="answerOuterContainer">
           <div className="answerContainer">
-            <Label>Hvor alvorlig var ulykken</Label>
-            <BodyShort>{skade.alvorlighetsgrad}</BodyShort>
+            <Label>Hvor på kroppen er skaden</Label>
+            <BodyShort>{data.skade.kroppsdelTabellD}</BodyShort>
           </div>
           <div className="answerContainer">
-            <Label>Hvor på kroppen er skaden?</Label>
-            <BodyShort>{skade.kroppsdelTabellD}</BodyShort>
+            <Label>Hva slags skade er det</Label>
+            <BodyShort>{data.skade.skadeartTabellC}</BodyShort>
           </div>
           <div className="answerContainer">
-            <Label>Hva slags type skade er det?</Label>
-            <BodyShort>{skade.skadeartTabellC}</BodyShort>
+            <Label>Har lege blitt kontaktet</Label>
+            <BodyShort>{data.skade.legeKontaktet}</BodyShort>
           </div>
           <div className="answerContainer">
-            <Label>Er lege kontaktet?</Label>
-            <BodyShort>{skade.legeKontaktet}</BodyShort>
+            <Label>Utfyllende beskrivelse</Label>
+            <BodyLong>{data.hendelsesfakta.utfyllendeBeskrivelse}</BodyLong>
           </div>
         </div>
     );
-  } else {
-    return null;
-  }
 }
 
 export default SkadeSummary;

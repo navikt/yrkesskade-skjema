@@ -36,17 +36,17 @@ app.get('/api/hello', (req, res) => {
 
 app.post(`/api/skademelding`, async (req: any, res: any) => {
   if (req.body) {
-    const { access_token } = await exchangeToken(req);
+    // const { access_token } = await exchangeToken(req);
     const response = await axios.post(
       'https://yrkesskade-melding-api.dev.intern.nav.no/api/midlertidig/skademeldinger',
       {
         skademelding: req.body,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${access_token}`,
+      //   },
+      // }
     );
     return res.json(response.data);
   } else {

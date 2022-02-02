@@ -6,13 +6,13 @@ import {
   Grid,
   Cell,
   Accordion,
-  BodyLong
+  BodyLong,
 } from '@navikt/ds-react';
 import SystemHeader from '../../components/SystemHeader';
-// import HendelsesfaktaSummary from '../../components/Summary/Hendelsesfakta';
-// import InnmelderSummary from '../../components/Summary/Innmelder';
-// import SkadelidtSummary from '../../components/Summary/Skadelidt';
-// import SkadeSummary from '../../components/Summary/Skade';
+import TidsromSummary from '../../components/Summary/Tidsrom';
+import SkadelidtSummary from '../../components/Summary/Skadelidt';
+import UlykkeSummary from '../../components/Summary/Ulykke';
+import SkadeSummary from '../../components/Summary/Skade';
 import { useNavigate } from 'react-router-dom';
 // import getTexts from '../../utils/getTexts.js';
 import axios from 'axios';
@@ -31,12 +31,13 @@ interface IProps {
 }
 const Summary = ({ steps, increaseStep, decreaseStep }: IProps) => {
   const { state } = useStateMachine({ formUpdateAction });
-  console.log(state);
+  const data = state;
   const navigate = useNavigate();
   const handleSending = async () => {
     try {
-      await axios.post('/api/skademelding', { state });
+      await axios.post('/api/skademelding', { data });
       increaseStep();
+      navigate('/yrkesskade/skjema/kvittering');
     } catch {
       navigate('/yrkesskade/skjema/feilmelding');
     }
@@ -47,51 +48,47 @@ const Summary = ({ steps, increaseStep, decreaseStep }: IProps) => {
       <Grid>
         <Cell xs={12} lg={2}></Cell>
         <Cell xs={12} lg={5}>
-        <Heading
-                size="2xlarge"
-                className="pageNumberTitle spacer"
-                data-number="7"
-              >
-                Oppsumering
-              </Heading>
-              <Heading
-                size="large"
-                className="spacer"
-              >
-                Undertittel
-              </Heading>
-              <BodyLong className="spacer">
-              Les gjennom oppsummeringen før du sender inn innmeldingen. Hvis du trenger å gjøre endringer, kan du gjøre det/gå tilbake.
-              </BodyLong>
+          <Heading
+            size="2xlarge"
+            className="pageNumberTitle spacer"
+            data-number="7"
+          >
+            Oppsumering
+          </Heading>
+          <Heading size="large" className="spacer">
+            Undertittel
+          </Heading>
+          <BodyLong className="spacer">
+            Les gjennom oppsummeringen før du sender inn innmeldingen. Hvis du
+            trenger å gjøre endringer, kan du gjøre det/gå tilbake.
+          </BodyLong>
           <Accordion className="spacer">
-          <Accordion.Item>
+            <Accordion.Item>
               <Accordion.Header>Om deg</Accordion.Header>
-              <Accordion.Content>
-                Foreløpig tom
-              </Accordion.Content>
+              <Accordion.Content>Foreløpig tom</Accordion.Content>
             </Accordion.Item>
             <Accordion.Item>
               <Accordion.Header>Tid og sted</Accordion.Header>
               <Accordion.Content>
-                {/* <InnmelderSummary innmelder={data?.innmelder} /> */}
+                <TidsromSummary data={data} />
               </Accordion.Content>
             </Accordion.Item>
             <Accordion.Item>
               <Accordion.Header>Om den skadelidte</Accordion.Header>
               <Accordion.Content>
-                {/* <InnmelderSummary innmelder={data?.innmelder} /> */}
+                <SkadelidtSummary data={data} />
               </Accordion.Content>
             </Accordion.Item>
             <Accordion.Item>
               <Accordion.Header>Om ulykken</Accordion.Header>
               <Accordion.Content>
-                {/* <InnmelderSummary innmelder={data?.innmelder} /> */}
+                <UlykkeSummary data={data} />
               </Accordion.Content>
             </Accordion.Item>
             <Accordion.Item>
               <Accordion.Header>Om skaden</Accordion.Header>
               <Accordion.Content>
-                {/* <InnmelderSummary innmelder={data?.innmelder} /> */}
+                <SkadeSummary data={data} />
               </Accordion.Content>
             </Accordion.Item>
           </Accordion>
