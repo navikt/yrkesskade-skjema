@@ -54,7 +54,7 @@ const AccidentFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
               className="pageNumberTitle spacer"
               data-number="6"
             >
-              Om skaden
+              Om ulykken
             </Heading>
             <AccidentForm errors={errors} register={register} />
             <Button onClick={handleSubmit(onSubmit)}>Neste steg</Button>

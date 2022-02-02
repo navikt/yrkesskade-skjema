@@ -31,6 +31,7 @@ interface IProps {
 }
 const Summary = ({ steps, increaseStep, decreaseStep }: IProps) => {
   const { state } = useStateMachine({ formUpdateAction });
+  console.log(state);
   const data = state;
   const navigate = useNavigate();
   const handleSending = async () => {

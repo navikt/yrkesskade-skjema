@@ -1,58 +1,38 @@
-import { TextField, Select } from '@navikt/ds-react';
+import { TextField, Label } from '@navikt/ds-react';
+import { Controller } from 'react-hook-form';
 import stillingstitler from '../../../assets/stillingstitler';
-// import Select from 'react-select';
+import Select from 'react-select';
 interface IProps {
   register: any;
   errors: any;
+  setValue: (field: string, value: string) => void;
+  control: any;
 }
-const InjuredForm = ({ register, errors }: IProps) => {
-  // console.log(errors);
+const InjuredForm = ({ register, errors, setValue, control }: IProps) => {
   return (
     <>
-      {/* <Select
-        label="Hva er den skadeliteds rolle"
-        {...register("skadelidt.arbeidsforhold.rolletype", {
-          required: true,
-        })}
-        error={errors?.skadelidt?.arbeidsforhold?.rolletype && "Dette feltet er påkrevd"}
-        data-testid="injured-role-options"
-      >
-        <option value="">Velg</option>
-        <option value="Rolle">Rolle</option>
-      </Select> */}
-
-      <Select
-        label="Hva er skadeliteds stilling"
-        {...register('skadelidt.arbeidsforhold.stillingstittel', {
-          required: true,
-        })}
-        error={
-          errors?.skadelidt?.arbeidsforhold?.stillingstittel &&
-          'Dette feltet er påkrevd'
-        }
-        data-testid="injured-position"
-        className="spacer"
-      >
-        <option value="">Velg</option>
-        {stillingstitler.map((title, index) => {
-          return (
-            <option key={index} value={title.value}>
-              {title.label}
-            </option>
-          );
-        })}
-      </Select>
-      {/* <TextField
-        label="Hva er skadeliteds stilling"
-        {...register("skadelidt.arbeidsforhold.stillingstittel", {
-          required: true,
-        })}
-        error={errors?.skadelidt?.arbeidsforhold?.stillingstittel && "Dette feltet er påkrevd"}
-        data-testid="injured-position"
-      /> */}
+      <div>
+        <Label>Hva er den skadeliteds rolle</Label>
+        <Controller
+          name="skadelidt.arbeidsforhold.stillingstittel"
+          // isClearable
+          control={control}
+          render={({
+            field: { onChange, onBlur, value, name, ref },
+            fieldState: { invalid, isTouched, isDirty, error },
+            formState,
+          }) => (
+            <Select
+              onBlur={onBlur}
+              onChange={(val) => onChange(val?.value)}
+              options={stillingstitler}
+            />
+          )}
+        />
+      </div>
 
       <TextField
-      className="spacer"
+        className="spacer"
         {...register('skadelidt.foedselsnummer', {
           required: true,
           minLength: 11,
