@@ -12,7 +12,7 @@ const InjuredForm = ({ register, errors, setValue, control }: IProps) => {
   return (
     <>
       <div>
-        <Label>Hva er den skadeliteds rolle</Label>
+        <Label>Hva er den skadeliteds stilling</Label>
         <Controller
           name="skadelidt.arbeidsforhold.stillingstittel"
           // isClearable

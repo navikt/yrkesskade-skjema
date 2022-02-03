@@ -25,14 +25,6 @@ const TimeframeForm = ({ register, errors, control }: IProps) => {
   return (
     <>
       <Fieldset legend="Når skjedde ulykken som skal meldes?">
-        {/* <TextField
-          {...register("hendelsesfakta.tid.dato", { required: true })}
-          error={errors?.hendelsesfakta?.tid?.dato && "Dette feltet er påkrevd"}
-          label="Dato for ulykken"
-          description="DD.MM.ÅÅÅÅ"
-          data-testid="timeframe-when-date"
-          className="spacer"
-        /> */}
         <div className="spacer">
           <Label>Dato for ulykken</Label>
           <Controller
