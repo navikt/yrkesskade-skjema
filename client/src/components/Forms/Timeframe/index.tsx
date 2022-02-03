@@ -30,6 +30,7 @@ const TimeframeForm = ({ register, errors, control }: IProps) => {
           <Controller
             name="hendelsesfakta.tid.dato"
             control={control}
+            rules={{ required: true }}
             render={({ field }) => (
               <DatePicker
                 className="navds-text-field__input navds-body-short navds-body-medium"
@@ -41,6 +42,7 @@ const TimeframeForm = ({ register, errors, control }: IProps) => {
               />
             )}
           />
+          {errors?.hendelsesfakta?.tid?.dato && <span className="navds-error-message navds-error-message--medium navds-label">Dette feltet er påkrevd</span>}
         </div>
 
         <TextField

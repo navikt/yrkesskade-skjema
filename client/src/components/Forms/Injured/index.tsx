@@ -2,21 +2,22 @@ import { TextField, Label } from '@navikt/ds-react';
 import { Controller } from 'react-hook-form';
 import stillingstitler from '../../../assets/stillingstitler';
 import Select from 'react-select';
+import validator from '@navikt/fnrvalidator';
 interface IProps {
   register: any;
   errors: any;
-  setValue: (field: string, value: string) => void;
   control: any;
+  setError: any;
 }
-const InjuredForm = ({ register, errors, setValue, control }: IProps) => {
+const InjuredForm = ({ register, errors, control, setError }: IProps) => {
   return (
     <>
       <div>
         <Label>Hva er den skadeliteds stilling</Label>
         <Controller
           name="skadelidt.arbeidsforhold.stillingstittel"
-          // isClearable
           control={control}
+          rules={{ required: 'Dette feltet er påkrevd' }}
           render={({
             field: { onChange, onBlur, value, name, ref },
             fieldState: { invalid, isTouched, isDirty, error },
@@ -29,18 +30,34 @@ const InjuredForm = ({ register, errors, setValue, control }: IProps) => {
             />
           )}
         />
+        {errors?.skadelidt?.arbeidsforhold?.stillingstittel && (
+          <span className="navds-error-message navds-error-message--medium navds-label">
+            {errors.skadelidt.arbeidsforhold.stillingstittel.message}
+          </span>
+        )}
       </div>
 
       <TextField
         className="spacer"
         {...register('skadelidt.foedselsnummer', {
-          required: true,
+          required: 'Dette feltet er påkrevd',
           minLength: 11,
           maxLength: 11,
+          validate: (value: any) => {
+            const validationResult: any = validator.idnr(value);
+            if (validationResult.status === 'invalid') {
+              return 'Fyll ut et gyldig fødselsnummer';
+            } else {
+              return true;
+            }
+          },
         })}
         label="Fyll ut fødselsnummer på den skadelidte"
         type="number"
-        error={errors?.skadelidt?.foedselsnummer && 'Dette feltet er påkrevd'}
+        error={
+          errors?.skadelidt?.foedselsnummer &&
+          errors.skadelidt.foedselsnummer.message
+        }
         data-testid="injured-id-number"
       />
     </>

@@ -30,8 +30,8 @@ const InjuredFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
-    setValue,
     control
   } = useForm();
 
@@ -58,7 +58,7 @@ const InjuredFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
             >
               Om den skadelidte
             </Heading>
-            <InjuredForm errors={errors} register={register} setValue={setValue} control={control}/>
+            <InjuredForm errors={errors} register={register} setError={setError} control={control}/>
             <Button onClick={handleSubmit(onSubmit)}>Neste steg</Button>
           </div>
         </Cell>
