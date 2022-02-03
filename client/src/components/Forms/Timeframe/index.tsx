@@ -5,12 +5,15 @@ import {
   Fieldset,
   RadioGroup,
   Radio,
-  Label
+  Label,
 } from '@navikt/ds-react';
-import DatePicker from 'react-datepicker';
+import DatePicker, { registerLocale }from 'react-datepicker';
+import nb from "date-fns/locale/nb"
 import { Controller } from 'react-hook-form';
 
-import "./timeframeForm.less";
+import './timeframeForm.less';
+
+registerLocale("nb", nb);
 
 interface IProps {
   register: any;
@@ -31,18 +34,21 @@ const TimeframeForm = ({ register, errors, control }: IProps) => {
           className="spacer"
         /> */}
         <div className="spacer">
-        <Label>Dato for ulykken</Label>
-        <Controller
-          name="hendelsesfakta.tid.dato"
-          control={control}
-          render={({ field }) => (
-            <DatePicker
-            className="navds-text-field__input navds-body-short navds-body-medium"
-              onChange={(date) => field.onChange(date)}
-              selected={field.value}
-            />
-         )}
-        />
+          <Label>Dato for ulykken</Label>
+          <Controller
+            name="hendelsesfakta.tid.dato"
+            control={control}
+            render={({ field }) => (
+              <DatePicker
+                className="navds-text-field__input navds-body-short navds-body-medium"
+                onChange={(date) => field.onChange(date)}
+                selected={field.value}
+                maxDate={new Date()}
+                locale="nb"
+                dateFormat="dd.MM.yyyy"
+              />
+            )}
+          />
         </div>
 
         <TextField
