@@ -3,7 +3,7 @@ import config from './config';
 
 export const redirectTilLogin = async (req, res): Promise<void> => {
   const nodeEnv = process.env.NODE_ENV;
-  if (nodeEnv === 'local' || nodeEnv === 'labs-gcp') {
+  if (nodeEnv === 'local' || nodeEnv === 'development' || nodeEnv === 'labs-gcp') {
     await redirectTilMock(req, res);
   } else {
     await redirectTilOauth(req, res);

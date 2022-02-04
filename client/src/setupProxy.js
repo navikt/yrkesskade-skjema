@@ -1,9 +1,12 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 module.exports = function (app) {
+
+  const host = process.env.HOST || 'localhost';
+
   app.use(
     '/yrkesskade/redirect-til-login',
     createProxyMiddleware({
-      target: 'http://localhost:3000/',
+      target: `http://${host}:3000/`,
       changeOrigin: true
     })
   )
@@ -11,7 +14,7 @@ module.exports = function (app) {
   app.use(
     '/yrkesskade/success',
     createProxyMiddleware({
-      target: 'http://localhost:3000/',
+      target: `http://${host}:3000/`,
       changeOrigin: true
     })
   )
@@ -19,7 +22,7 @@ module.exports = function (app) {
   app.use(
     '/yrkesskade/innlogget',
     createProxyMiddleware({
-      target: 'http://localhost:3000/',
+      target: `http://${host}:3000/`,
       changeOrigin: true
     })
   )
@@ -27,7 +30,7 @@ module.exports = function (app) {
   app.use(
     '/yrkesskade/toggles',
     createProxyMiddleware({
-      target: 'http://localhost:3000/',
+      target: `http://${host}:3000/`,
       changeOrigin: true
     })
   )
@@ -35,7 +38,7 @@ module.exports = function (app) {
   app.use(
     '/api',
     createProxyMiddleware({
-      target: 'http://localhost:3000/',
+      target: `http://${host}:3000/`,
       changeOrigin: true
     })
   )

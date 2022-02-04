@@ -1,11 +1,11 @@
 FROM node:16-alpine
 
-ENV NODE_ENV local
+ENV NODE_ENV development
 
-COPY . .
+VOLUME ["app"]
 
-COPY /build ./build
+WORKDIR /app
+
+EXPOSE 3001
 
 CMD ["yarn", "dev"]
-
-EXPOSE 3000 3001
