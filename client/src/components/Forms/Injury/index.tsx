@@ -1,25 +1,22 @@
-import { useState } from "react";
-import { Select, RadioGroup, Radio, Textarea } from "@navikt/ds-react";
-import { injuredBodypart, injuryType } from "../../../assets/injuryEnums";
+import { useState } from 'react';
+import { Select, RadioGroup, Textarea } from '@navikt/ds-react';
+import { injuredBodypart, injuryType } from '../../../assets/injuryEnums';
 
 interface IProps {
   register: any;
   errors: any;
 }
 const InjuryForm = ({ register, errors }: IProps) => {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState('');
   return (
     <>
       <Select
-      className="spacer"
+        className="spacer"
         label="Hvor på kroppen er skaden"
-        {...register("skade.kroppsdelTabellD", {
+        {...register('skade.kroppsdelTabellD', {
           required: true,
         })}
-        error={
-          errors?.skade?.kroppsdelTabellD &&
-          "Dette feltet er påkrevd"
-        }
+        error={errors?.skade?.kroppsdelTabellD && 'Dette feltet er påkrevd'}
         data-testid="injury-body-location-options"
       >
         <option value="">Velg</option>
@@ -34,16 +31,15 @@ const InjuryForm = ({ register, errors }: IProps) => {
         })}
       </Select>
 
-      <Select label="Hva slags skade er det"  {...register("skade.skadeartTabellC", {
+      <Select
+        label="Hva slags skade er det"
+        {...register('skade.skadeartTabellC', {
           required: true,
         })}
         className="spacer"
-        error={
-          errors?.skade?.skadeartTabellC &&
-          "Dette feltet er påkrevd"
-        }
+        error={errors?.skade?.skadeartTabellC && 'Dette feltet er påkrevd'}
         data-testid="injury-type-options"
-        >
+      >
         <option value="">Velg</option>
         {(Object.keys(injuryType) as Array<keyof typeof injuryType>).map(
           (key) => {
@@ -58,20 +54,75 @@ const InjuryForm = ({ register, errors }: IProps) => {
 
       {/* <button>Legg til flere skader</button> */}
 
-      <RadioGroup legend="Har lege blitt kontaktet?" error={
-          errors?.skade?.legeKontaktet &&
-          "Dette feltet er påkrevd"
+      <RadioGroup
+        legend="Har lege blitt kontaktet?"
+        error={
+          errors?.skade?.legeKontaktet && errors?.skade?.legeKontaktet.message
         }
-        className="spacer">
-        <Radio {...register("skade.legeKontaktet", {required: true })} value="Ja" data-testid="injury-medical-contacted-yes-option">Ja</Radio>
-        <Radio {...register("skade.legeKontaktet", {required: true })} value="Nei" data-testid="injury-medical-contacted-no-option">Nei</Radio>
-        <Radio {...register("skade.legeKontaktet", {required: true })} value="Vet ikke" data-testid="injury-medical-contacted-unknown-option">Vet ikke</Radio>
+        className="spacer"
+      >
+        <div className="navds-radio navds-radio--medium">
+          <input
+            type="radio"
+            className="navds-radio__input"
+            {...register('skade.legeKontaktet', {
+              required: 'Dette feltet er påkrevd',
+            })}
+            value="Ja"
+            data-testid="injury-medical-contacted-yes-option"
+            id="lege-ja"
+          />
+          <label htmlFor="lege-ja" className="navds-radio__label">
+            Ja
+          </label>
+        </div>
+        <div className="navds-radio navds-radio--medium">
+          <input
+            type="radio"
+            className="navds-radio__input"
+            {...register('skade.legeKontaktet', {
+              required: 'Dette feltet er påkrevd',
+            })}
+            value="Nei"
+            data-testid="injury-medical-contacted-no-option"
+            id="lege-nei"
+          />
+          <label htmlFor="lege-nei" className="navds-radio__label">
+            Nei
+          </label>
+        </div>
+        <div className="navds-radio navds-radio--medium">
+          <input
+            type="radio"
+            className="navds-radio__input"
+            {...register('skade.legeKontaktet', {
+              required: 'Dette feltet er påkrevd',
+            })}
+            value="Vet ikke"
+            data-testid="injury-medical-contacted-unknown-option"
+            id="lege-unknown"
+          />
+          <label htmlFor="lege-unknown" className="navds-radio__label">
+            Vet ikke
+          </label>
+        </div>
+        {/* <Radio
+          {...register('skade.legeKontaktet', {
+            required: 'Dette feltet er påkrevd',
+          })}
+          value="Ja"
+          data-testid="injury-medical-contacted-yes-option"
+        >
+          Ja
+        </Radio>
+        <Radio {...register("skade.legeKontaktet", {required: 'Dette feltet er påkrevd' })} value="Nei" data-testid="injury-medical-contacted-no-option">Nei</Radio>
+        <Radio {...register("skade.legeKontaktet", {required: 'Dette feltet er påkrevd' })} value="Vet ikke" data-testid="injury-medical-contacted-unknown-option">Vet ikke</Radio> */}
       </RadioGroup>
       <Textarea
-      className="spacer"
+        className="spacer"
         label="Utfyllende beskrivelse"
         description={<TextareaDescription />}
-        {...register("hendelsesfakta.utfyllendeBeskrivelse")}
+        {...register('hendelsesfakta.utfyllendeBeskrivelse')}
         value={value}
         maxLength={1000}
         onChange={(e) => setValue(e.target.value)}

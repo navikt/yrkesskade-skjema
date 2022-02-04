@@ -4,16 +4,15 @@ import {
   TextField,
   Fieldset,
   RadioGroup,
-  Radio,
   Label,
 } from '@navikt/ds-react';
-import DatePicker, { registerLocale }from 'react-datepicker';
-import nb from "date-fns/locale/nb"
+import DatePicker, { registerLocale } from 'react-datepicker';
+import nb from 'date-fns/locale/nb';
 import { Controller } from 'react-hook-form';
 
 import './timeframeForm.less';
 
-registerLocale("nb", nb);
+registerLocale('nb', nb);
 
 interface IProps {
   register: any;
@@ -42,7 +41,11 @@ const TimeframeForm = ({ register, errors, control }: IProps) => {
               />
             )}
           />
-          {errors?.hendelsesfakta?.tid?.dato && <span className="navds-error-message navds-error-message--medium navds-label">Dette feltet er påkrevd</span>}
+          {errors?.hendelsesfakta?.tid?.dato && (
+            <span className="navds-error-message navds-error-message--medium navds-label">
+              Dette feltet er påkrevd
+            </span>
+          )}
         </div>
 
         <TextField
@@ -63,20 +66,42 @@ const TimeframeForm = ({ register, errors, control }: IProps) => {
             errors?.hendelsesfakta?.tid?.ukjent && 'Dette feltet er påkrevd'
           }
         >
-          <Radio
-            {...register('hendelsesfakta.tid.ukjent')}
-            value="Ukjent"
-            data-testid="timeframe-when-unknown"
-          >
-            Ukjent
-          </Radio>
-          <Radio
-            {...register('hendelsesfakta.tid.ukjent')}
-            value="Over en periode"
-            data-testid="timeframe-when-over-period"
-          >
-            Over en periode
-          </Radio>
+          <div className="navds-radio navds-radio--medium">
+            <input
+              type="radio"
+              className="navds-radio__input"
+              {...register('hendelsesfakta.tid.ukjent', {
+                required: 'Dette feltet er påkrevd',
+              })}
+              value="Ukjent"
+              data-testid="timeframe-when-unknown"
+              id="timeframe-when-unknown"
+            />
+            <label
+              htmlFor="timeframe-when-unknown"
+              className="navds-radio__label"
+            >
+              Ukjent
+            </label>
+          </div>
+          <div className="navds-radio navds-radio--medium">
+            <input
+              type="radio"
+              className="navds-radio__input"
+              {...register('hendelsesfakta.tid.ukjent', {
+                required: 'Dette feltet er påkrevd',
+              })}
+              value="Over en periode"
+              data-testid="timeframe-when-over-period"
+              id="timeframe-when-over-period"
+            />
+            <label
+              htmlFor="timeframe-when-over-period"
+              className="navds-radio__label"
+            >
+              Over en periode
+            </label>
+          </div>
         </RadioGroup>
       </Fieldset>
 
