@@ -6,11 +6,16 @@ import {
   InnloggetStatus,
 } from '../utils/autentisering';
 import axios from 'axios';
+import { Brukerinfo } from '../types/brukerinfo';
 
 const [InnloggetProvider, useInnloggetContext] = createUseContext(() => {
   const [innloggetStatus, setInnloggetStatus] = useState<InnloggetStatus>(
     InnloggetStatus.IKKE_VERIFISERT
   );
+
+  const [innloggetBruker, setInnloggetBruker] = useState<Brukerinfo|null>(
+    null
+  )
 
   autentiseringsInterceptor();
 
@@ -27,18 +32,24 @@ const [InnloggetProvider, useInnloggetContext] = createUseContext(() => {
       .get(`/yrkesskade/innlogget`)
       .then((ressurs) => {
         if (ressurs.status === 200) {
-          setInnloggetStatus(InnloggetStatus.INNLOGGET);
+          axios.get<Brukerinfo>(`/api/v1/brukerinfo`).then((response) => {
+            setInnloggetBruker(response.data);
+            setInnloggetStatus(InnloggetStatus.INNLOGGET);
+          });
         } else {
           setInnloggetStatus(InnloggetStatus.FEILET);
+          setInnloggetBruker(null);
         }
       })
       .catch((error) => {
         setInnloggetStatus(InnloggetStatus.FEILET);
+        setInnloggetBruker(null);
       });
   };
 
   return {
     innloggetStatus,
+    innloggetBruker,
   };
 });
 
