@@ -17,7 +17,7 @@ describe('Skjema innsending', (): void => {
     cy.visit('');
     cy.location().should('to.be', 'http://localhost:3001/yrkesskade/')
 
-    network.intercept(endpointUrls.innlogget, 'innlogget.json').as('getInnlogget');
+    network.intercept(endpointUrls.brukerinfo, 'brukerinfo.json').as('getInnlogget');
     network.intercept(endpointUrls.skademelding, 'skademelding.json').as('postSkademelding');
   });
 
@@ -26,6 +26,8 @@ describe('Skjema innsending', (): void => {
     // vent til innlogget sjekk er fullført
     cy.wait('@getInnlogget');
 
+    // Virksomhetsvelger skal være synlig for arbeidsgiver
+    info.virksomhetsvelger().should('be.visible');
     // start innmelding
     info.startInnmelding().click();
 

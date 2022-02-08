@@ -15,6 +15,8 @@ import { StateMachineProvider, createStore } from 'little-state-machine';
 
 import { InnloggetProvider } from './context/InnloggetContext';
 import { FeatureTogglesProvider } from './context/FeatureTogglesContext';
+import { autentiseringsInterceptor } from './utils/autentisering';
+import { SelectedCompanyProvider } from './context/SelectedCompanyContext';
 
 const App = () => {
   createStore({}, { name: 'formdata'});
@@ -86,9 +88,12 @@ const App = () => {
     setSteps(newSteps);
   };
 
+  autentiseringsInterceptor();
+
   return (
     <InnloggetProvider>
       <FeatureTogglesProvider>
+        <SelectedCompanyProvider>
         <StateMachineProvider>
           <Routes>
             <Route path="yrkesskade/">
@@ -164,7 +169,8 @@ const App = () => {
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </StateMachineProvider>
+          </StateMachineProvider>
+        </SelectedCompanyProvider>
       </FeatureTogglesProvider>
     </InnloggetProvider>
   );

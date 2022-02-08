@@ -38,6 +38,7 @@ const hentBrukerinfo = async (req,res,next) => {
       req.data = response.data;
     }
   } catch (error) {
+    // tslint:disable-next-line:no-console
     console.log(error);
   }
 

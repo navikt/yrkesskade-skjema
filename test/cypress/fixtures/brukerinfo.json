@@ -1,0 +1,197 @@
+{
+  "fnr": "12345678910",
+  "organisasjoner": [
+    {
+      "organisasjonsnummer": "811076422",
+      "navn": "BALLSTAD OG EIDSLANDET",
+      "naeringskode": null,
+      "organisasjonsform": "BEDR",
+      "status": "Active",
+      "type": "Business"
+    },
+    {
+      "organisasjonsnummer": "811076732",
+      "navn": "BALLSTAD OG HAMARØY",
+      "naeringskode": null,
+      "organisasjonsform": "BEDR",
+      "status": "Active",
+      "type": "Business"
+    },
+    {
+      "organisasjonsnummer": "811076112",
+      "navn": "BALLSTAD OG HORTEN",
+      "naeringskode": null,
+      "organisasjonsform": "AS",
+      "status": "Active",
+      "type": "Enterprise"
+    },
+    {
+      "organisasjonsnummer": "811076902",
+      "navn": "BALLSTAD OG SÆTERVIK",
+      "naeringskode": null,
+      "organisasjonsform": "BEDR",
+      "status": "Active",
+      "type": "Business"
+    },
+    {
+      "organisasjonsnummer": "810514442",
+      "navn": "BAREKSTAD OG YTTERVÅG REGNSKAP",
+      "naeringskode": null,
+      "organisasjonsform": "AS",
+      "status": "Active",
+      "type": "Enterprise"
+    },
+    {
+      "organisasjonsnummer": "910998250",
+      "navn": "BIRI OG VANNAREID REVISJON",
+      "naeringskode": null,
+      "organisasjonsform": "AS",
+      "status": "Active",
+      "type": "Enterprise"
+    },
+    {
+      "organisasjonsnummer": "910521551",
+      "navn": "EIDSNES OG AUSTRE ÅMØY",
+      "naeringskode": null,
+      "organisasjonsform": "BEDR",
+      "status": "Active",
+      "type": "Business"
+    },
+    {
+      "organisasjonsnummer": null,
+      "navn": "ERLING ENGENES",
+      "naeringskode": null,
+      "organisasjonsform": null,
+      "status": null,
+      "type": "Person"
+    },
+    {
+      "organisasjonsnummer": "910223208",
+      "navn": "FRØNNINGEN OG LAUVSTAD REVISJON",
+      "naeringskode": null,
+      "organisasjonsform": "AS",
+      "status": "Active",
+      "type": "Enterprise"
+    },
+    {
+      "organisasjonsnummer": "810989572",
+      "navn": "HARSTAD OG TYSSEDAL REVISJON",
+      "naeringskode": null,
+      "organisasjonsform": "AS",
+      "status": "Active",
+      "type": "Enterprise"
+    },
+    {
+      "organisasjonsnummer": "910646176",
+      "navn": "HAVNNES OG ÅGSKARDET",
+      "naeringskode": null,
+      "organisasjonsform": "AS",
+      "status": "Active",
+      "type": "Enterprise"
+    },
+    {
+      "organisasjonsnummer": "910175777",
+      "navn": "KJØLLEFJORD OG ØKSFJORD",
+      "naeringskode": null,
+      "organisasjonsform": "AS",
+      "status": "Active",
+      "type": "Enterprise"
+    },
+    {
+      "organisasjonsnummer": "910514318",
+      "navn": "KYSTBASEN ÅGOTNES OG ILSENG REGNSKAP",
+      "naeringskode": null,
+      "organisasjonsform": "BEDR",
+      "status": "Active",
+      "type": "Business"
+    },
+    {
+      "organisasjonsnummer": "910804456",
+      "navn": "RAMNES OG TYSSEDAL REGNSKAP",
+      "naeringskode": null,
+      "organisasjonsform": "BEDR",
+      "status": "Active",
+      "type": "Business"
+    },
+    {
+      "organisasjonsnummer": null,
+      "navn": "RODAL LOUIS",
+      "naeringskode": null,
+      "organisasjonsform": null,
+      "status": null,
+      "type": "Person"
+    },
+    {
+      "organisasjonsnummer": "910793829",
+      "navn": "SANDVÆR OG HOV",
+      "naeringskode": null,
+      "organisasjonsform": "BEDR",
+      "status": "Active",
+      "type": "Business"
+    },
+    {
+      "organisasjonsnummer": "910720120",
+      "navn": "SKOTSELV OG HJELSET",
+      "naeringskode": "52.292",
+      "organisasjonsform": "AS",
+      "status": "Active",
+      "type": "Enterprise"
+    },
+    {
+      "organisasjonsnummer": "810771852",
+      "navn": "STOL PÅ TORE",
+      "naeringskode": null,
+      "organisasjonsform": "AS",
+      "status": "Active",
+      "type": "Enterprise"
+    },
+    {
+      "organisasjonsnummer": "910167200",
+      "navn": "SØR-HIDLE OG STRAUMGJERDE",
+      "naeringskode": null,
+      "organisasjonsform": "AS",
+      "status": "Active",
+      "type": "Enterprise"
+    },
+    {
+      "organisasjonsnummer": "910989626",
+      "navn": "TROMVIK OG SPARBU REVISJON",
+      "naeringskode": null,
+      "organisasjonsform": "BEDR",
+      "status": "Active",
+      "type": "Business"
+    },
+    {
+      "organisasjonsnummer": "910820834",
+      "navn": "Tore sitt testselskap",
+      "naeringskode": null,
+      "organisasjonsform": "AS",
+      "status": "Active",
+      "type": "Enterprise"
+    },
+    {
+      "organisasjonsnummer": "910521616",
+      "navn": "UGGDAL OG STEINSDALEN",
+      "naeringskode": null,
+      "organisasjonsform": "BEDR",
+      "status": "Active",
+      "type": "Business"
+    },
+    {
+      "organisasjonsnummer": "810989602",
+      "navn": "VALESTRANDSFOSSEN OG SØRLI REVISJON",
+      "naeringskode": null,
+      "organisasjonsform": "BEDR",
+      "status": "Active",
+      "type": "Business"
+    },
+    {
+      "organisasjonsnummer": "910989642",
+      "navn": "VESTBY OG LOEN REVISJON",
+      "naeringskode": null,
+      "organisasjonsform": "BEDR",
+      "status": "Active",
+      "type": "Business"
+    }
+  ]
+}

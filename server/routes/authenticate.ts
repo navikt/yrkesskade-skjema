@@ -1,7 +1,6 @@
 import { Express } from 'express';
 import { redirectTilLogin } from '../autentisering';
 import config from '../config';
-import { konfigurerAllFeatureTogglesEndpoint } from './feature-toggles';
 
 export const configureAuthenticationAndVerification = (app: Express) => {
 

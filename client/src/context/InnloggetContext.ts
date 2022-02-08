@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 
 import createUseContext from 'constate';
 import {
-  autentiseringsInterceptor,
   InnloggetStatus,
 } from '../utils/autentisering';
 import axios from 'axios';
@@ -17,25 +16,22 @@ const [InnloggetProvider, useInnloggetContext] = createUseContext(() => {
     null
   )
 
-  autentiseringsInterceptor();
-
   useEffect(() => {
     if (innloggetStatus === InnloggetStatus.IKKE_VERIFISERT) {
-      verifiserAtBrukerErAutentisert(setInnloggetStatus);
+      verifiserAtBrukerErAutentisert(setInnloggetStatus, setInnloggetBruker);
     }
-  }, [innloggetStatus]);
+  }, [innloggetStatus, innloggetBruker]);
 
   const verifiserAtBrukerErAutentisert = (
-    setInnloggetStatus: (innloggetStatus: InnloggetStatus) => void
+    setInnloggetStatus: (innloggetStatus: InnloggetStatus) => void,
+    setInnloggetBruker: (innloggetBruker: Brukerinfo | null) => void
   ) => {
     return axios
-      .get(`/yrkesskade/innlogget`)
+      .get<Brukerinfo>(`/api/v1/brukerinfo`)
       .then((ressurs) => {
         if (ressurs.status === 200) {
-          axios.get<Brukerinfo>(`/api/v1/brukerinfo`).then((response) => {
-            setInnloggetBruker(response.data);
+            setInnloggetBruker(ressurs.data);
             setInnloggetStatus(InnloggetStatus.INNLOGGET);
-          });
         } else {
           setInnloggetStatus(InnloggetStatus.FEILET);
           setInnloggetBruker(null);
