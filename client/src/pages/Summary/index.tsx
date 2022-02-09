@@ -36,7 +36,7 @@ const Summary = ({ steps, increaseStep, decreaseStep }: IProps) => {
   const navigate = useNavigate();
   const handleSending = async () => {
     try {
-      await axios.post('/api/skademelding', { data });
+      await axios.post('/api/midlertidig/skademeldinger', { data });
       increaseStep();
       navigate('/yrkesskade/skjema/kvittering');
     } catch {

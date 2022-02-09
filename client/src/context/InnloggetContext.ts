@@ -2,43 +2,50 @@ import { useEffect, useState } from 'react';
 
 import createUseContext from 'constate';
 import {
-  autentiseringsInterceptor,
   InnloggetStatus,
 } from '../utils/autentisering';
 import axios from 'axios';
+import { Brukerinfo } from '../types/brukerinfo';
 
 const [InnloggetProvider, useInnloggetContext] = createUseContext(() => {
   const [innloggetStatus, setInnloggetStatus] = useState<InnloggetStatus>(
     InnloggetStatus.IKKE_VERIFISERT
   );
 
-  autentiseringsInterceptor();
+  const [innloggetBruker, setInnloggetBruker] = useState<Brukerinfo|null>(
+    null
+  )
 
   useEffect(() => {
     if (innloggetStatus === InnloggetStatus.IKKE_VERIFISERT) {
-      verifiserAtBrukerErAutentisert(setInnloggetStatus);
+      verifiserAtBrukerErAutentisert(setInnloggetStatus, setInnloggetBruker);
     }
-  }, [innloggetStatus]);
+  }, [innloggetStatus, innloggetBruker]);
 
   const verifiserAtBrukerErAutentisert = (
-    setInnloggetStatus: (innloggetStatus: InnloggetStatus) => void
+    setInnloggetStatus: (innloggetStatus: InnloggetStatus) => void,
+    setInnloggetBruker: (innloggetBruker: Brukerinfo | null) => void
   ) => {
     return axios
-      .get(`/yrkesskade/innlogget`)
+      .get<Brukerinfo>(`/api/v1/brukerinfo`)
       .then((ressurs) => {
         if (ressurs.status === 200) {
-          setInnloggetStatus(InnloggetStatus.INNLOGGET);
+            setInnloggetBruker(ressurs.data);
+            setInnloggetStatus(InnloggetStatus.INNLOGGET);
         } else {
           setInnloggetStatus(InnloggetStatus.FEILET);
+          setInnloggetBruker(null);
         }
       })
       .catch((error) => {
         setInnloggetStatus(InnloggetStatus.FEILET);
+        setInnloggetBruker(null);
       });
   };
 
   return {
     innloggetStatus,
+    innloggetBruker,
   };
 });
 

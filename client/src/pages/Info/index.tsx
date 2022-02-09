@@ -14,6 +14,9 @@ import { useNavigate } from 'react-router-dom';
 import StepIndicator from '../../components/StepIndicator';
 
 import { ISteps } from '../../Interfaces/steps';
+import OrganisationSelect from '../../components/OrganisationSelect';
+import { useInnloggetContext } from '../../context/InnloggetContext';
+import { Organisasjon } from '../../types/brukerinfo';
 interface IProps {
   steps: ISteps;
   // updateStep: (data: { step: number; higher: Boolean }) => void;
@@ -26,6 +29,11 @@ const Info = ({ steps, increaseStep }: IProps) => {
     increaseStep();
     navigate('/yrkesskade/skjema/innmelder');
   };
+
+  const { innloggetBruker } = useInnloggetContext();
+
+  const onOrganisasjonChange = (organisasjon: Organisasjon) => {}
+
   return (
     <ContentContainer>
       <SystemHeader />
@@ -46,6 +54,11 @@ const Info = ({ steps, increaseStep }: IProps) => {
                 hva du er i gang med å søke om nå. Kort intro om hva du er i
                 gang med å søke om nå.{' '}
               </BodyLong>
+              {
+                innloggetBruker && (
+                  <OrganisationSelect organisasjoner={innloggetBruker.organisasjoner.filter((organisasjon) => organisasjon.status === 'Active')} onOrganisasjonChange={onOrganisasjonChange} data-testid="virksomhetsvelger" />
+                )
+              }
               <Link
                 className="spacer"
                 href="https://google.com"

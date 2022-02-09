@@ -14,6 +14,10 @@ export enum InnloggetStatus {
     FEILET,
 }
 
+export interface InnloggetBruker {
+  fnr: number;
+}
+
 export const autentiseringsInterceptor = () => {
     axios.interceptors.response.use(
         (response) => {
