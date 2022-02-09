@@ -26,8 +26,9 @@ const [InnloggetProvider, useInnloggetContext] = createUseContext(() => {
     setInnloggetStatus: (innloggetStatus: InnloggetStatus) => void,
     setInnloggetBruker: (innloggetBruker: Brukerinfo | null) => void
   ) => {
-    return axios
-      .get<Brukerinfo>(`/api/v1/brukerinfo`)
+    return axios.get('/yrkesskade/innlogget').then(ressurs => {
+      if (ressurs.status === 200) {
+      return axios.get<Brukerinfo>(`/api/v1/brukerinfo`)
       .then((ressurs) => {
         if (ressurs.status === 200) {
             setInnloggetBruker(ressurs.data);
@@ -41,6 +42,11 @@ const [InnloggetProvider, useInnloggetContext] = createUseContext(() => {
         setInnloggetStatus(InnloggetStatus.FEILET);
         setInnloggetBruker(null);
       });
+      } else {
+        setInnloggetStatus(InnloggetStatus.FEILET);
+        setInnloggetBruker(null);
+      }
+    })
   };
 
   return {

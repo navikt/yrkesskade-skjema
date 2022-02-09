@@ -19,8 +19,7 @@ export const tomAltinnOrganisasjon: Organisasjon = {
   type: '-'
 };
 
-const OrganisationSelect = (props: OrganisationSelectProps) => {
-  const onOrganisasjonChange = props.onOrganisasjonChange;
+const OrganisationSelect = ({organisasjoner, onOrganisasjonChange}: OrganisationSelectProps) => {
   const { selectedCompany, setSelectedCompany } = useSelectedCompany();
   const [erApen, setErApen] = useState(false);
   const [organisasjonIFokus, setOrganisasjonIFokus] = useState(tomAltinnOrganisasjon);
@@ -33,14 +32,14 @@ const OrganisationSelect = (props: OrganisationSelectProps) => {
   }, [onOrganisasjonChange, selectedCompany]);
 
   useEffect(() => {
-    setSelectedCompany(props.organisasjoner[0]);
-  }, [props.organisasjoner, setSelectedCompany]);
+    setSelectedCompany(organisasjoner[0]);
+  }, [organisasjoner, setSelectedCompany]);
 
   const showOrganisationSelect =
-    props.organisasjoner && props.organisasjoner?.length > 0;
+    organisasjoner && organisasjoner?.length > 0;
 
   return showOrganisationSelect ? (
-    <div aria-label="Velg virksomhet" className="" {...props}>
+    <div aria-label="Velg virksomhet" className="">
       <OrganisationButton erApen={erApen} setErApen={setErApen} />
       {erApen && (
         <div
@@ -54,7 +53,7 @@ const OrganisationSelect = (props: OrganisationSelectProps) => {
           <div className="dropdownmeny-elementer-wrapper">
             <div className={`dropdownmeny-elementer`}>
               <OrganisationDropdown
-                organisasjoner={props.organisasjoner}
+                organisasjoner={organisasjoner}
                 erApen={erApen}
                 setErApen={setErApen}
                 organisasjonIFokus={organisasjonIFokus}

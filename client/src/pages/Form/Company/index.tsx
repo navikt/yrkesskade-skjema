@@ -1,4 +1,3 @@
-import React from 'react';
 import CompanyForm from '../../../components/Forms/Company';
 import {
   ContentContainer,
@@ -19,7 +18,6 @@ import { useForm } from 'react-hook-form';
 import { useStateMachine } from 'little-state-machine';
 import formUpdateAction from '../../../State/formUpdateAction';
 import { useNavigate } from 'react-router-dom';
-
 interface IProps {
   steps: ISteps;
   decreaseStep: () => void;

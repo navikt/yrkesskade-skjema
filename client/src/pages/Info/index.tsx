@@ -32,7 +32,9 @@ const Info = ({ steps, increaseStep }: IProps) => {
 
   const { innloggetBruker } = useInnloggetContext();
 
-  const onOrganisasjonChange = (organisasjon: Organisasjon) => {}
+  const onOrganisasjonChange = (organisasjon: Organisasjon) => {
+    console.log('set adresse felter');
+  }
 
   return (
     <ContentContainer>
