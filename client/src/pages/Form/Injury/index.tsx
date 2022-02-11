@@ -55,7 +55,7 @@ const InjuryFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
             <Heading
               size="2xlarge"
               className="pageNumberTitle spacer"
-              data-number="6"
+              data-number="5"
             >
               Om skaden
             </Heading>

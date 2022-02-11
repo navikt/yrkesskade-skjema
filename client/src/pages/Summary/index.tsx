@@ -52,7 +52,7 @@ const Summary = ({ steps, increaseStep, decreaseStep }: IProps) => {
           <Heading
             size="2xlarge"
             className="pageNumberTitle spacer"
-            data-number="7"
+            data-number="6"
           >
             Oppsumering
           </Heading>

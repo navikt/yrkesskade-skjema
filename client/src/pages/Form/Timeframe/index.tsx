@@ -53,7 +53,7 @@ const TimeframeFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
             <Heading
               size="2xlarge"
               className="pageNumberTitle spacer"
-              data-number="3"
+              data-number="2"
             >
               Tid og dato
             </Heading>

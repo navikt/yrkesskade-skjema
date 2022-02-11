@@ -21,7 +21,7 @@ import { SelectedCompanyProvider } from './context/SelectedCompanyContext';
 const App = () => {
   createStore({}, { name: 'formdata'});
   const [steps, setSteps] = useState<ISteps>({
-    totalSteps: 8,
+    totalSteps: 7,
     currentStep: 1,
     details: [
       {
@@ -29,11 +29,11 @@ const App = () => {
         done: false,
         active: true,
       },
-      {
-        text: 'Om innmelder',
-        done: false,
-        active: false,
-      },
+      // {
+      //   text: 'Om innmelder',
+      //   done: false,
+      //   active: false,
+      // },
       {
         text: 'Tid og sted',
         done: false,
@@ -79,8 +79,6 @@ const App = () => {
   const decreaseStep = () => {
     let newSteps = { ...steps, currentStep: steps.currentStep - 1 };
     for (let i = newSteps.details.length; i >= newSteps.currentStep; i--) {
-      console.log(i - 1);
-      console.log(newSteps.details[i - 1]);
       newSteps.details[i - 1].done = false;
       newSteps.details[i - 1].active = false;
     }
@@ -103,7 +101,7 @@ const App = () => {
                 // element={<Info steps={steps} />}
               />
               <Route path="skjema">
-                <Route
+                {/* <Route
                   path="innmelder"
                   element={
                     <CompanyFormPage
@@ -112,7 +110,7 @@ const App = () => {
                       decreaseStep={decreaseStep}
                     />
                   }
-                />
+                /> */}
                 <Route
                   path="tidsrom"
                   element={

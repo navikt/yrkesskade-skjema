@@ -33,7 +33,7 @@ const Receipt = ({ steps }: IProps) => {
               <Heading
                 size="2xlarge"
                 className="pageNumberTitle spacer"
-                data-number="8"
+                data-number="7"
               >
                 Kvittering
               </Heading>

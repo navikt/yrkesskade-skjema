@@ -7,7 +7,7 @@ const SkadeSummary = ({ data }: IProps) => {
   return (
     <div className="answerOuterContainer">
       <div className="answerContainer">
-        <Table className="spacer">
+        <Table className="">
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>Område</Table.HeaderCell>

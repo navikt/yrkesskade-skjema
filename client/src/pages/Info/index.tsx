@@ -27,7 +27,7 @@ const Info = ({ steps, increaseStep }: IProps) => {
   const navigate = useNavigate();
   const handleForward = () => {
     increaseStep();
-    navigate('/yrkesskade/skjema/innmelder');
+    navigate('/yrkesskade/skjema/tidsrom');
   };
 
   const { innloggetBruker } = useInnloggetContext();
