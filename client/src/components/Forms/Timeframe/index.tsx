@@ -71,7 +71,7 @@ const TimeframeForm = ({ register, errors, control }: IProps) => {
               type="radio"
               className="navds-radio__input"
               {...register('hendelsesfakta.tid.ukjent', {
-                required: 'Dette feltet er påkrevd',
+                required: false,
               })}
               value="Ukjent"
               data-testid="timeframe-when-unknown"
@@ -89,7 +89,7 @@ const TimeframeForm = ({ register, errors, control }: IProps) => {
               type="radio"
               className="navds-radio__input"
               {...register('hendelsesfakta.tid.ukjent', {
-                required: 'Dette feltet er påkrevd',
+                required: false,
               })}
               value="Over en periode"
               data-testid="timeframe-when-over-period"

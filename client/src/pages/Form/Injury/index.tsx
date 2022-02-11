@@ -31,6 +31,9 @@ const InjuryFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
     register,
     handleSubmit,
     formState: { errors },
+    getValues,
+    resetField,
+    setValue
   } = useForm();
 
   const navigate = useNavigate();
@@ -56,7 +59,7 @@ const InjuryFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
             >
               Om skaden
             </Heading>
-            <InjuryForm errors={errors} register={register} />
+            <InjuryForm errors={errors} register={register} getValues={getValues} reset={resetField} setValue={setValue}/>
             <Button onClick={handleSubmit(onSubmit)}>Neste steg</Button>
           </div>
         </Cell>

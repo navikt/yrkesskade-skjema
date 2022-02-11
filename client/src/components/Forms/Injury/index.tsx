@@ -1,20 +1,51 @@
-import { useState } from 'react';
-import { Select, RadioGroup, Textarea } from '@navikt/ds-react';
+import { useState, useEffect } from 'react';
+import { Select, RadioGroup, Textarea, Table, Button } from '@navikt/ds-react';
 import { injuredBodypart, injuryType } from '../../../assets/injuryEnums';
+import { isEmpty } from 'ramda';
+import { AddCircle } from '@navikt/ds-icons';
 
 interface IProps {
   register: any;
   errors: any;
+  getValues: any;
+  reset: any;
+  setValue: any;
 }
-const InjuryForm = ({ register, errors }: IProps) => {
-  const [value, setValue] = useState('');
+const InjuryForm = ({
+  register,
+  errors,
+  getValues,
+  reset,
+  setValue,
+}: IProps) => {
+  const [freetext, setFreetext] = useState('');
+  const [injury, setInjury] = useState<{}[]>([]);
+
+  const handleMultipleIjurys = () => {
+    const bodypart = getValues('skade.kroppsdelTabellD');
+    const damage = getValues('skade.skadeartTabellC');
+    if (!isEmpty(bodypart) && !isEmpty(damage)) {
+      setInjury((injury) => [
+        ...injury,
+        { skadeartTabellC: damage, kroppsdelTabellD: bodypart },
+      ]);
+      reset('skade.kroppsdelTabellD');
+      reset('skade.skadeartTabellC');
+    }
+  };
+
+  useEffect(() => {
+    setValue('skade.skadedeDeler', injury);
+  }, [injury, setValue]);
+
   return (
     <>
       <Select
         className="spacer"
         label="Hvor på kroppen er skaden"
+        description="Husk å trykke på legg til skade før du går videre"
         {...register('skade.kroppsdelTabellD', {
-          required: true,
+          required: isEmpty(injury) && 'Dette feltet er påkrevd',
         })}
         error={errors?.skade?.kroppsdelTabellD && 'Dette feltet er påkrevd'}
         data-testid="injury-body-location-options"
@@ -34,7 +65,7 @@ const InjuryForm = ({ register, errors }: IProps) => {
       <Select
         label="Hva slags skade er det"
         {...register('skade.skadeartTabellC', {
-          required: true,
+          required: isEmpty(injury) && 'Dette feltet er påkrevd',
         })}
         className="spacer"
         error={errors?.skade?.skadeartTabellC && 'Dette feltet er påkrevd'}
@@ -52,7 +83,34 @@ const InjuryForm = ({ register, errors }: IProps) => {
         )}
       </Select>
 
-      {/* <button>Legg til flere skader</button> */}
+      <Button variant="tertiary" onClick={handleMultipleIjurys}>
+        <AddCircle />
+        Legg til flere skader
+      </Button>
+
+      {!isEmpty(injury) && (
+        <Table className="spacer">
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>Område</Table.HeaderCell>
+              <Table.HeaderCell>Skade</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {injury.map(
+              // (item: { damage?: string; bodypart?: string }, index: number) => {
+              (item: any, index: number) => {
+                return (
+                  <Table.Row key={index}>
+                    <Table.DataCell>{item.kroppsdelTabellD}</Table.DataCell>
+                    <Table.DataCell>{item.skadeartTabellC}</Table.DataCell>
+                  </Table.Row>
+                );
+              }
+            )}
+          </Table.Body>
+        </Table>
+      )}
 
       <RadioGroup
         legend="Har lege blitt kontaktet?"
@@ -106,26 +164,15 @@ const InjuryForm = ({ register, errors }: IProps) => {
             Vet ikke
           </label>
         </div>
-        {/* <Radio
-          {...register('skade.legeKontaktet', {
-            required: 'Dette feltet er påkrevd',
-          })}
-          value="Ja"
-          data-testid="injury-medical-contacted-yes-option"
-        >
-          Ja
-        </Radio>
-        <Radio {...register("skade.legeKontaktet", {required: 'Dette feltet er påkrevd' })} value="Nei" data-testid="injury-medical-contacted-no-option">Nei</Radio>
-        <Radio {...register("skade.legeKontaktet", {required: 'Dette feltet er påkrevd' })} value="Vet ikke" data-testid="injury-medical-contacted-unknown-option">Vet ikke</Radio> */}
       </RadioGroup>
       <Textarea
         className="spacer"
         label="Utfyllende beskrivelse"
         description={<TextareaDescription />}
         {...register('hendelsesfakta.utfyllendeBeskrivelse')}
-        value={value}
+        value={freetext}
         maxLength={1000}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(e) => setFreetext(e.target.value)}
         data-testid="injury-additional-information"
       />
     </>
