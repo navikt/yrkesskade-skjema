@@ -17,6 +17,8 @@ import { ISteps } from '../../Interfaces/steps';
 import OrganisationSelect from '../../components/OrganisationSelect';
 import { useInnloggetContext } from '../../context/InnloggetContext';
 import { Organisasjon } from '../../types/brukerinfo';
+import axios from 'axios';
+import { useForm } from 'react-hook-form';
 interface IProps {
   steps: ISteps;
   // updateStep: (data: { step: number; higher: Boolean }) => void;
@@ -25,6 +27,7 @@ interface IProps {
 
 const Info = ({ steps, increaseStep }: IProps) => {
   const navigate = useNavigate();
+  const { setValue } = useForm();
   const handleForward = () => {
     increaseStep();
     navigate('/yrkesskade/skjema/tidsrom');
@@ -33,7 +36,13 @@ const Info = ({ steps, increaseStep }: IProps) => {
   const { innloggetBruker } = useInnloggetContext();
 
   const onOrganisasjonChange = (organisasjon: Organisasjon) => {
-    console.log('set adresse felter');
+
+    axios.get<Organisasjon>(`/api/v1/brukerinfo/${organisasjon.organisasjonsnummer}`).then((response) => {
+      console.log('set adresse felter');
+      const organisasjon = response.data;
+      console.log(' organisasjon: ', organisasjon);
+
+    })
   }
 
   return (

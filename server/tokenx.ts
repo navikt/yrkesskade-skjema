@@ -1,15 +1,16 @@
 import axios from 'axios';
 import { Issuer, TokenSet } from 'openid-client';
 import { getMockTokenFromIdPorten, verifiserAccessToken } from './idporten';
+import config from './config'
 
 let tokenXClient;
 
 export const initTokenX = async () => {
-  const nodeEnv = process.env.NODE_ENV;
+  const env = process.env.ENV;
   // tslint:disable-next-line:no-console
-  console.log('Initializing TokenX: ', nodeEnv);
+  console.log('Initializing TokenX: ', env);
 
-  if (nodeEnv === 'not-local') {
+  if (env !== 'local') {
     const tokenXIssuer = await Issuer.discover(
       process.env.TOKEN_X_WELL_KNOWN_URL
     );
@@ -51,7 +52,7 @@ const getTokenXToken = async (token: string | Uint8Array, additionalClaims) => {
     );
   }
 
-  if (!tokenSet && process.env.NODE_ENV === 'local') {
+  if (!tokenSet && process.env.ENV === 'local') {
     // Dette skjer kun i lokalt miljø - siden tokenxClient kun blir initialisert i GCP env
     tokenSet = await getMockTokenXToken();
   }
@@ -60,9 +61,10 @@ const getTokenXToken = async (token: string | Uint8Array, additionalClaims) => {
 };
 
 const getMockTokenXToken = async () => {
+  // ?client_id=someclientid&aud=dev-gcp:targetteam:targetapp&acr=Level4&pid=12345678910
   const tokenXToken = await (
     await axios.get(
-      `${process.env.FAKEDINGS_URL_TOKENX}?aud=${process.env.TOKENX_AUDIENCE}&acr=Level4&pid=01065500791`
+      `${process.env.FAKEDINGS_URL_TOKENX}?aud=${process.env.TOKENX_AUDIENCE}&acr=Level4&pid=12345678910&client_id=yrkesskade-skjema`
     )
   ).data;
 
@@ -72,18 +74,23 @@ const getMockTokenXToken = async () => {
 };
 
 export const exchangeToken = async (request) => {
-  let token = request.headers.authorization?.split(' ')[1]; // henter del 2 fra authorization header (Bearer XXXXXXX)
+  let token = request.headers?.authorization?.split(' ')[1]; // henter del 2 fra authorization header (Bearer XXXXXXX)
 
   if (!token) {
-    if (process.env.NODE_ENV !== 'not-local') {
+    if (process.env.ENV === 'local') {
       token = await getMockTokenFromIdPorten();
     } else {
-      // brukeren er ikke autentisert
-      return;
+      // fant ikke token in header - sjekker cookie
+      token = request.cookies[config.IDPORTEN_COOKIE_NAME]
+
+      if (!token) {
+        // brukeren er ikke autentisert
+        return;
+      }
     }
   }
 
-  await verifiserAccessToken(token);
+  //await verifiserAccessToken(token);
   const additionalClaims = {
     clientAssertionPayload: {
       nbf: Math.floor(Date.now() / 1000),

@@ -1,9 +1,10 @@
-import { Express } from "express";
+import { Express, NextFunction, Request, Response } from "express";
 import config from "../config";
 import { isEnabled } from "../featureflag/unleash";
 import { ToggleKeys } from '../../client/src/types/feature-toggles';
 import { Brukerinfo, Organisasjon } from '../../client/src/types/brukerinfo';
 import axios, { AxiosError } from "axios";
+import { exchangeToken } from "../tokenx";
 
 const toggleFetchHandler = (req, res) => {
   const toggleId = req.params.id;
@@ -20,17 +21,24 @@ export const configureFeatureTogglesEndpoint = (app: Express): Express => {
   return app;
 };
 
-const hentBrukerinfo = async (req,res,next) => {
+const hentBrukerinfo = async (req, res: Response, next: NextFunction) => {
   // bruk rett cookie name
   const cookieName = config.IDPORTEN_COOKIE_NAME;
 
   // hent token fra cookie
-  const loginserviceToken = req.cookies[cookieName];
+  const idtoken = req.cookies[cookieName];
+
+  if (!idtoken) {
+    res.sendStatus(401);
+    return;
+  }
+
   try {
+    const tokenset = await exchangeToken(idtoken);
     const response = await axios.get<Brukerinfo>(`${config.API_URL}/api/v1/brukerinfo`, {
       headers: {
         // bruk cookie i kall mot api
-        Cookie: `${cookieName}=${loginserviceToken}`
+        Authorization: `Bearer ${tokenset.access_token}`,
     }
     });
 
@@ -38,8 +46,9 @@ const hentBrukerinfo = async (req,res,next) => {
       req.data = response.data;
     }
   } catch (error) {
-    // tslint:disable-next-line:no-console
-    console.log(error);
+    res.sendStatus(400);
+    console.error(error);
+    return;
   }
 
   next()

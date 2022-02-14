@@ -1,5 +1,5 @@
 import { BaseClient, Issuer } from 'openid-client';
-import { createRemoteJWKSet, jwtVerify, KeyLike } from 'jose';
+import { createRemoteJWKSet, jwtVerify } from 'jose';
 import axios from 'axios';
 
 const acceptedAcrLevel = 'Level4'; // definert i nais.yaml idporten.sidecar.level attributen

@@ -5,7 +5,7 @@ import createUseContext from 'constate';
 const [SelectedCompanyProvider, useSelectedCompany] = createUseContext(() => {
 
   const [selectedCompany, setSelectedCompany] = useState<Organisasjon>({
-    organisasjonsnummer: -1,
+    organisasjonsnummer: '-',
     navn: '-',
     type: '-',
     status: '-',

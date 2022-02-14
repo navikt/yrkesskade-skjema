@@ -11,12 +11,12 @@ interface OrganisationSelectProps {
 }
 
 export const tomAltinnOrganisasjon: Organisasjon = {
-  organisasjonsnummer: -1,
+  organisasjonsnummer: '-',
   navn: '-',
   naeringskode: '-',
   status: '-',
   organisasjonsform: '-',
-  type: '-'
+  type: '-',
 };
 
 const OrganisationSelect = ({organisasjoner, onOrganisasjonChange}: OrganisationSelectProps) => {
