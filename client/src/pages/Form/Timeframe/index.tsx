@@ -9,6 +9,7 @@ import {
   // Link
 } from '@navikt/ds-react';
 import SystemHeader from '../../../components/SystemHeader';
+import BackButton from '../../../components/BackButton';
 
 // import { IGeneralForm } from '../../Interfaces/generalForm';
 
@@ -43,6 +44,9 @@ const TimeframeFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
     increaseStep();
     navigate('/yrkesskade/skjema/skadelidt');
   };
+  const handleAbort = () => {
+    window.location.href = 'https://nav.no';
+  };
   return (
     <ContentContainer>
       <SystemHeader />
@@ -50,6 +54,7 @@ const TimeframeFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
         <Cell xs={12} lg={2}></Cell>
         <Cell xs={12} lg={5}>
           <div className="cellContentContainer">
+            <BackButton decreaseStep={decreaseStep} url="/yrkesskade/" />
             <Heading
               size="2xlarge"
               className="pageNumberTitle spacer"
@@ -58,7 +63,12 @@ const TimeframeFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
               Tid og dato
             </Heading>
             <TimeframeForm errors={errors} register={register} control={control}/>
-            <Button onClick={handleSubmit(onSubmit)}>Neste steg</Button>
+            <div className="buttonGroup">
+              <Button variant="secondary" onClick={handleAbort}>
+                Avbryt
+              </Button>
+              <Button onClick={handleSubmit(onSubmit)}>Neste steg</Button>
+            </div>
           </div>
         </Cell>
         <Cell xs={12} sm={12} lg={2}>

@@ -6,11 +6,9 @@ import {
   Cell,
   Button,
   Heading,
-  // Link
 } from '@navikt/ds-react';
 import SystemHeader from '../../../components/SystemHeader';
-
-// import { IGeneralForm } from '../../Interfaces/generalForm';
+import BackButton from '../../../components/BackButton';
 
 import StepIndicator from '../../../components/StepIndicator';
 import { ISteps } from '../../../Interfaces/steps';
@@ -42,6 +40,11 @@ const AccidentFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
     increaseStep();
     navigate('/yrkesskade/skjema/skaden');
   };
+
+  const handleAbort = () => {
+    window.location.href = 'https://nav.no';
+  };
+
   return (
     <ContentContainer>
       <SystemHeader />
@@ -49,6 +52,7 @@ const AccidentFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
         <Cell xs={12} lg={2}></Cell>
         <Cell xs={12} lg={5}>
           <div className="cellContentContainer">
+            <BackButton decreaseStep={decreaseStep} url="/yrkesskade/skjema/skadelidt" />
             <Heading
               size="2xlarge"
               className="pageNumberTitle spacer"
@@ -57,7 +61,12 @@ const AccidentFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
               Om ulykken
             </Heading>
             <AccidentForm errors={errors} register={register} />
-            <Button onClick={handleSubmit(onSubmit)}>Neste steg</Button>
+            <div className="buttonGroup">
+              <Button variant="secondary" onClick={handleAbort}>
+                Avbryt
+              </Button>
+              <Button onClick={handleSubmit(onSubmit)}>Neste steg</Button>
+            </div>
           </div>
         </Cell>
         <Cell xs={12} sm={12} lg={2}>

@@ -4,7 +4,7 @@ import Info from './pages/Info';
 import Summary from './pages/Summary';
 import Receipt from './pages/Receipt';
 import Error from './pages/Error';
-import CompanyFormPage from './pages/Form/Company';
+// import CompanyFormPage from './pages/Form/Company';
 import TimeframeFormPage from './pages/Form/Timeframe';
 import InjuryFormPage from './pages/Form/Injury';
 import InjuredFormPage from './pages/Form/Injured';
@@ -101,16 +101,6 @@ const App = () => {
                 // element={<Info steps={steps} />}
               />
               <Route path="skjema">
-                {/* <Route
-                  path="innmelder"
-                  element={
-                    <CompanyFormPage
-                      steps={steps}
-                      increaseStep={increaseStep}
-                      decreaseStep={decreaseStep}
-                    />
-                  }
-                /> */}
                 <Route
                   path="tidsrom"
                   element={
