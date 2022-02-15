@@ -4,10 +4,20 @@ export interface Brukerinfo {
 }
 
 export interface Organisasjon {
-  organisasjonsnummer: number;
+  organisasjonsnummer: string;
   navn: string;
   naeringskode: string;
   organisasjonsform: string;
   status: string;
   type: string;
+  postadresse?: Adresse;
+  forretningsadresse?: Adresse;
+}
+
+export interface Adresse {
+  landkode: string;
+  land: string;
+  postnummer: string;
+  poststed: string;
+  adresser: string[];
 }

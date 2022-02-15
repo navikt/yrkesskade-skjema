@@ -52,7 +52,7 @@ export const finnOrganisasjonsSomskalHaFokus = (
 };
 
 export const finnIndeksIorganisasjoner = (
-  enhetsOrganisasjonsnummer: number,
+  enhetsOrganisasjonsnummer: string,
   array: Organisasjon[]
 ) => {
   return array
@@ -60,7 +60,7 @@ export const finnIndeksIorganisasjoner = (
       .indexOf(enhetsOrganisasjonsnummer);
 };
 
-export const finnIndeksIUtpakketListe = (organisasjonsnummer: number, array: Organisasjon[]) => {
+export const finnIndeksIUtpakketListe = (organisasjonsnummer: string, array: Organisasjon[]) => {
   return array
       .map((organisasjon) => organisasjon.organisasjonsnummer)
       .indexOf(organisasjonsnummer);

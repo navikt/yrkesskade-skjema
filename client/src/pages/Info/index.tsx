@@ -17,6 +17,9 @@ import { ISteps } from '../../Interfaces/steps';
 import OrganisationSelect from '../../components/OrganisationSelect';
 import { useInnloggetContext } from '../../context/InnloggetContext';
 import { Organisasjon } from '../../types/brukerinfo';
+import axios from 'axios';
+import { useEffect } from 'react';
+import { useSelectedCompany } from '../../context/SelectedCompanyContext';
 interface IProps {
   steps: ISteps;
   // updateStep: (data: { step: number; higher: Boolean }) => void;
@@ -31,9 +34,21 @@ const Info = ({ steps, increaseStep }: IProps) => {
   };
 
   const { innloggetBruker } = useInnloggetContext();
+  const { setSelectedCompany, setSelectedAddress } = useSelectedCompany();
+
+  useEffect(() => {
+    if (innloggetBruker?.fnr) {
+      setSelectedCompany(innloggetBruker.organisasjoner[0]);
+    }
+  }, [innloggetBruker?.fnr])
 
   const onOrganisasjonChange = (organisasjon: Organisasjon) => {
-    console.log('set adresse felter');
+    if (organisasjon.organisasjonsnummer !== '-') {
+      axios.get<Organisasjon>(`/api/v1/brukerinfo/organisasjoner/${organisasjon.organisasjonsnummer}`).then((response) => {
+        console.log('response: ', response.data);
+        setSelectedAddress(response.data.forretningsadresse);
+      })
+    }
   }
 
   return (
@@ -57,7 +72,7 @@ const Info = ({ steps, increaseStep }: IProps) => {
                 gang med å søke om nå.{' '}
               </BodyLong>
               {
-                innloggetBruker && (
+                innloggetBruker && innloggetBruker.organisasjoner.length && (
                   <OrganisationSelect organisasjoner={innloggetBruker.organisasjoner.filter((organisasjon) => organisasjon.status === 'Active')} onOrganisasjonChange={onOrganisasjonChange} data-testid="virksomhetsvelger" />
                 )
               }
@@ -118,3 +133,4 @@ const Info = ({ steps, increaseStep }: IProps) => {
   );
 };
 export default Info;
+

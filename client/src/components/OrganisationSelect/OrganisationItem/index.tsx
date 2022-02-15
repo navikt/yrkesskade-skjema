@@ -17,8 +17,8 @@ interface OrganisationItemProps {
   lukkMenyOnTabPaNedersteElement: (
     organisasjonsnummer: string
   ) => void;
-  organisasjonIFokus: Organisasjon;
-  forrigeOrganisasjonIFokus: Organisasjon;
+  organisasjonIFokus: Organisasjon | null;
+  forrigeOrganisasjonIFokus: Organisasjon | null;
 }
 const OrganisationItem = ({organisations, organisation, erApen, organisasjonIFokus, forrigeOrganisasjonIFokus, setNyOrganisasjonIFokus, lukkMenyOnTabPaNedersteElement}: OrganisationItemProps) => {
   const [isSelectedOrganisation, setIsSelectedOrganisation] = useState(false);
@@ -32,10 +32,10 @@ const OrganisationItem = ({organisations, organisation, erApen, organisasjonIFok
     ) {
       setIsSelectedOrganisation(true);
     }
-  }, [selectedCompany, organisation, organisation.organisasjonsnummer]);
+  }, [selectedCompany, organisation]);
 
   useEffect(() => {
-    const skalSettesIFokus = organisasjonIFokus.organisasjonsnummer === organisation.organisasjonsnummer;
+    const skalSettesIFokus = organisasjonIFokus?.organisasjonsnummer === organisation.organisasjonsnummer;
     if (skalSettesIFokus) {
       const organisationElementId = selectedCompany.organisasjonsnummer === organisation.organisasjonsnummer ?
                 'valgtjuridiskenhet' : 'organisasjons-id-' + organisation.organisasjonsnummer;
@@ -43,14 +43,14 @@ const OrganisationItem = ({organisations, organisation, erApen, organisasjonIFok
         const element = document.getElementById(organisationElementId);
         element?.focus()
     }
-}, [forrigeOrganisasjonIFokus,organisasjonIFokus, organisation.organisasjonsnummer, selectedCompany.organisasjonsnummer]);
+}, [forrigeOrganisasjonIFokus, organisasjonIFokus, organisation.organisasjonsnummer, selectedCompany.organisasjonsnummer]);
 
   const changeCompany = () => {
     setSelectedCompany(organisation);
   };
 
   const onKeyDown = (key: string) => {
-    if (key === 'Enter') {
+    if (key === 'Enter' && organisasjonIFokus) {
       setSelectedCompany(organisasjonIFokus);
       return;
     }

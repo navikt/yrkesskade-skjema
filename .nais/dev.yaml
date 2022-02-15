@@ -11,6 +11,8 @@ env:
   value: https://loginservice.dev.nav.no/login?redirect=
 - name: NODE_ENV
   value: dev
+- name: ENV
+  value: dev
 - name: TOKENX_AUDIENCE
   value: "dev-gcp:yrkesskade:yrkesskade-melding-api"
 externals:

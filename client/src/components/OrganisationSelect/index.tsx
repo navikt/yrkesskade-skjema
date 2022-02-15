@@ -1,3 +1,4 @@
+import { or } from 'ramda';
 import { useEffect, useState } from 'react';
 import { useSelectedCompany } from '../../context/SelectedCompanyContext';
 import { Organisasjon } from '../../types/brukerinfo';
@@ -11,32 +12,30 @@ interface OrganisationSelectProps {
 }
 
 export const tomAltinnOrganisasjon: Organisasjon = {
-  organisasjonsnummer: -1,
+  organisasjonsnummer: '-',
   navn: '-',
   naeringskode: '-',
   status: '-',
   organisasjonsform: '-',
-  type: '-'
+  type: '-',
 };
 
 const OrganisationSelect = ({organisasjoner, onOrganisasjonChange}: OrganisationSelectProps) => {
-  const { selectedCompany, setSelectedCompany } = useSelectedCompany();
+  const { selectedCompany } = useSelectedCompany();
   const [erApen, setErApen] = useState(false);
-  const [organisasjonIFokus, setOrganisasjonIFokus] = useState(tomAltinnOrganisasjon);
-    const [forrigeOrganisasjonIFokus, setForrigeOrganisasjonIFokus] = useState(tomAltinnOrganisasjon);
+  const [organisasjonIFokus, setOrganisasjonIFokus] = useState<Organisasjon | null>(null);
+  const [forrigeOrganisasjonIFokus, setForrigeOrganisasjonIFokus] = useState<Organisasjon | null>(null);
 
   useEffect(() => {
     onOrganisasjonChange(selectedCompany);
-    setOrganisasjonIFokus(selectedCompany);
+    if (selectedCompany) {
+      setOrganisasjonIFokus(selectedCompany);
+    }
     setErApen(false);
-  }, [onOrganisasjonChange, selectedCompany]);
-
-  useEffect(() => {
-    setSelectedCompany(organisasjoner[0]);
-  }, [organisasjoner, setSelectedCompany]);
+  }, [selectedCompany]);
 
   const showOrganisationSelect =
-    organisasjoner && organisasjoner?.length > 0;
+    organisasjoner && organisasjoner?.length > 0 && organisasjonIFokus;
 
   return showOrganisationSelect ? (
     <div aria-label="Velg virksomhet" className="">

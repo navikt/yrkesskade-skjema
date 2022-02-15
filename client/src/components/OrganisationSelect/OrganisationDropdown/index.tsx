@@ -8,10 +8,10 @@ interface Props {
   organisasjoner: Organisasjon[];
   setErApen: (bool: boolean) => void;
   erApen: boolean;
-  setOrganisasjonIFokus: (organisasjon: Organisasjon) => void;
-  setForrigeOrganisasjonIFokus: (organisasjon: Organisasjon) => void;
-  organisasjonIFokus: Organisasjon;
-  forrigeOrganisasjonIFokus: Organisasjon
+  setOrganisasjonIFokus: (organisasjon: Organisasjon | null) => void;
+  setForrigeOrganisasjonIFokus: (organisasjon: Organisasjon | null) => void;
+  organisasjonIFokus: Organisasjon | null;
+  forrigeOrganisasjonIFokus: Organisasjon | null
 }
 const OrganisationDropdown = ({
   organisasjoner,
@@ -24,6 +24,10 @@ const OrganisationDropdown = ({
 }: Props) => {
 
   const setNyOrganisasjonIFokus = (keypressKey: string) => {
+    if (!organisasjonIFokus) {
+      return;
+    }
+
     const organisasjonsSomSkalFåFokus =
         finnOrganisasjonsSomskalHaFokus(organisasjonIFokus,keypressKey, erApen, organisasjoner);
     if (organisasjonsSomSkalFåFokus) {
