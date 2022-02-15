@@ -10,6 +10,8 @@ interface IProps {
   setError: any;
 }
 const InjuredForm = ({ register, errors, control, setError }: IProps) => {
+  // Legg inn fnr fra altinn her
+  const userFNR = '27119826689';
   return (
     <>
       <div>
@@ -47,7 +49,11 @@ const InjuredForm = ({ register, errors, control, setError }: IProps) => {
             const validationResult: any = validator.idnr(value);
             if (validationResult.status === 'invalid') {
               return 'Fyll ut et gyldig fødselsnummer';
-            } else {
+            }
+            else if (value === userFNR) {
+              return 'Fødselsnummer kan ikke være likt ditt eget';
+            }
+            else {
               return true;
             }
           },
