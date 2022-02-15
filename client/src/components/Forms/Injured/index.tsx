@@ -3,6 +3,7 @@ import { Controller } from 'react-hook-form';
 import stillingstitler from '../../../assets/stillingstitler';
 import Select from 'react-select';
 import validator from '@navikt/fnrvalidator';
+import { useInnloggetContext } from '../../../context/InnloggetContext';
 interface IProps {
   register: any;
   errors: any;
@@ -11,7 +12,8 @@ interface IProps {
 }
 const InjuredForm = ({ register, errors, control, setError }: IProps) => {
   // Legg inn fnr fra altinn her
-  const userFNR = '27119826689';
+  const { innloggetBruker } = useInnloggetContext();
+
   return (
     <>
       <div>
@@ -50,7 +52,7 @@ const InjuredForm = ({ register, errors, control, setError }: IProps) => {
             if (validationResult.status === 'invalid') {
               return 'Fyll ut et gyldig fødselsnummer';
             }
-            else if (value === userFNR) {
+            else if (value === innloggetBruker?.fnr) {
               return 'Fødselsnummer kan ikke være likt ditt eget';
             }
             else {
