@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Organisasjon } from "../types/brukerinfo";
+import { Adresse, Organisasjon } from "../types/brukerinfo";
 import createUseContext from 'constate';
 
 const [SelectedCompanyProvider, useSelectedCompany] = createUseContext(() => {
@@ -11,9 +11,13 @@ const [SelectedCompanyProvider, useSelectedCompany] = createUseContext(() => {
     status: '-',
   } as Organisasjon);
 
+  const [selectedAddress, setSelectedAddress] = useState<Adresse | null>()
+
   return {
     selectedCompany,
-    setSelectedCompany
+    setSelectedCompany,
+    selectedAddress,
+    setSelectedAddress
   }
 });
 

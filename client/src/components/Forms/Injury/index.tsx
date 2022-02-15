@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Select, RadioGroup, Textarea, Table, Button } from '@navikt/ds-react';
+import { Select, RadioGroup, Textarea, Table, Button, Label, Detail, BodyShort, Radio } from '@navikt/ds-react';
 import { injuredBodypart, injuryType } from '../../../assets/injuryEnums';
 import { isEmpty } from 'ramda';
 import { AddCircle } from '@navikt/ds-icons';
+import { useSelectedCompany } from '../../../context/SelectedCompanyContext';
 
 interface IProps {
   register: any;
@@ -20,6 +21,7 @@ const InjuryForm = ({
 }: IProps) => {
   const [freetext, setFreetext] = useState('');
   const [injury, setInjury] = useState<{}[]>([]);
+  const { selectedAddress } = useSelectedCompany();
 
   const handleMultipleIjurys = () => {
     const bodypart = getValues('skade.kroppsdelTabellD');
@@ -36,10 +38,24 @@ const InjuryForm = ({
 
   useEffect(() => {
     setValue('skade.skadedeDeler', injury);
+
   }, [injury, setValue]);
 
   return (
     <>
+      <div>
+        <Label spacing>Adresse</Label>
+        <BodyShort data-test-id="injury-street-address">{ selectedAddress?.adresser[0]}</BodyShort>
+        <BodyShort data-test-id="injury-postal-code-place">{ selectedAddress?.postnummer} {selectedAddress?.poststed}</BodyShort>
+      </div>
+      <div className="spacer">
+        <RadioGroup
+          legend="Skjedde ulykken på samme adressse"
+        >
+          <Radio value="ja">Ja</Radio>
+          <Radio value="nei">Nei</Radio>
+        </RadioGroup>
+      </div>
       <Select
         className="spacer"
         label="Hvor på kroppen er skaden"

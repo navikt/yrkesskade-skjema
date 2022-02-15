@@ -18,7 +18,8 @@ import OrganisationSelect from '../../components/OrganisationSelect';
 import { useInnloggetContext } from '../../context/InnloggetContext';
 import { Organisasjon } from '../../types/brukerinfo';
 import axios from 'axios';
-import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
+import { useSelectedCompany } from '../../context/SelectedCompanyContext';
 interface IProps {
   steps: ISteps;
   // updateStep: (data: { step: number; higher: Boolean }) => void;
@@ -27,22 +28,27 @@ interface IProps {
 
 const Info = ({ steps, increaseStep }: IProps) => {
   const navigate = useNavigate();
-  const { setValue } = useForm();
   const handleForward = () => {
     increaseStep();
     navigate('/yrkesskade/skjema/tidsrom');
   };
 
   const { innloggetBruker } = useInnloggetContext();
+  const { setSelectedCompany, setSelectedAddress } = useSelectedCompany();
+
+  useEffect(() => {
+    if (innloggetBruker?.fnr) {
+      setSelectedCompany(innloggetBruker.organisasjoner[0]);
+    }
+  }, [innloggetBruker?.fnr])
 
   const onOrganisasjonChange = (organisasjon: Organisasjon) => {
-
-    axios.get<Organisasjon>(`/api/v1/brukerinfo/${organisasjon.organisasjonsnummer}`).then((response) => {
-      console.log('set adresse felter');
-      const organisasjon = response.data;
-      console.log(' organisasjon: ', organisasjon);
-
-    })
+    if (organisasjon.organisasjonsnummer !== '-') {
+      axios.get<Organisasjon>(`/api/v1/brukerinfo/organisasjoner/${organisasjon.organisasjonsnummer}`).then((response) => {
+        console.log('response: ', response.data);
+        setSelectedAddress(response.data.forretningsadresse);
+      })
+    }
   }
 
   return (
@@ -66,7 +72,7 @@ const Info = ({ steps, increaseStep }: IProps) => {
                 gang med å søke om nå.{' '}
               </BodyLong>
               {
-                innloggetBruker && (
+                innloggetBruker && innloggetBruker.organisasjoner.length && (
                   <OrganisationSelect organisasjoner={innloggetBruker.organisasjoner.filter((organisasjon) => organisasjon.status === 'Active')} onOrganisasjonChange={onOrganisasjonChange} data-testid="virksomhetsvelger" />
                 )
               }
@@ -127,3 +133,4 @@ const Info = ({ steps, increaseStep }: IProps) => {
   );
 };
 export default Info;
+
