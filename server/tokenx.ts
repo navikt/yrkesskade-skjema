@@ -90,7 +90,7 @@ export const exchangeToken = async (request) => {
     }
   }
 
-  //await verifiserAccessToken(token);
+  // await verifiserAccessToken(token);
   const additionalClaims = {
     clientAssertionPayload: {
       nbf: Math.floor(Date.now() / 1000),

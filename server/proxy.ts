@@ -19,7 +19,7 @@ const restream = (
 export const doProxy = (path: string, target: string) => {
   return createProxyMiddleware(path, {
     changeOrigin: true,
-    logLevel: process.env.NODE_ENV !== 'production' ? 'silent' : 'info',
+    logLevel: process.env.NODE_ENV !== 'production' ? 'debug' : 'info',
     secure: true,
     onProxyReq: restream,
     target: `${target}`,
