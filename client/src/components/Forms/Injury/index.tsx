@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Select, RadioGroup, Textarea, Table, Button, Label, Detail, BodyShort, Radio } from '@navikt/ds-react';
+import { Select, RadioGroup, Textarea, Table, Button, Label, BodyShort, Radio } from '@navikt/ds-react';
 import { injuredBodypart, injuryType } from '../../../assets/injuryEnums';
 import { isEmpty } from 'ramda';
 import { AddCircle } from '@navikt/ds-icons';

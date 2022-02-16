@@ -1,4 +1,3 @@
-import { or } from 'ramda';
 import { useEffect, useState } from 'react';
 import { useSelectedCompany } from '../../context/SelectedCompanyContext';
 import { Organisasjon } from '../../types/brukerinfo';
@@ -32,6 +31,7 @@ const OrganisationSelect = ({organisasjoner, onOrganisasjonChange}: Organisation
       setOrganisasjonIFokus(selectedCompany);
     }
     setErApen(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCompany]);
 
   const showOrganisationSelect =

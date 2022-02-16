@@ -40,7 +40,7 @@ const Info = ({ steps, increaseStep }: IProps) => {
     if (innloggetBruker?.fnr) {
       setSelectedCompany(innloggetBruker.organisasjoner[0]);
     }
-  }, [innloggetBruker?.fnr])
+  }, [innloggetBruker?.fnr, innloggetBruker?.organisasjoner, setSelectedCompany])
 
   const onOrganisasjonChange = (organisasjon: Organisasjon) => {
     if (organisasjon.organisasjonsnummer !== '-') {
