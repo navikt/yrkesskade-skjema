@@ -1,9 +1,9 @@
-import { Express, NextFunction, Request, Response } from "express";
+import { Express, NextFunction, Response } from "express";
 import config from "../config";
 import { isEnabled } from "../featureflag/unleash";
 import { ToggleKeys } from '../../client/src/types/feature-toggles';
 import { Brukerinfo, Organisasjon } from '../../client/src/types/brukerinfo';
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { exchangeToken } from "../tokenx";
 
 const toggleFetchHandler = (req, res) => {
@@ -22,11 +22,21 @@ export const configureFeatureTogglesEndpoint = (app: Express): Express => {
 };
 
 const hentBrukerinfo = async (req, res: Response, next: NextFunction) => {
+
+  // tslint:disable-next-line:no-console
+  console.log('hent brukerinfo config: ', config);
+
   // bruk rett cookie name
   const cookieName = config.IDPORTEN_COOKIE_NAME;
 
+  // tslint:disable-next-line:no-console
+  console.log('hent brukerinfo cookies: ', req.cookies);
+
   // hent token fra cookie
   const idtoken = req.cookies && req.cookies[cookieName];
+
+  // tslint:disable-next-line:no-console
+  console.log('hent brukerinfo idtoken: ', idtoken);
 
   if (!idtoken) {
     res.sendStatus(401);
