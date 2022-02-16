@@ -1,6 +1,6 @@
 import { TextField, Label } from '@navikt/ds-react';
 import { Controller } from 'react-hook-form';
-import stillingstitler from '../../../assets/stillingstitler';
+import stillingstitler from '../../../assets/Lists/stillingstitler';
 import Select from 'react-select';
 import validator from '@navikt/fnrvalidator';
 import { useInnloggetContext } from '../../../context/InnloggetContext';
@@ -8,9 +8,8 @@ interface IProps {
   register: any;
   errors: any;
   control: any;
-  setError: any;
 }
-const InjuredForm = ({ register, errors, control, setError }: IProps) => {
+const InjuredForm = ({ register, errors, control }: IProps) => {
   // Legg inn fnr fra altinn her
   const { innloggetBruker } = useInnloggetContext();
 
@@ -51,11 +50,9 @@ const InjuredForm = ({ register, errors, control, setError }: IProps) => {
             const validationResult: any = validator.idnr(value);
             if (validationResult.status === 'invalid') {
               return 'Fyll ut et gyldig fødselsnummer';
-            }
-            else if (value === innloggetBruker?.fnr) {
+            } else if (value === innloggetBruker?.fnr) {
               return 'Fødselsnummer kan ikke være likt ditt eget';
-            }
-            else {
+            } else {
               return true;
             }
           },

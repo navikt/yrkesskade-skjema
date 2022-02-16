@@ -1,5 +1,4 @@
-import React from 'react';
-import AccidentForm from '../../../components/Forms/Accident';
+import DescriptionForm from '../../../components/Forms/Description';
 import {
   ContentContainer,
   Grid,
@@ -24,7 +23,7 @@ interface IProps {
   increaseStep: () => void;
 }
 
-const AccidentFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
+const DescriptionFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
   const {
     register,
     handleSubmit,
@@ -39,7 +38,7 @@ const AccidentFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
   const onSubmit = (data: any) => {
     actions.formUpdateAction(data);
     increaseStep();
-    navigate('/yrkesskade/skjema/skaden');
+    navigate('/yrkesskade/skjema/oppsumering');
   };
 
   const handleAbort = () => {
@@ -53,15 +52,15 @@ const AccidentFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
         <Cell xs={12} lg={2}></Cell>
         <Cell xs={12} lg={5}>
           <div className="cellContentContainer">
-            <BackButton decreaseStep={decreaseStep} url="/yrkesskade/skjema/skadelidt" />
+            <BackButton decreaseStep={decreaseStep} url="/yrkesskade/skjema/skaden" />
             <Heading
               size="2xlarge"
               className="pageNumberTitle spacer"
-              data-number="4"
+              data-number="6"
             >
-              Om ulykken
+              Utfyllende beskrivelse
             </Heading>
-            <AccidentForm errors={errors} register={register} control={control} />
+            <DescriptionForm errors={errors} register={register} />
             <div className="buttonGroup">
               <Button variant="secondary" onClick={handleAbort}>
                 Avbryt
@@ -78,4 +77,4 @@ const AccidentFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
     </ContentContainer>
   );
 };
-export default AccidentFormPage;
+export default DescriptionFormPage;

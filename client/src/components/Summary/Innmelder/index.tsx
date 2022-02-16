@@ -3,7 +3,6 @@ interface IProps {
   innmelder: any;
 }
 const InnmelderSummary = ({ innmelder }: IProps) => {
-  console.log(innmelder);
   if(!isNil(innmelder)) {
     return (
     <>

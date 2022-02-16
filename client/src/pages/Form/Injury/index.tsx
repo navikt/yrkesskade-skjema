@@ -44,7 +44,7 @@ const InjuryFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
   const onSubmit = (data: any) => {
     actions.formUpdateAction(data);
     increaseStep();
-    navigate('/yrkesskade/skjema/oppsumering');
+    navigate('/yrkesskade/skjema/beskrivelse');
   };
   const handleAbort = () => {
     window.location.href = 'https://nav.no';

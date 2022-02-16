@@ -28,16 +28,21 @@ interface IProps {
 }
 
 const TimeframeFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
+  const { actions, state } = useStateMachine({ formUpdateAction });
+  console.log(state);
   const {
     register,
     handleSubmit,
     formState: { errors },
-    control
-  } = useForm();
+    control,
+    setValue
+  } = useForm({
+    defaultValues: {
+      'hendelsesfakta.tid.tidstype': 'Tidspunkt'
+    }
+  });
 
   const navigate = useNavigate();
-
-  const { actions } = useStateMachine({ formUpdateAction });
 
   const onSubmit = (data: any) => {
     actions.formUpdateAction(data);
@@ -62,7 +67,7 @@ const TimeframeFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
             >
               Tid og dato
             </Heading>
-            <TimeframeForm errors={errors} register={register} control={control}/>
+            <TimeframeForm errors={errors} register={register} control={control} setValue={setValue}/>
             <div className="buttonGroup">
               <Button variant="secondary" onClick={handleAbort}>
                 Avbryt

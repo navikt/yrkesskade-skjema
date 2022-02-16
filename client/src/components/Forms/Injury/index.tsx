@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Select, RadioGroup, Textarea, Table, Button, Label, Detail, BodyShort, Radio } from '@navikt/ds-react';
+import { Select, RadioGroup, Table, Button } from '@navikt/ds-react';
 import { injuredBodypart, injuryType } from '../../../assets/injuryEnums';
 import { isEmpty } from 'ramda';
 import { AddCircle } from '@navikt/ds-icons';
-import { useSelectedCompany } from '../../../context/SelectedCompanyContext';
 
 interface IProps {
   register: any;
@@ -19,9 +18,7 @@ const InjuryForm = ({
   reset,
   setValue,
 }: IProps) => {
-  const [freetext, setFreetext] = useState('');
   const [injury, setInjury] = useState<{}[]>([]);
-  const { selectedAddress } = useSelectedCompany();
 
   const handleMultipleIjurys = () => {
     const bodypart = getValues('skade.kroppsdelTabellD');
@@ -38,100 +35,89 @@ const InjuryForm = ({
 
   useEffect(() => {
     setValue('skade.skadedeDeler', injury);
-
   }, [injury, setValue]);
 
   return (
     <>
       <div>
-        <Label spacing>Adresse</Label>
-        <BodyShort data-test-id="injury-street-address">{ selectedAddress?.adresser[0]}</BodyShort>
-        <BodyShort data-test-id="injury-postal-code-place">{ selectedAddress?.postnummer} {selectedAddress?.poststed}</BodyShort>
-      </div>
-      <div className="spacer">
-        <RadioGroup
-          legend="Skjedde ulykken på samme adressse"
+        <Select
+          className="spacer"
+          label="Hvor på kroppen er skaden"
+          description="Husk å trykke på legg til skade før du går videre"
+          {...register('skade.kroppsdelTabellD', {
+            required: isEmpty(injury) && 'Dette feltet er påkrevd',
+          })}
+          error={errors?.skade?.kroppsdelTabellD && 'Dette feltet er påkrevd'}
+          data-testid="injury-body-location-options"
         >
-          <Radio value="ja">Ja</Radio>
-          <Radio value="nei">Nei</Radio>
-        </RadioGroup>
-      </div>
-      <Select
-        className="spacer"
-        label="Hvor på kroppen er skaden"
-        description="Husk å trykke på legg til skade før du går videre"
-        {...register('skade.kroppsdelTabellD', {
-          required: isEmpty(injury) && 'Dette feltet er påkrevd',
-        })}
-        error={errors?.skade?.kroppsdelTabellD && 'Dette feltet er påkrevd'}
-        data-testid="injury-body-location-options"
-      >
-        <option value="">Velg</option>
-        {(
-          Object.keys(injuredBodypart) as Array<keyof typeof injuredBodypart>
-        ).map((key) => {
-          return (
-            <option key={key} value={injuredBodypart[key]}>
-              {injuredBodypart[key]}
-            </option>
-          );
-        })}
-      </Select>
-
-      <Select
-        label="Hva slags skade er det"
-        {...register('skade.skadeartTabellC', {
-          required: isEmpty(injury) && 'Dette feltet er påkrevd',
-        })}
-        className="spacer"
-        error={errors?.skade?.skadeartTabellC && 'Dette feltet er påkrevd'}
-        data-testid="injury-type-options"
-      >
-        <option value="">Velg</option>
-        {(Object.keys(injuryType) as Array<keyof typeof injuryType>).map(
-          (key) => {
+          <option hidden value=""></option>
+          {(
+            Object.keys(injuredBodypart) as Array<keyof typeof injuredBodypart>
+          ).map((key) => {
             return (
-              <option key={key} value={injuryType[key]}>
-                {injuryType[key]}
+              <option key={key} value={injuredBodypart[key]}>
+                {injuredBodypart[key]}
               </option>
             );
-          }
+          })}
+        </Select>
+
+        <Select
+          label="Hva slags skade er det"
+          {...register('skade.skadeartTabellC', {
+            required: isEmpty(injury) && 'Dette feltet er påkrevd',
+          })}
+          className="spacer"
+          error={errors?.skade?.skadeartTabellC && 'Dette feltet er påkrevd'}
+          data-testid="injury-type-options"
+        >
+          <option hidden value=""></option>
+          {(Object.keys(injuryType) as Array<keyof typeof injuryType>).map(
+            (key) => {
+              return (
+                <option key={key} value={injuryType[key]}>
+                  {injuryType[key]}
+                </option>
+              );
+            }
+          )}
+        </Select>
+
+        <Button variant="tertiary" onClick={handleMultipleIjurys}>
+          <AddCircle />
+          Legg til flere skader
+        </Button>
+
+        {!isEmpty(injury) && (
+          <Table className="spacer">
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell>Område</Table.HeaderCell>
+                <Table.HeaderCell>Skade</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {injury.map(
+                // (item: { damage?: string; bodypart?: string }, index: number) => {
+                (item: any, index: number) => {
+                  return (
+                    <Table.Row key={index}>
+                      <Table.DataCell>{item.kroppsdelTabellD}</Table.DataCell>
+                      <Table.DataCell>{item.skadeartTabellC}</Table.DataCell>
+                    </Table.Row>
+                  );
+                }
+              )}
+            </Table.Body>
+          </Table>
         )}
-      </Select>
-
-      <Button variant="tertiary" onClick={handleMultipleIjurys}>
-        <AddCircle />
-        Legg til flere skader
-      </Button>
-
-      {!isEmpty(injury) && (
-        <Table className="spacer">
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>Område</Table.HeaderCell>
-              <Table.HeaderCell>Skade</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {injury.map(
-              // (item: { damage?: string; bodypart?: string }, index: number) => {
-              (item: any, index: number) => {
-                return (
-                  <Table.Row key={index}>
-                    <Table.DataCell>{item.kroppsdelTabellD}</Table.DataCell>
-                    <Table.DataCell>{item.skadeartTabellC}</Table.DataCell>
-                  </Table.Row>
-                );
-              }
-            )}
-          </Table.Body>
-        </Table>
-      )}
+      </div>
 
       <RadioGroup
-        legend="Har lege blitt kontaktet?"
+        legend="Har helsepersonell blitt oppsøkt? (valgfri)"
         error={
-          errors?.skade?.legeKontaktet && errors?.skade?.legeKontaktet.message
+          errors?.skade?.oppsoektHelsehjelp &&
+          errors?.skade?.oppsoektHelsehjelp.message
         }
         className="spacer"
       >
@@ -139,14 +125,15 @@ const InjuryForm = ({
           <input
             type="radio"
             className="navds-radio__input"
-            {...register('skade.legeKontaktet', {
-              required: 'Dette feltet er påkrevd',
-            })}
-            value="Ja"
-            data-testid="injury-medical-contacted-yes-option"
-            id="lege-ja"
+            {...register('skade.oppsoektHelsehjelp')}
+            value="Lege oppsøkt"
+            data-testid="injury-doctor-contacted-option"
+            id="injury-doctor-contacted-option"
           />
-          <label htmlFor="lege-ja" className="navds-radio__label">
+          <label
+            htmlFor="injury-doctor-contacted-option"
+            className="navds-radio__label"
+          >
             Ja
           </label>
         </div>
@@ -154,59 +141,106 @@ const InjuryForm = ({
           <input
             type="radio"
             className="navds-radio__input"
-            {...register('skade.legeKontaktet', {
-              required: 'Dette feltet er påkrevd',
-            })}
-            value="Nei"
-            data-testid="injury-medical-contacted-no-option"
-            id="lege-nei"
+            {...register('skade.oppsoektHelsehjelp')}
+            value="Annet helsepersonell oppsøkt "
+            data-testid="injury-other-contacted-no-option"
+            id="injury-other-contacted-no-option"
           />
-          <label htmlFor="lege-nei" className="navds-radio__label">
-            Nei
+          <label
+            htmlFor="injury-other-contacted-no-option"
+            className="navds-radio__label"
+          >
+            Annet helsepersonell oppsøkt
           </label>
         </div>
+      </RadioGroup>
+
+      <RadioGroup
+        legend="Har den skadelidte hatt fravær?"
+        error={
+          errors?.skade?.antattSykefravaerTabellH &&
+          errors?.skade?.antattSykefravaerTabellH.message
+        }
+        className="spacer"
+      >
         <div className="navds-radio navds-radio--medium">
           <input
             type="radio"
             className="navds-radio__input"
-            {...register('skade.legeKontaktet', {
+            {...register('skade.antattSykefravaerTabellH', {
               required: 'Dette feltet er påkrevd',
             })}
-            value="Vet ikke"
-            data-testid="injury-medical-contacted-unknown-option"
-            id="lege-unknown"
+            value="Fraværsdager ukjent"
+            data-testid="injury-absence-unknown-option"
+            id="injury-absence-unknown-option"
           />
-          <label htmlFor="lege-unknown" className="navds-radio__label">
-            Vet ikke
+          <label
+            htmlFor="injury-absence-unknown-option"
+            className="navds-radio__label"
+          >
+            Fraværsdager ukjent
+          </label>
+        </div>
+
+        <div className="navds-radio navds-radio--medium">
+          <input
+            type="radio"
+            className="navds-radio__input"
+            {...register('skade.antattSykefravaerTabellH', {
+              required: 'Dette feltet er påkrevd',
+            })}
+            value="Kjent fravær mindre enn 3 dager"
+            data-testid="injury-absence-short-option"
+            id="injury-absence-short-option"
+          />
+          <label
+            htmlFor="injury-absence-short-option"
+            className="navds-radio__label"
+          >
+            Kjent fravær mindre enn 3 dager
+          </label>
+        </div>
+
+        <div className="navds-radio navds-radio--medium">
+          <input
+            type="radio"
+            className="navds-radio__input"
+            {...register('skade.antattSykefravaerTabellH', {
+              required: 'Dette feltet er påkrevd',
+            })}
+            value="Kjent fravær mer enn 3 dagerLege oppsøkt"
+            data-testid="injury-absence-long-option"
+            id="injury-absence-long-option"
+          />
+          <label
+            htmlFor="injury-absence-long-option"
+            className="navds-radio__label"
+          >
+            Kjent fravær mer enn 3 dager
+          </label>
+        </div>
+
+        <div className="navds-radio navds-radio--medium">
+          <input
+            type="radio"
+            className="navds-radio__input"
+            {...register('skade.antattSykefravaerTabellH', {
+              required: 'Dette feltet er påkrevd',
+            })}
+            value="Alternativene passer ikke"
+            data-testid="injury-absence-nomatch-option"
+            id="injury-absence-nomatch-option"
+          />
+          <label
+            htmlFor="injury-absence-nomatch-option"
+            className="navds-radio__label"
+          >
+            Alternativene passer ikke
           </label>
         </div>
       </RadioGroup>
-      <Textarea
-        className="spacer"
-        label="Utfyllende beskrivelse"
-        description={<TextareaDescription />}
-        {...register('hendelsesfakta.utfyllendeBeskrivelse')}
-        value={freetext}
-        maxLength={1000}
-        onChange={(e) => setFreetext(e.target.value)}
-        data-testid="injury-additional-information"
-      />
     </>
   );
 };
 
 export default InjuryForm;
-
-const TextareaDescription = () => {
-  return (
-    <>
-      Vi trenger opplysninger om
-      <ul>
-        <li>Hvordan ulykken skjedde og om skadens/sykdommens art</li>
-        <li>behandlingen av skadede, behandlingstype (f.eks. førstehjelp)</li>
-        <li>behandling av hvem (f.eks. lege)</li>
-        <li>behandlet hvor (f.eks. på sykehus, på stedet osv.)</li>
-      </ul>
-    </>
-  );
-};

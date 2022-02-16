@@ -1,16 +1,11 @@
 import { useState } from 'react';
-import {
-  Select,
-  TextField,
-  Fieldset,
-  RadioGroup,
-  Label,
-} from '@navikt/ds-react';
+import { Select, RadioGroup, Label } from '@navikt/ds-react';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import nb from 'date-fns/locale/nb';
 import { Controller } from 'react-hook-form';
 
 import './timeframeForm.less';
+import ulykkestid from '../../../assets/Lists/ulykkestid';
 
 registerLocale('nb', nb);
 
@@ -18,134 +13,167 @@ interface IProps {
   register: any;
   errors: any;
   control: any;
+  setValue: any
 }
-const TimeframeForm = ({ register, errors, control }: IProps) => {
-  const [timeframe, setTimeframe] = useState('');
+const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
+  const [startDateRange, setStartDateRange] = useState(null);
+  const [endDateRange, setEndDateRange] = useState(null);
+
+  const [timeType, setTimeType] = useState('Tidspunkt');
+
+  const onChangeRange = (dates: any) => {
+    const [startRange, endRange] = dates;
+    setStartDateRange(startRange);
+    setValue('hendelsesfakta.tid.periode.fra', startRange);
+    setValue('hendelsesfakta.tid.periode.til', endRange);
+    setEndDateRange(endRange);
+  };
+
   return (
     <>
-      <Fieldset legend="Når skjedde ulykken som skal meldes?">
-        <div className="spacer">
-          <Label>Dato for ulykken</Label>
-          <Controller
-            name="hendelsesfakta.tid.dato"
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <DatePicker
-                className="navds-text-field__input navds-body-short navds-body-medium"
-                onChange={(date) => field.onChange(date)}
-                selected={field.value}
-                maxDate={new Date()}
-                locale="nb"
-                dateFormat="dd.MM.yyyy"
-              />
-            )}
+      <RadioGroup
+        // className="spacer"
+        legend="Når skjedde ulykken som skal meldes?"
+        error={
+          errors?.hendelsesfakta?.tid?.tidstype &&
+          errors?.hendelsesfakta?.tid?.tidstype.message
+        }
+      >
+        <div className="navds-radio navds-radio--medium">
+          <input
+            type="radio"
+            className="navds-radio__input"
+            {...register('hendelsesfakta.tid.tidstype', {
+              required: 'Dette feltet er påkrevd',
+            })}
+            value="Tidspunkt"
+            data-testid="timeframe-when-date"
+            id="timeframe-when-date"
+            onChange={(e) => {
+              setTimeType(e.target.value);
+            }}
           />
-          {errors?.hendelsesfakta?.tid?.dato && (
-            <span className="navds-error-message navds-error-message--medium navds-label">
-              Dette feltet er påkrevd
-            </span>
-          )}
+          <label htmlFor="timeframe-when-date" className="navds-radio__label">
+            På en dato
+          </label>
+        </div>
+        {timeType === 'Tidspunkt' && (
+          <div className="spacer">
+            <Label>Dato for ulykken</Label>
+            <Controller
+              name="hendelsesfakta.tid.dato"
+              control={control}
+              rules={{ required: timeType === 'Tidspunkt' && 'Dette feltet er påkrevd' }}
+              render={({ field }) => (
+                <DatePicker
+                  className="navds-text-field__input navds-body-short navds-body-medium"
+                  onChange={(date) => field.onChange(date)}
+                  selected={field.value}
+                  maxDate={new Date()}
+                  locale="nb"
+                  dateFormat="dd.MM.yyyy HH:mm"
+                  showTimeInput
+                  shouldCloseOnSelect={false}
+                />
+              )}
+            />
+            {errors?.hendelsesfakta?.tid?.dato && (
+              <span className="navds-error-message navds-error-message--medium navds-label">
+                {errors?.hendelsesfakta?.tid?.dato.message}
+              </span>
+            )}
+          </div>
+        )}
+
+        <div className="navds-radio navds-radio--medium">
+          <input
+            type="radio"
+            className="navds-radio__input"
+            {...register('hendelsesfakta.tid.tidstype', {
+              required: 'Dette feltet er påkrevd',
+            })}
+            value="Periode"
+            data-testid="timeframe-when-over-period"
+            id="timeframe-when-over-period"
+            onChange={(e) => {
+              setTimeType(e.target.value);
+            }}
+          />
+          <label
+            htmlFor="timeframe-when-over-period"
+            className="navds-radio__label"
+          >
+            Over en periode
+          </label>
         </div>
 
-        <TextField
-          {...register('hendelsesfakta.tid.tidspunkt', { required: true })}
-          error={
-            errors?.hendelsesfakta?.tid?.tidspunkt && 'Dette feltet er påkrevd'
-          }
-          label="Klokkeslett for ulykken"
-          description="00:00"
-          data-testid="timeframe-when-time"
-          // className="spacer"
-        />
+        {timeType === 'Periode' && (
+          <div className="spacer">
+            <Label>Fra - Til</Label>
+            <Controller
+              name="hendelsesfakta.tid.periode"
+              control={control}
+              rules={{ required: timeType === 'Periode' && startDateRange === null && endDateRange === null && 'Dette feltet er påkrevd' }}
+              render={({ field }) => (
+                <DatePicker
+                  className="navds-text-field__input navds-body-short navds-body-medium"
+                  maxDate={new Date()}
+                  locale="nb"
+                  dateFormat="dd.MM.yyyy"
+                  selectsRange
+                  selected={startDateRange}
+                  onChange={onChangeRange}
+                  startDate={startDateRange}
+                  endDate={endDateRange}
+                  shouldCloseOnSelect={false}
+                />
+              )}
+            />
+            {errors?.hendelsesfakta?.tid?.periode && (
+              <span className="navds-error-message navds-error-message--medium navds-label">
+                {errors?.hendelsesfakta?.tid?.periode.message}
+              </span>
+            )}
+          </div>
+        )}
 
-        <RadioGroup
-          // className="spacer"
-          legend
-          error={
-            errors?.hendelsesfakta?.tid?.ukjent && 'Dette feltet er påkrevd'
-          }
-        >
-          <div className="navds-radio navds-radio--medium">
-            <input
-              type="radio"
-              className="navds-radio__input"
-              {...register('hendelsesfakta.tid.ukjent', {
-                required: false,
-              })}
-              value="Ukjent"
-              data-testid="timeframe-when-unknown"
-              id="timeframe-when-unknown"
-            />
-            <label
-              htmlFor="timeframe-when-unknown"
-              className="navds-radio__label"
-            >
-              Ukjent
-            </label>
-          </div>
-          <div className="navds-radio navds-radio--medium">
-            <input
-              type="radio"
-              className="navds-radio__input"
-              {...register('hendelsesfakta.tid.ukjent', {
-                required: false,
-              })}
-              value="Over en periode"
-              data-testid="timeframe-when-over-period"
-              id="timeframe-when-over-period"
-            />
-            <label
-              htmlFor="timeframe-when-over-period"
-              className="navds-radio__label"
-            >
-              Over en periode
-            </label>
-          </div>
-        </RadioGroup>
-      </Fieldset>
+        <div className="navds-radio navds-radio--medium">
+          <input
+            type="radio"
+            className="navds-radio__input"
+            {...register('hendelsesfakta.tid.tidstype', {
+              required: 'Dette feltet er påkrevd',
+            })}
+            value="Ukjent"
+            data-testid="timeframe-when-unknown"
+            id="timeframe-when-unknown"
+            onChange={(e) => {
+              setTimeType(e.target.value);
+            }}
+          />
+          <label
+            htmlFor="timeframe-when-unknown"
+            className="navds-radio__label"
+          >
+            Ukjent
+          </label>
+        </div>
+      </RadioGroup>
 
       <Select
         className="spacer"
-        {...register('hendelsesfakta.tid.tidstype', { required: true })}
+        {...register('hendelsesfakta.tid.naarSkjeddeUlykken', { required: 'Dette feltet er påkrevd' })}
         error={
-          errors?.hendelsesfakta?.tid?.tidstype && 'Dette feltet er påkrevd'
+          errors?.hendelsesfakta?.tid?.naarSkjeddeUlykken && errors?.hendelsesfakta?.tid?.naarSkjeddeUlykken.message
         }
-        onChange={(e) => {
-          setTimeframe(e.target.value);
-        }}
         label="Innenfor hvilket tidsrom inntraff skaden?"
         data-testid="timeframe-period-options"
       >
-        <option value="">Velg</option>
-        <option value="I avtalt arbeidstid">I avtalt arbeidstid</option>
-        <option value="Under permisjon">Under permisjon</option>
-        <option value="Under full sykemelding">Under full sykemelding</option>
-        <option value="Fritid/ privat aktivitet">
-          Fritid/ privat aktivitet
-        </option>
-        <option value="Hvilende vakt">Hvilende vakt</option>
-        <option value="Under frivillig arbeid">Under frivillig arbeid</option>
-        <option value="Under redningsarbeid, vakthold eller redningsøvelse">
-          Under redningsarbeid, vakthold eller redningsøvelse
-        </option>
-        <option value="Annet" data-testid="timeframe-period-option-other">
-          Annet
-        </option>
+        <option hidden value=""></option>
+        {ulykkestid.map((time: { value: string; label: string }) => {
+          return <option key={encodeURIComponent(time.value)} value={time.value}>{time.label}</option>;
+        })}
       </Select>
-
-      {timeframe === 'Annet' && (
-        <TextField
-          className="spacer"
-          {...register('hendelsesfakta.tid.tidstypeAnnet')}
-          error={
-            errors?.hendelsesfakta?.tid?.tidstypeAnnet &&
-            'Dette feltet er påkrevd'
-          }
-          label="Annet"
-          data-testid="timeframe-period-option-other-text"
-        />
-      )}
     </>
   );
 };

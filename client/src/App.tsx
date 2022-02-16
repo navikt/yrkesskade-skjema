@@ -9,6 +9,7 @@ import TimeframeFormPage from './pages/Form/Timeframe';
 import InjuryFormPage from './pages/Form/Injury';
 import InjuredFormPage from './pages/Form/Injured';
 import AccidentFormPage from './pages/Form/Accident';
+import DescriptionFormPage from './pages/Form/Description';
 import { Route, Routes } from 'react-router-dom';
 import { ISteps } from './Interfaces/steps';
 import { StateMachineProvider, createStore } from 'little-state-machine';
@@ -51,6 +52,11 @@ const App = () => {
       },
       {
         text: 'Om skaden',
+        done: false,
+        active: false,
+      },
+      {
+        text: 'Utfyllende beskrivelse',
         done: false,
         active: false,
       },
@@ -135,6 +141,16 @@ const App = () => {
                   path="skaden"
                   element={
                     <InjuryFormPage
+                      steps={steps}
+                      increaseStep={increaseStep}
+                      decreaseStep={decreaseStep}
+                    />
+                  }
+                />
+                <Route
+                  path="beskrivelse"
+                  element={
+                    <DescriptionFormPage
                       steps={steps}
                       increaseStep={increaseStep}
                       decreaseStep={decreaseStep}

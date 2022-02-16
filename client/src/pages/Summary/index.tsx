@@ -53,7 +53,7 @@ const Summary = ({ steps, increaseStep, decreaseStep }: IProps) => {
       <Grid>
         <Cell xs={12} lg={2}></Cell>
         <Cell xs={12} lg={5}>
-        <BackButton decreaseStep={decreaseStep} url="/yrkesskade/skjema/skaden" />
+        <BackButton decreaseStep={decreaseStep} url="/yrkesskade/skjema/beskrivelse" />
           <Heading
             size="2xlarge"
             className="pageNumberTitle spacer"

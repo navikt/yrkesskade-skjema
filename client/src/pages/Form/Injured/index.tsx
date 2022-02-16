@@ -63,7 +63,7 @@ const InjuredFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
             >
               Om den skadelidte
             </Heading>
-            <InjuredForm errors={errors} register={register} setError={setError} control={control}/>
+            <InjuredForm errors={errors} register={register} control={control}/>
             <div className="buttonGroup">
               <Button variant="secondary" onClick={handleAbort}>
                 Avbryt

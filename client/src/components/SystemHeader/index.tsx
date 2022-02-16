@@ -3,7 +3,7 @@ import {} from '@navikt/ds-icons';
 
 const SystemHeader = () => {
   return (
-    <PageHeader variant="product" description="Innmelding">
+    <PageHeader variant="product" description="INNMELDING">
         Innmelding av yrkesskade
       </PageHeader>
   )
