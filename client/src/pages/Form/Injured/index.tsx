@@ -31,7 +31,6 @@ const InjuredFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors },
     control
   } = useForm();

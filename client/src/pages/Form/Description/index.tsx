@@ -27,7 +27,6 @@ const DescriptionFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors },
   } = useForm();
 
