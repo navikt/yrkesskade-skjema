@@ -47,6 +47,7 @@ const hentBrukerinfo = async (req, res: Response, next: NextFunction) => {
     }
   } catch (error) {
     res.sendStatus(400);
+    // tslint:disable-next-line:no-console
     console.error(error);
     return;
   }
