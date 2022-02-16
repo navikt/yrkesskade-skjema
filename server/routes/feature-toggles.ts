@@ -23,20 +23,11 @@ export const configureFeatureTogglesEndpoint = (app: Express): Express => {
 
 const hentBrukerinfo = async (req, res: Response, next: NextFunction) => {
 
-  // tslint:disable-next-line:no-console
-  console.log('hent brukerinfo config: ', config);
-
   // bruk rett cookie name
   const cookieName = config.IDPORTEN_COOKIE_NAME;
 
-  // tslint:disable-next-line:no-console
-  console.log('hent brukerinfo cookies: ', req.cookies);
-
   // hent token fra cookie
   const idtoken = req.cookies && req.cookies[cookieName];
-
-  // tslint:disable-next-line:no-console
-  console.log('hent brukerinfo idtoken: ', idtoken);
 
   if (!idtoken) {
     res.sendStatus(401);
@@ -44,7 +35,7 @@ const hentBrukerinfo = async (req, res: Response, next: NextFunction) => {
   }
 
   try {
-    const tokenset = await exchangeToken(idtoken);
+    const tokenset = await exchangeToken(req);
     const response = await axios.get<Brukerinfo>(`${config.API_URL}/api/v1/brukerinfo`, {
       headers: {
         // bruk cookie i kall mot api
