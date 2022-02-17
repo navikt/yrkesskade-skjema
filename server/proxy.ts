@@ -14,12 +14,12 @@ const restream = (
     proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
     proxyReq.write(bodyData);
   }
-
-  // tslint:disable-next-line:no-console
-  console.log(proxyReq);
-  // tslint:disable-next-line:no-console
-  console.log(req);
 };
+
+const errorHandler = (err, req, res) => {
+   // tslint:disable-next-line:no-console
+  console.error('error:', err);
+}
 
 export const doProxy = (path: string, target: string) => {
   return createProxyMiddleware(path, {
@@ -27,6 +27,7 @@ export const doProxy = (path: string, target: string) => {
     logLevel: process.env.NODE_ENV !== 'production' ? 'debug' : 'info',
     secure: true,
     onProxyReq: restream,
+    onError: errorHandler,
     target: `${target}`,
   });
 };
