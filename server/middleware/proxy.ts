@@ -1,6 +1,7 @@
 import { ClientRequest, IncomingMessage, ServerResponse } from 'http';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import { Request } from 'express';
+import { exchangeToken } from '../tokenx';
 
 const restream = (
   proxyReq: ClientRequest,
@@ -31,6 +32,13 @@ export const doProxy = (path: string, target: string) => {
     secure: true,
     onProxyReq: restream,
     onError: errorHandler,
+    router: async (req) => {
+      const tokenSet = await exchangeToken(req);
+      if (!tokenSet?.expired() && tokenSet?.access_token) {
+          req.headers['authorization'] = `Bearer ${tokenSet.access_token}`;
+      }
+      return undefined;
+  },
     target: `${target}`,
   });
 
