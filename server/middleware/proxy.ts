@@ -22,7 +22,10 @@ const errorHandler = (err, req, res) => {
 }
 
 export const doProxy = (path: string, target: string) => {
-  return createProxyMiddleware(path, {
+  // tslint:disable-next-line:no-console
+  console.log(`redirect ${path} to ${target}`);
+
+  const proxy = createProxyMiddleware(path, {
     changeOrigin: true,
     logLevel: process.env.ENV === 'prod' ? 'silent' : 'debug',
     secure: true,
@@ -30,4 +33,9 @@ export const doProxy = (path: string, target: string) => {
     onError: errorHandler,
     target: `${target}`,
   });
+
+  // tslint:disable-next-line:no-console
+  console.log(`proxy: `, proxy);
+
+  return proxy;
 };
