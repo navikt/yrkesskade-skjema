@@ -16,7 +16,9 @@ const restream = (
   }
 
   // tslint:disable-next-line:no-console
-  console.log(`restream headers:`, (req as Request).headers);
+  console.log(proxyReq);
+  // tslint:disable-next-line:no-console
+  console.log(req);
 };
 
 export const doProxy = (path: string, target: string) => {
