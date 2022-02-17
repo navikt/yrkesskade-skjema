@@ -23,10 +23,7 @@ const errorHandler = (err, req, res) => {
 }
 
 export const doProxy = (path: string, target: string) => {
-  // tslint:disable-next-line:no-console
-  console.log(`redirect ${path} to ${target}`);
-
-  const proxy = createProxyMiddleware(path, {
+    return createProxyMiddleware(path, {
     changeOrigin: true,
     logLevel: process.env.ENV === 'prod' ? 'silent' : 'debug',
     secure: true,
@@ -35,16 +32,19 @@ export const doProxy = (path: string, target: string) => {
     onError: errorHandler,
     router: async (req) => {
       const tokenSet = await exchangeToken(req);
+      // tslint:disable-next-line:no-console
+      console.log('new token: ', tokenSet);
+
       if (!tokenSet?.expired() && tokenSet?.access_token) {
+          // tslint:disable-next-line:no-console
+          console.log('add new token bearer');
           req.headers['authorization'] = `Bearer ${tokenSet.access_token}`;
       }
+      // tslint:disable-next-line:no-console
+      console.log('headers: ', req.headers);
+
       return undefined;
   },
     target: `${target}`,
   });
-
-  // tslint:disable-next-line:no-console
-  console.log(`proxy: `, proxy);
-
-  return proxy;
 };
