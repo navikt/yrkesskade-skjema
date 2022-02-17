@@ -14,12 +14,6 @@ const restream = (
     proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
     proxyReq.write(bodyData);
   }
-
-   // tslint:disable-next-line:no-console
-  console.log(`request headers`, req.headers);
-
-   // tslint:disable-next-line:no-console
-   console.log('proxyReq headers', proxyReq.getHeaders());
 };
 
 const errorHandler = (err, req, res) => {
@@ -30,7 +24,7 @@ const errorHandler = (err, req, res) => {
 export const doProxy = (path: string, target: string) => {
   return createProxyMiddleware(path, {
     changeOrigin: true,
-    logLevel: process.env.NODE_ENV !== 'production' ? 'debug' : 'debug',
+    logLevel: process.env.ENV === 'prod' ? 'silent' : 'debug',
     secure: true,
     onProxyReq: restream,
     onError: errorHandler,
