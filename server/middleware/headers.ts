@@ -8,5 +8,8 @@ export const appendHeaders = async (req: Request, res: Response, next: NextFunct
     req.headers.Authorization = `Bearer ${tokenSet.access_token}`;
   }
 
+  // tslint:disable-next-line:no-console
+  console.log(`request headers ${req.headers}`);
+
   next();
 }
