@@ -1,7 +1,6 @@
 import { Express } from 'express';
-import { appendHeaders } from '../middleware/headers';
 import { doProxy } from '../middleware/proxy'
 
 export const configureApiEndpoint = (app: Express, apiBasePath: string, proxyApiUrl) => {
-  app.use(apiBasePath, appendHeaders, doProxy(apiBasePath, proxyApiUrl));
+  app.use(apiBasePath, doProxy(apiBasePath, proxyApiUrl));
 }

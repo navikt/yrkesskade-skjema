@@ -30,6 +30,7 @@ export const doProxy = (path: string, target: string) => {
     changeOrigin: true,
     logLevel: process.env.ENV === 'prod' ? 'silent' : 'debug',
     secure: true,
+    xfwd: true,
     onProxyReq: restream,
     onError: errorHandler,
     router: async (req) => {
