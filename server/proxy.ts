@@ -24,7 +24,7 @@ const restream = (
 
 const errorHandler = (err, req, res) => {
    // tslint:disable-next-line:no-console
-  console.error('error:', err);
+  console.error('error:',  { err, req, res });
 }
 
 export const doProxy = (path: string, target: string) => {
