@@ -9,7 +9,7 @@ export const appendHeaders = async (req: Request, res: Response, next: NextFunct
   }
 
   // tslint:disable-next-line:no-console
-  console.log(`request headers ${req.headers}`);
+  console.log(`request headers`, req.headers);
 
   next();
 }
