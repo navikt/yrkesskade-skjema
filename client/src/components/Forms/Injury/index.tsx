@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Select, RadioGroup, Table, Button } from '@navikt/ds-react';
 import { injuredBodypart, injuryType } from '../../../assets/injuryEnums';
-import { isEmpty } from 'ramda';
-import { AddCircle } from '@navikt/ds-icons';
+import { isEmpty, remove } from 'ramda';
+import { AddCircle, MinusCircle } from '@navikt/ds-icons';
 
 interface IProps {
   register: any;
@@ -19,6 +19,11 @@ const InjuryForm = ({
   setValue,
 }: IProps) => {
   const [injury, setInjury] = useState<{}[]>([]);
+
+  const removeInjury = (index: number) => {
+    console.log(index);
+    setInjury(remove(index, 1, injury));
+  }
 
   const handleMultipleIjurys = () => {
     const bodypart = getValues('skade.kroppsdelTabellD');
@@ -94,6 +99,7 @@ const InjuryForm = ({
               <Table.Row>
                 <Table.HeaderCell>Område</Table.HeaderCell>
                 <Table.HeaderCell>Skade</Table.HeaderCell>
+                <Table.HeaderCell></Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -104,6 +110,11 @@ const InjuryForm = ({
                     <Table.Row key={index}>
                       <Table.DataCell>{item.kroppsdelTabellD}</Table.DataCell>
                       <Table.DataCell>{item.skadeartTabellC}</Table.DataCell>
+                      <Table.DataCell>
+                        <Button variant="tertiary" onClick={() => removeInjury(index)}>
+                        <MinusCircle  />
+                        </Button>
+                      </Table.DataCell>
                     </Table.Row>
                   );
                 }
