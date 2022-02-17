@@ -21,7 +21,6 @@ const InjuryForm = ({
   const [injury, setInjury] = useState<{}[]>([]);
 
   const removeInjury = (index: number) => {
-    console.log(index);
     setInjury(remove(index, 1, injury));
   }
 
