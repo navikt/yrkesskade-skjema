@@ -14,6 +14,9 @@ const restream = (
     proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
     proxyReq.write(bodyData);
   }
+
+  // tslint:disable-next-line:no-console
+  console.log(`restream headers:`, (req as Request).headers);
 };
 
 export const doProxy = (path: string, target: string) => {
