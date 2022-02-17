@@ -18,6 +18,7 @@ import { InnloggetProvider } from './context/InnloggetContext';
 import { FeatureTogglesProvider } from './context/FeatureTogglesContext';
 import { autentiseringsInterceptor } from './utils/autentisering';
 import { SelectedCompanyProvider } from './context/SelectedCompanyContext';
+import Landing from './pages/Landing';
 
 const App = () => {
   createStore({}, { name: 'formdata'});
@@ -103,6 +104,9 @@ const App = () => {
             <Route path="yrkesskade/">
               <Route
                 index
+                element={<Landing />}
+              />
+              <Route path="info"
                 element={<Info increaseStep={increaseStep} steps={steps} />}
                 // element={<Info steps={steps} />}
               />
