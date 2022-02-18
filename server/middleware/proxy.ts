@@ -8,13 +8,19 @@ const restream = (
   req: IncomingMessage,
   _res: ServerResponse
 ) => {
-  const requestBody = (req as Request).body;
+  const httpRequest = (req as Request);
+  const requestBody = httpRequest.body;
   if (requestBody) {
     const bodyData = JSON.stringify(requestBody);
     proxyReq.setHeader('Content-Type', 'application/json');
     proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
     proxyReq.write(bodyData);
   }
+
+  if (httpRequest.headers['authorization']) {
+    proxyReq.setHeader('Authorization', httpRequest.headers['authorization'])
+  }
+
 };
 
 const errorHandler = (err, req, res) => {
@@ -28,20 +34,14 @@ export const doProxy = (path: string, target: string) => {
     logLevel: process.env.ENV === 'prod' ? 'silent' : 'debug',
     secure: true,
     xfwd: true,
-    //onProxyReq: restream,
+    onProxyReq: restream,
     onError: errorHandler,
     router: async (req) => {
       const tokenSet = await exchangeToken(req);
-      // tslint:disable-next-line:no-console
-      console.log('new token: ', tokenSet);
 
       if (!tokenSet?.expired() && tokenSet?.access_token) {
-          // tslint:disable-next-line:no-console
-          console.log('add new token bearer');
           req.headers['authorization'] = `Bearer ${tokenSet.access_token}`;
       }
-      // tslint:disable-next-line:no-console
-      console.log('headers: ', req.headers);
 
       return undefined;
   },

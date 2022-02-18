@@ -45,8 +45,8 @@ const Info = ({ steps, increaseStep }: IProps) => {
   const onOrganisasjonChange = (organisasjon: Organisasjon) => {
     if (organisasjon.organisasjonsnummer !== '-') {
       axios.get<Organisasjon>(`/api/v1/brukerinfo/organisasjoner/${organisasjon.organisasjonsnummer}`).then((response) => {
-        console.log('response: ', response.data);
-        setSelectedAddress(response.data.forretningsadresse);
+        const adresse = response.data.beliggenhetsadresse || response.data.forretningsadresse
+        setSelectedAddress(adresse);
       })
     }
   }

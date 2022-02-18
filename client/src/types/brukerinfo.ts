@@ -12,6 +12,7 @@ export interface Organisasjon {
   type: string;
   postadresse?: Adresse;
   forretningsadresse?: Adresse;
+  beliggenhetsadresse?: Adresse;
 }
 
 export interface Adresse {
