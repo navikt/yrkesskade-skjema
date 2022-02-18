@@ -1,30 +1,46 @@
-import { Cell, ContentContainer, Grid, Heading } from '@navikt/ds-react';
-import { useEffect } from 'react';
+import {
+  BodyLong,
+  BodyShort,
+  Button,
+  Cell,
+  ContentContainer,
+  Grid,
+  Heading,
+  Ingress,
+  Loader,
+} from '@navikt/ds-react';
+import { ReactElement, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import SystemHeader from '../../components/SystemHeader';
 import { useFeatureToggles } from '../../context/FeatureTogglesContext';
 import { useInnloggetContext } from '../../context/InnloggetContext';
 import { Brukerinfo } from '../../types/brukerinfo';
 import { EAllFeatureToggles } from '../../types/feature-toggles';
+import { logMessage } from '../../utils/logging';
+import './Landing.less';
 
 const Landing = () => {
   const navigate = useNavigate();
   const { innloggetBruker } = useInnloggetContext();
   const { toggles } = useFeatureToggles();
+  const [content, setContent] = useState<ReactElement>(<LoadingContent />);
 
   const digitalFormAvailable = (
     innloggetBruker: Brukerinfo,
     toggles: EAllFeatureToggles
   ): boolean => {
+    if (toggles.ER_IKKE_PROD) {
+      logMessage('Digitalt skjema tilgjengelig: er ikke i produksjons miljø');
+      return true;
+    }
     // check if user is part of MVP naeringskoder
     if (!toggles.DIGITAL_SKJEMA_INNSENDING) {
-      console.error('Feature toggle disabled form');
+      logMessage('Feature toggle disabled form')
       return false;
     }
 
     // check if user meets the number of organisations requirement
     if (innloggetBruker.organisasjoner.length !== 1) {
-      console.error('User need to have access to only one organisation');
+      logMessage('User need to have access to only one organisation');
       // MVP only supports 1 organisation
       return false;
     }
@@ -34,22 +50,69 @@ const Landing = () => {
 
   useEffect(() => {
     console.log('toggles: ', toggles);
-    if (innloggetBruker && digitalFormAvailable(innloggetBruker, toggles)) {
-      navigate('/yrkesskade/skjema');
+    if (innloggetBruker) {
+      const tilgangTilDigitaltskjema = digitalFormAvailable(
+        innloggetBruker,
+        toggles
+      );
+      if (tilgangTilDigitaltskjema) {
+        navigate('/yrkesskade/info');
+      } else {
+        setContent(<NoAccessContent />);
+      }
     }
   }, [innloggetBruker, toggles, navigate]);
 
   return (
     <ContentContainer>
-      <Grid>
-        <Cell xs={12} lg={2}></Cell>
-        <Cell xs={12} lg={5}>
-        <Heading spacing level="3" size="medium">
-          Laster
-        </Heading>
-        </Cell>
-      </Grid>
+      {content}
     </ContentContainer>
+  );
+};
+
+const LoadingContent = () => {
+  return (
+    <Grid>
+      <Cell xs={12} lg={4}></Cell>
+      <Cell xs={12} lg={4} className="center">
+        <Heading spacing level="3" size="medium">
+          <Loader size="xlarge" />
+        </Heading>
+        <Heading spacing level="3" size="medium">
+          Henter opplysninger
+        </Heading>
+        <Ingress spacing>
+          Vennligst vent mens vi henter de nødvendige opplysningene
+        </Ingress>
+      </Cell>
+    </Grid>
+  );
+};
+
+const NoAccessContent = () => {
+
+  const handleClick = () => {
+    console.log('Naviger tilbake til nav.no og skjemasidene');
+    window.location.href = 'https://www.nav.no/no/person/arbeid/yrkesskade-og-yrkessykdom';
+  }
+
+  return (
+    <Grid>
+      <Cell xs={12} lg={6}>
+        <Heading spacing level="3" size="medium">
+          Innmelding av yrkesskade
+        </Heading>
+        <BodyLong className="spacer">
+          Det ser ut som du fortsatt må ta i bruk dagens løsning, men vi setter
+          stor pris på at du er intressert i den digitale løsningen. Velkommen
+          tilbake igjen ved neste anledning for å sjekke om din bruker er
+          inkludert. Takk for tålmodigheten.
+        </BodyLong>
+        <BodyShort>
+          <Button onClick={handleClick}>Tilbake til dagens løsning</Button>
+        </BodyShort>
+      </Cell>
+    </Grid>
   );
 };
 
