@@ -34,7 +34,6 @@ export const doProxy = (path: string, target: string) => {
     logLevel: process.env.ENV === 'prod' ? 'silent' : 'debug',
     secure: true,
     xfwd: true,
-    onProxyReq: restream,
     onError: errorHandler,
     router: async (req) => {
       const tokenSet = await exchangeToken(req);
