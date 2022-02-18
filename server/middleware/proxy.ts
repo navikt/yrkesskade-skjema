@@ -16,11 +16,6 @@ const restream = (
     proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
     proxyReq.write(bodyData);
   }
-
-  if (httpRequest.headers['authorization']) {
-    proxyReq.setHeader('Authorization', httpRequest.headers['authorization'])
-  }
-
 };
 
 const errorHandler = (err, req, res) => {
@@ -34,7 +29,7 @@ export const doProxy = (path: string, target: string) => {
     logLevel: process.env.ENV === 'prod' ? 'silent' : 'debug',
     secure: true,
     xfwd: true,
-    onProxyReq: restream,
+   // onProxyReq: restream,
     onError: errorHandler,
     router: async (req) => {
       const tokenSet = await exchangeToken(req);
