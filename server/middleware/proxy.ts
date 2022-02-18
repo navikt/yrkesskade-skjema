@@ -10,6 +10,11 @@ const restream = (
 ) => {
   const httpRequest = (req as Request);
   const requestBody = httpRequest.body;
+
+  if (httpRequest.headers['authorization']) {
+    proxyReq.setHeader('Authorization', httpRequest.headers['authorization'])
+  }
+
   if (requestBody) {
     const bodyData = JSON.stringify(requestBody);
     proxyReq.setHeader('Content-Type', 'application/json');
