@@ -38,7 +38,11 @@ const TimeframeFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
     setValue
   } = useForm({
     defaultValues: {
-      'hendelsesfakta.tid.tidstype': 'Tidspunkt'
+      'hendelsesfakta.tid.tidstype': state.hendelsesfakta.tid.tidstype,
+      'hendelsesfakta.tid.tidspunkt': state.hendelsesfakta.tid.tidspunkt,
+      'hendelsesfakta.tid.periode.fra': state.hendelsesfakta.tid.periode.fra,
+      'hendelsesfakta.tid.periode.til': state.hendelsesfakta.tid.periode.til,
+      'hendelsesfakta.naarSkjeddeUlykken': state.hendelsesfakta.naarSkjeddeUlykken
     }
   });
 

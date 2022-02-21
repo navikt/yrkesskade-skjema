@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Select, RadioGroup, Label } from '@navikt/ds-react';
 import DatePicker, { registerLocale } from 'react-datepicker';
+import { useStateMachine } from 'little-state-machine';
 import nb from 'date-fns/locale/nb';
 import { Controller } from 'react-hook-form';
 
@@ -16,10 +17,11 @@ interface IProps {
   setValue: any
 }
 const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
-  const [startDateRange, setStartDateRange] = useState(null);
-  const [endDateRange, setEndDateRange] = useState(null);
+  const { state } = useStateMachine();
+  const [startDateRange, setStartDateRange] = useState(state.hendelsesfakta.tid.periode.fra);
+  const [endDateRange, setEndDateRange] = useState(state.hendelsesfakta.tid.periode.til);
 
-  const [timeType, setTimeType] = useState('Tidspunkt');
+  const [timeType, setTimeType] = useState(state.hendelsesfakta.tid.tidstype);
 
   const onChangeRange = (dates: any) => {
     const [startRange, endRange] = dates;
@@ -28,7 +30,6 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
     setValue('hendelsesfakta.tid.periode.til', endRange);
     setEndDateRange(endRange);
   };
-
   return (
     <>
       <RadioGroup
@@ -61,7 +62,7 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
           <div className="spacer">
             <Label>Dato for ulykken</Label>
             <Controller
-              name="hendelsesfakta.tid.dato"
+              name="hendelsesfakta.tid.tidspunkt"
               control={control}
               rules={{ required: timeType === 'Tidspunkt' && 'Dette feltet er påkrevd' }}
               render={({ field }) => (
@@ -77,9 +78,9 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
                 />
               )}
             />
-            {errors?.hendelsesfakta?.tid?.dato && (
+            {errors?.hendelsesfakta?.tid?.tidspunkt && (
               <span className="navds-error-message navds-error-message--medium navds-label">
-                {errors?.hendelsesfakta?.tid?.dato.message}
+                {errors?.hendelsesfakta?.tid?.tidspunkt.message}
               </span>
             )}
           </div>
@@ -162,9 +163,9 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
 
       <Select
         className="spacer"
-        {...register('hendelsesfakta.tid.naarSkjeddeUlykken', { required: 'Dette feltet er påkrevd' })}
+        {...register('hendelsesfakta.naarSkjeddeUlykken', { required: 'Dette feltet er påkrevd' })}
         error={
-          errors?.hendelsesfakta?.tid?.naarSkjeddeUlykken && errors?.hendelsesfakta?.tid?.naarSkjeddeUlykken.message
+          errors?.hendelsesfakta?.naarSkjeddeUlykken && errors?.hendelsesfakta?.naarSkjeddeUlykken.message
         }
         label="Innenfor hvilket tidsrom inntraff skaden?"
         data-testid="timeframe-period-options"

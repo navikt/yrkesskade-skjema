@@ -18,9 +18,9 @@ import { InnloggetProvider } from './context/InnloggetContext';
 import { FeatureTogglesProvider } from './context/FeatureTogglesContext';
 import { autentiseringsInterceptor } from './utils/autentisering';
 import { SelectedCompanyProvider } from './context/SelectedCompanyContext';
+// import alvorlighetsgrad from './assets/Lists/alvorlighetsgrad';
 
 const App = () => {
-  createStore({}, { name: 'formdata'});
   const [steps, setSteps] = useState<ISteps>({
     totalSteps: 7,
     currentStep: 1,
@@ -92,87 +92,139 @@ const App = () => {
     setSteps(newSteps);
   };
 
+  createStore({
+    innmelder: {
+      norskIdentitetsnummer: undefined,
+      paaVegneAv: '',
+      innmelderrolle: '',
+      altinnrolleIDer: [],
+    },
+    skadelidt: {
+      norskIdentitetsnummer: '',
+      dekningsforhold: {
+        organisasjonsnummer: '',
+        navnPaaVirksomheten: '',
+        stillingstittelTilDenSkadelidte: '',
+        rolletype: '',
+      },
+    },
+    skade: {
+      alvorlighetsgrad: '',
+      skadedeDeler: [],
+      antattSykefravaerTabellH: '',
+    },
+    hendelsesfakta: {
+      tid: {
+        tidspunkt: null,
+        periode: {
+          fra: null,
+          til: null,
+        },
+        ukjent: false,
+        tidstype: 'Tidspunkt',
+      },
+      naarSkjeddeUlykken: '',
+      hvorSkjeddeUlykken: '',
+      ulykkessted: {
+        sammeSomVirksomhetensAdresse: false,
+        adresse: {
+          adresselinje1: '',
+          adresselinje2: '',
+          adresselinje3: '',
+          land: '',
+        },
+      },
+      aarsakUlykkeTabellAogE: '',
+      bakgrunnsaarsakTabellBogG: '',
+      utfyllendeBeskrivelse: '',
+      stedsbeskrivelseTabellF: '',
+    },
+  },{});
+
   autentiseringsInterceptor();
 
   return (
     <InnloggetProvider>
       <FeatureTogglesProvider>
         <SelectedCompanyProvider>
-        <StateMachineProvider>
-          <Routes>
-            <Route path="yrkesskade/">
-              <Route
-                index
-                element={<Info increaseStep={increaseStep} steps={steps} />}
-                // element={<Info steps={steps} />}
-              />
-              <Route path="skjema">
+          <StateMachineProvider>
+            <Routes>
+              <Route path="yrkesskade/">
                 <Route
-                  path="tidsrom"
-                  element={
-                    <TimeframeFormPage
-                      steps={steps}
-                      increaseStep={increaseStep}
-                      decreaseStep={decreaseStep}
-                    />
-                  }
+                  index
+                  element={<Info increaseStep={increaseStep} steps={steps} />}
+                  // element={<Info steps={steps} />}
                 />
-                <Route
-                  path="skadelidt"
-                  element={
-                    <InjuredFormPage
-                      steps={steps}
-                      increaseStep={increaseStep}
-                      decreaseStep={decreaseStep}
-                    />
-                  }
-                />
-                <Route
-                  path="ulykken"
-                  element={
-                    <AccidentFormPage
-                      steps={steps}
-                      increaseStep={increaseStep}
-                      decreaseStep={decreaseStep}
-                    />
-                  }
-                />
-                <Route
-                  path="skaden"
-                  element={
-                    <InjuryFormPage
-                      steps={steps}
-                      increaseStep={increaseStep}
-                      decreaseStep={decreaseStep}
-                    />
-                  }
-                />
-                <Route
-                  path="beskrivelse"
-                  element={
-                    <DescriptionFormPage
-                      steps={steps}
-                      increaseStep={increaseStep}
-                      decreaseStep={decreaseStep}
-                    />
-                  }
-                />
-                <Route
-                  path="oppsumering"
-                  element={
-                    <Summary
-                      steps={steps}
-                      increaseStep={increaseStep}
-                      decreaseStep={decreaseStep}
-                    />
-                  }
-                />
-                <Route path="kvittering" element={<Receipt steps={steps}/>} />
-                <Route path="feilmelding" element={<Error />} />
+                <Route path="skjema">
+                  <Route
+                    path="tidsrom"
+                    element={
+                      <TimeframeFormPage
+                        steps={steps}
+                        increaseStep={increaseStep}
+                        decreaseStep={decreaseStep}
+                      />
+                    }
+                  />
+                  <Route
+                    path="skadelidt"
+                    element={
+                      <InjuredFormPage
+                        steps={steps}
+                        increaseStep={increaseStep}
+                        decreaseStep={decreaseStep}
+                      />
+                    }
+                  />
+                  <Route
+                    path="ulykken"
+                    element={
+                      <AccidentFormPage
+                        steps={steps}
+                        increaseStep={increaseStep}
+                        decreaseStep={decreaseStep}
+                      />
+                    }
+                  />
+                  <Route
+                    path="skaden"
+                    element={
+                      <InjuryFormPage
+                        steps={steps}
+                        increaseStep={increaseStep}
+                        decreaseStep={decreaseStep}
+                      />
+                    }
+                  />
+                  <Route
+                    path="beskrivelse"
+                    element={
+                      <DescriptionFormPage
+                        steps={steps}
+                        increaseStep={increaseStep}
+                        decreaseStep={decreaseStep}
+                      />
+                    }
+                  />
+                  <Route
+                    path="oppsumering"
+                    element={
+                      <Summary
+                        steps={steps}
+                        increaseStep={increaseStep}
+                        decreaseStep={decreaseStep}
+                      />
+                    }
+                  />
+                  <Route
+                    path="kvittering"
+                    element={<Receipt steps={steps} />}
+                  />
+                  <Route path="feilmelding" element={<Error />} />
+                </Route>
               </Route>
-            </Route>
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
           </StateMachineProvider>
         </SelectedCompanyProvider>
       </FeatureTogglesProvider>

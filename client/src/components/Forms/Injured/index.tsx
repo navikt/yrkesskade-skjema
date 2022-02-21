@@ -18,7 +18,7 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
       <div>
         <Label>Hva er den skadeliteds stilling</Label>
         <Controller
-          name="skadelidt.arbeidsforhold.stillingstittel"
+          name="skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte"
           control={control}
           rules={{ required: 'Dette feltet er påkrevd' }}
           render={({
@@ -33,16 +33,16 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
             />
           )}
         />
-        {errors?.skadelidt?.arbeidsforhold?.stillingstittel && (
+        {errors?.skadelidt?.dekningsforhold?.stillingstittelTilDenSkadelidte && (
           <span className="navds-error-message navds-error-message--medium navds-label">
-            {errors.skadelidt.arbeidsforhold.stillingstittel.message}
+            {errors.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte.message}
           </span>
         )}
       </div>
 
       <TextField
         className="spacer"
-        {...register('skadelidt.foedselsnummer', {
+        {...register('skadelidt.norskIdentitetsnummer', {
           required: 'Dette feltet er påkrevd',
           minLength: 11,
           maxLength: 11,
@@ -60,8 +60,8 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
         label="Fyll ut fødselsnummer på den skadelidte"
         type="number"
         error={
-          errors?.skadelidt?.foedselsnummer &&
-          errors.skadelidt.foedselsnummer.message
+          errors?.skadelidt?.norskIdentitetsnummer &&
+          errors.skadelidt.norskIdentitetsnummer.message
         }
         data-testid="injured-id-number"
       />

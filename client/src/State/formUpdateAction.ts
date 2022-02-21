@@ -1,5 +1,7 @@
 // import { IGeneralForm } from '../Interfaces/generalForm';
-export default function formUpdateAction(state: any, payload: any) {
+import { GlobalState } from 'little-state-machine';
+
+export default function formUpdateAction(state: GlobalState, payload: any) {
   return {
     ...state,
     hendelsesfakta: { ...state.hendelsesfakta, ...payload.hendelsesfakta },

@@ -28,16 +28,19 @@ interface IProps {
 }
 
 const InjuredFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
+  const { actions, state } = useStateMachine({ formUpdateAction });
   const {
     register,
     handleSubmit,
     formState: { errors },
     control
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      'skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte': state.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte,
+      'skadelidt.norskIdentitetsnummer': state.skadelidt.norskIdentitetsnummer,
+    });
 
   const navigate = useNavigate();
-
-  const { actions } = useStateMachine({ formUpdateAction });
 
   const onSubmit = (data: any) => {
     actions.formUpdateAction(data);
