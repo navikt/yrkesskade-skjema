@@ -1,4 +1,9 @@
-import { Select as NAVSelect, RadioGroup, Label, BodyShort } from '@navikt/ds-react';
+import {
+  Select as NAVSelect,
+  RadioGroup,
+  Label,
+  BodyShort,
+} from '@navikt/ds-react';
 import Select from 'react-select';
 import { Controller } from 'react-hook-form';
 import { useSelectedCompany } from '../../../context/SelectedCompanyContext';
@@ -21,24 +26,33 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
     <>
       <div>
         <Label spacing>Adresse</Label>
-        <BodyShort data-test-id="injury-street-address">{ selectedAddress?.adresser[0]}</BodyShort>
-        <BodyShort data-test-id="injury-postal-code-place">{ selectedAddress?.postnummer} {selectedAddress?.poststed}</BodyShort>
+        <BodyShort data-test-id="injury-street-address">
+          {selectedAddress?.adresser[0]}
+        </BodyShort>
+        <BodyShort data-test-id="injury-postal-code-place">
+          {selectedAddress?.postnummer} {selectedAddress?.poststed}
+        </BodyShort>
       </div>
+
       <RadioGroup
         className="spacer"
         legend="Skjedde ulykken på samme adresse?"
         error={
           errors?.hendelsesfakta?.ulykkessted.sammeSomVirksomhetensAdresse &&
-          errors?.hendelsesfakta?.ulykkessted.sammeSomVirksomhetensAdresse.message
+          errors?.hendelsesfakta?.ulykkessted.sammeSomVirksomhetensAdresse
+            .message
         }
       >
         <div className="navds-radio navds-radio--medium">
           <input
             type="radio"
             className="navds-radio__input"
-            {...register('hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse', {
-              required: 'Dette feltet er påkrevd',
-            })}
+            {...register(
+              'hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse',
+              {
+                required: 'Dette feltet er påkrevd',
+              }
+            )}
             value={true}
             data-testid="accident-place-yes"
             id="accident-place-yes"
@@ -47,13 +61,17 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
             Ja
           </label>
         </div>
+
         <div className="navds-radio navds-radio--medium">
           <input
             type="radio"
             className="navds-radio__input"
-            {...register('hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse', {
-              required: 'Dette feltet er påkrevd',
-            })}
+            {...register(
+              'hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse',
+              {
+                required: 'Dette feltet er påkrevd',
+              }
+            )}
             value={false}
             data-testid="accident-place-no"
             id="accident-place-no"
@@ -63,6 +81,7 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
           </label>
         </div>
       </RadioGroup>
+
       <RadioGroup
         className="spacer"
         legend="Hvor alvorlig var hendelsen? (Valgfritt)"
@@ -76,17 +95,35 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
             type="radio"
             className="navds-radio__input"
             {...register('skade.alvorlighetsgrad')}
-            value="Andre livstruende sykdom/skade"
-            data-testid="injury-severity-deadly-other"
-            id="injury-severity-deadly-other"
+            value="Alvorlig kreftsykdom"
+            data-testid="injury-severity-no-medical"
+            id="injury-severity-no-medical"
           />
           <label
-            htmlFor="injury-severity-deadly-other"
+            htmlFor="injury-severity-no-medical"
             className="navds-radio__label"
           >
-            Andre livstruende sykdom/skade
+            Helsehjelp antatt ikke oppsøkt
           </label>
         </div>
+
+        <div className="navds-radio navds-radio--medium">
+          <input
+            type="radio"
+            className="navds-radio__input"
+            {...register('skade.alvorlighetsgrad')}
+            value="Alvorlig kreftsykdom"
+            data-testid="injury-severity-medical"
+            id="injury-severity-medical"
+          />
+          <label
+            htmlFor="injury-severity-medical"
+            className="navds-radio__label"
+          >
+            Helsehjelp antatt oppsøkt
+          </label>
+        </div>
+
         <div className="navds-radio navds-radio--medium">
           <input
             type="radio"
@@ -103,6 +140,24 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
             Alvorlig kreftsykdom
           </label>
         </div>
+
+        <div className="navds-radio navds-radio--medium">
+          <input
+            type="radio"
+            className="navds-radio__input"
+            {...register('skade.alvorlighetsgrad')}
+            value="Andre livstruende sykdom/skade"
+            data-testid="injury-severity-deadly-other"
+            id="injury-severity-deadly-other"
+          />
+          <label
+            htmlFor="injury-severity-deadly-other"
+            className="navds-radio__label"
+          >
+            Andre livstruende sykdom/skade
+          </label>
+        </div>
+
         <div className="navds-radio navds-radio--medium">
           <input
             type="radio"
@@ -117,6 +172,7 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
           </label>
         </div>
       </RadioGroup>
+
       <NAVSelect
         className="spacer"
         label="Hvor skjedde ulykken"
@@ -138,6 +194,7 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
           );
         })}
       </NAVSelect>
+
       <NAVSelect
         className="spacer"
         label="Hvilken type arbeidsplass er det?"
@@ -159,21 +216,27 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
           );
         })}
       </NAVSelect>
+
       <div className="spacer spacer navds-form-field navds-form-field--medium">
-        <Label className="navds-select__label navds-label">Beskriv årsak for hendelsen og bakgrunn for årsaken. Gi en mest mulig komplett utfylling.</Label>
-        <BodyShort className="navds-select__description navds-body-short">Du kan velge flere alternativer</BodyShort>
+        <Label className="navds-select__label navds-label">
+          Beskriv årsak for hendelsen og bakgrunn for årsaken. Gi en mest mulig
+          komplett utfylling.
+        </Label>
+        <BodyShort className="navds-select__description navds-body-short">
+          Du kan velge flere alternativer
+        </BodyShort>
         <Controller
           name="hendelsesfakta.aarsakUlykkeTabellAogE"
           control={control}
           rules={{ required: 'Dette feltet er påkrevd' }}
           render={({ field }) => (
             <Select
-            className=""
+              className=""
               closeMenuOnSelect={false}
               isMulti
               options={aarsakUlykkeTabellAogE}
               placeholder=""
-              onChange={(val) => field.onChange(val.map(i => i.value))}
+              onChange={(val) => field.onChange(val.map((i) => i.value))}
             />
           )}
         />
@@ -183,9 +246,14 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
           </span>
         )}
       </div>
+
       <div className="spacer spacer navds-form-field navds-form-field--medium">
-        <Label className="navds-select__label navds-label">Hva var bakgrunnen til hendelsen?</Label>
-        <BodyShort className="navds-select__description navds-body-short">Du kan velge flere alternativer</BodyShort>
+        <Label className="navds-select__label navds-label">
+          Hva var bakgrunnen til hendelsen?
+        </Label>
+        <BodyShort className="navds-select__description navds-body-short">
+          Du kan velge flere alternativer
+        </BodyShort>
         <Controller
           name="hendelsesfakta.bakgrunnsaarsakTabellBogG"
           control={control}
@@ -196,7 +264,7 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
               isMulti
               options={bakgrunnsaarsakTabellBogG}
               placeholder=""
-              onChange={(val) => field.onChange(val.map(i => i.value))}
+              onChange={(val) => field.onChange(val.map((i) => i.value))}
             />
           )}
         />

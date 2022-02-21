@@ -123,7 +123,7 @@ const InjuryForm = ({
         )}
       </div>
 
-      <RadioGroup
+      {/* <RadioGroup
         legend="Har helsepersonell blitt oppsøkt? (valgfri)"
         error={
           errors?.skade?.oppsoektHelsehjelp &&
@@ -163,7 +163,7 @@ const InjuryForm = ({
             Annet helsepersonell oppsøkt
           </label>
         </div>
-      </RadioGroup>
+      </RadioGroup> */}
 
       <RadioGroup
         legend="Har den skadelidte hatt fravær?"
