@@ -1,5 +1,6 @@
 export interface Brukerinfo {
   fnr: number;
+  navn: string;
   organisasjoner: Organisasjon[];
 }
 
