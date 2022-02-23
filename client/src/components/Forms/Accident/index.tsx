@@ -3,9 +3,10 @@ import {
   RadioGroup,
   Label,
   BodyShort,
+  Radio,
 } from '@navikt/ds-react';
 import Select from 'react-select';
-import { Controller } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useSelectedCompany } from '../../../context/SelectedCompanyContext';
 
 // import { accidentType, accidentBackground } from '../../../assets/injuryEnums';
@@ -14,6 +15,10 @@ import ulykkessted from '../../../assets/Lists/ulykkessted';
 import stedstype from '../../../assets/Lists/stedstype';
 import aarsakUlykkeTabellAogE from '../../../assets/Lists/aarsakUlykkeTabellAogE';
 import bakgrunnsaarsakTabellBogG from '../../../assets/Lists/bakgrunnsaarsakTabellBogG';
+import { useState } from 'react';
+import Address from '../Address';
+import formUpdateAction from '../../../State/formUpdateAction';
+import { useStateMachine } from 'little-state-machine';
 
 interface IProps {
   register: any;
@@ -22,65 +27,68 @@ interface IProps {
 }
 const AccidentForm = ({ register, errors, control }: IProps) => {
   const { selectedAddress } = useSelectedCompany();
+  const { state } = useStateMachine({ formUpdateAction });
+  console.log(state);
+  const { getValues } = useForm();
+  const [sammeSomVirksomhetensAdresse, setSammeSomVirksomhetensAdresse] =
+    useState<boolean>(
+      getValues('hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse') ||
+        selectedAddress
+        ? true
+        : false
+    );
+
   return (
     <>
-      <div>
-        <Label spacing>Adresse</Label>
-        <BodyShort data-test-id="injury-street-address">
-          {selectedAddress?.adresser[0]}
-        </BodyShort>
-        <BodyShort data-test-id="injury-postal-code-place">
-          {selectedAddress?.postnummer} {selectedAddress?.poststed}
-        </BodyShort>
-      </div>
+      {selectedAddress && (
+        <>
+          <div>
+            <Label spacing>Adresse</Label>
 
-      <RadioGroup
-        className="spacer"
-        legend="Skjedde ulykken på samme adresse?"
-        error={
-          errors?.hendelsesfakta?.ulykkessted.sammeSomVirksomhetensAdresse &&
-          errors?.hendelsesfakta?.ulykkessted.sammeSomVirksomhetensAdresse
-            .message
-        }
-      >
-        <div className="navds-radio navds-radio--medium">
-          <input
-            type="radio"
-            className="navds-radio__input"
-            {...register(
-              'hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse',
-              {
-                required: 'Dette feltet er påkrevd',
-              }
-            )}
-            value={true}
-            data-testid="accident-place-yes"
-            id="accident-place-yes"
-          />
-          <label htmlFor="accident-place-yes" className="navds-radio__label">
-            Ja
-          </label>
-        </div>
+            <BodyShort data-test-id="injury-street-address">
+              {selectedAddress.adresser[0]}
+            </BodyShort>
+            <BodyShort data-test-id="injury-postal-code-place">
+              {selectedAddress.postnummer} {selectedAddress.poststed}
+            </BodyShort>
+          </div>
 
-        <div className="navds-radio navds-radio--medium">
-          <input
-            type="radio"
-            className="navds-radio__input"
-            {...register(
-              'hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse',
-              {
-                required: 'Dette feltet er påkrevd',
-              }
+          <Controller
+            name="hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse"
+            control={control}
+            defaultValue={true}
+            render={({
+              field: { onChange, onBlur, value, name, ref },
+              fieldState: { invalid, isTouched, isDirty, error },
+              formState,
+            }) => (
+              <RadioGroup
+                className="spacer"
+                legend="Skjedde ulykken på samme adresse?"
+                defaultValue="true"
+                onChange={(val) => {
+                  setSammeSomVirksomhetensAdresse(val === 'true');
+                  onChange(val === 'true');
+                }}
+                onBlur={onBlur}
+                error={
+                  errors?.hendelsesfakta?.ulykkessted
+                    .sammeSomVirksomhetensAdresse &&
+                  errors?.hendelsesfakta?.ulykkessted
+                    .sammeSomVirksomhetensAdresse.message
+                }
+              >
+                <Radio value="true">Ja</Radio>
+                <Radio value="false">Nei</Radio>
+              </RadioGroup>
             )}
-            value={false}
-            data-testid="accident-place-no"
-            id="accident-place-no"
           />
-          <label htmlFor="accident-place-no" className="navds-radio__label">
-            Nei
-          </label>
-        </div>
-      </RadioGroup>
+        </>
+      )}
+
+      {(!selectedAddress || !sammeSomVirksomhetensAdresse) && (
+        <Address register={register} errors={errors} control={control} />
+      )}
 
       <RadioGroup
         className="spacer"

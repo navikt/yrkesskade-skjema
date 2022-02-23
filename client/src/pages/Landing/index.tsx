@@ -49,7 +49,6 @@ const Landing = () => {
   };
 
   useEffect(() => {
-    console.log('toggles: ', toggles);
     if (innloggetBruker) {
       const tilgangTilDigitaltskjema = digitalFormAvailable(
         innloggetBruker,
