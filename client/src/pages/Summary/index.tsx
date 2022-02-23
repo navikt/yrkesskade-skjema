@@ -21,16 +21,11 @@ import axios from 'axios';
 import StepIndicator from '../../components/StepIndicator';
 import formUpdateAction from '../../State/formUpdateAction';
 
-import { ISteps } from '../../Interfaces/steps';
+// import { ISteps } from '../../Interfaces/steps';
 
 import { useStateMachine } from 'little-state-machine';
-interface IProps {
-  // data?: IGeneralForm | undefined;
-  steps: ISteps;
-  increaseStep: () => void;
-  decreaseStep: () => void;
-}
-const Summary = ({ steps, increaseStep, decreaseStep }: IProps) => {
+
+const Summary = () => {
   const { state } = useStateMachine({ formUpdateAction });
   console.log(state);
   const data = state;
@@ -38,7 +33,6 @@ const Summary = ({ steps, increaseStep, decreaseStep }: IProps) => {
   const handleSending = async () => {
     try {
       await axios.post('/api/midlertidig/skademeldinger', { data });
-      increaseStep();
       navigate('/yrkesskade/skjema/kvittering');
     } catch {
       navigate('/yrkesskade/skjema/feilmelding');
@@ -53,7 +47,7 @@ const Summary = ({ steps, increaseStep, decreaseStep }: IProps) => {
       <Grid>
         <Cell xs={12} lg={2}></Cell>
         <Cell xs={12} lg={5}>
-        <BackButton decreaseStep={decreaseStep} url="/yrkesskade/skjema/beskrivelse" />
+        <BackButton url="/yrkesskade/skjema/beskrivelse" />
           <Heading
             size="2xlarge"
             className="pageNumberTitle spacer"
@@ -106,7 +100,7 @@ const Summary = ({ steps, increaseStep, decreaseStep }: IProps) => {
             </div>
         </Cell>
         <Cell xs={12} sm={12} lg={2}>
-          <StepIndicator steps={steps} />
+          <StepIndicator />
         </Cell>
         <Cell xs={12} lg={2}></Cell>
       </Grid>

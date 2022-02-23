@@ -3,6 +3,7 @@ import { Select, RadioGroup, Table, Button } from '@navikt/ds-react';
 import { injuredBodypart, injuryType } from '../../../assets/injuryEnums';
 import { isEmpty, remove } from 'ramda';
 import { AddCircle, MinusCircle } from '@navikt/ds-icons';
+import { useStateMachine } from 'little-state-machine';
 
 interface IProps {
   register: any;
@@ -18,11 +19,12 @@ const InjuryForm = ({
   reset,
   setValue,
 }: IProps) => {
-  const [injury, setInjury] = useState<{}[]>([]);
+  const { state } = useStateMachine();
+  const [injury, setInjury] = useState<{}[]>(state.skade.skadedeDeler);
 
   const removeInjury = (index: number) => {
     setInjury(remove(index, 1, injury));
-  }
+  };
 
   const handleMultipleIjurys = () => {
     const bodypart = getValues('skade.kroppsdelTabellD');
@@ -110,8 +112,11 @@ const InjuryForm = ({
                       <Table.DataCell>{item.kroppsdelTabellD}</Table.DataCell>
                       <Table.DataCell>{item.skadeartTabellC}</Table.DataCell>
                       <Table.DataCell>
-                        <Button variant="tertiary" onClick={() => removeInjury(index)}>
-                        <MinusCircle  />
+                        <Button
+                          variant="tertiary"
+                          onClick={() => removeInjury(index)}
+                        >
+                          <MinusCircle />
                         </Button>
                       </Table.DataCell>
                     </Table.Row>

@@ -4,6 +4,7 @@ import DatePicker, { registerLocale } from 'react-datepicker';
 import { useStateMachine } from 'little-state-machine';
 import nb from 'date-fns/locale/nb';
 import { Controller } from 'react-hook-form';
+import { isNil } from 'ramda';
 
 import './timeframeForm.less';
 import ulykkestid from '../../../assets/Lists/ulykkestid';
@@ -14,21 +15,38 @@ interface IProps {
   register: any;
   errors: any;
   control: any;
-  setValue: any
+  setValue: any;
 }
 const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
   const { state } = useStateMachine();
-  const [startDateRange, setStartDateRange] = useState(state.hendelsesfakta.tid.periode.fra);
-  const [endDateRange, setEndDateRange] = useState(state.hendelsesfakta.tid.periode.til);
-
   const [timeType, setTimeType] = useState(state.hendelsesfakta.tid.tidstype);
 
-  const onChangeRange = (dates: any) => {
+  const [specificDate, setSpecificDate] = useState<Date | null>(
+    !isNil(state.hendelsesfakta.tid.tidspunkt)
+      ? new Date(state.hendelsesfakta.tid.tidspunkt)
+      : null
+  );
+  const [startDateRange, setStartDateRange] = useState<Date | null>(
+    !isNil(state.hendelsesfakta.tid.periode.fra)
+      ? new Date(state.hendelsesfakta.tid.periode.fra)
+      : null
+  );
+  const [endDateRange, setEndDateRange] = useState<Date | null>(
+    !isNil(state.hendelsesfakta.tid.periode.til)
+      ? new Date(state.hendelsesfakta.tid.periode.til)
+      : null
+  );
+
+  const onChangeRange = (dates: (Date | null)[]) => {
     const [startRange, endRange] = dates;
     setStartDateRange(startRange);
     setValue('hendelsesfakta.tid.periode.fra', startRange);
     setValue('hendelsesfakta.tid.periode.til', endRange);
     setEndDateRange(endRange);
+  };
+  const onChangeSpecificDate = (date: Date | null) => {
+    setSpecificDate(date);
+    setValue('hendelsesfakta.tid.tidspunkt', date);
   };
   return (
     <>
@@ -64,12 +82,17 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
             <Controller
               name="hendelsesfakta.tid.tidspunkt"
               control={control}
-              rules={{ required: timeType === 'Tidspunkt' && 'Dette feltet er påkrevd' }}
+              rules={{
+                required:
+                  timeType === 'Tidspunkt' &&
+                  specificDate === null &&
+                  'Dette feltet er påkrevd',
+              }}
               render={({ field }) => (
                 <DatePicker
                   className="navds-text-field__input navds-body-short navds-body-medium"
-                  onChange={(date) => field.onChange(date)}
-                  selected={field.value}
+                  onChange={onChangeSpecificDate}
+                  selected={specificDate}
                   maxDate={new Date()}
                   locale="nb"
                   dateFormat="dd.MM.yyyy HH:mm"
@@ -112,9 +135,15 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
           <div className="spacer">
             <Label>Fra - Til</Label>
             <Controller
-              name="hendelsesfakta.tid.periode"
+              name="periode"
               control={control}
-              rules={{ required: timeType === 'Periode' && startDateRange === null && endDateRange === null && 'Dette feltet er påkrevd' }}
+              rules={{
+                required:
+                  timeType === 'Periode' &&
+                  startDateRange === null &&
+                  endDateRange === null &&
+                  'Dette feltet er påkrevd',
+              }}
               render={({ field }) => (
                 <DatePicker
                   className="navds-text-field__input navds-body-short navds-body-medium"
@@ -163,16 +192,23 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
 
       <Select
         className="spacer"
-        {...register('hendelsesfakta.naarSkjeddeUlykken', { required: 'Dette feltet er påkrevd' })}
+        {...register('hendelsesfakta.naarSkjeddeUlykken', {
+          required: 'Dette feltet er påkrevd',
+        })}
         error={
-          errors?.hendelsesfakta?.naarSkjeddeUlykken && errors?.hendelsesfakta?.naarSkjeddeUlykken.message
+          errors?.hendelsesfakta?.naarSkjeddeUlykken &&
+          errors?.hendelsesfakta?.naarSkjeddeUlykken.message
         }
         label="Innenfor hvilket tidsrom inntraff skaden?"
         data-testid="timeframe-period-options"
       >
         <option hidden value=""></option>
         {ulykkestid.map((time: { value: string; label: string }) => {
-          return <option key={encodeURIComponent(time.value)} value={time.value}>{time.label}</option>;
+          return (
+            <option key={encodeURIComponent(time.value)} value={time.value}>
+              {time.label}
+            </option>
+          );
         })}
       </Select>
     </>

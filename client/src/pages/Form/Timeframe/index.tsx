@@ -14,20 +14,14 @@ import BackButton from '../../../components/BackButton';
 // import { IGeneralForm } from '../../Interfaces/generalForm';
 
 import StepIndicator from '../../../components/StepIndicator';
-import { ISteps } from '../../../Interfaces/steps';
+// import { ISteps } from '../../../Interfaces/steps';
 
 import { useForm } from 'react-hook-form';
 import { useStateMachine } from 'little-state-machine';
 import formUpdateAction from '../../../State/formUpdateAction';
 import { useNavigate } from 'react-router-dom';
 
-interface IProps {
-  steps: ISteps;
-  decreaseStep: () => void;
-  increaseStep: () => void;
-}
-
-const TimeframeFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
+const TimeframeFormPage = () => {
   const { actions, state } = useStateMachine({ formUpdateAction });
   console.log(state);
   const {
@@ -39,9 +33,6 @@ const TimeframeFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
   } = useForm({
     defaultValues: {
       'hendelsesfakta.tid.tidstype': state.hendelsesfakta.tid.tidstype,
-      'hendelsesfakta.tid.tidspunkt': state.hendelsesfakta.tid.tidspunkt,
-      'hendelsesfakta.tid.periode.fra': state.hendelsesfakta.tid.periode.fra,
-      'hendelsesfakta.tid.periode.til': state.hendelsesfakta.tid.periode.til,
       'hendelsesfakta.naarSkjeddeUlykken': state.hendelsesfakta.naarSkjeddeUlykken
     }
   });
@@ -50,7 +41,6 @@ const TimeframeFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
 
   const onSubmit = (data: any) => {
     actions.formUpdateAction(data);
-    increaseStep();
     navigate('/yrkesskade/skjema/skadelidt');
   };
   const handleAbort = () => {
@@ -63,7 +53,7 @@ const TimeframeFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
         <Cell xs={12} lg={2}></Cell>
         <Cell xs={12} lg={5}>
           <div className="cellContentContainer">
-            <BackButton decreaseStep={decreaseStep} url="/yrkesskade/" />
+            <BackButton url="/yrkesskade/" />
             <Heading
               size="2xlarge"
               className="pageNumberTitle spacer"
@@ -81,7 +71,7 @@ const TimeframeFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
           </div>
         </Cell>
         <Cell xs={12} sm={12} lg={2}>
-          <StepIndicator steps={steps} />
+          <StepIndicator />
         </Cell>
         <Cell xs={12} lg={2}></Cell>
       </Grid>

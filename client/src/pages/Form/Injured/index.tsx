@@ -14,20 +14,16 @@ import BackButton from '../../../components/BackButton';
 // import { IGeneralForm } from '../../Interfaces/generalForm';
 
 import StepIndicator from '../../../components/StepIndicator';
-import { ISteps } from '../../../Interfaces/steps';
+// import { ISteps } from '../../../Interfaces/steps';
 
 import { useForm } from 'react-hook-form';
 import { useStateMachine } from 'little-state-machine';
 import formUpdateAction from '../../../State/formUpdateAction';
 import { useNavigate } from 'react-router-dom';
 
-interface IProps {
-  steps: ISteps;
-  decreaseStep: () => void;
-  increaseStep: () => void;
-}
 
-const InjuredFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
+
+const InjuredFormPage = () => {
   const { actions, state } = useStateMachine({ formUpdateAction });
   const {
     register,
@@ -36,15 +32,14 @@ const InjuredFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
     control
   } = useForm({
     defaultValues: {
-      'skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte': state.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte,
+      // 'skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte': state.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte,
       'skadelidt.norskIdentitetsnummer': state.skadelidt.norskIdentitetsnummer,
-    });
+    }});
 
   const navigate = useNavigate();
 
   const onSubmit = (data: any) => {
     actions.formUpdateAction(data);
-    increaseStep();
     navigate('/yrkesskade/skjema/Ulykken');
   };
   const handleAbort = () => {
@@ -57,7 +52,7 @@ const InjuredFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
         <Cell xs={12} lg={2}></Cell>
         <Cell xs={12} lg={5}>
           <div className="cellContentContainer">
-          <BackButton decreaseStep={decreaseStep} url="/yrkesskade/skjema/tidsrom" />
+          <BackButton url="/yrkesskade/skjema/tidsrom" />
             <Heading
               size="2xlarge"
               className="pageNumberTitle spacer"
@@ -75,7 +70,7 @@ const InjuredFormPage = ({ steps, decreaseStep, increaseStep }: IProps) => {
           </div>
         </Cell>
         <Cell xs={12} sm={12} lg={2}>
-          <StepIndicator steps={steps} />
+          <StepIndicator />
         </Cell>
         <Cell xs={12} lg={2}></Cell>
       </Grid>

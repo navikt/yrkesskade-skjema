@@ -5,15 +5,13 @@ import './BackButton.less';
 import { useNavigate } from 'react-router-dom';
 
 interface IProps {
-  decreaseStep: () => void;
   url: string;
 }
 
-const BackButton = ({ decreaseStep, url }: IProps) => {
+const BackButton = ({ url }: IProps) => {
   const navigate = useNavigate();
   const handleBack = () => {
     navigate(url);
-    decreaseStep();
   };
   return (
     <div className="backButton">

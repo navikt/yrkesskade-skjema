@@ -24,10 +24,10 @@ declare module 'little-state-machine' {
     },
     hendelsesfakta: {
       tid: {
-        tidspunkt: Date | null,
+        tidspunkt: string | null,
         periode: {
-          fra: Date | null,
-          til: Date | null,
+          fra: string | null,
+          til: string | null,
         },
         ukjent: boolean,
         tidstype: string,
@@ -35,16 +35,16 @@ declare module 'little-state-machine' {
       naarSkjeddeUlykken: string,
       hvorSkjeddeUlykken: string,
       ulykkessted: {
-        sammeSomVirksomhetensAdresse: boolean,
+        sammeSomVirksomhetensAdresse: boolean | undefined,
         adresse: {
-          adresselinje1: string,
-          adresselinje2: string,
-          adresselinje3: string,
-          land: string,
+          adresselinje1: string | undefined,
+          adresselinje2: string | undefined,
+          adresselinje3: string | undefined,
+          land: string | undefined,
         },
       },
-      aarsakUlykkeTabellAogE: string,
-      bakgrunnsaarsakTabellBogG: string,
+      aarsakUlykkeTabellAogE: string[],
+      bakgrunnsaarsakTabellBogG: string[],
       utfyllendeBeskrivelse: string,
       stedsbeskrivelseTabellF: string,
     },

@@ -1,145 +1,74 @@
-import { useState } from 'react';
 import NotFound from './pages/404';
 import Info from './pages/Info';
 import Summary from './pages/Summary';
 import Receipt from './pages/Receipt';
 import Error from './pages/Error';
-// import CompanyFormPage from './pages/Form/Company';
 import TimeframeFormPage from './pages/Form/Timeframe';
 import InjuryFormPage from './pages/Form/Injury';
 import InjuredFormPage from './pages/Form/Injured';
 import AccidentFormPage from './pages/Form/Accident';
 import DescriptionFormPage from './pages/Form/Description';
+
 import { Route, Routes } from 'react-router-dom';
-import { ISteps } from './Interfaces/steps';
 import { StateMachineProvider, createStore } from 'little-state-machine';
 
 import { InnloggetProvider } from './context/InnloggetContext';
 import { FeatureTogglesProvider } from './context/FeatureTogglesContext';
 import { autentiseringsInterceptor } from './utils/autentisering';
 import { SelectedCompanyProvider } from './context/SelectedCompanyContext';
-// import alvorlighetsgrad from './assets/Lists/alvorlighetsgrad';
 
 const App = () => {
-  const [steps, setSteps] = useState<ISteps>({
-    totalSteps: 7,
-    currentStep: 1,
-    details: [
-      {
-        text: 'Innledning',
-        done: false,
-        active: true,
+  createStore(
+    {
+      innmelder: {
+        norskIdentitetsnummer: undefined,
+        paaVegneAv: '',
+        innmelderrolle: '',
+        altinnrolleIDer: [],
       },
-      // {
-      //   text: 'Om innmelder',
-      //   done: false,
-      //   active: false,
-      // },
-      {
-        text: 'Tid og sted',
-        done: false,
-        active: false,
-      },
-      {
-        text: 'Om den skadelidte',
-        done: false,
-        active: false,
-      },
-      {
-        text: 'Om ulykken',
-        done: false,
-        active: false,
-      },
-      {
-        text: 'Om skaden',
-        done: false,
-        active: false,
-      },
-      {
-        text: 'Utfyllende beskrivelse',
-        done: false,
-        active: false,
-      },
-      {
-        text: 'Oppsumering',
-        done: false,
-        active: false,
-      },
-      {
-        text: 'Kvittering',
-        done: false,
-        active: false,
-      },
-    ],
-  });
-
-  const increaseStep = () => {
-    let newSteps = { ...steps, currentStep: steps.currentStep + 1 };
-    for (let i = 0; i < newSteps.currentStep - 1; i++) {
-      newSteps.details[i].done = true;
-      newSteps.details[i].active = false;
-    }
-    newSteps.details[newSteps.currentStep - 1].active = true;
-    setSteps(newSteps);
-  };
-  const decreaseStep = () => {
-    let newSteps = { ...steps, currentStep: steps.currentStep - 1 };
-    for (let i = newSteps.details.length; i >= newSteps.currentStep; i--) {
-      newSteps.details[i - 1].done = false;
-      newSteps.details[i - 1].active = false;
-    }
-    newSteps.details[newSteps.currentStep - 1].active = true;
-    setSteps(newSteps);
-  };
-
-  createStore({
-    innmelder: {
-      norskIdentitetsnummer: undefined,
-      paaVegneAv: '',
-      innmelderrolle: '',
-      altinnrolleIDer: [],
-    },
-    skadelidt: {
-      norskIdentitetsnummer: '',
-      dekningsforhold: {
-        organisasjonsnummer: '',
-        navnPaaVirksomheten: '',
-        stillingstittelTilDenSkadelidte: '',
-        rolletype: '',
-      },
-    },
-    skade: {
-      alvorlighetsgrad: '',
-      skadedeDeler: [],
-      antattSykefravaerTabellH: '',
-    },
-    hendelsesfakta: {
-      tid: {
-        tidspunkt: null,
-        periode: {
-          fra: null,
-          til: null,
-        },
-        ukjent: false,
-        tidstype: 'Tidspunkt',
-      },
-      naarSkjeddeUlykken: '',
-      hvorSkjeddeUlykken: '',
-      ulykkessted: {
-        sammeSomVirksomhetensAdresse: false,
-        adresse: {
-          adresselinje1: '',
-          adresselinje2: '',
-          adresselinje3: '',
-          land: '',
+      skadelidt: {
+        norskIdentitetsnummer: '',
+        dekningsforhold: {
+          organisasjonsnummer: '',
+          navnPaaVirksomheten: '',
+          stillingstittelTilDenSkadelidte: '',
+          rolletype: '',
         },
       },
-      aarsakUlykkeTabellAogE: '',
-      bakgrunnsaarsakTabellBogG: '',
-      utfyllendeBeskrivelse: '',
-      stedsbeskrivelseTabellF: '',
+      skade: {
+        alvorlighetsgrad: '',
+        skadedeDeler: [],
+        antattSykefravaerTabellH: '',
+      },
+      hendelsesfakta: {
+        tid: {
+          tidspunkt: null,
+          periode: {
+            fra: null,
+            til: null,
+          },
+          ukjent: false,
+          tidstype: 'Tidspunkt',
+        },
+        naarSkjeddeUlykken: '',
+        hvorSkjeddeUlykken: '',
+        ulykkessted: {
+          sammeSomVirksomhetensAdresse: undefined,
+          adresse: {
+            adresselinje1: undefined,
+            adresselinje2: undefined,
+            adresselinje3: undefined,
+            land: undefined,
+          },
+        },
+        aarsakUlykkeTabellAogE: [],
+        bakgrunnsaarsakTabellBogG: [],
+        utfyllendeBeskrivelse: '',
+        stedsbeskrivelseTabellF: '',
+      },
     },
-  },{});
+    {}
+  );
 
   autentiseringsInterceptor();
 
@@ -152,74 +81,16 @@ const App = () => {
               <Route path="yrkesskade/">
                 <Route
                   index
-                  element={<Info increaseStep={increaseStep} steps={steps} />}
-                  // element={<Info steps={steps} />}
+                  element={<Info />}
                 />
                 <Route path="skjema">
-                  <Route
-                    path="tidsrom"
-                    element={
-                      <TimeframeFormPage
-                        steps={steps}
-                        increaseStep={increaseStep}
-                        decreaseStep={decreaseStep}
-                      />
-                    }
-                  />
-                  <Route
-                    path="skadelidt"
-                    element={
-                      <InjuredFormPage
-                        steps={steps}
-                        increaseStep={increaseStep}
-                        decreaseStep={decreaseStep}
-                      />
-                    }
-                  />
-                  <Route
-                    path="ulykken"
-                    element={
-                      <AccidentFormPage
-                        steps={steps}
-                        increaseStep={increaseStep}
-                        decreaseStep={decreaseStep}
-                      />
-                    }
-                  />
-                  <Route
-                    path="skaden"
-                    element={
-                      <InjuryFormPage
-                        steps={steps}
-                        increaseStep={increaseStep}
-                        decreaseStep={decreaseStep}
-                      />
-                    }
-                  />
-                  <Route
-                    path="beskrivelse"
-                    element={
-                      <DescriptionFormPage
-                        steps={steps}
-                        increaseStep={increaseStep}
-                        decreaseStep={decreaseStep}
-                      />
-                    }
-                  />
-                  <Route
-                    path="oppsumering"
-                    element={
-                      <Summary
-                        steps={steps}
-                        increaseStep={increaseStep}
-                        decreaseStep={decreaseStep}
-                      />
-                    }
-                  />
-                  <Route
-                    path="kvittering"
-                    element={<Receipt steps={steps} />}
-                  />
+                  <Route path="tidsrom" element={<TimeframeFormPage />} />
+                  <Route path="skadelidt" element={<InjuredFormPage />} />
+                  <Route path="ulykken" element={<AccidentFormPage />} />
+                  <Route path="skaden" element={<InjuryFormPage />} />
+                  <Route path="beskrivelse" element={<DescriptionFormPage />} />
+                  <Route path="oppsumering" element={<Summary />} />
+                  <Route path="kvittering" element={<Receipt />} />
                   <Route path="feilmelding" element={<Error />} />
                 </Route>
               </Route>

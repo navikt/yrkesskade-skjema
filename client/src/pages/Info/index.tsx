@@ -13,23 +13,17 @@ import SystemHeader from '../../components/SystemHeader';
 import { useNavigate } from 'react-router-dom';
 import StepIndicator from '../../components/StepIndicator';
 
-import { ISteps } from '../../Interfaces/steps';
+// import { ISteps } from '../../Interfaces/steps';
 import OrganisationSelect from '../../components/OrganisationSelect';
 import { useInnloggetContext } from '../../context/InnloggetContext';
 import { Organisasjon } from '../../types/brukerinfo';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useSelectedCompany } from '../../context/SelectedCompanyContext';
-interface IProps {
-  steps: ISteps;
-  // updateStep: (data: { step: number; higher: Boolean }) => void;
-  increaseStep: () => void;
-}
 
-const Info = ({ steps, increaseStep }: IProps) => {
+const Info = () => {
   const navigate = useNavigate();
   const handleForward = () => {
-    increaseStep();
     navigate('/yrkesskade/skjema/tidsrom');
   };
 
@@ -125,7 +119,7 @@ const Info = ({ steps, increaseStep }: IProps) => {
           </div>
         </Cell>
         <Cell xs={12} sm={12} lg={2}>
-          <StepIndicator steps={steps} />
+          <StepIndicator/>
         </Cell>
         <Cell xs={12} lg={2}></Cell>
       </Grid>

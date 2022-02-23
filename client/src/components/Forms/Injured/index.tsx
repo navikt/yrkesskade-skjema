@@ -4,15 +4,15 @@ import stillingstitler from '../../../assets/Lists/stillingstitler';
 import Select from 'react-select';
 import validator from '@navikt/fnrvalidator';
 import { useInnloggetContext } from '../../../context/InnloggetContext';
+import { useStateMachine } from 'little-state-machine';
 interface IProps {
   register: any;
   errors: any;
   control: any;
 }
 const InjuredForm = ({ register, errors, control }: IProps) => {
-  // Legg inn fnr fra altinn her
   const { innloggetBruker } = useInnloggetContext();
-
+  const { state } = useStateMachine();
   return (
     <>
       <div>
@@ -21,21 +21,29 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
           name="skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte"
           control={control}
           rules={{ required: 'Dette feltet er påkrevd' }}
-          render={({
-            field: { onChange, onBlur, value, name, ref },
-            fieldState: { invalid, isTouched, isDirty, error },
-            formState,
-          }) => (
+          render={({ field: { onChange, onBlur, value, name, ref } }) => (
             <Select
+              defaultValue={{
+                'value':
+                  state.skadelidt.dekningsforhold
+                    .stillingstittelTilDenSkadelidte,
+                'label':
+                  state.skadelidt.dekningsforhold
+                    .stillingstittelTilDenSkadelidte,
+              }}
               onBlur={onBlur}
               onChange={(val) => onChange(val?.value)}
               options={stillingstitler}
             />
           )}
         />
-        {errors?.skadelidt?.dekningsforhold?.stillingstittelTilDenSkadelidte && (
+        {errors?.skadelidt?.dekningsforhold
+          ?.stillingstittelTilDenSkadelidte && (
           <span className="navds-error-message navds-error-message--medium navds-label">
-            {errors.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte.message}
+            {
+              errors.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte
+                .message
+            }
           </span>
         )}
       </div>

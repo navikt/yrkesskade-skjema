@@ -14,6 +14,7 @@ import ulykkessted from '../../../assets/Lists/ulykkessted';
 import stedstype from '../../../assets/Lists/stedstype';
 import aarsakUlykkeTabellAogE from '../../../assets/Lists/aarsakUlykkeTabellAogE';
 import bakgrunnsaarsakTabellBogG from '../../../assets/Lists/bakgrunnsaarsakTabellBogG';
+import { useStateMachine } from 'little-state-machine';
 
 interface IProps {
   register: any;
@@ -21,6 +22,7 @@ interface IProps {
   control: any;
 }
 const AccidentForm = ({ register, errors, control }: IProps) => {
+  const { state } = useStateMachine();
   const { selectedAddress } = useSelectedCompany();
   return (
     <>
@@ -38,7 +40,7 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
         className="spacer"
         legend="Skjedde ulykken på samme adresse?"
         error={
-          errors?.hendelsesfakta?.ulykkessted.sammeSomVirksomhetensAdresse &&
+          errors?.hendelsesfakta?.ulykkessted?.sammeSomVirksomhetensAdresse &&
           errors?.hendelsesfakta?.ulykkessted.sammeSomVirksomhetensAdresse
             .message
         }
@@ -235,6 +237,11 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
               closeMenuOnSelect={false}
               isMulti
               options={aarsakUlykkeTabellAogE}
+              defaultValue={state.hendelsesfakta.aarsakUlykkeTabellAogE.map(
+                (i) => {
+                  return { value: i, label: i };
+                }
+              )}
               placeholder=""
               onChange={(val) => field.onChange(val.map((i) => i.value))}
             />
@@ -260,6 +267,11 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
           rules={{ required: 'Dette feltet er påkrevd' }}
           render={({ field }) => (
             <Select
+              defaultValue={state.hendelsesfakta.bakgrunnsaarsakTabellBogG.map(
+                (i) => {
+                  return { value: i, label: i };
+                }
+              )}
               closeMenuOnSelect={false}
               isMulti
               options={bakgrunnsaarsakTabellBogG}

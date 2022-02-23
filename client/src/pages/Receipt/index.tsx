@@ -10,14 +10,14 @@ import SystemHeader from '../../components/SystemHeader';
 // import { useNavigate } from 'react-router-dom';
 import StepIndicator from '../../components/StepIndicator';
 
-import { ISteps } from '../../Interfaces/steps';
-interface IProps {
-  steps: ISteps;
+// import { ISteps } from '../../Interfaces/steps';
+// interface IProps {
+  // steps: ISteps;
   // updateStep: (data: { step: number; higher: Boolean }) => void;
   // increaseStep: () => void;
-}
+// }
 
-const Receipt = ({ steps }: IProps) => {
+const Receipt = () => {
   // const navigate = useNavigate();
   // const handleForward = () => {
   //   navigate('/yrkesskade/skjema/innmelder');
@@ -45,7 +45,7 @@ const Receipt = ({ steps }: IProps) => {
           </div>
         </Cell>
         <Cell xs={12} sm={12} lg={2}>
-          <StepIndicator steps={steps} />
+          <StepIndicator />
         </Cell>
         <Cell xs={12} lg={2}></Cell>
       </Grid>

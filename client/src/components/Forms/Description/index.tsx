@@ -2,6 +2,7 @@ import { useState } from 'react';
 import {
   Textarea,
 } from '@navikt/ds-react';
+import { useStateMachine } from 'little-state-machine';
 
 interface IProps {
   register: any;
@@ -10,7 +11,8 @@ interface IProps {
 const DescriptionForm = ({
   register,
 }: IProps) => {
-  const [freetext, setFreetext] = useState('');
+  const { state } = useStateMachine({});
+  const [freetext, setFreetext] = useState(state.hendelsesfakta.utfyllendeBeskrivelse);
 
   return (
     <>
