@@ -174,6 +174,7 @@ const App = () => {
                 <Route path="kvittering" element={<Receipt steps={steps}/>} />
                 <Route path="feilmelding" element={<Error />} />
               </Route>
+              <Route path="feilmelding" element={<Error />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
