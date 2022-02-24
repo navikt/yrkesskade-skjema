@@ -15,6 +15,7 @@ import stedstype from '../../../assets/Lists/stedstype';
 import aarsakUlykkeTabellAogE from '../../../assets/Lists/aarsakUlykkeTabellAogE';
 import bakgrunnsaarsakTabellBogG from '../../../assets/Lists/bakgrunnsaarsakTabellBogG';
 import { useStateMachine } from 'little-state-machine';
+import { isNil } from 'ramda';
 
 interface IProps {
   register: any;
@@ -230,18 +231,18 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
         <Controller
           name="hendelsesfakta.aarsakUlykkeTabellAogE"
           control={control}
-          rules={{ required: 'Dette feltet er påkrevd' }}
+          rules={{ required: isNil(state.hendelsesfakta.aarsakUlykkeTabellAogE) && 'Dette feltet er påkrevd' }}
           render={({ field }) => (
             <Select
               className=""
               closeMenuOnSelect={false}
               isMulti
               options={aarsakUlykkeTabellAogE}
-              defaultValue={state.hendelsesfakta.aarsakUlykkeTabellAogE.map(
+              defaultValue={!isNil(state.hendelsesfakta.aarsakUlykkeTabellAogE) ? state.hendelsesfakta.aarsakUlykkeTabellAogE.map(
                 (i) => {
                   return { value: i, label: i };
                 }
-              )}
+              ): []}
               placeholder=""
               onChange={(val) => field.onChange(val.map((i) => i.value))}
             />
@@ -264,14 +265,14 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
         <Controller
           name="hendelsesfakta.bakgrunnsaarsakTabellBogG"
           control={control}
-          rules={{ required: 'Dette feltet er påkrevd' }}
+          rules={{ required: isNil(state.hendelsesfakta.bakgrunnsaarsakTabellBogG) && 'Dette feltet er påkrevd' }}
           render={({ field }) => (
             <Select
-              defaultValue={state.hendelsesfakta.bakgrunnsaarsakTabellBogG.map(
+              defaultValue={!isNil(state.hendelsesfakta.bakgrunnsaarsakTabellBogG) ?  state.hendelsesfakta.bakgrunnsaarsakTabellBogG.map(
                 (i) => {
                   return { value: i, label: i };
                 }
-              )}
+              ): []}
               closeMenuOnSelect={false}
               isMulti
               options={bakgrunnsaarsakTabellBogG}

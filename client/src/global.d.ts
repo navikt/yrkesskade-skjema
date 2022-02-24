@@ -24,9 +24,9 @@ declare module 'little-state-machine' {
     },
     hendelsesfakta: {
       tid: {
-        tidspunkt: Date | null | undefined,
+        tidspunkt: Date | null,
         periode: {
-          fra: Date | null | undefinde,
+          fra: Date | null,
           til: Date | null,
         },
         ukjent: boolean,

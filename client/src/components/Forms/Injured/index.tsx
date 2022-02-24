@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { TextField, Label } from '@navikt/ds-react';
 import { Controller } from 'react-hook-form';
 import stillingstitler from '../../../assets/Lists/stillingstitler';
@@ -5,6 +6,8 @@ import Select from 'react-select';
 import validator from '@navikt/fnrvalidator';
 import { useInnloggetContext } from '../../../context/InnloggetContext';
 import { useStateMachine } from 'little-state-machine';
+import {isNil} from 'ramda';
+
 interface IProps {
   register: any;
   errors: any;
@@ -13,6 +16,15 @@ interface IProps {
 const InjuredForm = ({ register, errors, control }: IProps) => {
   const { innloggetBruker } = useInnloggetContext();
   const { state } = useStateMachine();
+  const [openMenu, setOpenMenu] = useState(false);
+
+  const handleInputChange = (query: string, action:any) => {
+    if (action.action === 'input-change' && query.length >= 2) {
+      setOpenMenu(true);
+    } else {
+      setOpenMenu(false);
+    }
+  };
   return (
     <>
       <div>
@@ -20,20 +32,23 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
         <Controller
           name="skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte"
           control={control}
-          rules={{ required: 'Dette feltet er påkrevd' }}
+          rules={{ required:  isNil(state.skadelidt.dekningsforhold
+            .stillingstittelTilDenSkadelidte) && 'Dette feltet er påkrevd'  }}
           render={({ field: { onChange, onBlur, value, name, ref } }) => (
             <Select
               defaultValue={{
-                'value':
+                value:
                   state.skadelidt.dekningsforhold
                     .stillingstittelTilDenSkadelidte,
-                'label':
+                label:
                   state.skadelidt.dekningsforhold
                     .stillingstittelTilDenSkadelidte,
               }}
               onBlur={onBlur}
               onChange={(val) => onChange(val?.value)}
               options={stillingstitler}
+              menuIsOpen={openMenu}
+              onInputChange={handleInputChange}
             />
           )}
         />

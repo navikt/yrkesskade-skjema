@@ -8,6 +8,7 @@ import { path } from 'ramda';
 
 import './timeframeForm.less';
 import ulykkestid from '../../../assets/Lists/ulykkestid';
+import { parseISO } from 'date-fns';
 
 registerLocale('nb', nb);
 
@@ -20,21 +21,20 @@ interface IProps {
 const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
   const { state } = useStateMachine();
   const [timeType, setTimeType] = useState(state.hendelsesfakta.tid.tidstype);
-  console.log(state);
-  console.log(new Date(path(['hendelsesfakta', 'tid', 'tidspunkt'], state)));
+
   const [specificDate, setSpecificDate] = useState<Date | null>(
     typeof path(['hendelsesfakta', 'tid', 'tidspunkt'], state) === 'string'
-      ? new Date(path(['hendelsesfakta', 'tid', 'tidspunkt'], state))
+      ? parseISO(state.hendelsesfakta.tid.tidspunkt + '')
       : null
   );
   const [startDateRange, setStartDateRange] = useState<Date | null>(
     typeof path(['hendelsesfakta', 'tid', 'periode', 'fra'], state) === 'string'
-      ? new Date(path(['hendelsesfakta', 'tid', 'periode', 'fra'], state))
+      ? parseISO(path(['hendelsesfakta', 'tid', 'periode', 'fra'], state) + '')
       : null
   );
   const [endDateRange, setEndDateRange] = useState<Date | null>(
     typeof path(['hendelsesfakta', 'tid', 'periode', 'til'], state) === 'string'
-      ? new Date(path(['hendelsesfakta', 'tid', 'periode', 'til'], state))
+      ? parseISO(path(['hendelsesfakta', 'tid', 'periode', 'til'], state) + '')
       : null
   );
 
