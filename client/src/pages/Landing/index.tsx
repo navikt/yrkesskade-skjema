@@ -38,10 +38,20 @@ const Landing = () => {
       return false;
     }
 
+    const organisationsLength = innloggetBruker.organisasjoner.length;
+
     // check if user meets the number of organisations requirement
-    if (innloggetBruker.organisasjoner.length !== 1) {
-      logMessage('User need to have access to only one organisation');
-      // MVP only supports 1 organisation
+    if (organisationsLength !== 1) {
+
+      if (organisationsLength > 1) {
+        // MVP only supports 1 organisation
+        logMessage(`User has access to ${organisationsLength} organisations.`);
+      }
+
+      if (innloggetBruker.organisasjoner.length === 0) {
+        logMessage('User must have access to at least 1 organisation')
+      }
+
       return false;
     }
 
