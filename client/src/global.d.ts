@@ -24,10 +24,10 @@ declare module 'little-state-machine' {
     },
     hendelsesfakta: {
       tid: {
-        tidspunkt: string | null,
+        tidspunkt: Date | null | undefined,
         periode: {
-          fra: string | null,
-          til: string | null,
+          fra: Date | null | undefinde,
+          til: Date | null,
         },
         ukjent: boolean,
         tidstype: string,

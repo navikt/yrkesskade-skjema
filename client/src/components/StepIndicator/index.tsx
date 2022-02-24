@@ -59,6 +59,7 @@ const StepIndicator = () => {
   });
   useEffect(() => {
     const updateSteps: any = (newCurrentStep: number, currentSteps: ISteps) => {
+      console.log(currentSteps);
       if (newCurrentStep === currentSteps.currentStep) {
         return;
       }

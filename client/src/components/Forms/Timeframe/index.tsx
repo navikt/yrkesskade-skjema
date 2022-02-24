@@ -4,7 +4,7 @@ import DatePicker, { registerLocale } from 'react-datepicker';
 import { useStateMachine } from 'little-state-machine';
 import nb from 'date-fns/locale/nb';
 import { Controller } from 'react-hook-form';
-import { isNil } from 'ramda';
+import { path } from 'ramda';
 
 import './timeframeForm.less';
 import ulykkestid from '../../../assets/Lists/ulykkestid';
@@ -20,20 +20,21 @@ interface IProps {
 const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
   const { state } = useStateMachine();
   const [timeType, setTimeType] = useState(state.hendelsesfakta.tid.tidstype);
-
+  console.log(state);
+  console.log(new Date(path(['hendelsesfakta', 'tid', 'tidspunkt'], state)));
   const [specificDate, setSpecificDate] = useState<Date | null>(
-    !isNil(state.hendelsesfakta.tid.tidspunkt)
-      ? new Date(state.hendelsesfakta.tid.tidspunkt)
+    typeof path(['hendelsesfakta', 'tid', 'tidspunkt'], state) === 'string'
+      ? new Date(path(['hendelsesfakta', 'tid', 'tidspunkt'], state))
       : null
   );
   const [startDateRange, setStartDateRange] = useState<Date | null>(
-    !isNil(state.hendelsesfakta.tid.periode.fra)
-      ? new Date(state.hendelsesfakta.tid.periode.fra)
+    typeof path(['hendelsesfakta', 'tid', 'periode', 'fra'], state) === 'string'
+      ? new Date(path(['hendelsesfakta', 'tid', 'periode', 'fra'], state))
       : null
   );
   const [endDateRange, setEndDateRange] = useState<Date | null>(
-    !isNil(state.hendelsesfakta.tid.periode.til)
-      ? new Date(state.hendelsesfakta.tid.periode.til)
+    typeof path(['hendelsesfakta', 'tid', 'periode', 'til'], state) === 'string'
+      ? new Date(path(['hendelsesfakta', 'tid', 'periode', 'til'], state))
       : null
   );
 
