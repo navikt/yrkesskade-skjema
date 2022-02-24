@@ -76,7 +76,8 @@ const byggContextFraRequest = (req) => {
       'naeringskoder': req.data.organisasjoner
         .filter((organisasjon: Organisasjon) => !!organisasjon.naeringskode)
         .map((organisasjon: Organisasjon) => organisasjon.naeringskode)
-        .join(',')
+        .join(','),
+      'antallAnsatte': Math.max.apply(Math, req.data.organisasjoner.map((organisasjon: Organisasjon) =>  organisasjon.antallAnsatte ))
     }
   }
 

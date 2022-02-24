@@ -14,6 +14,7 @@ export interface Organisasjon {
   postadresse?: Adresse;
   forretningsadresse?: Adresse;
   beliggenhetsadresse?: Adresse;
+  antallAnsatte?: number;
 }
 
 export interface Adresse {

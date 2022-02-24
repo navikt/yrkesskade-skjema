@@ -1,4 +1,4 @@
-import { Strategy } from "unleash-client";
+import { Strategy } from 'unleash-client';
 
 export class IsNotProdStrategy extends Strategy {
   constructor() {
@@ -6,6 +6,6 @@ export class IsNotProdStrategy extends Strategy {
   }
 
   isEnabled(parameters, context) {
-    return process.env.ENV !== "production"
+    return process.env.ENV !== 'production';
   }
 }
