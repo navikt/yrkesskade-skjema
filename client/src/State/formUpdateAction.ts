@@ -2,7 +2,6 @@
 import { GlobalState } from 'little-state-machine';
 
 export default function formUpdateAction(state: GlobalState, payload: any) {
-  console.log(state);
   return {
     ...state,
     hendelsesfakta: { ...state.hendelsesfakta, ...payload.hendelsesfakta },

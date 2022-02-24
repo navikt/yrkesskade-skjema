@@ -27,7 +27,6 @@ import { useStateMachine } from 'little-state-machine';
 
 const Summary = () => {
   const { state } = useStateMachine({ formUpdateAction });
-  console.log(state);
   const data = state;
   const navigate = useNavigate();
   const handleSending = async () => {

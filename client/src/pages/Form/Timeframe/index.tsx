@@ -23,7 +23,6 @@ import { useNavigate } from 'react-router-dom';
 
 const TimeframeFormPage = () => {
   const { actions, state } = useStateMachine({ formUpdateAction });
-  console.log(state);
   const {
     register,
     handleSubmit,
