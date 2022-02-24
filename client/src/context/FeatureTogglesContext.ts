@@ -15,7 +15,7 @@ const [FeatureTogglesProvider, useFeatureToggles] = createUseContext(() => {
 
   useEffect(() => {
     hentFeatureToggles();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const hentFeatureToggles = () => {
      return axios.get<EAllFeatureToggles>(`/yrkesskade/toggles`).then((response) => {
