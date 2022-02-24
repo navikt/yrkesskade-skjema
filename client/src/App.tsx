@@ -16,6 +16,7 @@ import { InnloggetProvider } from './context/InnloggetContext';
 import { FeatureTogglesProvider } from './context/FeatureTogglesContext';
 import { autentiseringsInterceptor } from './utils/autentisering';
 import { SelectedCompanyProvider } from './context/SelectedCompanyContext';
+import Landing from './pages/Landing';
 
 const App = () => {
   createStore(
@@ -76,9 +77,17 @@ const App = () => {
     <InnloggetProvider>
       <FeatureTogglesProvider>
         <SelectedCompanyProvider>
-          <StateMachineProvider>
-            <Routes>
-              <Route path="yrkesskade/">
+        <StateMachineProvider>
+          <Routes>
+            <Route path="yrkesskade/">
+              <Route
+                index
+                element={<Landing />}
+              />
+              <Route path="info"
+                element={<Info />}
+              />
+              <Route path="skjema">
                 <Route
                   index
                   element={<Info />}
@@ -94,8 +103,10 @@ const App = () => {
                   <Route path="feilmelding" element={<Error />} />
                 </Route>
               </Route>
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+              <Route path="feilmelding" element={<Error />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
           </StateMachineProvider>
         </SelectedCompanyProvider>
       </FeatureTogglesProvider>

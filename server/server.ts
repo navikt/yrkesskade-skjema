@@ -13,6 +13,8 @@ import {
 } from './routes/feature-toggles';
 import { configureApiEndpoint } from './routes/api';
 import { configureAuthenticationAndVerification } from './routes/authenticate';
+import { configureLoggingEndpoint } from './routes/logging';
+import bodyParser from 'body-parser'
 
 const BUILD_PATH = path.join(__dirname, '../build');
 const PORT = process.env.PORT || 3000;
@@ -25,6 +27,12 @@ app.use(cookies());
 app.use(express.json());
 app.use(express.static('../build'));
 
+// configure the app to use bodyParser()
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json());
+
 // health checks
 app.get([`/internal/isAlive`, `/internal/isReady`], (req: any, res: any) =>
   res.sendStatus(200)
@@ -36,6 +44,9 @@ configureApiEndpoint(app, '/api', config.API_URL);
 // feature toggle endpoints
 configureFeatureTogglesEndpoint(app);
 configureAllFeatureTogglesEndpoint(app);
+
+// enpoint to send frontend logs to remote logging services
+configureLoggingEndpoint(app);
 
 // autentisering og verifikasjon
 configureAuthenticationAndVerification(app);

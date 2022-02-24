@@ -7,6 +7,8 @@ import {
   BodyLong,
   Alert,
   Link,
+  BodyShort,
+  Label,
 } from '@navikt/ds-react';
 import SystemHeader from '../../components/SystemHeader';
 // import getTexts from '../../utils/getTexts';
@@ -20,6 +22,7 @@ import { Organisasjon } from '../../types/brukerinfo';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useSelectedCompany } from '../../context/SelectedCompanyContext';
+// import Description from '../Form/Description';
 
 const Info = () => {
   const navigate = useNavigate();
@@ -67,7 +70,11 @@ const Info = () => {
               </BodyLong>
               {
                 innloggetBruker && innloggetBruker.organisasjoner.length && (
+                  <>
+                  <Label>Navn</Label>
+                  <BodyShort spacing>{innloggetBruker.navn}</BodyShort>
                   <OrganisationSelect organisasjoner={innloggetBruker.organisasjoner.filter((organisasjon) => organisasjon.status === 'Active')} onOrganisasjonChange={onOrganisasjonChange} data-testid="virksomhetsvelger" />
+                  </>
                 )
               }
               <Link

@@ -3,9 +3,10 @@ import {
   RadioGroup,
   Label,
   BodyShort,
+  Radio,
 } from '@navikt/ds-react';
 import Select from 'react-select';
-import { Controller } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useSelectedCompany } from '../../../context/SelectedCompanyContext';
 
 // import { accidentType, accidentBackground } from '../../../assets/injuryEnums';
@@ -14,6 +15,9 @@ import ulykkessted from '../../../assets/Lists/ulykkessted';
 import stedstype from '../../../assets/Lists/stedstype';
 import aarsakUlykkeTabellAogE from '../../../assets/Lists/aarsakUlykkeTabellAogE';
 import bakgrunnsaarsakTabellBogG from '../../../assets/Lists/bakgrunnsaarsakTabellBogG';
+import { useState } from 'react';
+import Address from '../Address';
+import formUpdateAction from '../../../State/formUpdateAction';
 import { useStateMachine } from 'little-state-machine';
 import { isNil } from 'ramda';
 
@@ -23,67 +27,69 @@ interface IProps {
   control: any;
 }
 const AccidentForm = ({ register, errors, control }: IProps) => {
-  const { state } = useStateMachine();
   const { selectedAddress } = useSelectedCompany();
+  const { state } = useStateMachine({ formUpdateAction });
+
+  const { getValues } = useForm();
+  const [sammeSomVirksomhetensAdresse, setSammeSomVirksomhetensAdresse] =
+    useState<boolean>(
+      getValues('hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse') ||
+        selectedAddress
+        ? true
+        : false
+    );
+
   return (
     <>
-      <div>
-        <Label spacing>Adresse</Label>
-        <BodyShort data-test-id="injury-street-address">
-          {selectedAddress?.adresser[0]}
-        </BodyShort>
-        <BodyShort data-test-id="injury-postal-code-place">
-          {selectedAddress?.postnummer} {selectedAddress?.poststed}
-        </BodyShort>
-      </div>
+      {selectedAddress && (
+        <>
+          <div>
+            <Label spacing>Adresse</Label>
 
-      <RadioGroup
-        className="spacer"
-        legend="Skjedde ulykken på samme adresse?"
-        error={
-          errors?.hendelsesfakta?.ulykkessted?.sammeSomVirksomhetensAdresse &&
-          errors?.hendelsesfakta?.ulykkessted.sammeSomVirksomhetensAdresse
-            .message
-        }
-      >
-        <div className="navds-radio navds-radio--medium">
-          <input
-            type="radio"
-            className="navds-radio__input"
-            {...register(
-              'hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse',
-              {
-                required: 'Dette feltet er påkrevd',
-              }
-            )}
-            value={true}
-            data-testid="accident-place-yes"
-            id="accident-place-yes"
-          />
-          <label htmlFor="accident-place-yes" className="navds-radio__label">
-            Ja
-          </label>
-        </div>
+            <BodyShort data-test-id="injury-street-address">
+              {selectedAddress.adresser[0]}
+            </BodyShort>
+            <BodyShort data-test-id="injury-postal-code-place">
+              {selectedAddress.postnummer} {selectedAddress.poststed}
+            </BodyShort>
+          </div>
 
-        <div className="navds-radio navds-radio--medium">
-          <input
-            type="radio"
-            className="navds-radio__input"
-            {...register(
-              'hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse',
-              {
-                required: 'Dette feltet er påkrevd',
-              }
+          <Controller
+            name="hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse"
+            control={control}
+            defaultValue={true}
+            render={({
+              field: { onChange, onBlur, value, name, ref },
+              fieldState: { invalid, isTouched, isDirty, error },
+              formState,
+            }) => (
+              <RadioGroup
+                className="spacer"
+                legend="Skjedde ulykken på samme adresse?"
+                defaultValue="true"
+                onChange={(val) => {
+                  setSammeSomVirksomhetensAdresse(val === 'true');
+                  onChange(val === 'true');
+                }}
+                onBlur={onBlur}
+                error={
+                  errors?.hendelsesfakta?.ulykkessted
+                    .sammeSomVirksomhetensAdresse &&
+                  errors?.hendelsesfakta?.ulykkessted
+                    .sammeSomVirksomhetensAdresse.message
+                }
+              >
+                <Radio value="true">Ja</Radio>
+                <Radio value="false">Nei</Radio>
+              </RadioGroup>
             )}
-            value={false}
-            data-testid="accident-place-no"
-            id="accident-place-no"
           />
-          <label htmlFor="accident-place-no" className="navds-radio__label">
-            Nei
-          </label>
-        </div>
-      </RadioGroup>
+        </>
+      )}
+
+      {(!selectedAddress || !sammeSomVirksomhetensAdresse) && (
+        <Address register={register} errors={errors} control={control} />
+      )}
 
       <RadioGroup
         className="spacer"
@@ -231,18 +237,24 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
         <Controller
           name="hendelsesfakta.aarsakUlykkeTabellAogE"
           control={control}
-          rules={{ required: isNil(state.hendelsesfakta.aarsakUlykkeTabellAogE) && 'Dette feltet er påkrevd' }}
+          rules={{
+            required:
+              isNil(state.hendelsesfakta.aarsakUlykkeTabellAogE) &&
+              'Dette feltet er påkrevd',
+          }}
           render={({ field }) => (
             <Select
               className=""
               closeMenuOnSelect={false}
               isMulti
               options={aarsakUlykkeTabellAogE}
-              defaultValue={!isNil(state.hendelsesfakta.aarsakUlykkeTabellAogE) ? state.hendelsesfakta.aarsakUlykkeTabellAogE.map(
-                (i) => {
-                  return { value: i, label: i };
-                }
-              ): []}
+              defaultValue={
+                !isNil(state.hendelsesfakta.aarsakUlykkeTabellAogE)
+                  ? state.hendelsesfakta.aarsakUlykkeTabellAogE.map((i) => {
+                      return { value: i, label: i };
+                    })
+                  : []
+              }
               placeholder=""
               onChange={(val) => field.onChange(val.map((i) => i.value))}
             />
@@ -265,14 +277,20 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
         <Controller
           name="hendelsesfakta.bakgrunnsaarsakTabellBogG"
           control={control}
-          rules={{ required: isNil(state.hendelsesfakta.bakgrunnsaarsakTabellBogG) && 'Dette feltet er påkrevd' }}
+          rules={{
+            required:
+              isNil(state.hendelsesfakta.bakgrunnsaarsakTabellBogG) &&
+              'Dette feltet er påkrevd',
+          }}
           render={({ field }) => (
             <Select
-              defaultValue={!isNil(state.hendelsesfakta.bakgrunnsaarsakTabellBogG) ?  state.hendelsesfakta.bakgrunnsaarsakTabellBogG.map(
-                (i) => {
-                  return { value: i, label: i };
-                }
-              ): []}
+              defaultValue={
+                !isNil(state.hendelsesfakta.bakgrunnsaarsakTabellBogG)
+                  ? state.hendelsesfakta.bakgrunnsaarsakTabellBogG.map((i) => {
+                      return { value: i, label: i };
+                    })
+                  : []
+              }
               closeMenuOnSelect={false}
               isMulti
               options={bakgrunnsaarsakTabellBogG}
