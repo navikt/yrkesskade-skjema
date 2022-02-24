@@ -11,8 +11,8 @@ const restream = (
   const httpRequest = (req as Request);
   const requestBody = httpRequest.body;
 
-  if (httpRequest.headers['authorization']) {
-    proxyReq.setHeader('Authorization', httpRequest.headers['authorization'])
+  if (httpRequest.headers.authorization) {
+    proxyReq.setHeader('Authorization', httpRequest.headers.authorization)
   }
 
   if (requestBody) {
@@ -39,7 +39,7 @@ export const doProxy = (path: string, target: string) => {
       const tokenSet = await exchangeToken(req);
 
       if (!tokenSet?.expired() && tokenSet?.access_token) {
-          req.headers['authorization'] = `Bearer ${tokenSet.access_token}`;
+          req.headers.authorization = `Bearer ${tokenSet.access_token}`;
       }
 
       return undefined;
