@@ -101,7 +101,6 @@ const LoadingContent = () => {
 const NoAccessContent = () => {
 
   const handleClick = () => {
-    console.log('Naviger tilbake til nav.no og skjemasidene');
     window.location.href = 'https://www.nav.no/no/person/arbeid/yrkesskade-og-yrkessykdom';
   }
 
