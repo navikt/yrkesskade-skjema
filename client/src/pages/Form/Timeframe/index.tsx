@@ -52,7 +52,7 @@ const TimeframeFormPage = () => {
         <Cell xs={12} lg={2}></Cell>
         <Cell xs={12} lg={5}>
           <div className="cellContentContainer">
-            <BackButton url="/yrkesskade/" />
+            <BackButton url="/yrkesskade/skjema" />
             <Heading
               size="2xlarge"
               className="pageNumberTitle spacer"

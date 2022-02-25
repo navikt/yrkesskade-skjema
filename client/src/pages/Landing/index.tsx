@@ -65,7 +65,7 @@ const Landing = () => {
         toggles
       );
       if (tilgangTilDigitaltskjema) {
-        navigate('/yrkesskade/info');
+        navigate('/yrkesskade/skjema');
       } else {
         setContent(<NoAccessContent />);
       }

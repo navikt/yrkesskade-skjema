@@ -84,15 +84,11 @@ const App = () => {
                 index
                 element={<Landing />}
               />
-              <Route path="info"
-                element={<Info />}
-              />
               <Route path="skjema">
                 <Route
                   index
                   element={<Info />}
                 />
-                <Route path="skjema">
                   <Route path="tidsrom" element={<TimeframeFormPage />} />
                   <Route path="skadelidt" element={<InjuredFormPage />} />
                   <Route path="ulykken" element={<AccidentFormPage />} />
@@ -101,7 +97,6 @@ const App = () => {
                   <Route path="oppsumering" element={<Summary />} />
                   <Route path="kvittering" element={<Receipt />} />
                   <Route path="feilmelding" element={<Error />} />
-                </Route>
               </Route>
               <Route path="feilmelding" element={<Error />} />
             </Route>
