@@ -128,48 +128,6 @@ const InjuryForm = ({
         )}
       </div>
 
-      {/* <RadioGroup
-        legend="Har helsepersonell blitt oppsøkt? (valgfri)"
-        error={
-          errors?.skade?.oppsoektHelsehjelp &&
-          errors?.skade?.oppsoektHelsehjelp.message
-        }
-        className="spacer"
-      >
-        <div className="navds-radio navds-radio--medium">
-          <input
-            type="radio"
-            className="navds-radio__input"
-            {...register('skade.oppsoektHelsehjelp')}
-            value="Lege oppsøkt"
-            data-testid="injury-doctor-contacted-option"
-            id="injury-doctor-contacted-option"
-          />
-          <label
-            htmlFor="injury-doctor-contacted-option"
-            className="navds-radio__label"
-          >
-            Ja
-          </label>
-        </div>
-        <div className="navds-radio navds-radio--medium">
-          <input
-            type="radio"
-            className="navds-radio__input"
-            {...register('skade.oppsoektHelsehjelp')}
-            value="Annet helsepersonell oppsøkt "
-            data-testid="injury-other-contacted-no-option"
-            id="injury-other-contacted-no-option"
-          />
-          <label
-            htmlFor="injury-other-contacted-no-option"
-            className="navds-radio__label"
-          >
-            Annet helsepersonell oppsøkt
-          </label>
-        </div>
-      </RadioGroup> */}
-
       <RadioGroup
         legend="Har den skadelidte hatt fravær?"
         error={

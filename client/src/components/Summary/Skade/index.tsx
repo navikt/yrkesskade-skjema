@@ -1,5 +1,5 @@
 // import { isNil } from "ramda";
-import { Label, BodyShort, BodyLong, Table } from '@navikt/ds-react';
+import { Label, BodyShort, Table } from '@navikt/ds-react';
 interface IProps {
   data: any;
 }
@@ -29,13 +29,9 @@ const SkadeSummary = ({ data }: IProps) => {
           </Table.Body>
         </Table>
       </div>
-      <div className="answerContainer">
-        <Label>Har lege blitt kontaktet</Label>
-        <BodyShort>{data.skade.legeKontaktet}</BodyShort>
-      </div>
-      <div className="answerContainer">
-        <Label>Utfyllende beskrivelse</Label>
-        <BodyLong>{data.hendelsesfakta.utfyllendeBeskrivelse}</BodyLong>
+      <div className="answerContainer spacer">
+        <Label>Har den skadelidte hatt fravær</Label>
+        <BodyShort>{data.skade.antattSykefravaerTabellH}</BodyShort>
       </div>
     </div>
   );

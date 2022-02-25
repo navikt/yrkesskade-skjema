@@ -1,4 +1,4 @@
-import { TextField } from '@navikt/ds-react';
+import { TextField, Fieldset } from '@navikt/ds-react';
 import './Address.less';
 
 interface IProps {
@@ -9,9 +9,9 @@ interface IProps {
 const Address = ({ register, errors, control }: IProps) => {
 
   return (
-    <>
+    <Fieldset legend="Fyll ut adressen hvor ulykken skjedde">
       <TextField
-        className="spacer"
+        className=""
         {...register('hendelsesfakta.ulykkessted.adresse.adresselinje1', {
           required: 'Dette feltet er påkrevd',
         })}
@@ -25,10 +25,10 @@ const Address = ({ register, errors, control }: IProps) => {
             .adresse.adresselinje1.message
         }
       />
-      <div className="postalcode-and-place">
+      <div className="postalcode-and-place spacer">
         <TextField
           className="postal-code"
-          {...register('hendelsesfakta.ulykkessted.adresse.postkode', {
+          {...register('hendelsesfakta.ulykkessted.adresse.adresselinje2', {
             required: 'Dette feltet er påkrevd',
             pattern: {
               value: /[0-9]/,
@@ -40,14 +40,14 @@ const Address = ({ register, errors, control }: IProps) => {
           data-testid="injury-location-postal-code"
           error={
             errors?.hendelsesfakta?.ulykkessted
-              .adresse.postkode &&
+              .adresse.adresselinje2 &&
             errors?.hendelsesfakta?.ulykkessted
-              .adresse.postkode.message
+              .adresse.adresselinje2.message
           }
         />
         <TextField
           className="city"
-          {...register('hendelsesfakta.ulykkessted.adresse.poststed', {
+          {...register('hendelsesfakta.ulykkessted.adresse.adresselinje3', {
             required: 'Dette feltet er påkrevd',
           })}
           label="Poststed"
@@ -55,13 +55,28 @@ const Address = ({ register, errors, control }: IProps) => {
           data-testid="injury-location-place"
           error={
             errors?.hendelsesfakta?.ulykkessted
-              .adresse.poststed &&
+              .adresse.adresselinje3 &&
             errors?.hendelsesfakta?.ulykkessted
-              .adresse.poststed.message
+              .adresse.adresselinje3.message
           }
         />
       </div>
-    </>
+      <TextField
+          className="country spacer"
+          {...register('hendelsesfakta.ulykkessted.adresse.land', {
+            required: 'Dette feltet er påkrevd',
+          })}
+          label="Land"
+          type="text"
+          data-testid="injury-location-country"
+          error={
+            errors?.hendelsesfakta?.ulykkessted
+              .adresse.land &&
+            errors?.hendelsesfakta?.ulykkessted
+              .adresse.land.message
+          }
+        />
+    </Fieldset>
   );
 };
 

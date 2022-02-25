@@ -8,11 +8,11 @@ const SkadelidtSummary = ({ data }: IProps) => {
     <div className="answerOuterContainer">
       <div className="answerContainer">
         <Label>Hva er skadeliteds stilling</Label>
-        <BodyShort>{data.skadelidt.arbeidsforhold.stillingstittel}</BodyShort>
+        <BodyShort>{data.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte}</BodyShort>
       </div>
       <div className="answerContainer">
         <Label>Hva er skadeliteds fødselsnummer</Label>
-        <BodyShort>{data.skadelidt.foedselsnummer}</BodyShort>
+        <BodyShort>{data.skadelidt.norskIdentitetsnummer}</BodyShort>
       </div>
     </div>
   );

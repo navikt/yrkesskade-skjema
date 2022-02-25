@@ -105,7 +105,7 @@ const StepIndicator = () => {
     }
   }, [pathname, steps]);
   return (
-    <div className="Stepcontainer">
+    <div className="Stepcontainer no-print">
       <section className="step-indicator">
         {steps?.details.map((step, index) => (
           <div key={index + 1}>

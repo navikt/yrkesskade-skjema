@@ -14,7 +14,7 @@ const BackButton = ({ url }: IProps) => {
     navigate(url);
   };
   return (
-    <div className="backButton">
+    <div className="backButton no-print">
       <Button onClick={handleBack} variant="tertiary" size="small">
         <Left />
         Tilbake
