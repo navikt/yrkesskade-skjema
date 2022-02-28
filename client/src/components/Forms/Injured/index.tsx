@@ -8,6 +8,8 @@ import { useInnloggetContext } from '../../../context/InnloggetContext';
 import { useStateMachine } from 'little-state-machine';
 import {isNil} from 'ramda';
 
+import './Injured.less';
+
 interface IProps {
   register: any;
   errors: any;
@@ -64,7 +66,7 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
       </div>
 
       <TextField
-        className="spacer"
+        className="spacer fnr"
         {...register('skadelidt.norskIdentitetsnummer', {
           required: 'Dette feltet er påkrevd',
           minLength: 11,
