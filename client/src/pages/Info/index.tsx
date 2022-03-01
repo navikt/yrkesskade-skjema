@@ -28,7 +28,7 @@ import { oppdaterInnmelder, oppdaterPaaVegneAv, oppdaterDekningsforholdOrganisas
 
 const Info = () => {
   const navigate = useNavigate();
-  const { actions, state } = useStateMachine({ oppdaterPaaVegneAv, oppdaterInnmelder, oppdaterDekningsforholdOrganisasjon });
+  const { actions } = useStateMachine({ oppdaterPaaVegneAv, oppdaterInnmelder, oppdaterDekningsforholdOrganisasjon });
 
   const handleForward = () => {
     navigate('/yrkesskade/skjema/tidsrom');
