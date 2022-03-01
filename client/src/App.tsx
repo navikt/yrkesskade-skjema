@@ -24,7 +24,7 @@ const App = () => {
       innmelder: {
         norskIdentitetsnummer: undefined,
         paaVegneAv: '',
-        innmelderrolle: '',
+        innmelderrolle: 'Virksomhetsrepresentant',
         altinnrolleIDer: [],
       },
       skadelidt: {

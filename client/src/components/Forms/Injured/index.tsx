@@ -47,7 +47,7 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
                     .stillingstittelTilDenSkadelidte,
               }}
               onBlur={onBlur}
-              onChange={(val) => onChange(val?.value)}
+              onChange={(val) => onChange([val?.value])}
               options={stillingstitler}
               menuIsOpen={openMenu}
               onInputChange={handleInputChange}

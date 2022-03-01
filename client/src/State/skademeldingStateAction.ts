@@ -1,0 +1,52 @@
+import { GlobalState } from 'little-state-machine';
+
+const oppdaterPaaVegneAv = (state: GlobalState, payload: string) => ({
+  ...state,
+  innmelder: {
+    ...state.innmelder,
+    paaVegneAv: payload,
+  },
+});
+
+const oppdaterInnmelder = (
+  state: GlobalState,
+  payload: { norskIdentitetsnummer: number; innmelderrolle: string }
+) => ({
+  ...state,
+  innmelder: {
+    ...state.innmelder,
+    norskIdentitetsnummer: payload.norskIdentitetsnummer,
+    innmelderrolle: payload.innmelderrolle,
+  },
+});
+
+const oppdaterDekningsforholdOrganisasjon = (
+  state: GlobalState,
+  payload: { organisasjonsnummer: string, navn: string }
+) => ({
+  ...state,
+  skadelidt: {
+    ...state.skadelidt,
+    dekningsforhold: {
+      ...state.skadelidt.dekningsforhold,
+      organisasjonsnummer: payload.organisasjonsnummer,
+      navnPaaVirksomheten: payload.navn,
+      rolletype: 'Arbeidstaker'
+    },
+  },
+});
+
+const oppdaterSkade = (
+  state: GlobalState,
+  payload: any // sett rett type
+) => ({
+  ...state,
+  skade: payload,
+});
+
+export {
+  oppdaterPaaVegneAv,
+  oppdaterInnmelder,
+  oppdaterDekningsforholdOrganisasjon,
+  oppdaterSkade,
+};

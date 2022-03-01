@@ -26,9 +26,25 @@ import StepIndicator from '../../components/StepIndicator';
 // import { ISteps } from '../../Interfaces/steps';
 
 import { useStateMachine } from 'little-state-machine';
+import { useSelectedCompany } from '../../context/SelectedCompanyContext';
+import { useEffect } from 'react';
+import { oppdaterDekningsforholdOrganisasjon, oppdaterSkade } from '../../State/skademeldingStateAction';
 
 const Summary = () => {
-  const { state } = useStateMachine();
+  const { state, actions } = useStateMachine({ oppdaterDekningsforholdOrganisasjon, oppdaterSkade });
+  const { selectedCompany } = useSelectedCompany();
+
+  useEffect(() => {
+    // oppdater state med verdier som ikke har blitt satt av skjema
+    actions.oppdaterDekningsforholdOrganisasjon({ organisasjonsnummer: selectedCompany.organisasjonsnummer as string, navn: selectedCompany.navn });
+    actions.oppdaterSkade({
+      alvorlighetsgrad: state.skade.alvorlighetsgrad,
+      skadedeDeler: state.skade.skadedeDeler,
+      antattSykefravaerTabellH: state.skade.antattSykefravaerTabellH
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCompany.organisasjonsnummer])
+
   const data = state;
   // const data = {
   //   innmelder: {
@@ -94,7 +110,9 @@ const Summary = () => {
   const navigate = useNavigate();
   const handleSending = async () => {
     try {
-      await axios.post('/api/midlertidig/skademeldinger', { data });
+      console.log('send skademelding: ', data);
+
+      await axios.post('/api/midlertidig/skademeldinger', data);
       navigate('/yrkesskade/skjema/kvittering');
     } catch {
       navigate('/yrkesskade/skjema/feilmelding');

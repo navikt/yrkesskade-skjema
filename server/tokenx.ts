@@ -62,14 +62,15 @@ const getTokenXToken = async (token: string | Uint8Array, additionalClaims) => {
 
 const getMockTokenXToken = async () => {
   // ?client_id=someclientid&aud=dev-gcp:targetteam:targetapp&acr=Level4&pid=12345678910
-  const tokenXToken = await (
+  const tokenXTokenResponse = await (
     await axios.get(
       `${process.env.FAKEDINGS_URL_TOKENX}?aud=${process.env.TOKENX_AUDIENCE}&acr=Level4&pid=12345678910&client_id=yrkesskade-skjema`
     )
-  ).data;
+  );
 
+  const tokenxToken = tokenXTokenResponse.data;
   return new TokenSet({
-    access_token: tokenXToken,
+    access_token: tokenxToken,
   });
 };
 
