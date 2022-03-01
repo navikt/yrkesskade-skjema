@@ -79,28 +79,28 @@ const StepIndicator = () => {
       }
       setSteps(newSteps);
     };
-    if (pathname === '/yrkesskade/') {
+    if (pathname.toLowerCase() === '/yrkesskade/') {
       updateSteps(1, steps);
     }
-    if (pathname === '/yrkesskade/skjema/tidsrom') {
+    if (pathname.toLowerCase() === '/yrkesskade/skjema/tidsrom') {
       updateSteps(2, steps);
     }
-    if (pathname === '/yrkesskade/skjema/skadelidt') {
+    if (pathname.toLowerCase() === '/yrkesskade/skjema/skadelidt') {
       updateSteps(3, steps);
     }
-    if (pathname === '/yrkesskade/skjema/ulykken') {
+    if (pathname.toLowerCase() === '/yrkesskade/skjema/ulykken') {
       updateSteps(4, steps);
     }
-    if (pathname === '/yrkesskade/skjema/skaden') {
+    if (pathname.toLowerCase() === '/yrkesskade/skjema/skaden') {
       updateSteps(5, steps);
     }
-    if (pathname === '/yrkesskade/skjema/beskrivelse') {
+    if (pathname.toLowerCase() === '/yrkesskade/skjema/beskrivelse') {
       updateSteps(6, steps);
     }
-    if (pathname === '/yrkesskade/skjema/oppsumering') {
+    if (pathname.toLowerCase() === '/yrkesskade/skjema/oppsumering') {
       updateSteps(7, steps);
     }
-    if (pathname === '/yrkesskade/skjema/kvittering') {
+    if (pathname.toLowerCase() === '/yrkesskade/skjema/kvittering') {
       updateSteps(8, steps);
     }
   }, [pathname, steps]);

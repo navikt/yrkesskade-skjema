@@ -34,6 +34,8 @@ const InjuryFormPage = () => {
     }
   });
 
+
+
   const navigate = useNavigate();
 
 

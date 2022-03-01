@@ -1,4 +1,4 @@
-// import {isNil} from 'ramda';
+import { path } from 'ramda';
 import { Label, BodyLong } from '@navikt/ds-react';
 interface IProps {
   data: any;
@@ -6,10 +6,12 @@ interface IProps {
 const BeskrivelseSummary = ({ data }: IProps) => {
   return (
     <div className="answerOuterContainer">
-      <div className="answerContainer">
-        <Label>Utfyllende beskrivelse</Label>
-        <BodyLong>{data.hendelsesfakta.utfyllendeBeskrivelse}</BodyLong>
-      </div>
+      { path(['hendelsesfakta', 'utfyllendeBeskrivelse'], data) !== 'undefined' && (
+        <div className="answerContainer">
+          <Label>Utfyllende beskrivelse</Label>
+          <BodyLong>{data.hendelsesfakta.utfyllendeBeskrivelse}</BodyLong>
+        </div>
+      )}
     </div>
   );
 };

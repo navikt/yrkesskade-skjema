@@ -54,7 +54,7 @@ const App = () => {
         naarSkjeddeUlykken: '',
         hvorSkjeddeUlykken: '',
         ulykkessted: {
-          sammeSomVirksomhetensAdresse: undefined,
+          sammeSomVirksomhetensAdresse: false,
           adresse: {
             adresselinje1: undefined,
             adresselinje2: undefined,
