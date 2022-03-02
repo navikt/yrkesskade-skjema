@@ -28,7 +28,7 @@ const hentBrukerinfo = async (req, res: Response, next: NextFunction) => {
   const cookieName = config.IDPORTEN_COOKIE_NAME;
 
   // hent token fra cookie
-  const idtoken = req.cookies && req.cookies[cookieName];
+  const idtoken = req?.cookies && req?.cookies[cookieName];
 
   if (!idtoken) {
     res.sendStatus(401);

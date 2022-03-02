@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 import { exchangeToken } from '../tokenx';
 import { logError, logInfo } from '@navikt/yrkesskade-logging';
 import jwt_decode from "jwt-decode";
+import config from '../config';
 
 const restream = (
   proxyReq: ClientRequest,
@@ -11,7 +12,7 @@ const restream = (
   _res: ServerResponse
 ) => {
   const httpRequest = req as Request;
-  const authToken = httpRequest.cookies['selvbetjening-idtoken'];
+  const authToken = httpRequest?.cookies && httpRequest?.cookies[config.IDPORTEN_COOKIE_NAME];
 
   if (checkAuth(authToken)) {
     const requestBody = httpRequest.body;
@@ -45,7 +46,7 @@ const errorHandler = (err, req, res) => {
 export const doProxy = (path: string, target: string) => {
   return createProxyMiddleware(path, {
     changeOrigin: true,
-    logLevel: process.env.ENV === 'prod' ? 'silent' : 'debug',
+    logLevel: process.env.ENV === 'prod' ? 'debug' : 'debug',
     secure: true,
     xfwd: true,
     onProxyReq: restream,
@@ -62,7 +63,7 @@ export const doProxy = (path: string, target: string) => {
   });
 };
 
-const checkAuth = (authToken) => {
+const checkAuth = (authToken): boolean => {
   try {
     jwt_decode(authToken);
     return true;
