@@ -6,7 +6,7 @@ import Select from 'react-select';
 import validator from '@navikt/fnrvalidator';
 import { useInnloggetContext } from '../../../context/InnloggetContext';
 import { useStateMachine } from 'little-state-machine';
-import {isNil} from 'ramda';
+import {isEmpty} from 'ramda';
 
 import './Injured.less';
 
@@ -34,7 +34,7 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
         <Controller
           name="skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte"
           control={control}
-          rules={{ required:  isNil(state.skadelidt.dekningsforhold
+          rules={{ required:  isEmpty(state.skadelidt.dekningsforhold
             .stillingstittelTilDenSkadelidte) && 'Dette feltet er påkrevd'  }}
           render={({ field: { onChange, onBlur, value, name, ref } }) => (
             <Select

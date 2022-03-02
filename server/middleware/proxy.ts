@@ -2,9 +2,12 @@ import { ClientRequest, IncomingMessage, ServerResponse } from 'http';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import { Request, Response } from 'express';
 import { exchangeToken } from '../tokenx';
-import { logError, logInfo, logSecure, stdoutLogger } from '@navikt/yrkesskade-logging';
-import jwt_decode from "jwt-decode";
-import config from '../config';
+import {
+  logError,
+  logInfo,
+  logSecure,
+  stdoutLogger,
+} from '@navikt/yrkesskade-logging';
 
 const restream = (
   proxyReq: ClientRequest,
@@ -14,19 +17,13 @@ const restream = (
   const httpRequest = req as Request;
   const requestBody = httpRequest.body;
 
-  /*Object.keys(req.headers).forEach((key) => {
-    proxyReq.setHeader(key, req.headers[key]);
-  });*/
-
   if (requestBody && requestBody.length > 0) {
-    logInfo('request body: ', requestBody);
     const bodyData = JSON.stringify(requestBody);
     proxyReq.setHeader('Content-Type', 'application/json');
     proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
     proxyReq.write(bodyData);
     proxyReq.end();
   }
-
 };
 
 const errorHandler = (err, req, res) => {
@@ -54,13 +51,4 @@ export const doProxy = (path: string, target: string) => {
     },
     target: `${target}`,
   });
-};
-
-const checkAuth = (authToken): boolean => {
-  try {
-    jwt_decode(authToken);
-    return true;
-  } catch (error) {
-    return false;
-  }
 };
