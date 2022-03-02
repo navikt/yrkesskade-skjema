@@ -29,10 +29,12 @@ import { useStateMachine } from 'little-state-machine';
 import { useSelectedCompany } from '../../context/SelectedCompanyContext';
 import { useEffect } from 'react';
 import { oppdaterDekningsforholdOrganisasjon, oppdaterSkade } from '../../State/skademeldingStateAction';
+import { useErrorMessageContext } from '../../context/ErrorMessageContext';
 
 const Summary = () => {
   const { state, actions } = useStateMachine({ oppdaterDekningsforholdOrganisasjon, oppdaterSkade });
   const { selectedCompany } = useSelectedCompany();
+  const { setError } = useErrorMessageContext();
 
   useEffect(() => {
     // oppdater state med verdier som ikke har blitt satt av skjema
@@ -114,7 +116,8 @@ const Summary = () => {
       const url = '/api/v1/skademeldinger';
       await axios.post(url, data);
       navigate('/yrkesskade/skjema/kvittering');
-    } catch {
+    } catch (error: any) {
+      setError(error.message);
       navigate('/yrkesskade/skjema/feilmelding');
     }
   };
