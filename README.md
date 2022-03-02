@@ -38,3 +38,11 @@ Dersom `code` ikke finnes i path, må du åpne VS Code og velg Shift + CMD + P o
 
 Velg deretter kommandoen
 `Install 'code' command in PATH`
+
+## Kodegenering OpenAPI
+
+Kodegenering av klient kode for yrkesskade-melding-api
+
+```bash
+yarn codegen-yrkesskade
+```
