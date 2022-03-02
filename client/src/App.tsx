@@ -17,6 +17,7 @@ import { FeatureTogglesProvider } from './context/FeatureTogglesContext';
 import { autentiseringsInterceptor } from './utils/autentisering';
 import { SelectedCompanyProvider } from './context/SelectedCompanyContext';
 import Landing from './pages/Landing';
+import { ErrorMessageProvider } from './context/ErrorMessageContext';
 
 const App = () => {
   createStore(
@@ -74,38 +75,41 @@ const App = () => {
   autentiseringsInterceptor();
 
   return (
-    <InnloggetProvider>
-      <FeatureTogglesProvider>
-        <SelectedCompanyProvider>
-        <StateMachineProvider>
-          <Routes>
-            <Route path="yrkesskade/">
-              <Route
-                index
-                element={<Landing />}
-              />
-              <Route path="skjema">
+    <ErrorMessageProvider>
+      <InnloggetProvider>
+        <FeatureTogglesProvider>
+          <SelectedCompanyProvider>
+
+          <StateMachineProvider>
+            <Routes>
+              <Route path="yrkesskade/">
                 <Route
                   index
-                  element={<Info />}
+                  element={<Landing />}
                 />
-                  <Route path="tidsrom" element={<TimeframeFormPage />} />
-                  <Route path="skadelidt" element={<InjuredFormPage />} />
-                  <Route path="ulykken" element={<AccidentFormPage />} />
-                  <Route path="skaden" element={<InjuryFormPage />} />
-                  <Route path="beskrivelse" element={<DescriptionFormPage />} />
-                  <Route path="oppsumering" element={<Summary />} />
-                  <Route path="kvittering" element={<Receipt />} />
-                  <Route path="feilmelding" element={<Error />} />
+                <Route path="skjema">
+                  <Route
+                    index
+                    element={<Info />}
+                  />
+                    <Route path="tidsrom" element={<TimeframeFormPage />} />
+                    <Route path="skadelidt" element={<InjuredFormPage />} />
+                    <Route path="ulykken" element={<AccidentFormPage />} />
+                    <Route path="skaden" element={<InjuryFormPage />} />
+                    <Route path="beskrivelse" element={<DescriptionFormPage />} />
+                    <Route path="oppsumering" element={<Summary />} />
+                    <Route path="kvittering" element={<Receipt />} />
+                    <Route path="feilmelding" element={<Error />} />
+                </Route>
+                <Route path="feilmelding" element={<Error />} />
               </Route>
-              <Route path="feilmelding" element={<Error />} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          </StateMachineProvider>
-        </SelectedCompanyProvider>
-      </FeatureTogglesProvider>
-    </InnloggetProvider>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            </StateMachineProvider>
+          </SelectedCompanyProvider>
+        </FeatureTogglesProvider>
+      </InnloggetProvider>
+    </ErrorMessageProvider>
   );
 };
 

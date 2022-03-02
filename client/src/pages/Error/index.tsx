@@ -7,6 +7,7 @@ import {
   Cell,
   BodyLong,
 } from "@navikt/ds-react";
+import { useErrorMessageContext } from '../../context/ErrorMessageContext';
 // import { SkjemaGruppe, Input } from "nav-frontend-skjema";
 // import { Hovedknapp } from "nav-frontend-knapper";
 // import { useHistory } from "react-router-dom";
@@ -14,6 +15,7 @@ import {
 // import axios from "axios";
 
 const Receipt = () => {
+  const { error } = useErrorMessageContext();
   return (
     <ContentContainer>
       <Grid>
@@ -23,13 +25,16 @@ const Receipt = () => {
           </Heading>
           </Cell>
           <Cell xs={12} lg={6} className="grid-centered--lg">
-          <BodyLong spacing>
-            Ullamco ut laboris irure excepteur velit nisi occaecat proident.
-            Amet aliquip dolor eu occaecat. Elit sunt occaecat excepteur ea.
-            Quis commodo adipisicing laborum minim. Culpa duis occaecat
-            adipisicing dolor sint cillum. Non in consequat ex esse exercitation
-            cillum Lorem voluptate officia.
-          </BodyLong>
+            <BodyLong spacing>
+              { error }
+            </BodyLong>
+            <BodyLong spacing>
+              Ullamco ut laboris irure excepteur velit nisi occaecat proident.
+              Amet aliquip dolor eu occaecat. Elit sunt occaecat excepteur ea.
+              Quis commodo adipisicing laborum minim. Culpa duis occaecat
+              adipisicing dolor sint cillum. Non in consequat ex esse exercitation
+              cillum Lorem voluptate officia.
+            </BodyLong>
         </Cell>
       </Grid>
     </ContentContainer>

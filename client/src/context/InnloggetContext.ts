@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 
 import createUseContext from 'constate';
@@ -6,8 +7,10 @@ import {
 } from '../utils/autentisering';
 import axios from 'axios';
 import { Brukerinfo } from '../types/brukerinfo';
+import { useErrorMessageContext } from './ErrorMessageContext';
 
 const [InnloggetProvider, useInnloggetContext] = createUseContext(() => {
+  const { setError } = useErrorMessageContext();
   const [innloggetStatus, setInnloggetStatus] = useState<InnloggetStatus>(
     InnloggetStatus.IKKE_VERIFISERT
   );
@@ -36,11 +39,13 @@ const [InnloggetProvider, useInnloggetContext] = createUseContext(() => {
         } else {
           setInnloggetStatus(InnloggetStatus.FEILET);
           setInnloggetBruker(null);
+          setError('Klarte ikke hente nødvendige data');
         }
       })
       .catch((error) => {
         setInnloggetStatus(InnloggetStatus.FEILET);
         setInnloggetBruker(null);
+        setError(`Klarte ikke hente nødvendige data:  ${error.message}`);
       });
       } else {
         setInnloggetStatus(InnloggetStatus.FEILET);
