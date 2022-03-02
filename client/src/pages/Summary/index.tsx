@@ -112,7 +112,11 @@ const Summary = () => {
     try {
       console.log('send skademelding: ', data);
       const url = '/api/v1/skademeldinger';
-      await axios.post(url, data);
+      await axios.post(url, data, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
       navigate('/yrkesskade/skjema/kvittering');
     } catch {
       navigate('/yrkesskade/skjema/feilmelding');
