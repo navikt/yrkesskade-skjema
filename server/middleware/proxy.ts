@@ -2,7 +2,7 @@ import { ClientRequest, IncomingMessage, ServerResponse } from 'http';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import { Request, Response } from 'express';
 import { exchangeToken } from '../tokenx';
-import { logError, logInfo } from '@navikt/yrkesskade-logging';
+import { logError, logInfo, stdoutLogger } from '@navikt/yrkesskade-logging';
 import jwt_decode from "jwt-decode";
 import config from '../config';
 
@@ -49,6 +49,7 @@ export const doProxy = (path: string, target: string) => {
     logLevel: process.env.ENV === 'prod' ? 'debug' : 'debug',
     secure: true,
     xfwd: true,
+    logProvider: () => stdoutLogger,
     onProxyReq: restream,
     onError: errorHandler,
     router: async (req) => {
