@@ -3,7 +3,10 @@ import {render} from "react-dom";
 import "./index.less";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
+import { OpenAPI } from "./api/yrkesskade";
 // import reportWebVitals from "./reportWebVitals";
+
+OpenAPI.BASE = '';
 
 render(
   <React.StrictMode>
