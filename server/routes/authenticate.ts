@@ -1,6 +1,7 @@
 import { Express } from 'express';
 import { redirectTilLogin } from '../autentisering';
 import config from '../config';
+import { logInfo } from '@navikt/yrkesskade-logging';
 
 export const configureAuthenticationAndVerification = (app: Express) => {
 
@@ -26,14 +27,12 @@ export const configureAuthenticationAndVerification = (app: Express) => {
   app.get(`${config.BASE_PATH}/innlogget`, (req, res) => {
     const loginserviceToken = req.cookies[config.IDPORTEN_COOKIE_NAME];
     if (loginserviceToken) {
-      // tslint:disable-next-line:no-console
-      console.log(
+      logInfo(
         `innlogget? ja (cookie ${config.IDPORTEN_COOKIE_NAME} eksisterer)`
       );
       res.status(200).send();
     } else {
-      // tslint:disable-next-line:no-console
-      console.log(
+      logInfo(
         `innlogget? nei (cookie ${config.IDPORTEN_COOKIE_NAME} mangler)`
       );
       res.status(401).send();

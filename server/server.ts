@@ -15,6 +15,7 @@ import { configureApiEndpoint } from './routes/api';
 import { configureAuthenticationAndVerification } from './routes/authenticate';
 import { configureLoggingEndpoint } from './routes/logging';
 import bodyParser from 'body-parser'
+import { logInfo }from '@navikt/yrkesskade-logging'
 
 const BUILD_PATH = path.join(__dirname, '../build');
 const PORT = process.env.PORT || 3000;
@@ -57,15 +58,13 @@ app.get(`${config.BASE_PATH}/*`, (req: any, res: any) =>
       res.send(html);
     })
     .catch((e) => {
-      // tslint:disable-next-line:no-console
-      console.log('Dekoratøren error', e);
+      logInfo('Dekoratøren error', e);
       res.status(500).send(e);
     })
 );
 
 app.listen(PORT, async () => {
   await Promise.all([initIdPorten(), initTokenX()]);
-  // tslint:disable-next-line:no-console
-  console.log(`Server listening on ${PORT}`);
+  logInfo(`Server listening on ${PORT}`);
 });
 

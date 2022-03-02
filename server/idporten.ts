@@ -1,6 +1,7 @@
 import { BaseClient, Issuer } from 'openid-client';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 import axios from 'axios';
+import { logInfo } from '@navikt/yrkesskade-logging';
 
 const acceptedAcrLevel = 'Level4'; // definert i nais.yaml idporten.sidecar.level attributen
 const acceptedSigningAlgorithm = 'RS256';
@@ -11,7 +12,7 @@ let _remoteJWKSet;
 export const initIdPorten = async () => {
   const nodeEnv = process.env.NODE_ENV
   // tslint:disable-next-line:no-console
-  console.log('Initializing IDPorten:', nodeEnv);
+  logInfo(`Initializing IDPorten: ${nodeEnv}`);
     if (nodeEnv === 'labs-gcp' || nodeEnv === 'local') {
         // returner MOCK for labs
         return;

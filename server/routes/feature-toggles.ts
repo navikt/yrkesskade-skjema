@@ -5,6 +5,7 @@ import { ToggleKeys } from '../../client/src/types/feature-toggles';
 import { Brukerinfo, Organisasjon } from '../../client/src/types/brukerinfo';
 import axios from "axios";
 import { exchangeToken } from "../tokenx";
+import { logError } from '@navikt/yrkesskade-logging';
 
 const toggleFetchHandler = (req, res) => {
   const toggleId = req.params.id;
@@ -48,8 +49,7 @@ const hentBrukerinfo = async (req, res: Response, next: NextFunction) => {
     }
   } catch (error) {
     res.sendStatus(400);
-    // tslint:disable-next-line:no-console
-    console.error(error);
+    logError('Kunne ikke utføre token exchange', error);
     return;
   }
 
@@ -76,7 +76,12 @@ const byggContextFraRequest = (req) => {
       'naeringskoder': req.data.organisasjoner
         .filter((organisasjon: Organisasjon) => !!organisasjon.naeringskode)
         .map((organisasjon: Organisasjon) => organisasjon.naeringskode)
-        .join(',')
+        .join(','),
+      'antallAnsatte': Math.max.apply(Math, req.data.organisasjoner.map((organisasjon: Organisasjon) =>  organisasjon.antallAnsatte )),
+      'organisasjonsformer': req.data.organisasjoner
+        .filter((organisasjon: Organisasjon) => !!organisasjon.organisasjonsform)
+        .map((organisasjon: Organisasjon) => organisasjon.organisasjonsform)
+        .join(','),
     }
   }
 

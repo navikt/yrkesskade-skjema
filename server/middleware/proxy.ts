@@ -2,6 +2,7 @@ import { ClientRequest, IncomingMessage, ServerResponse } from 'http';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import { Request } from 'express';
 import { exchangeToken } from '../tokenx';
+import { logSecure, logError } from '@navikt/yrkesskade-logging';
 
 const restream = (
   proxyReq: ClientRequest,
@@ -24,8 +25,11 @@ const restream = (
 };
 
 const errorHandler = (err, req, res) => {
-   // tslint:disable-next-line:no-console
-  console.error('error:',  { err, req, res });
+  if (process.env.ENV !== 'production') {
+    logError('Feil', err);
+  } else {
+    logSecure(err);
+  }
 }
 
 export const doProxy = (path: string, target: string) => {
