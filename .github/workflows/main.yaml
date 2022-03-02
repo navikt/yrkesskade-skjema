@@ -27,12 +27,18 @@ jobs:
         with:
           node-version: "14"
           cache: "yarn"
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@navikt'
       - name: "install server dependencies Yarn"
         # if: "steps.cache-server-node-modules.outputs.cache-hit != 'true'"
         run: "yarn install --frozen-lockfile"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       - name: "install dependencies Yarn"
         run: "yarn install --frozen-lockfile"
         working-directory: "client"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       # - name: "Bygg klient(yarn run build)"
       #   run: "yarn run build"
       # - name: "Bygg server(yarn run build)"

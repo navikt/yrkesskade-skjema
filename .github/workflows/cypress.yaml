@@ -11,6 +11,22 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - uses: "actions/setup-node@v2"
+        with:
+          node-version: "14"
+          cache: "yarn"
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@navikt'
+      - name: "install server dependencies Yarn"
+        # if: "steps.cache-server-node-modules.outputs.cache-hit != 'true'"
+        run: "yarn install --frozen-lockfile"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
+      - name: "install dependencies Yarn"
+        run: "yarn install --frozen-lockfile"
+        working-directory: "client"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:

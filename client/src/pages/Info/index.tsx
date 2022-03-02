@@ -22,10 +22,14 @@ import { Organisasjon } from '../../types/brukerinfo';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useSelectedCompany } from '../../context/SelectedCompanyContext';
+import { useStateMachine } from 'little-state-machine';
+import { oppdaterInnmelder, oppdaterPaaVegneAv, oppdaterDekningsforholdOrganisasjon } from '../../State/skademeldingStateAction';
 // import Description from '../Form/Description';
 
 const Info = () => {
   const navigate = useNavigate();
+  const { actions } = useStateMachine({ oppdaterPaaVegneAv, oppdaterInnmelder, oppdaterDekningsforholdOrganisasjon });
+
   const handleForward = () => {
     navigate('/yrkesskade/skjema/tidsrom');
   };
@@ -36,7 +40,9 @@ const Info = () => {
   useEffect(() => {
     if (innloggetBruker?.fnr) {
       setSelectedCompany(innloggetBruker.organisasjoner[0]);
+      actions.oppdaterInnmelder({ norskIdentitetsnummer: innloggetBruker.fnr, innmelderrolle: 'Virksomhetsrepresentant'});
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [innloggetBruker?.fnr, innloggetBruker?.organisasjoner, setSelectedCompany])
 
   const onOrganisasjonChange = (organisasjon: Organisasjon) => {
@@ -44,6 +50,10 @@ const Info = () => {
       axios.get<Organisasjon>(`/api/v1/brukerinfo/organisasjoner/${organisasjon.organisasjonsnummer}`).then((response) => {
         const adresse = response.data.beliggenhetsadresse || response.data.forretningsadresse
         setSelectedAddress(adresse);
+
+        const organisasjon = response.data
+        actions.oppdaterPaaVegneAv(organisasjon.organisasjonsnummer)
+        actions.oppdaterDekningsforholdOrganisasjon({ organisasjonsnummer: organisasjon.organisasjonsnummer as string, navn: organisasjon.navn });
       })
     }
   }
