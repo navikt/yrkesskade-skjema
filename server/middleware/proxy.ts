@@ -1,30 +1,12 @@
 import { ClientRequest, IncomingMessage, ServerResponse } from 'http';
-import { createProxyMiddleware } from 'http-proxy-middleware';
-import { Request, Response } from 'express';
+import { createProxyMiddleware, fixRequestBody } from 'http-proxy-middleware';
+import { Request } from 'express';
 import { exchangeToken } from '../tokenx';
 import {
   logError,
-  logInfo,
   logSecure,
   stdoutLogger,
 } from '@navikt/yrkesskade-logging';
-
-const restream = (
-  proxyReq: ClientRequest,
-  req: IncomingMessage,
-  _res: ServerResponse
-) => {
-  const httpRequest = req as Request;
-  const requestBody = httpRequest.body;
-
-  if (requestBody && requestBody.length > 0) {
-    const bodyData = JSON.stringify(requestBody);
-    proxyReq.setHeader('Content-Type', 'application/json');
-    proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
-    proxyReq.write(bodyData);
-    proxyReq.end();
-  }
-};
 
 const errorHandler = (err, req, res) => {
   if (process.env.ENV !== 'production') {
@@ -37,9 +19,10 @@ const errorHandler = (err, req, res) => {
 export const doProxy = (path: string, target: string) => {
   return createProxyMiddleware(path, {
     changeOrigin: true,
-    logLevel: process.env.ENV === 'prod' ? 'silent' : 'debug',
+    secure: false,
+    logLevel: process.env.ENV === 'prod' ? 'info' : 'info',
     logProvider: () => stdoutLogger,
-    onProxyReq: restream,
+    onProxyReq: fixRequestBody,
     onError: errorHandler,
     router: async (req) => {
       const tokenSet = await exchangeToken(req);
