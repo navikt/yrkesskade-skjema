@@ -45,11 +45,9 @@ const errorHandler = (err, req, res) => {
 export const doProxy = (path: string, target: string) => {
   return createProxyMiddleware(path, {
     changeOrigin: true,
-    logLevel: process.env.ENV === 'prod' ? 'debug' : 'debug',
-    secure: true,
-    xfwd: true,
+    logLevel: process.env.ENV === 'prod' ? 'silent' : 'debug',
     logProvider: () => stdoutLogger,
-    //onProxyReq: restream,
+    onProxyReq: restream,
     onError: errorHandler,
     router: async (req) => {
       const tokenSet = await exchangeToken(req);
