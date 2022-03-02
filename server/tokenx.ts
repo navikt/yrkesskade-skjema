@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { Issuer, TokenSet } from 'openid-client';
 import { getMockTokenFromIdPorten, verifiserAccessToken } from './idporten';
+import { logInfo, logError } from '@navikt/yrkesskade-logging';
+
 import config from './config'
 
 let tokenXClient;
@@ -8,7 +10,7 @@ let tokenXClient;
 export const initTokenX = async () => {
   const env = process.env.ENV;
   // tslint:disable-next-line:no-console
-  console.log('Initializing TokenX: ', env);
+  logInfo(`Initializing TokenX:  ${env}`);
 
   if (env !== 'local') {
     const tokenXIssuer = await Issuer.discover(
@@ -43,12 +45,12 @@ const getTokenXToken = async (token: string | Uint8Array, additionalClaims) => {
     );
   } catch (error) {
     // tslint:disable-next-line:no-console
-    console.error(
+    logError(
       `Noe gitt kalt med token exchange mot TokenX.
     Feilmelding fra openid-client: (${error}).
     HTTP Status fra TokenX: (${error.response.statusCode} ${error.response.statusMessage})
     Body fra TokenX `,
-      error.response.body
+      error
     );
   }
 
