@@ -12,26 +12,21 @@ const restream = (
   _res: ServerResponse
 ) => {
   const httpRequest = req as Request;
-  const authToken = httpRequest?.cookies && httpRequest?.cookies[config.IDPORTEN_COOKIE_NAME];
+  const requestBody = httpRequest.body;
 
-  if (checkAuth(authToken)) {
-    const requestBody = httpRequest.body;
+  /*Object.keys(req.headers).forEach((key) => {
+    proxyReq.setHeader(key, req.headers[key]);
+  });*/
 
-    Object.keys(req.headers).forEach((key) => {
-      proxyReq.setHeader(key, req.headers[key]);
-    });
-
+  if (requestBody && requestBody.length > 0) {
     logInfo('request body: ', requestBody);
-    if (requestBody && requestBody.length > 0) {
-      const bodyData = JSON.stringify(requestBody);
-      proxyReq.setHeader('Content-Type', 'application/json');
-      proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
-      proxyReq.write(bodyData);
-    }
-  } else {
-    logError("Unauthorized. Selvbetjening-idtoken invalid");
-    (_res as Response).status(401).send("Unauthorized");
+    const bodyData = JSON.stringify(requestBody);
+    proxyReq.setHeader('Content-Type', 'application/json');
+    proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+    proxyReq.write(bodyData);
+    proxyReq.end();
   }
+
 };
 
 const errorHandler = (err, req, res) => {
