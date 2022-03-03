@@ -104,7 +104,7 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
             type="radio"
             className="navds-radio__input"
             {...register('skade.alvorlighetsgrad')}
-            value="Alvorlig kreftsykdom"
+            value="Helsehjelp antatt ikke oppsøkt"
             data-testid="injury-severity-no-medical"
             id="injury-severity-no-medical"
           />
@@ -121,7 +121,7 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
             type="radio"
             className="navds-radio__input"
             {...register('skade.alvorlighetsgrad')}
-            value="Alvorlig kreftsykdom"
+            value="Helsehjelp antatt oppsøkt"
             data-testid="injury-severity-medical"
             id="injury-severity-medical"
           />

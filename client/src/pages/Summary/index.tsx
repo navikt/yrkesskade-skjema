@@ -18,7 +18,6 @@ import SkadeSummary from '../../components/Summary/Skade';
 import BeskrivelseSummary from '../../components/Summary/Beskrivelse';
 import { useNavigate } from 'react-router-dom';
 // import getTexts from '../../utils/getTexts.js';
-import axios from 'axios';
 // import { IGeneralForm } from '../../Interfaces/generalForm';
 import StepIndicator from '../../components/StepIndicator';
 // import formUpdateAction from '../../State/formUpdateAction';
@@ -30,6 +29,7 @@ import { useSelectedCompany } from '../../context/SelectedCompanyContext';
 import { useEffect } from 'react';
 import { oppdaterDekningsforholdOrganisasjon, oppdaterSkade } from '../../State/skademeldingStateAction';
 import { useErrorMessageContext } from '../../context/ErrorMessageContext';
+import { Skademelding, SkademeldingApiControllerService } from '../../api/yrkesskade';
 
 const Summary = () => {
   const { state, actions } = useStateMachine({ oppdaterDekningsforholdOrganisasjon, oppdaterSkade });
@@ -113,8 +113,7 @@ const Summary = () => {
   const handleSending = async () => {
     try {
       console.log('send skademelding: ', data);
-      const url = '/api/v1/skademeldinger';
-      await axios.post(url, data);
+      await SkademeldingApiControllerService.sendSkademelding(data as unknown as Skademelding); // axios.post(url, data);
       navigate('/yrkesskade/skjema/kvittering');
     } catch (error: any) {
       setError(error.message);

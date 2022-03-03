@@ -1,13 +1,4 @@
-const ulykkestid: { value: string; label: string }[] = [
-  { value: "I avtalt arbeidstid", label: "I avtalt arbeidstid" },
-  { value: "Utenfor arbeidstid", label: "Utenfor arbeidstid" },
-  { value: "Under permisjon", label: "Under permisjon" },
-  { value: "Under full sykemelding", label: " Under full sykemelding" },
-  { value: "Fritid / privat aktivitet", label: "Fritid / privat aktivitet" },
-  { value: "Hvilende vakt", label: "Hvilende vakt" },
-  { value: "Under frivillig arbeid", label: "Under frivillig arbeid" },
-  { value: "Under redningsarbeid", label: "Under redningsarbeid" },
-  { value: "vakthold eller redningsøvelse", label: "vakthold eller redningsøvelse" },
-  { value: "Alternativene passer ikke", label: "Alternativene passer ikke" }
-]
+import { Hendelsesfakta } from "../../api/yrkesskade";
+
+const ulykkestid: {value: string; label: string}[] = Object.values(Hendelsesfakta.naarSkjeddeUlykken).map((val) => ({value: val, label: val}));
 export default ulykkestid;
