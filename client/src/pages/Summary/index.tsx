@@ -116,7 +116,7 @@ const Summary = () => {
       await SkademeldingApiControllerService.sendSkademelding(data as unknown as Skademelding); // axios.post(url, data);
       navigate('/yrkesskade/skjema/kvittering');
     } catch (error: any) {
-      setError(error.message);
+      setError(error.body);
       navigate('/yrkesskade/skjema/feilmelding');
     }
   };

@@ -4,6 +4,7 @@ import { injuredBodypart, injuryType } from '../../../assets/injuryEnums';
 import { isEmpty, remove } from 'ramda';
 import { AddCircle, MinusCircle } from '@navikt/ds-icons';
 import { useStateMachine } from 'little-state-machine';
+import antattSykefravaerTabellH from '../../../assets/Lists/antattSykefravaerTabellH';
 
 interface IProps {
   register: any;
@@ -136,83 +137,30 @@ const InjuryForm = ({
         }
         className="spacer"
       >
-        <div className="navds-radio navds-radio--medium">
+        { antattSykefravaerTabellH.map((verdi, index) => (
+          <div className="navds-radio navds-radio--medium" key={verdi.value}>
           <input
             type="radio"
             className="navds-radio__input"
             {...register('skade.antattSykefravaerTabellH', {
               required: 'Dette feltet er påkrevd',
             })}
-            value="Fraværsdager ukjent"
-            data-testid="injury-absence-unknown-option"
-            id="injury-absence-unknown-option"
+            value={verdi.value}
+            data-testid={`injury-absence-${index}`}
+            id={`injury-absence-${index}`}
           />
           <label
-            htmlFor="injury-absence-unknown-option"
+            htmlFor={`injury-absence-${index}`}
             className="navds-radio__label"
           >
-            Fraværsdager ukjent
+            {verdi.value}
           </label>
         </div>
+        ))
 
-        <div className="navds-radio navds-radio--medium">
-          <input
-            type="radio"
-            className="navds-radio__input"
-            {...register('skade.antattSykefravaerTabellH', {
-              required: 'Dette feltet er påkrevd',
-            })}
-            value="Kjent fravær mindre enn 3 dager"
-            data-testid="injury-absence-short-option"
-            id="injury-absence-short-option"
-          />
-          <label
-            htmlFor="injury-absence-short-option"
-            className="navds-radio__label"
-          >
-            Kjent fravær mindre enn 3 dager
-          </label>
-        </div>
-
-        <div className="navds-radio navds-radio--medium">
-          <input
-            type="radio"
-            className="navds-radio__input"
-            {...register('skade.antattSykefravaerTabellH', {
-              required: 'Dette feltet er påkrevd',
-            })}
-            value="Kjent fravær mer enn 3 dagerLege oppsøkt"
-            data-testid="injury-absence-long-option"
-            id="injury-absence-long-option"
-          />
-          <label
-            htmlFor="injury-absence-long-option"
-            className="navds-radio__label"
-          >
-            Kjent fravær mer enn 3 dager
-          </label>
-        </div>
-
-        <div className="navds-radio navds-radio--medium">
-          <input
-            type="radio"
-            className="navds-radio__input"
-            {...register('skade.antattSykefravaerTabellH', {
-              required: 'Dette feltet er påkrevd',
-            })}
-            value="Alternativene passer ikke"
-            data-testid="injury-absence-nomatch-option"
-            id="injury-absence-nomatch-option"
-          />
-          <label
-            htmlFor="injury-absence-nomatch-option"
-            className="navds-radio__label"
-          >
-            Alternativene passer ikke
-          </label>
-        </div>
-      </RadioGroup>
-    </>
+      }
+    </RadioGroup>
+   </>
   );
 };
 
