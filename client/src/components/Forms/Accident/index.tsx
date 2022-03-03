@@ -20,6 +20,7 @@ import Address from '../Address';
 import formUpdateAction from '../../../State/formUpdateAction';
 import { useStateMachine } from 'little-state-machine';
 import { isNil } from 'ramda';
+import alvorlighetsgrad from '../../../assets/Lists/alvorlighetsgrad';
 
 interface IProps {
   register: any;
@@ -99,87 +100,25 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
           errors?.skade?.alvorlighetsgrad.message
         }
       >
-        <div className="navds-radio navds-radio--medium">
-          <input
-            type="radio"
-            className="navds-radio__input"
-            {...register('skade.alvorlighetsgrad')}
-            value="Helsehjelp antatt ikke oppsøkt"
-            data-testid="injury-severity-no-medical"
-            id="injury-severity-no-medical"
-          />
-          <label
-            htmlFor="injury-severity-no-medical"
-            className="navds-radio__label"
-          >
-            Helsehjelp antatt ikke oppsøkt
-          </label>
-        </div>
-
-        <div className="navds-radio navds-radio--medium">
-          <input
-            type="radio"
-            className="navds-radio__input"
-            {...register('skade.alvorlighetsgrad')}
-            value="Helsehjelp antatt oppsøkt"
-            data-testid="injury-severity-medical"
-            id="injury-severity-medical"
-          />
-          <label
-            htmlFor="injury-severity-medical"
-            className="navds-radio__label"
-          >
-            Helsehjelp antatt oppsøkt
-          </label>
-        </div>
-
-        <div className="navds-radio navds-radio--medium">
-          <input
-            type="radio"
-            className="navds-radio__input"
-            {...register('skade.alvorlighetsgrad')}
-            value="Alvorlig kreftsykdom"
-            data-testid="injury-severity-cancer"
-            id="injury-severity-cancer"
-          />
-          <label
-            htmlFor="injury-severity-cancer"
-            className="navds-radio__label"
-          >
-            Alvorlig kreftsykdom
-          </label>
-        </div>
-
-        <div className="navds-radio navds-radio--medium">
-          <input
-            type="radio"
-            className="navds-radio__input"
-            {...register('skade.alvorlighetsgrad')}
-            value="Andre livstruende sykdom/skade"
-            data-testid="injury-severity-deadly-other"
-            id="injury-severity-deadly-other"
-          />
-          <label
-            htmlFor="injury-severity-deadly-other"
-            className="navds-radio__label"
-          >
-            Andre livstruende sykdom/skade
-          </label>
-        </div>
-
-        <div className="navds-radio navds-radio--medium">
-          <input
-            type="radio"
-            className="navds-radio__input"
-            {...register('skade.alvorlighetsgrad')}
-            value="Dødsfall"
-            data-testid="injury-severity-death"
-            id="injury-severity-death"
-          />
-          <label htmlFor="injury-severity-death" className="navds-radio__label">
-            Dødsfall
-          </label>
-        </div>
+        { alvorlighetsgrad.map((alvorlighetsgrad, index) => (
+          <div className="navds-radio navds-radio--medium" key={alvorlighetsgrad.label}>
+            <input
+              type="radio"
+              className="navds-radio__input"
+              {...register('skade.alvorlighetsgrad')}
+              value={alvorlighetsgrad.value}
+              data-testid={ `injury-severity-${index}`}
+              id={ `injury-severity-${index}`}
+            />
+            <label
+              htmlFor={ `injury-severity-${index}`}
+              className="navds-radio__label"
+            >
+              { alvorlighetsgrad.value }
+            </label>
+          </div>
+        ))
+      }
       </RadioGroup>
 
       <NAVSelect
