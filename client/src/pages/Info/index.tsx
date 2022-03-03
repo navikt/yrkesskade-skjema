@@ -53,7 +53,7 @@ const Info = () => {
         return;
       }
 
-      const adresse = /*organisasjon.beliggenhetsadresse ||*/ organisasjon.forretningsadresse;
+      const adresse = organisasjon.beliggenhetsadresse || organisasjon.forretningsadresse;
       setSelectedAddress(adresse);
 
       actions.oppdaterPaaVegneAv(organisasjon.organisasjonsnummer)

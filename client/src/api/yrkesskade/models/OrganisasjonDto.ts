@@ -13,5 +13,6 @@ export type OrganisasjonDto = {
     type?: string;
     postadresse?: AdresseDto;
     forretningsadresse?: AdresseDto;
+    beliggenhetsadresse?: AdresseDto;
     antallAnsatte?: number;
 };
