@@ -1,20 +1,40 @@
 import { isNil, path } from 'ramda';
 import { Label, BodyShort } from '@navikt/ds-react';
+import { useSelectedCompany } from '../../../context/SelectedCompanyContext';
+import { Adresse } from '../../../api/yrkesskade';
 interface IProps {
   data: any;
 }
 const UlykkeSummary = ({ data }: IProps) => {
+
+  var adresse: Adresse = { adresselinje1: '', adresselinje2:'', adresselinje3: '', land: ''};
+  const { selectedAddress } = useSelectedCompany();
+
+  const ulykkessted = data.hendelsesfakta.ulykkessted;
+  console.log(ulykkessted);
+
+  if (!ulykkessted.sammeSomVirksomhetensAdresse && ulykkessted.adresse) {
+    adresse = ulykkessted.adresse;
+  } else if (ulykkessted.sammeSomVirksomhetensAdresse && selectedAddress) {
+    adresse = {
+      adresselinje1: (selectedAddress.adresser && selectedAddress.adresser[0]) || '',
+      adresselinje2: selectedAddress.postnummer || '',
+      adresselinje3: selectedAddress.poststed || '',
+      land: selectedAddress.land
+    };
+  }
+
   return (
     <div className="answerOuterContainer">
       <div className="answerContainer">
         <Label>Ulykken fant sted</Label>
         <BodyShort>
-          {data.hendelsesfakta.ulykkessted.adresse.adresselinje1}
+          {adresse.adresselinje1}
         </BodyShort>
         <BodyShort>
-          {`${data.hendelsesfakta.ulykkessted.adresse.adresselinje2} ${data.hendelsesfakta.ulykkessted.adresse.adresselinje3}`}
+          {`${adresse.adresselinje2} ${adresse.adresselinje3}`}
         </BodyShort>
-        <BodyShort>{data.hendelsesfakta.ulykkessted.adresse.land}</BodyShort>
+        <BodyShort>{adresse.land}</BodyShort>
       </div>
       {!isNil(data.skade.alvorlighetsgrad) && (
         <div className="answerContainer">

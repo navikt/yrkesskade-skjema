@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   BodyLong,
   BodyShort,
@@ -11,11 +12,13 @@ import {
 } from '@navikt/ds-react';
 import { ReactElement, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { BrukerinfoControllerService } from '../../api/yrkesskade';
 import { useFeatureToggles } from '../../context/FeatureTogglesContext';
 import { useInnloggetContext } from '../../context/InnloggetContext';
 import { Brukerinfo } from '../../types/brukerinfo';
 import { EAllFeatureToggles } from '../../types/feature-toggles';
 import { logMessage } from '../../utils/logging';
+import { sjekkTilgangTilSkjema } from '../../utils/skjemaTilgangstyring';
 import './Landing.less';
 
 const Landing = () => {
@@ -24,17 +27,17 @@ const Landing = () => {
   const { toggles } = useFeatureToggles();
   const [content, setContent] = useState<ReactElement>(<LoadingContent />);
 
-  const digitalFormAvailable = (
+  const digitalFormAvailable = async (
     innloggetBruker: Brukerinfo,
     toggles: EAllFeatureToggles
-  ): boolean => {
+  ): Promise<boolean> => {
     if (toggles.ER_IKKE_PROD) {
       logMessage('Digitalt skjema tilgjengelig: er ikke i produksjons miljø');
       return true;
     }
     // check if user is part of MVP naeringskoder
     if (!toggles.DIGITAL_SKJEMA_INNSENDING) {
-      logMessage('Feature toggle disabled form')
+      logMessage('Feature toggle disabled form');
       return false;
     }
 
@@ -42,41 +45,50 @@ const Landing = () => {
 
     // check if user meets the number of organisations requirement
     if (organisationsLength !== 1) {
-
       if (organisationsLength > 1) {
         // MVP only supports 1 organisation
-        logMessage(`User has access to ${organisationsLength} organisations.`);
+        logMessage(`Innlogget bruker har tilgang til ${organisationsLength} organisasjoner.`);
       }
 
       if (innloggetBruker.organisasjoner.length === 0) {
-        logMessage('User must have access to at least 1 organisation')
+        logMessage('Innlogget bruker har kun tilgang til 1 organisasjon');
       }
 
+      return false;
+    }
+
+    const organisasjon = innloggetBruker.organisasjoner[0];
+    const roller = await BrukerinfoControllerService.hentRoller(
+      organisasjon.organisasjonsnummer
+    );
+
+    if (!sjekkTilgangTilSkjema(roller)) {
+      logMessage(`Innlogget bruker har ikke nødvendige roller for valgt organisasjon`);
       return false;
     }
 
     return true;
   };
 
+  const sjekkTilgang = async (innloggetBruker: Brukerinfo) => {
+    const tilgangTilDigitaltskjema = await digitalFormAvailable(
+      innloggetBruker,
+      toggles
+    );
+    if (tilgangTilDigitaltskjema) {
+      navigate('/yrkesskade/skjema');
+    } else {
+      setContent(<NoAccessContent />);
+    }
+  };
+
   useEffect(() => {
     if (innloggetBruker) {
-      const tilgangTilDigitaltskjema = digitalFormAvailable(
-        innloggetBruker,
-        toggles
-      );
-      if (tilgangTilDigitaltskjema) {
-        navigate('/yrkesskade/skjema');
-      } else {
-        setContent(<NoAccessContent />);
-      }
+      sjekkTilgang(innloggetBruker);
     }
   }, [innloggetBruker, toggles, navigate]);
 
-  return (
-    <ContentContainer>
-      {content}
-    </ContentContainer>
-  );
+  return <ContentContainer>{content}</ContentContainer>;
 };
 
 const LoadingContent = () => {
@@ -99,10 +111,10 @@ const LoadingContent = () => {
 };
 
 const NoAccessContent = () => {
-
   const handleClick = () => {
-    window.location.href = 'https://www.nav.no/no/person/arbeid/yrkesskade-og-yrkessykdom';
-  }
+    window.location.href =
+      'https://www.nav.no/no/person/arbeid/yrkesskade-og-yrkessykdom';
+  };
 
   return (
     <Grid>
@@ -112,7 +124,7 @@ const NoAccessContent = () => {
         </Heading>
         <BodyLong className="spacer">
           Det ser ut som du fortsatt må ta i bruk dagens løsning, men vi setter
-          stor pris på at du er intressert i den digitale løsningen. Velkommen
+          stor pris på at du er interessert i den digitale løsningen. Velkommen
           tilbake igjen ved neste anledning for å sjekke om din bruker er
           inkludert. Takk for tålmodigheten.
         </BodyLong>
