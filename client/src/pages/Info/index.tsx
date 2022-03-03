@@ -9,6 +9,7 @@ import {
   Link,
   BodyShort,
   Label,
+  Detail,
 } from '@navikt/ds-react';
 import SystemHeader from '../../components/SystemHeader';
 // import getTexts from '../../utils/getTexts';
@@ -16,14 +17,13 @@ import { useNavigate } from 'react-router-dom';
 import StepIndicator from '../../components/StepIndicator';
 
 // import { ISteps } from '../../Interfaces/steps';
-import OrganisationSelect from '../../components/OrganisationSelect';
 import { useInnloggetContext } from '../../context/InnloggetContext';
 import { Organisasjon } from '../../types/brukerinfo';
-import axios from 'axios';
 import { useEffect } from 'react';
 import { useSelectedCompany } from '../../context/SelectedCompanyContext';
 import { useStateMachine } from 'little-state-machine';
 import { oppdaterInnmelder, oppdaterPaaVegneAv, oppdaterDekningsforholdOrganisasjon } from '../../State/skademeldingStateAction';
+import { BrukerinfoControllerService, OrganisasjonDto } from '../../api/yrkesskade';
 // import Description from '../Form/Description';
 
 const Info = () => {
@@ -35,27 +35,30 @@ const Info = () => {
   };
 
   const { innloggetBruker } = useInnloggetContext();
-  const { setSelectedCompany, setSelectedAddress } = useSelectedCompany();
+  const { selectedCompany, setSelectedCompany, setSelectedAddress } = useSelectedCompany();
 
   useEffect(() => {
     if (innloggetBruker?.fnr) {
-      setSelectedCompany(innloggetBruker.organisasjoner[0]);
+      settValgtVirksomhet(innloggetBruker.organisasjoner[0]);
       actions.oppdaterInnmelder({ norskIdentitetsnummer: innloggetBruker.fnr, innmelderrolle: 'Virksomhetsrepresentant'});
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [innloggetBruker?.fnr, innloggetBruker?.organisasjoner, setSelectedCompany])
 
-  const onOrganisasjonChange = (organisasjon: Organisasjon) => {
-    if (organisasjon.organisasjonsnummer !== '-') {
-      axios.get<Organisasjon>(`/api/v1/brukerinfo/organisasjoner/${organisasjon.organisasjonsnummer}`).then((response) => {
-        const adresse = response.data.beliggenhetsadresse || response.data.forretningsadresse
-        setSelectedAddress(adresse);
+  const settValgtVirksomhet = (virksomhet: Organisasjon) => {
+    setSelectedCompany(virksomhet);
 
-        const organisasjon = response.data
-        actions.oppdaterPaaVegneAv(organisasjon.organisasjonsnummer)
-        actions.oppdaterDekningsforholdOrganisasjon({ organisasjonsnummer: organisasjon.organisasjonsnummer as string, navn: organisasjon.navn });
-      })
-    }
+    BrukerinfoControllerService.hentOrganisasjon(virksomhet.organisasjonsnummer).then(async (organisasjon: OrganisasjonDto) => {
+      if (!organisasjon.organisasjonsnummer) {
+        return;
+      }
+
+      const adresse = organisasjon.beliggenhetsadresse || organisasjon.forretningsadresse;
+      setSelectedAddress(adresse);
+
+      actions.oppdaterPaaVegneAv(organisasjon.organisasjonsnummer)
+      actions.oppdaterDekningsforholdOrganisasjon({ organisasjonsnummer: organisasjon.organisasjonsnummer as string, navn: organisasjon.navn || '' });
+    })
   }
 
   return (
@@ -83,7 +86,9 @@ const Info = () => {
                   <>
                   <Label>Navn</Label>
                   <BodyShort spacing>{innloggetBruker.navn}</BodyShort>
-                  <OrganisationSelect organisasjoner={innloggetBruker.organisasjoner.filter((organisasjon) => organisasjon.status === 'Active')} onOrganisasjonChange={onOrganisasjonChange} data-testid="virksomhetsvelger" />
+                  <Label>Virksomhet</Label>
+                  <BodyShort >{selectedCompany.navn}</BodyShort>
+                  <Detail spacing>virksomhetsnummer: {selectedCompany.organisasjonsnummer}</Detail>
                   </>
                 )
               }
