@@ -96,7 +96,7 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
                   selected={specificDate}
                   maxDate={new Date()}
                   locale="nb"
-                  dateFormat={["dd.MM.yyyy", "ddMMYYYY", "ddMMYY"]}
+                  dateFormat={["dd.MM.yyyy", "ddMMyyyy", "ddMMYY"]}
                   showTimeInput
                   shouldCloseOnSelect={false}
                 />
@@ -150,7 +150,7 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
                   className="navds-text-field__input navds-body-short navds-body-medium"
                   maxDate={new Date()}
                   locale="nb"
-                  dateFormat={["dd.MM.yyyy", "ddMMYYYY", "ddMMYY"]}
+                  dateFormat={["dd.MM.yyyy", "ddMMyyyy", "ddMMYY"]}
                   selectsRange
                   selected={startDateRange}
                   onChange={onChangeRange}
