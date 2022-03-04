@@ -1,5 +1,6 @@
 const aarsakUlykkeTabellAogE: { value: string; label: string }[] = [
   { value: "Støt/treff av gjenstand", label: "Støt/treff av gjenstand" },
+  { value: "Trafikkulykke", label: "Trafikkulykke" },
   { value: "Sammenstøt, bitt, spark, osv. (dyr eller menneske)", label: "Sammenstøt, bitt, spark, osv. (dyr eller menneske)" },
   { value: "Sammenstøt med gjenstand eller påkjørsel", label: "Sammenstøt med gjenstand eller påkjørsel" },
   { value: "Velt", label: "Velt" },
