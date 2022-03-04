@@ -19,10 +19,8 @@ const Address = ({ register, errors, control }: IProps) => {
         type="text"
         data-testid="injury-location-address"
         error={
-          errors?.hendelsesfakta?.ulykkessted
-            .adresse.adresselinje1 &&
-          errors?.hendelsesfakta?.ulykkessted
-            .adresse.adresselinje1.message
+          errors?.hendelsesfakta?.ulykkessted?.adresse?.adresselinje1 &&
+          errors?.hendelsesfakta?.ulykkessted?.adresse?.adresselinje1.message
         }
       />
       <div className="postalcode-and-place spacer">
@@ -39,10 +37,8 @@ const Address = ({ register, errors, control }: IProps) => {
           type="text"
           data-testid="injury-location-postal-code"
           error={
-            errors?.hendelsesfakta?.ulykkessted
-              .adresse.adresselinje2 &&
-            errors?.hendelsesfakta?.ulykkessted
-              .adresse.adresselinje2.message
+            errors?.hendelsesfakta?.ulykkessted?.adresse?.adresselinje2 &&
+            errors?.hendelsesfakta?.ulykkessted?.adresse?.adresselinje2.message
           }
         />
         <TextField
@@ -54,10 +50,8 @@ const Address = ({ register, errors, control }: IProps) => {
           type="text"
           data-testid="injury-location-place"
           error={
-            errors?.hendelsesfakta?.ulykkessted
-              .adresse.adresselinje3 &&
-            errors?.hendelsesfakta?.ulykkessted
-              .adresse.adresselinje3.message
+            errors?.hendelsesfakta?.ulykkessted?.adresse?.adresselinje3 &&
+            errors?.hendelsesfakta?.ulykkessted?.adresse?.adresselinje3.message
           }
         />
       </div>
@@ -70,10 +64,8 @@ const Address = ({ register, errors, control }: IProps) => {
           type="text"
           data-testid="injury-location-country"
           error={
-            errors?.hendelsesfakta?.ulykkessted
-              .adresse.land &&
-            errors?.hendelsesfakta?.ulykkessted
-              .adresse.land.message
+            errors?.hendelsesfakta?.ulykkessted?.adresse.land &&
+            errors?.hendelsesfakta?.ulykkessted?.adresse.land.message
           }
         />
     </Fieldset>

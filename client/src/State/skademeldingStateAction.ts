@@ -44,9 +44,21 @@ const oppdaterSkade = (
   skade: payload,
 });
 
+const oppdaterSetSammeSomVirksomhetsAdresse = (state: GlobalState, payload: boolean) => ({
+  ...state,
+  hendelsesfakta: {
+    ...state.hendelsesfakta,
+    ulykkessted: {
+      ...state.hendelsesfakta.ulykkessted,
+      sammeSomVirksomhetensAdresse: payload
+    }
+  }
+})
+
 export {
   oppdaterPaaVegneAv,
   oppdaterInnmelder,
   oppdaterDekningsforholdOrganisasjon,
   oppdaterSkade,
+  oppdaterSetSammeSomVirksomhetsAdresse
 };
