@@ -1,5 +1,4 @@
 import { GlobalState } from 'little-state-machine';
-import ulykkessted from '../assets/Lists/ulykkessted';
 
 const oppdaterPaaVegneAv = (state: GlobalState, payload: string) => ({
   ...state,
