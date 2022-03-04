@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Select as NAVSelect,
   RadioGroup,
@@ -15,12 +16,13 @@ import ulykkessted from '../../../assets/Lists/ulykkessted';
 import stedstype from '../../../assets/Lists/stedstype';
 import aarsakUlykkeTabellAogE from '../../../assets/Lists/aarsakUlykkeTabellAogE';
 import bakgrunnsaarsakTabellBogG from '../../../assets/Lists/bakgrunnsaarsakTabellBogG';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Address from '../Address';
 import formUpdateAction from '../../../State/formUpdateAction';
 import { useStateMachine } from 'little-state-machine';
-import { isNil } from 'ramda';
 import alvorlighetsgrad from '../../../assets/Lists/alvorlighetsgrad';
+import _ from 'lodash';
+import { oppdaterSetSammeSomVirksomhetsAdresse } from '../../../State/skademeldingStateAction';
 
 interface IProps {
   register: any;
@@ -29,9 +31,9 @@ interface IProps {
 }
 const AccidentForm = ({ register, errors, control }: IProps) => {
   const { selectedAddress } = useSelectedCompany();
-  const { state } = useStateMachine({ formUpdateAction });
+  const { state, actions } = useStateMachine({ formUpdateAction, oppdaterSetSammeSomVirksomhetsAdresse });
 
-  const { getValues } = useForm();
+  const { getValues, setValue } = useForm();
   const [sammeSomVirksomhetensAdresse, setSammeSomVirksomhetensAdresse] =
     useState<boolean>(
       getValues('hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse') ||
@@ -39,6 +41,11 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
         ? true
         : false
     );
+
+    useEffect(() => {
+      actions.oppdaterSetSammeSomVirksomhetsAdresse(sammeSomVirksomhetensAdresse);
+      setValue('hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse', sammeSomVirksomhetensAdresse);
+    }, [sammeSomVirksomhetensAdresse])
 
   return (
     <>
@@ -58,7 +65,6 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
           <Controller
             name="hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse"
             control={control}
-            defaultValue={true}
             render={({
               field: { onChange, onBlur, value, name, ref },
               fieldState: { invalid, isTouched, isDirty, error },
@@ -74,10 +80,8 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
                 }}
                 onBlur={onBlur}
                 error={
-                  errors?.hendelsesfakta?.ulykkessted
-                    .sammeSomVirksomhetensAdresse &&
-                  errors?.hendelsesfakta?.ulykkessted
-                    .sammeSomVirksomhetensAdresse.message
+                  errors?.hendelsesfakta?.ulykkessted?.sammeSomVirksomhetensAdresse &&
+                  errors?.hendelsesfakta?.ulykkessted?.sammeSomVirksomhetensAdresse.message
                 }
               >
                 <Radio value="true">Ja</Radio>
@@ -105,7 +109,9 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
             <input
               type="radio"
               className="navds-radio__input"
-              {...register('skade.alvorlighetsgrad')}
+              {...register('skade.alvorlighetsgrad', {
+                required: 'Dette feltet er påkrevd'
+              })}
               value={alvorlighetsgrad.value}
               data-testid={ `injury-severity-${index}`}
               id={ `injury-severity-${index}`}
@@ -178,7 +184,7 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
           control={control}
           rules={{
             required:
-              isNil(state.hendelsesfakta.aarsakUlykkeTabellAogE) &&
+              _.isEmpty(state.hendelsesfakta.aarsakUlykkeTabellAogE) &&
               'Dette feltet er påkrevd',
           }}
           render={({ field }) => (
@@ -188,7 +194,7 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
               isMulti
               options={aarsakUlykkeTabellAogE}
               defaultValue={
-                !isNil(state.hendelsesfakta.aarsakUlykkeTabellAogE)
+                !_.isEmpty(state.hendelsesfakta.aarsakUlykkeTabellAogE)
                   ? state.hendelsesfakta.aarsakUlykkeTabellAogE.map((i) => {
                       return { value: i, label: i };
                     })
@@ -218,13 +224,13 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
           control={control}
           rules={{
             required:
-              isNil(state.hendelsesfakta.bakgrunnsaarsakTabellBogG) &&
+              _.isEmpty(state.hendelsesfakta.bakgrunnsaarsakTabellBogG) &&
               'Dette feltet er påkrevd',
           }}
           render={({ field }) => (
             <Select
               defaultValue={
-                !isNil(state.hendelsesfakta.bakgrunnsaarsakTabellBogG)
+                !_.isEmpty(state.hendelsesfakta.bakgrunnsaarsakTabellBogG)
                   ? state.hendelsesfakta.bakgrunnsaarsakTabellBogG.map((i) => {
                       return { value: i, label: i };
                     })
