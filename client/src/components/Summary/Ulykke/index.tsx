@@ -11,7 +11,6 @@ const UlykkeSummary = ({ data }: IProps) => {
   const { selectedAddress } = useSelectedCompany();
 
   const ulykkessted = data.hendelsesfakta.ulykkessted;
-  console.log(ulykkessted);
 
   if (!ulykkessted.sammeSomVirksomhetensAdresse && ulykkessted.adresse) {
     adresse = ulykkessted.adresse;
