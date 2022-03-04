@@ -73,6 +73,7 @@ const byggContextFraRequest = (req) => {
     // legg på properties dersom vi har fnr i request
     context.properties = {
       ...context.properties,
+      'organisasjonsnumre': req.data.organisasjoner.map(organisasjon => organisasjon.organisasjonsnummer),
       'naeringskoder': req.data.organisasjoner
         .filter((organisasjon: Organisasjon) => !!organisasjon.naeringskode)
         .map((organisasjon: Organisasjon) => organisasjon.naeringskode)
