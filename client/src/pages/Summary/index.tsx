@@ -1,3 +1,4 @@
+// import { useState } from 'react';
 import './summary.less';
 import {
   Heading,
@@ -8,6 +9,8 @@ import {
   Accordion,
   BodyLong,
 } from '@navikt/ds-react';
+import { Print } from '@navikt/ds-icons';
+
 import SystemHeader from '../../components/SystemHeader';
 import BackButton from '../../components/BackButton';
 import InnmelderSummary from '../../components/Summary/Innmelder';
@@ -27,25 +30,41 @@ import StepIndicator from '../../components/StepIndicator';
 import { useStateMachine } from 'little-state-machine';
 import { useSelectedCompany } from '../../context/SelectedCompanyContext';
 import { useEffect } from 'react';
-import { oppdaterDekningsforholdOrganisasjon, oppdaterSkade } from '../../State/skademeldingStateAction';
+import {
+  oppdaterDekningsforholdOrganisasjon,
+  oppdaterSkade,
+} from '../../State/skademeldingStateAction';
 import { useErrorMessageContext } from '../../context/ErrorMessageContext';
-import { Skademelding, SkademeldingApiControllerService } from '../../api/yrkesskade';
+import {
+  Skademelding,
+  SkademeldingApiControllerService,
+} from '../../api/yrkesskade';
 
 const Summary = () => {
-  const { state, actions } = useStateMachine({ oppdaterDekningsforholdOrganisasjon, oppdaterSkade });
+  const { state, actions } = useStateMachine({
+    oppdaterDekningsforholdOrganisasjon,
+    oppdaterSkade,
+  });
   const { selectedCompany } = useSelectedCompany();
   const { setError } = useErrorMessageContext();
 
   useEffect(() => {
     // oppdater state med verdier som ikke har blitt satt av skjema
-    actions.oppdaterDekningsforholdOrganisasjon({ organisasjonsnummer: selectedCompany.organisasjonsnummer as string, navn: selectedCompany.navn });
+    actions.oppdaterDekningsforholdOrganisasjon({
+      organisasjonsnummer: selectedCompany.organisasjonsnummer as string,
+      navn: selectedCompany.navn,
+    });
     actions.oppdaterSkade({
       alvorlighetsgrad: state.skade.alvorlighetsgrad,
       skadedeDeler: state.skade.skadedeDeler,
-      antattSykefravaerTabellH: state.skade.antattSykefravaerTabellH
+      antattSykefravaerTabellH: state.skade.antattSykefravaerTabellH,
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCompany.organisasjonsnummer])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCompany.organisasjonsnummer]);
+
+  const handlePrintClicked = () => {
+    window.print()
+  }
 
   const data = state;
   // const data = {
@@ -113,7 +132,9 @@ const Summary = () => {
   const handleSending = async () => {
     try {
       console.log('send skademelding: ', data);
-      await SkademeldingApiControllerService.sendSkademelding(data as unknown as Skademelding); // axios.post(url, data);
+      await SkademeldingApiControllerService.sendSkademelding(
+        data as unknown as Skademelding
+      ); // axios.post(url, data);
       navigate('/yrkesskade/skjema/kvittering');
     } catch (error: any) {
       setError(error.body);
@@ -125,11 +146,11 @@ const Summary = () => {
   };
   return (
     <ContentContainer>
-      <SystemHeader/>
+      <SystemHeader />
       <Grid>
         <Cell xs={12} lg={2}></Cell>
         <Cell xs={12} lg={5}>
-          <BackButton url="/yrkesskade/skjema/beskrivelse"/>
+          <BackButton url="/yrkesskade/skjema/beskrivelse" />
           <Heading
             size="2xlarge"
             className="pageNumberTitle spacer"
@@ -138,43 +159,50 @@ const Summary = () => {
             Oppsumering
           </Heading>
           <BodyLong className="spacer">
-            Les gjennom oppsummeringen før du sender inn innmeldingen. Hvis du
-            trenger å gjøre endringer kan du gjøre det helt frem til du har
-            bekreftet innsendingen. Her kan du også skrive ut egen kopi av
-            skademeldingen.
+            Les gjennom oppsummeringen før du sender inn og bekrefter
+            opplysningene du har oppgitt. Hvis du trenger å gjøre endringer kan
+            du gjøre det helt frem til du har fullført innsendingen. Dersom du
+            med viten og vilje oppgir uriktige opplysninger, eller holder
+            tilbake informasjon som kan ha betydning for utbetalinger fra NAV,
+            kan dette medføre en politianmeldelse. Ønsker du kopi av
+            skademeldingen kan du skrive den ut her.
           </BodyLong>
+          <Button className="no-print" onClick={handlePrintClicked} variant="tertiary">
+            <Print />
+            Skriv ut en kopi av skademeldingen
+          </Button>
           <Accordion className="spacer">
-            <Accordion.Item>
+            <Accordion.Item renderContentWhenClosed={true}>
               <Accordion.Header>Om deg</Accordion.Header>
               <Accordion.Content>
                 <InnmelderSummary data={data} />
               </Accordion.Content>
             </Accordion.Item>
-            <Accordion.Item>
+            <Accordion.Item renderContentWhenClosed={true}>
               <Accordion.Header>Tid og sted</Accordion.Header>
               <Accordion.Content>
                 <TidsromSummary data={data} />
               </Accordion.Content>
             </Accordion.Item>
-            <Accordion.Item>
+            <Accordion.Item renderContentWhenClosed={true}>
               <Accordion.Header>Om den skadelidte</Accordion.Header>
               <Accordion.Content>
                 <SkadelidtSummary data={data} />
               </Accordion.Content>
             </Accordion.Item>
-            <Accordion.Item>
+            <Accordion.Item renderContentWhenClosed={true}>
               <Accordion.Header>Om ulykken</Accordion.Header>
               <Accordion.Content>
                 <UlykkeSummary data={data} />
               </Accordion.Content>
             </Accordion.Item>
-            <Accordion.Item>
+            <Accordion.Item renderContentWhenClosed={true}>
               <Accordion.Header>Om skaden</Accordion.Header>
               <Accordion.Content>
                 <SkadeSummary data={data} />
               </Accordion.Content>
             </Accordion.Item>
-            <Accordion.Item>
+            <Accordion.Item renderContentWhenClosed={true}>
               <Accordion.Header>Utfyllende beskrivelse</Accordion.Header>
               <Accordion.Content>
                 <BeskrivelseSummary data={data} />

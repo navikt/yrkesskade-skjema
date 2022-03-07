@@ -52,7 +52,6 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
   return (
     <>
       <RadioGroup
-        // className="spacer"
         legend="Når skjedde ulykken som skal meldes?"
         error={
           errors?.hendelsesfakta?.tid?.tidstype &&
@@ -78,7 +77,7 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
           </label>
         </div>
         {timeType === 'Tidspunkt' && (
-          <div className="spacer">
+          <div>
             <Label>Dato for ulykken</Label>
             <Controller
               name="hendelsesfakta.tid.tidspunkt"
@@ -96,9 +95,8 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
                   selected={specificDate}
                   maxDate={new Date()}
                   locale="nb"
-                  dateFormat={["dd.MM.yyyy", "ddMMyyyy", "ddMMyy"]}
-                  showTimeInput
-                  shouldCloseOnSelect={false}
+                  dateFormat={['dd.MM.yyyy', 'ddMMyyyy', 'ddMMyy']}
+                  // shouldCloseOnSelect={false}
                 />
               )}
             />
@@ -106,6 +104,44 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
               <span className="navds-error-message navds-error-message--medium navds-label">
                 {errors?.hendelsesfakta?.tid?.tidspunkt.message}
               </span>
+            )}
+
+            {specificDate !== null && (
+              <div className="spacer">
+                <Label>Tid for ulykken</Label>
+                <Controller
+                  name="hendelsesfakta.tid.tidspunktTime"
+                  control={control}
+                  rules={{
+                    required:
+                      timeType === 'Tidspunkt' &&
+                      specificDate !== null &&
+                      new Date(specificDate)?.getHours() === 0 &&
+                      new Date(specificDate)?.getMinutes() === 0 &&
+                      'Dette feltet er påkrevd',
+                  }}
+                  render={({ field }) => (
+                    <DatePicker
+                      className="navds-text-field__input navds-body-short navds-body-medium"
+                      onChange={onChangeSpecificDate}
+                      selected={specificDate}
+                      maxDate={new Date()}
+                      locale="nb"
+                      shouldCloseOnSelect={false}
+                      showTimeSelect
+                      showTimeSelectOnly
+                      timeIntervals={15}
+                      timeCaption="Time"
+                      dateFormat="HH:mm"
+                    />
+                  )}
+                />
+                {errors?.hendelsesfakta?.tid?.tidspunktTime && (
+                  <span className="navds-error-message navds-error-message--medium navds-label">
+                    {errors?.hendelsesfakta?.tid?.tidspunktTime.message}
+                  </span>
+                )}
+              </div>
             )}
           </div>
         )}
@@ -150,7 +186,7 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
                   className="navds-text-field__input navds-body-short navds-body-medium"
                   maxDate={new Date()}
                   locale="nb"
-                  dateFormat={["dd.MM.yyyy", "ddMMyyyy", "ddMMyy"]}
+                  dateFormat={['dd.MM.yyyy', 'ddMMyyyy', 'ddMMyy']}
                   selectsRange
                   selected={startDateRange}
                   onChange={onChangeRange}

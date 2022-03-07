@@ -5,7 +5,6 @@ import {
   Cell,
   Button,
   BodyLong,
-  Alert,
   Link,
   BodyShort,
   Label,
@@ -125,7 +124,7 @@ const Info = () => {
               )}
             </div>
             <div>
-              <Heading size="large" className="">
+              <Heading size="large" className="spacer">
                 Arbeidsgivers meldeplikt
               </Heading>
               <BodyLong className="spacer">
