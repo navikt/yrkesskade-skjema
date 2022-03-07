@@ -92,7 +92,7 @@ const InjuryForm = ({
 
         <Button variant="tertiary" onClick={handleMultipleIjurys}>
           <AddCircle />
-          Legg til flere skader
+          Legg til skade
         </Button>
 
         {!isEmpty(injury) && (
