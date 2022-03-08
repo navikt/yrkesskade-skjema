@@ -35,10 +35,10 @@ describe('Skjema innsending', (): void => {
     info.startInnmelding().click();
 
     // velg tidspunkt
-    timeframeForm.timeframeWhenDate().type(injuryTime.format('DD.MM.YYYY')).type('{esc}');
-    //timeframeForm.timeframeWhenTime().click().type(injuryTime.format('HH:mm')).type('{esc}'); // ser ikke ut som den liker at dette felter skrives til
-    timeframeForm.timeframeWhenTime().click();
-    timeframeForm.timeframeWhenTimeSelect(13).click();
+    timeframeForm.timeframeWhenDate().clear().type(injuryTime.format('DD.MM.YYYY')).type('{enter}');
+    timeframeForm.timeframeWhenTime().type('{selectall}' + injuryTime.format('HH:mm')).type('{enter}'); // ser ikke ut som den liker at dette felter skrives til
+   // timeframeForm.timeframeWhenTime().click();
+   // timeframeForm.timeframeWhenTimeSelect(13).click();
     timeframeForm.timeframePeriodOptions().select('I avtalt arbeidstid');
 
     // Gå til neste steg
