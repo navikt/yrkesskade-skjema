@@ -18,13 +18,12 @@ import StepIndicator from '../../../components/StepIndicator';
 
 import { useForm } from 'react-hook-form';
 import { useStateMachine } from 'little-state-machine';
-import formUpdateAction from '../../../State/formUpdateAction';
+import formUpdateAction from '../../../State/actions/formUpdateAction';
 import { useNavigate } from 'react-router-dom';
-
-
+import clearFormAction from '../../../State/actions/clearAction';
 
 const InjuredFormPage = () => {
-  const { actions, state } = useStateMachine({ formUpdateAction });
+  const { actions, state } = useStateMachine({ formUpdateAction, clearFormAction });
   const {
     register,
     handleSubmit,
@@ -43,6 +42,7 @@ const InjuredFormPage = () => {
     navigate('/yrkesskade/skjema/Ulykken');
   };
   const handleAbort = () => {
+    actions.clearFormAction({});
     window.location.href = 'https://nav.no';
   };
   return (

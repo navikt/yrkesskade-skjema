@@ -3,7 +3,7 @@
 /* eslint-disable */
 
 export type Innmelder = {
-    norskIdentitetsnummer: number;
+    norskIdentitetsnummer: string;
     paaVegneAv: string;
     innmelderrolle: Innmelder.innmelderrolle;
     altinnrolleIDer?: Array<string>;

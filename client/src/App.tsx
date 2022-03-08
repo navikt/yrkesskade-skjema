@@ -18,59 +18,11 @@ import { autentiseringsInterceptor } from './utils/autentisering';
 import { SelectedCompanyProvider } from './context/SelectedCompanyContext';
 import Landing from './pages/Landing';
 import { ErrorMessageProvider } from './context/ErrorMessageContext';
+import { formState } from './State/formState';
+import { StateManagementProvider } from './context/StateManagementContext';
 
 const App = () => {
-  createStore(
-    {
-      innmelder: {
-        norskIdentitetsnummer: undefined,
-        paaVegneAv: '',
-        innmelderrolle: 'Virksomhetsrepresentant',
-        altinnrolleIDer: [],
-      },
-      skadelidt: {
-        norskIdentitetsnummer: '',
-        dekningsforhold: {
-          organisasjonsnummer: '',
-          navnPaaVirksomheten: '',
-          stillingstittelTilDenSkadelidte: '',
-          rolletype: '',
-        },
-      },
-      skade: {
-        alvorlighetsgrad: '',
-        skadedeDeler: [],
-        antattSykefravaerTabellH: '',
-      },
-      hendelsesfakta: {
-        tid: {
-          tidspunkt: null,
-          periode: {
-            fra: null,
-            til: null,
-          },
-          ukjent: false,
-          tidstype: 'Tidspunkt',
-        },
-        naarSkjeddeUlykken: '',
-        hvorSkjeddeUlykken: '',
-        ulykkessted: {
-          sammeSomVirksomhetensAdresse: false,
-          adresse: {
-            adresselinje1: undefined,
-            adresselinje2: undefined,
-            adresselinje3: undefined,
-            land: undefined,
-          },
-        },
-        aarsakUlykkeTabellAogE: [],
-        bakgrunnsaarsakTabellBogG: [],
-        utfyllendeBeskrivelse: '',
-        stedsbeskrivelseTabellF: '',
-      },
-    },
-    {}
-  );
+  createStore(formState, {});
 
   autentiseringsInterceptor();
 
@@ -79,32 +31,30 @@ const App = () => {
       <InnloggetProvider>
         <FeatureTogglesProvider>
           <SelectedCompanyProvider>
-
-          <StateMachineProvider>
-            <Routes>
-              <Route path="yrkesskade/">
-                <Route
-                  index
-                  element={<Landing />}
-                />
-                <Route path="skjema">
-                  <Route
-                    index
-                    element={<Info />}
-                  />
-                    <Route path="tidsrom" element={<TimeframeFormPage />} />
-                    <Route path="skadelidt" element={<InjuredFormPage />} />
-                    <Route path="ulykken" element={<AccidentFormPage />} />
-                    <Route path="skaden" element={<InjuryFormPage />} />
-                    <Route path="beskrivelse" element={<DescriptionFormPage />} />
-                    <Route path="oppsumering" element={<Summary />} />
-                    <Route path="kvittering" element={<Receipt />} />
+            <StateMachineProvider>
+              <StateManagementProvider>
+                <Routes>
+                  <Route path="yrkesskade/">
+                    <Route index element={<Landing />} />
+                    <Route path="skjema">
+                      <Route index element={<Info />} />
+                      <Route path="tidsrom" element={<TimeframeFormPage />} />
+                      <Route path="skadelidt" element={<InjuredFormPage />} />
+                      <Route path="ulykken" element={<AccidentFormPage />} />
+                      <Route path="skaden" element={<InjuryFormPage />} />
+                      <Route
+                        path="beskrivelse"
+                        element={<DescriptionFormPage />}
+                      />
+                      <Route path="oppsumering" element={<Summary />} />
+                      <Route path="kvittering" element={<Receipt />} />
+                      <Route path="feilmelding" element={<Error />} />
+                    </Route>
                     <Route path="feilmelding" element={<Error />} />
-                </Route>
-                <Route path="feilmelding" element={<Error />} />
-              </Route>
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+                  </Route>
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </StateManagementProvider>
             </StateMachineProvider>
           </SelectedCompanyProvider>
         </FeatureTogglesProvider>
