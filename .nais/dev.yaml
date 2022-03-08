@@ -1,5 +1,5 @@
 ingresses:
-- "https://yrkesskade-skjema.dev.nav.no"
+- "https://skademelding.dev.nav.no"
 env:
 - name: DECORATOR_URL
   value: "https://dekoratoren.dev.nav.no"
