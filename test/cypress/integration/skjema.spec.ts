@@ -20,7 +20,7 @@ describe('Skjema innsending', (): void => {
     network.intercept(endpointUrls.brukerinfo, 'brukerinfo/brukerinfo.json').as('brukerinfo');
     network.intercept(endpointUrls.brukerinfoOrganisasjon, 'brukerinfo/organisasjoner/910437127.json').as('getOrganisasjon');
     network.intercept(endpointUrls.skademelding, 'skademelding.json').as('postSkademelding');
-    network.intercept(endpointUrls.log, 'logResult.json').as('postLog');
+   // network.intercept(endpointUrls.log, 'logResult.json').as('postLog');
 
     cy.visit('');
     cy.location().should('to.be', 'http://localhost:3001/yrkesskade/')
