@@ -217,7 +217,7 @@ const Summary = () => {
             <Button variant="secondary" onClick={handleAbort}>
               Avbryt
             </Button>
-            <Button onClick={handleSending}>Send inn</Button>
+            <Button onClick={handleSending} data-testid="send-injuryform">Send inn</Button>
           </div>
         </Cell>
         <Cell xs={12} sm={12} lg={2}>

@@ -67,7 +67,7 @@ const TimeframeFormPage = () => {
               <Button variant="secondary" onClick={handleAbort}>
                 Avbryt
               </Button>
-              <Button onClick={handleSubmit(onSubmit)}>Neste steg</Button>
+              <Button onClick={handleSubmit(onSubmit)} data-testid="neste-steg">Neste steg</Button>
             </div>
           </div>
         </Cell>

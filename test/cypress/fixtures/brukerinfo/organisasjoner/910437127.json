@@ -1,0 +1,24 @@
+{
+  "organisasjonsnummer": "910437127",
+  "navn": null,
+  "naeringskode": "52.292",
+  "organisasjonsform": "AS",
+  "status": null,
+  "type": null,
+  "postadresse": {
+    "landkode": "NO",
+    "land": "Norge",
+    "postnummer": "0122",
+    "poststed": "OSLO",
+    "adresser": ["Postboks 1752 Vika", ""]
+  },
+  "forretningsadresse": {
+    "landkode": "NO",
+    "land": "Norge",
+    "postnummer": "0101",
+    "poststed": "OSLO",
+    "adresser": ["Tyvholmen 15", null, null, ""]
+  },
+  "beliggenhetsadresse": null,
+  "antallAnsatte": 3
+}

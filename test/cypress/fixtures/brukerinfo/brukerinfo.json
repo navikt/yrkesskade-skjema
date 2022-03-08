@@ -1,0 +1,62 @@
+{
+  "fnr": "12345678910",
+  "navn": "ROLF BJØRN",
+  "organisasjoner": [
+    {
+      "organisasjonsnummer": "910437127",
+      "navn": "BIRI OG TORPO REGNSKAP",
+      "naeringskode": "52.292",
+      "organisasjonsform": "AS",
+      "status": "Active",
+      "type": "Enterprise",
+      "postadresse": null,
+      "forretningsadresse": {
+        "land" : "Norge",
+        "landkode" : "NO",
+        "postnummer" : "0101",
+        "poststed" : "OSLO",
+        "adresse" : [ "Tyvholmen 15", null, null, "" ],
+        "kommune" : "OSLO",
+        "kommunenummer" : "0301"
+      },
+      "beliggenhetsadresse": null,
+      "antallAnsatte": 3
+    },
+    {
+      "organisasjonsnummer": "910521551",
+      "navn": "EIDSNES OG AUSTRE ÅMØY",
+      "naeringskode": "52.292",
+      "organisasjonsform": "AS",
+      "status": "Active",
+      "type": "Business",
+      "postadresse": null,
+      "forretningsadresse": null,
+      "beliggenhetsadresse": null,
+      "antallAnsatte": 50
+    },
+    {
+      "organisasjonsnummer": "910441205",
+      "navn": "BARDU OG SØRUM REGNSKAP",
+      "naeringskode": null,
+      "organisasjonsform": null,
+      "status": "Active",
+      "type": "Business",
+      "postadresse": null,
+      "forretningsadresse": null,
+      "beliggenhetsadresse": null,
+      "antallAnsatte": null
+    },
+    {
+      "organisasjonsnummer": "910460048",
+      "navn": "HOLUM OG SVARSTAD REGNSKAP",
+      "naeringskode": "52.292",
+      "organisasjonsform": "BEDR",
+      "status": "Active",
+      "type": "Enterprise",
+      "postadresse": null,
+      "forretningsadresse": null,
+      "beliggenhetsadresse": null,
+      "antallAnsatte": 50
+    }
+  ]
+}

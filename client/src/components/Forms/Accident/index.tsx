@@ -189,7 +189,7 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
           }}
           render={({ field }) => (
             <Select
-              className=""
+              className="aarsak-ulykke-tabell-a-e"
               closeMenuOnSelect={false}
               isMulti
               options={aarsakUlykkeTabellAogE}
@@ -229,6 +229,7 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
           }}
           render={({ field }) => (
             <Select
+              className="bakgrunnsaarsak-b-g"
               defaultValue={
                 !_.isEmpty(state.hendelsesfakta.bakgrunnsaarsakTabellBogG)
                   ? state.hendelsesfakta.bakgrunnsaarsakTabellBogG.map((i) => {
