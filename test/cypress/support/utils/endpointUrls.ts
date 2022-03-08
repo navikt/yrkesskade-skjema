@@ -1,5 +1,6 @@
 export const endpointUrls = {
   innlogget: '**/yrkesskade/innlogget',
-  skademelding: '**/skademelding',
-  brukerinfo: '**/api/*/brukerinfo'
+  skademelding: '**/api/*/skademeldinger',
+  brukerinfo: '**/api/*/brukerinfo',
+  toggle: '**/yrkesskade/toggles'
 };

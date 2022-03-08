@@ -90,7 +90,7 @@ const InjuryForm = ({
           )}
         </Select>
 
-        <Button variant="tertiary" onClick={handleMultipleIjurys}>
+        <Button variant="tertiary" onClick={handleMultipleIjurys} data-testid="add-injury-button">
           <AddCircle />
           Legg til skade
         </Button>

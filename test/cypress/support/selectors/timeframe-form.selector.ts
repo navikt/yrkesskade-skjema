@@ -1,6 +1,7 @@
 export const timeframeForm = {
-  timeframeWhenDate: () => cy.get('[data-testid=timeframe-when-date]'),
-  timeframeWhenTime: () => cy.get('[data-testid=timeframe-when-time]'),
+  timeframeWhenDate: () => cy.get('.timeframe-when-date'),
+  timeframeWhenTime: () => cy.get('.timeframe-when-time'),
+  timeframeWhenTimeSelect: (index: number) => cy.get(`.react-datepicker__time-list-item:nth-child(${index})`),
   timeframeWhenUnknown: () => cy.get('[data-testid=timeframe-when-unknown]'),
   timeframeWhenOverPeriod: () => cy.get('[data-testid=timeframe-when-over-periode]'),
   timeframePeriodOptions: () => cy.get('[data-testid=timeframe-period-options]'),

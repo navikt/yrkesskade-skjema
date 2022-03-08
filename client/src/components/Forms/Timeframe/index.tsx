@@ -41,13 +41,13 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
   const onChangeRange = (dates: (Date | null)[]) => {
     const [startRange, endRange] = dates;
     setStartDateRange(startRange);
-    setValue('hendelsesfakta.tid.periode.fra', startRange);
-    setValue('hendelsesfakta.tid.periode.til', endRange);
+    setValue('hendelsesfakta.tid.periode.fra', startRange?.toISOString());
+    setValue('hendelsesfakta.tid.periode.til', endRange?.toString());
     setEndDateRange(endRange);
   };
   const onChangeSpecificDate = (date: Date | null) => {
     setSpecificDate(date);
-    setValue('hendelsesfakta.tid.tidspunkt', date);
+    setValue('hendelsesfakta.tid.tidspunkt', date?.toISOString());
   };
   return (
     <>
@@ -90,13 +90,14 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
               }}
               render={({ field }) => (
                 <DatePicker
-                  className="navds-text-field__input navds-body-short navds-body-medium"
+                  className="navds-text-field__input navds-body-short navds-body-medium timeframe-when-date"
                   onChange={onChangeSpecificDate}
                   selected={specificDate}
                   maxDate={new Date()}
                   locale="nb"
                   dateFormat={['dd.MM.yyyy', 'ddMMyyyy', 'ddMMyy']}
                   // shouldCloseOnSelect={false}
+                  data-testid="timeframe-when-date"
                 />
               )}
             />
@@ -122,7 +123,7 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
                   }}
                   render={({ field }) => (
                     <DatePicker
-                      className="navds-text-field__input navds-body-short navds-body-medium"
+                      className="navds-text-field__input navds-body-short navds-body-medium timeframe-when-time"
                       onChange={onChangeSpecificDate}
                       selected={specificDate}
                       maxDate={new Date()}

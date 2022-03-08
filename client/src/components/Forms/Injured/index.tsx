@@ -52,6 +52,7 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
               options={stillingstitler}
               menuIsOpen={openMenu}
               onInputChange={handleInputChange}
+              className="injured-position"
             />
           )}
         />

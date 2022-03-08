@@ -10,15 +10,18 @@ import { homeForm } from "../support/selectors/home-fom.selectors";
 import { injuredForm } from "../support/selectors/injured-form.selectors";
 import { accidentForm } from "../support/selectors/accident-form.selectors";
 import { injuryForm } from "../support/selectors/injury-form.selectors";
+import { summary } from "../support/selectors/summary.selectors";
 
 describe('Skjema innsending', (): void => {
 
   beforeEach(() => {
+    network.intercept(endpointUrls.toggle, 'toggles/enabled.json').as('toggles');
+    network.intercept(endpointUrls.innlogget, 'innlogget.json').as('getInnlogget');
+    network.intercept(endpointUrls.brukerinfo, 'brukerinfo.json').as('brukerinfo');
+    network.intercept(endpointUrls.skademelding, 'skademelding.json').as('postSkademelding');
+
     cy.visit('');
     cy.location().should('to.be', 'http://localhost:3001/yrkesskade/')
-
-    network.intercept(endpointUrls.brukerinfo, 'brukerinfo.json').as('getInnlogget');
-    network.intercept(endpointUrls.skademelding, 'skademelding.json').as('postSkademelding');
   });
 
   it('normal flyt - ingen avvik', () => {
@@ -26,21 +29,14 @@ describe('Skjema innsending', (): void => {
     // vent til innlogget sjekk er fullført
     cy.wait('@getInnlogget');
 
-    // Virksomhetsvelger skal være synlig for arbeidsgiver
-    info.virksomhetsvelger().should('be.visible');
     // start innmelding
     info.startInnmelding().click();
 
-    // samme selskap
-    companyForm.companyOptionYes().click();
-    companyForm.companyOptionNo().click();
-
-    // Gå til neste steg
-    general.nextStep().click();
-
     // velg tidspunkt
-    timeframeForm.timeframeWhenDate().type(injuryTime.format('DD.MM.YYYY'));
-    timeframeForm.timeframeWhenTime().type(injuryTime.format('HH:mm'));
+    timeframeForm.timeframeWhenDate().type(injuryTime.format('DD.MM.YYYY')).type('{esc}');
+    //timeframeForm.timeframeWhenTime().click().type(injuryTime.format('HH:mm')).type('{esc}'); // ser ikke ut som den liker at dette felter skrives til
+    timeframeForm.timeframeWhenTime().click();
+    timeframeForm.timeframeWhenTimeSelect(13).click();
     timeframeForm.timeframePeriodOptions().select('I avtalt arbeidstid');
 
     // Gå til neste steg
@@ -48,17 +44,17 @@ describe('Skjema innsending', (): void => {
 
     // info om skadelydte
     // injuredForm.roleOptions().select('Rolle');
-    injuredForm.position().type('Tastaturkriger');
-    injuredForm.idNumber().type('01011050433');
+    injuredForm.position().type('Programvareutviklere{enter}');
+    injuredForm.idNumber().type('16120101181');
 
     // Gå til neste steg
     general.nextStep().click();
 
     // info om ulykken
-    accidentForm.severityOptions().select('Veldig');
-    accidentForm.locationOptions().select('1');
-    accidentForm.reasonOptions().select('Støt/treff av gjenstand');
-    accidentForm.backgroundOptions().select('Manglende merking, varsling, skilting');
+    accidentForm.place().select(1);
+    accidentForm.placeType().select(2);
+    accidentForm.reasonOptions().type('Trafikkulykke{enter}{esc}');
+    accidentForm.backgroundOptions().type('Manglende merking{enter}{esc}')
 
     // Gå til neste steg
     general.nextStep().click();
@@ -66,13 +62,17 @@ describe('Skjema innsending', (): void => {
     // info om skaden
     injuryForm.bodylocationOptions().select('Øye, venstre');
     injuryForm.injuryTypeOptions().select('Tap av legemsdel');
-    injuryForm.medicalContacted.noOption().click();
+    injuryForm.addInjuryButton().click();
+    injuryForm.injuryAbsentRadio(2).click();
+
+    // Gå til neste steg
+    general.nextStep().click();
 
     // Gå til neste steg
     general.nextStep().click();
 
     // send inn skjema
-    homeForm.continue().click();
+    summary.sendInjury().click();
 
     cy.location().should((location) => {
       expect(location.pathname).to.contain('/skjema/oppsumering');
