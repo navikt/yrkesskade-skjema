@@ -18,11 +18,11 @@ import aarsakUlykkeTabellAogE from '../../../assets/Lists/aarsakUlykkeTabellAogE
 import bakgrunnsaarsakTabellBogG from '../../../assets/Lists/bakgrunnsaarsakTabellBogG';
 import { useEffect, useState } from 'react';
 import Address from '../Address';
-import formUpdateAction from '../../../State/formUpdateAction';
+import formUpdateAction from '../../../State/actions/formUpdateAction';
 import { useStateMachine } from 'little-state-machine';
 import alvorlighetsgrad from '../../../assets/Lists/alvorlighetsgrad';
 import _ from 'lodash';
-import { oppdaterSetSammeSomVirksomhetsAdresse } from '../../../State/skademeldingStateAction';
+import { oppdaterSetSammeSomVirksomhetsAdresse } from '../../../State/actions/skademeldingStateAction';
 
 interface IProps {
   register: any;

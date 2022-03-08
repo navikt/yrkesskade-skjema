@@ -33,17 +33,19 @@ import { useEffect } from 'react';
 import {
   oppdaterDekningsforholdOrganisasjon,
   oppdaterSkade,
-} from '../../State/skademeldingStateAction';
+} from '../../State/actions/skademeldingStateAction';
 import { useErrorMessageContext } from '../../context/ErrorMessageContext';
 import {
   Skademelding,
   SkademeldingApiControllerService,
 } from '../../api/yrkesskade';
+import clearFormAction from '../../State/actions/clearAction';
 
 const Summary = () => {
   const { state, actions } = useStateMachine({
     oppdaterDekningsforholdOrganisasjon,
     oppdaterSkade,
+    clearFormAction
   });
   const { selectedCompany } = useSelectedCompany();
   const { setError } = useErrorMessageContext();
@@ -134,7 +136,8 @@ const Summary = () => {
       console.log('send skademelding: ', data);
       await SkademeldingApiControllerService.sendSkademelding(
         data as unknown as Skademelding
-      ); // axios.post(url, data);
+      );
+      actions.clearFormAction({});
       navigate('/yrkesskade/skjema/kvittering');
     } catch (error: any) {
       setError(error.body);
@@ -142,6 +145,7 @@ const Summary = () => {
     }
   };
   const handleAbort = () => {
+    actions.clearFormAction({});
     window.location.href = 'https://nav.no';
   };
   return (

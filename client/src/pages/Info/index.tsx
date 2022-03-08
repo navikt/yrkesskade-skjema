@@ -25,11 +25,12 @@ import {
   oppdaterInnmelder,
   oppdaterPaaVegneAv,
   oppdaterDekningsforholdOrganisasjon,
-} from '../../State/skademeldingStateAction';
+} from '../../State/actions/skademeldingStateAction';
 import {
   BrukerinfoControllerService,
   OrganisasjonDto,
 } from '../../api/yrkesskade';
+import clearFormAction from '../../State/actions/clearAction';
 // import Description from '../Form/Description';
 
 const Info = () => {
@@ -38,12 +39,15 @@ const Info = () => {
     oppdaterPaaVegneAv,
     oppdaterInnmelder,
     oppdaterDekningsforholdOrganisasjon,
+    clearFormAction
   });
 
   const handleForward = () => {
     navigate('/yrkesskade/skjema/tidsrom');
   };
+
   const handleCancel = () => {
+    actions.clearFormAction({});
     navigate('https://nav.no');
   };
 

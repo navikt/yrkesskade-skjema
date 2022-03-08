@@ -57,7 +57,7 @@ const Landing = () => {
       return false;
     }
 
-    const organisasjon = innloggetBruker.organisasjoner[0];
+    const organisasjon = innloggetBruker.organisasjoner[2];
     const roller = await BrukerinfoControllerService.hentRoller(
       organisasjon.organisasjonsnummer
     );
