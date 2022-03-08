@@ -110,7 +110,7 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
               type="radio"
               className="navds-radio__input"
               {...register('skade.alvorlighetsgrad', {
-                required: 'Dette feltet er påkrevd'
+                required: false
               })}
               value={alvorlighetsgrad.value}
               data-testid={ `injury-severity-${index}`}
