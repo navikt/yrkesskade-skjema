@@ -7,19 +7,20 @@ interface IProps {
 const TidsromSummary = ({ data }: IProps) => {
   let accidentTime: Date | string;
   const timetype = data.hendelsesfakta.tid.tidstype.toLowerCase();
+  console.log(timetype);
   if (timetype === 'tidspunkt') {
     // force the date to a string with +''. Dum hack
     accidentTime = `${format(
       parseISO(data.hendelsesfakta.tid.tidspunkt + ''),
-      'MM/dd/yyyy HH:mm'
+      'dd/MM/yyyy HH:mm'
     )}`;
   } else if (timetype === 'periode') {
     accidentTime = `${format(
       parseISO(data.hendelsesfakta.tid.periode.fra + ''),
-      'MM/dd/yyyy'
+      'dd/MM/yyyy'
     )} - ${format(
       parseISO(data.hendelsesfakta.tid.periode.til + ''),
-      'MM/dd/yyyy'
+      'dd/MM/yyyy'
     )}`;
   } else {
     accidentTime = 'Ukjent';
