@@ -17,8 +17,10 @@ describe('Skjema innsending', (): void => {
   beforeEach(() => {
     network.intercept(endpointUrls.toggle, 'toggles/enabled.json').as('toggles');
     network.intercept(endpointUrls.innlogget, 'innlogget.json').as('getInnlogget');
-    network.intercept(endpointUrls.brukerinfo, 'brukerinfo.json').as('brukerinfo');
+    network.intercept(endpointUrls.brukerinfo, 'brukerinfo/brukerinfo.json').as('brukerinfo');
+    network.intercept(endpointUrls.brukerinfoOrganisasjon, 'brukerinfo/organisasjoner/910437127.json').as('getOrganisasjon');
     network.intercept(endpointUrls.skademelding, 'skademelding.json').as('postSkademelding');
+    network.intercept(endpointUrls.log, 'logResult.json').as('postLog');
 
     cy.visit('');
     cy.location().should('to.be', 'http://localhost:3001/yrkesskade/')
@@ -72,10 +74,10 @@ describe('Skjema innsending', (): void => {
     general.nextStep().click();
 
     // send inn skjema
-    summary.sendInjury().click();
+    summary.sendInjury().click().wait('@postSkademelding');
 
     cy.location().should((location) => {
-      expect(location.pathname).to.contain('/skjema/oppsumering');
+      expect(location.pathname).to.contain('/skjema/kvittering');
     });
   });
 });
