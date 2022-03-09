@@ -16,7 +16,6 @@ Opprett en .env fil på rot med følgende verdier;
 ```bash
 IDPORTEN_WELL_KNOWN_URL=https://fakedings.dev-gcp.nais.io/idporten/.well-known/openid-configuration
 FAKEDINGS_URL_TOKENX=https://fakedings.dev-gcp.nais.io/fake/tokenx
-IDPORTEN_COOKIE_NAME=localhost-idtoken
 FAKEDINGS_URL_IDPORTEN=https://fakedings.dev-gcp.nais.io/fake/idporten
 TOKENX_AUDIENCE=dev-gcp:yrkesskade:yrkesskade-melding-api
 APP_INGRESS=http://localhost:3001/yrkesskade

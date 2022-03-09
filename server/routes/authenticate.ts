@@ -13,16 +13,16 @@ export const configureAuthenticationAndVerification = (app: Express) => {
   );
 
   app.get(`${config.BASE_PATH}/innlogget`, (req, res) => {
-    logInfo('Headers: ' + JSON.stringify(req.headers));
-    const loginserviceToken = req.cookies[config.IDPORTEN_COOKIE_NAME];
-    if (loginserviceToken) {
+    logInfo('header: ' + JSON.stringify(req.headers.authorization));
+    const token = req.headers?.authorization?.split(' ')[1];
+    if (token) {
       logInfo(
-        `innlogget? ja (cookie ${config.IDPORTEN_COOKIE_NAME} eksisterer)`
+        `innlogget? ja (token eksisterer)`
       );
       res.status(200).send();
     } else {
       logInfo(
-        `innlogget? nei (cookie ${config.IDPORTEN_COOKIE_NAME} mangler)`
+        `innlogget? nei (authorization header eller token mangler)`
       );
       res.status(401).send();
     }
