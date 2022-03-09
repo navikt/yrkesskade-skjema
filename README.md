@@ -19,7 +19,6 @@ FAKEDINGS_URL_TOKENX=https://fakedings.dev-gcp.nais.io/fake/tokenx
 IDPORTEN_COOKIE_NAME=localhost-idtoken
 FAKEDINGS_URL_IDPORTEN=https://fakedings.dev-gcp.nais.io/fake/idporten
 TOKENX_AUDIENCE=dev-gcp:yrkesskade:yrkesskade-melding-api
-APP_INGRESS=http://localhost:3001/yrkesskade
 API_URL=http://localhost:8080
 NODE_ENV=local
 ENV=local

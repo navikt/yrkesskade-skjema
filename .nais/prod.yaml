@@ -1,0 +1,17 @@
+ingresses:
+- "https://skademelding.nav.no"
+env:
+- name: DECORATOR_URL
+  value: "https://dekoratoren.nav.no"
+- name: DECORATOR_ENV
+  value: "prod"
+- name: NODE_ENV
+  value: prod
+- name: ENV
+  value: prod
+- name: TOKENX_AUDIENCE
+  value: "prod-gcp:yrkesskade:yrkesskade-melding-api"
+- name: API_URL
+  value: https://yrkesskade-melding-api.intern.nav.no
+externals:
+  - "dekoratoren.nav.no"
