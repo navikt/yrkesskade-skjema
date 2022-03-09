@@ -80,17 +80,8 @@ export const exchangeToken = async (request) => {
   let token = request.headers?.authorization?.split(' ')[1]; // henter del 2 fra authorization header (Bearer XXXXXXX)
 
   if (!token) {
-    if (process.env.ENV === 'local') {
-      token = await getMockTokenFromIdPorten();
-    } else {
-      // fant ikke token in header - sjekker cookie
-      token = request.cookies[config.IDPORTEN_COOKIE_NAME]
-
-      if (!token) {
-        // brukeren er ikke autentisert
-        return;
-      }
-    }
+    // brukeren er ikke autentisert
+    return;
   }
 
   // await verifiserAccessToken(token);
