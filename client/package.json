@@ -36,7 +36,7 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "PORT=3001 craco start",
+    "start": "PORT=3001 craco -r @cypress/instrument-cra start",
     "build": "craco build && mv build ..",
     "test": "craco test",
     "eject": "craco eject"
@@ -60,7 +60,20 @@
     ]
   },
   "devDependencies": {
+    "@babel/preset-typescript": "^7.16.7",
+    "@cypress/instrument-cra": "^1.4.0",
+    "babel-plugin-istanbul": "^6.1.1",
     "constate": "^3.3.0",
     "less": "^4.1.2"
+  },
+  "nyc": {
+    "check-coverage": true,
+    "extends": "@istanbul/nyc-config-typescript",
+    "extension": [
+      ".ts",
+      ".tsx",
+      ".js",
+      ".jsx"
+    ]
   }
 }

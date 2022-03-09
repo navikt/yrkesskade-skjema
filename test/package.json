@@ -2,10 +2,10 @@
   "name": "test",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-
-  },
+  "dependencies": {},
   "devDependencies": {
+    "@cypress/code-coverage": "^3.9.12",
+    "@cypress/instrument-cra": "^1.4.0",
     "cypress": "^9.3.1",
     "dayjs": "^1.10.7"
   },

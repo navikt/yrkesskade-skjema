@@ -80,5 +80,45 @@ describe('Skjema innsending', (): void => {
       expect(location.pathname).to.contain('/skjema/kvittering');
     });
   });
+
+  it('normal flyt - sjekk validering av felter', () => {
+    const injuryTime = dayjs();
+    // vent til innlogget sjekk er fullført
+    cy.wait('@getInnlogget');
+
+    // start innmelding
+    info.startInnmelding().click();
+
+    general.nextStep().click();
+
+    general.feilmeldinger().should('have.length', 2);
+
+    // valider
+    timeframeForm.timeframeWhenDate().clear().type(injuryTime.format('DD.MM.YYYY')).type('{enter}');
+    timeframeForm.timeframeWhenTime().type('{selectall}' + injuryTime.format('HH:mm')).type('{enter}'); // ser ikke ut som den liker at dette felter skrives til
+
+    general.nextStep().click();
+
+    general.feilmeldinger().should('have.length', 1);
+
+    timeframeForm.timeframePeriodOptions().select('I avtalt arbeidstid');
+
+    general.nextStep().click();
+
+    cy.location().should((location) => {
+      expect(location.pathname).to.contain('/skjema/skadelidt');
+    });
+
+    general.nextStep().click();
+
+    general.feilmeldinger().should('have.length', 2);
+
+    injuredForm.position().type('Programvareutviklere{enter}');
+
+    general.nextStep().click();
+
+    general.feilmeldinger().should('have.length', 1);
+  });
+
 });
 
