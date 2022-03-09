@@ -21,10 +21,10 @@ export const initialState = {
   },
   hendelsesfakta: {
     tid: {
-      tidspunkt: null,
+      tidspunkt: undefined,
       periode: {
-        fra: null,
-        til: null,
+        fra: undefined,
+        til: undefined,
       },
       ukjent: false,
       tidstype: 'Tidspunkt',
