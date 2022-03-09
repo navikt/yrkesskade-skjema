@@ -24,12 +24,16 @@ export const configureFeatureTogglesEndpoint = (app: Express): Express => {
 
 const hentBrukerinfo = async (req, res: Response, next: NextFunction) => {
 
+
+
   // hent token fra cookie
-  const idtoken = req.headers?.authorization?.split(' ')[1];
+  let idtoken = req.headers?.authorization?.split(' ')[1];
 
   if (!idtoken) {
-    res.sendStatus(401);
-    return;
+    idtoken = req.cookies[config.IDPORTEN_COOKIE_NAME];
+    if (!idtoken) {
+      return;
+    }
   }
 
   try {

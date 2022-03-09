@@ -1,4 +1,3 @@
-import { logInfo } from '@navikt/yrkesskade-logging';
 import axios from 'axios';
 import config from './config';
 
@@ -24,8 +23,6 @@ const redirectTilOauth = (req, res): Promise<void> => {
 const redirectTilMock = async (req, res): Promise<void> => {
   const response = await axios.get(`${process.env.FAKEDINGS_URL_IDPORTEN}?pid=12345678910&acr=Level4`);
   const token = await response.data;
-  res.setHeader('authorization', `Bearer ${token}`);
-  logInfo(JSON.stringify(res));
-
+  res.cookie(config.IDPORTEN_COOKIE_NAME, token);
   res.redirect(req.query.redirect as string);
 };
