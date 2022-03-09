@@ -14,7 +14,10 @@ export const configureAuthenticationAndVerification = (app: Express) => {
 
   app.get(`${config.BASE_PATH}/innlogget`, (req, res) => {
     logInfo('header: ' + JSON.stringify(req.headers.authorization));
-    const token = req.headers?.authorization?.split(' ')[1];
+    let token = req.headers?.authorization?.split(' ')[1];
+    if (!token) {
+      token = req.cookies[config.IDPORTEN_COOKIE_NAME];
+    }
     if (token) {
       logInfo(
         `innlogget? ja (token eksisterer)`
