@@ -68,7 +68,6 @@
   },
   "nyc": {
     "check-coverage": true,
-    "extends": "@istanbul/nyc-config-typescript",
     "extension": [
       ".ts",
       ".tsx",

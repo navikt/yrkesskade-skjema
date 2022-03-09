@@ -27,6 +27,11 @@ jobs:
         working-directory: "client"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
+      - name: "install test dependencies Yarn"
+        run: "yarn install --frozen-lockfile"
+        working-directory: "test"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
