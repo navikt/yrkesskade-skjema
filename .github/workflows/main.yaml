@@ -11,9 +11,31 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - uses: "actions/setup-node@v2"
+        with:
+          node-version: "14"
+          cache: "yarn"
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@navikt'
+      - name: "install server dependencies Yarn"
+        # if: "steps.cache-server-node-modules.outputs.cache-hit != 'true'"
+        run: "yarn install --frozen-lockfile"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
+      - name: "install dependencies Yarn"
+        run: "yarn install --frozen-lockfile"
+        working-directory: "client"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
+      - name: "install test dependencies Yarn"
+        run: "yarn install --frozen-lockfile"
+        working-directory: "test"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
+          project: ./test
           build: yarn build-prod
           start: yarn dev
           wait-on: 'http://localhost:3001'
@@ -82,3 +104,31 @@ jobs:
           "CLUSTER": "dev-gcp"
           "RESOURCE": ".nais/alerts-dev.yaml"
           "VARS": ".nais/dev.yaml"
+
+  "deployAppToProd":
+    name: "Deploy app to prod"
+    needs: "build"
+    runs-on: "ubuntu-18.04"
+    steps:
+      - uses: "actions/checkout@v2"
+      - name: "Deploy to PROD"
+        uses: "nais/deploy/actions/deploy@v1"
+        env:
+          "APIKEY": "${{ secrets.NAIS_DEPLOY_APIKEY }}"
+          "CLUSTER": "prod-gcp"
+          "RESOURCE": ".nais/nais.yaml"
+          "VARS": ".nais/prod.yaml"
+
+  "deployAlertsToProd":
+    name: "Deploy alerts to prod"
+    needs: "build"
+    runs-on: "ubuntu-18.04"
+    steps:
+      - uses: "actions/checkout@v2"
+      - name: "Deploy alerts to PROD"
+        uses: "nais/deploy/actions/deploy@v1"
+        env:
+          "APIKEY": "${{ secrets.NAIS_DEPLOY_APIKEY }}"
+          "CLUSTER": "prod-gcp"
+          "RESOURCE": ".nais/alerts-prod.yaml"
+          "VARS": ".nais/prod.yaml"
