@@ -36,6 +36,7 @@ import {
 } from '../../State/actions/skademeldingStateAction';
 import { useErrorMessageContext } from '../../context/ErrorMessageContext';
 import {
+  ApiError,
   Skademelding,
   SkademeldingApiControllerService,
 } from '../../api/yrkesskade';
@@ -137,10 +138,13 @@ const Summary = () => {
       await SkademeldingApiControllerService.sendSkademelding(
         data as unknown as Skademelding
       );
+
       actions.clearFormAction({});
       navigate('/yrkesskade/skjema/kvittering');
     } catch (error: any) {
-      setError(error.body);
+      console.log('error: ', (error as ApiError).message);
+
+      setError('Det skjedde en feil med innsendingen. Vi jobber med å løse problemet. Prøv igjen senere.');
       navigate('/yrkesskade/skjema/feilmelding');
     }
   };
