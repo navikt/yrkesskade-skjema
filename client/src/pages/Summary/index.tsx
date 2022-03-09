@@ -137,10 +137,11 @@ const Summary = () => {
       await SkademeldingApiControllerService.sendSkademelding(
         data as unknown as Skademelding
       );
+
       actions.clearFormAction({});
       navigate('/yrkesskade/skjema/kvittering');
     } catch (error: any) {
-      setError(error.body);
+      setError('Det skjedde en feil med innsendingen. Vi jobber med å løse problemet. Prøv igjen senere.');
       navigate('/yrkesskade/skjema/feilmelding');
     }
   };
