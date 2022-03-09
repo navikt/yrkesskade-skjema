@@ -8,7 +8,7 @@ env:
 - name: NODE_ENV
   value: prod
 - name: ENV
-  value: prod
+  value: production
 - name: TOKENX_AUDIENCE
   value: "prod-gcp:yrkesskade:yrkesskade-melding-api"
 - name: API_URL
