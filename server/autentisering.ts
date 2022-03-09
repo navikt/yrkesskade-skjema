@@ -16,7 +16,6 @@ export const redirectTilLogin = async (req, res): Promise<void> => {
 };
 
 const redirectTilOauth = (req, res): Promise<void> => {
-  //const referrerUrl = `${process.env.APP_INGRESS}${config.BASE_PATH}/success?redirect=${req.query.redirect}`;
   res.redirect(`/oauth2/login?redirect=${req.query.redirect}`);
   return Promise.resolve();
 };
