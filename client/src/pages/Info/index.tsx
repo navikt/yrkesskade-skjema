@@ -56,8 +56,6 @@ const Info = () => {
     useSelectedCompany();
 
   useEffect(() => {
-    console.log('innloggetBruker: ', innloggetBruker);
-
     if (innloggetBruker?.fnr) {
       settValgtVirksomhet(innloggetBruker.organisasjoner[0]);
       actions.oppdaterInnmelder({

@@ -30,9 +30,8 @@ const [StateManagementProvider, useState] = createUseContext(() => {
       innloggetBruker.fnr !== state.innmelder.norskIdentitetsnummer ||
       selectedCompany.organisasjonsnummer !== state.innmelder.paaVegneAv
     ) {
-      console.log('state nullstilt');
 
-      //actions.clearFormAction({});
+      actions.clearFormAction({});
       // state slettet
       return;
     }

@@ -142,8 +142,6 @@ const Summary = () => {
       actions.clearFormAction({});
       navigate('/yrkesskade/skjema/kvittering');
     } catch (error: any) {
-      console.log('error: ', (error as ApiError).message);
-
       setError('Det skjedde en feil med innsendingen. Vi jobber med å løse problemet. Prøv igjen senere.');
       navigate('/yrkesskade/skjema/feilmelding');
     }

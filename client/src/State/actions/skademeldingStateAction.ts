@@ -11,17 +11,14 @@ const oppdaterPaaVegneAv = (state: GlobalState, payload: string) => ({
 const oppdaterInnmelder = (
   state: GlobalState,
   payload: { norskIdentitetsnummer: number; innmelderrolle: string }
-) => {
-  console.log('payload: ', payload);
-
-  return {
+) => ({
   ...state,
   innmelder: {
     ...state.innmelder,
     norskIdentitetsnummer: payload.norskIdentitetsnummer,
     innmelderrolle: payload.innmelderrolle,
   },
-}};
+});
 
 const oppdaterDekningsforholdOrganisasjon = (
   state: GlobalState,
