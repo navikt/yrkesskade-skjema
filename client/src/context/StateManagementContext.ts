@@ -22,7 +22,7 @@ const [StateManagementProvider, useState] = createUseContext(() => {
       return;
     }
 
-    if (!state) {
+    if (!state || !state.innmelder || !state.innmelder.norskIdentitetsnummer) {
       return;
     }
 
@@ -30,6 +30,7 @@ const [StateManagementProvider, useState] = createUseContext(() => {
       innloggetBruker.fnr !== state.innmelder.norskIdentitetsnummer ||
       selectedCompany.organisasjonsnummer !== state.innmelder.paaVegneAv
     ) {
+      console.log('nullstill');
 
       actions.clearFormAction({});
       // state slettet
