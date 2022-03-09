@@ -36,7 +36,6 @@ import {
 } from '../../State/actions/skademeldingStateAction';
 import { useErrorMessageContext } from '../../context/ErrorMessageContext';
 import {
-  ApiError,
   Skademelding,
   SkademeldingApiControllerService,
 } from '../../api/yrkesskade';
