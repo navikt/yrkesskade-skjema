@@ -158,9 +158,9 @@ const Summary = () => {
           <Heading
             size="2xlarge"
             className="pageNumberTitle spacer"
-            data-number="6"
+            data-number="7"
           >
-            Oppsumering
+            Oppsummering
           </Heading>
           <BodyLong className="spacer">
             Les gjennom oppsummeringen før du sender inn og bekrefter

@@ -31,7 +31,7 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
   return (
     <>
       <div>
-        <Label>Hva er den skadeliteds stilling</Label>
+        <Label>Hva er den skadelidtes stilling</Label>
         <Controller
           name="skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte"
           control={control}

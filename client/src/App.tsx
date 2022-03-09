@@ -46,7 +46,7 @@ const App = () => {
                         path="beskrivelse"
                         element={<DescriptionFormPage />}
                       />
-                      <Route path="oppsumering" element={<Summary />} />
+                      <Route path="oppsummering" element={<Summary />} />
                       <Route path="kvittering" element={<Receipt />} />
                       <Route path="feilmelding" element={<Error />} />
                     </Route>

@@ -1,24 +1,22 @@
 import { useState } from 'react';
-import {
-  Textarea,
-} from '@navikt/ds-react';
+import { Textarea } from '@navikt/ds-react';
 import { useStateMachine } from 'little-state-machine';
 
 interface IProps {
   register: any;
   errors: any;
 }
-const DescriptionForm = ({
-  register,
-}: IProps) => {
+const DescriptionForm = ({ register }: IProps) => {
   const { state } = useStateMachine({});
-  const [freetext, setFreetext] = useState(state.hendelsesfakta.utfyllendeBeskrivelse);
+  const [freetext, setFreetext] = useState(
+    state.hendelsesfakta.utfyllendeBeskrivelse
+  );
 
   return (
     <>
       <Textarea
         className="spacer"
-        label="Noe mer å legge til? (valgfri)"
+        label="Under kan du tilføre ytterligere opplysninger (valgfri)"
         description={<TextareaDescription />}
         {...register('hendelsesfakta.utfyllendeBeskrivelse')}
         value={freetext}
@@ -35,12 +33,17 @@ export default DescriptionForm;
 const TextareaDescription = () => {
   return (
     <>
-      Vi trenger opplysninger om
+      Oppgi informasjon som du mener kan ha betydning for saken. Det kan være
+      nyttig for oss å vite mer om:
       <ul>
-        <li>Hvordan ulykken skjedde og om skadens/sykdommens art</li>
-        <li>behandlingen av skadede, behandlingstype (f.eks. førstehjelp)</li>
-        <li>behandling av hvem (f.eks. lege)</li>
-        <li>behandlet hvor (f.eks. på sykehus, på stedet osv.)</li>
+        <li>Hendelsesforløpet</li>
+        <li>Spesielle omstendigheter</li>
+        <li>Avvik fra normale arbeidsoppgaver</li>
+        <li>Skadelig påvirkning av stoffer</li>
+        <li>
+          Umiddelbar behandling av skaden/sykdommen hvis det er kjent,
+          førstehjelp, debrifing eller legevakt/sykehus.
+        </li>
       </ul>
     </>
   );

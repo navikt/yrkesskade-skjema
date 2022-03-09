@@ -46,7 +46,7 @@ const StepIndicator = () => {
         active: false,
       },
       {
-        text: 'Oppsumering',
+        text: 'Oppsummering',
         done: false,
         active: false,
       },
@@ -97,7 +97,7 @@ const StepIndicator = () => {
     if (pathname.toLowerCase() === '/yrkesskade/skjema/beskrivelse') {
       updateSteps(6, steps);
     }
-    if (pathname.toLowerCase() === '/yrkesskade/skjema/oppsumering') {
+    if (pathname.toLowerCase() === '/yrkesskade/skjema/oppsummering') {
       updateSteps(7, steps);
     }
     if (pathname.toLowerCase() === '/yrkesskade/skjema/kvittering') {
