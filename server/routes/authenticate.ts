@@ -13,6 +13,7 @@ export const configureAuthenticationAndVerification = (app: Express) => {
   );
 
   app.get(`${config.BASE_PATH}/innlogget`, (req, res) => {
+    logInfo('Headers: ' + JSON.stringify(req.headers));
     const loginserviceToken = req.cookies[config.IDPORTEN_COOKIE_NAME];
     if (loginserviceToken) {
       logInfo(
