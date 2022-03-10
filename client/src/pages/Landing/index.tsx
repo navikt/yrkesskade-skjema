@@ -51,7 +51,7 @@ const Landing = () => {
       }
 
       if (innloggetBruker.organisasjoner.length === 0) {
-        logMessage('Innlogget bruker har kun tilgang til 1 organisasjon');
+        logMessage('Innlogget bruker har ikke tilgang til noen organisasjoner');
       }
 
       return false;
