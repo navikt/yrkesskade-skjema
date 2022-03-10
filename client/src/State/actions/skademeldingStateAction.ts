@@ -1,5 +1,4 @@
 import { GlobalState } from 'little-state-machine';
-import { Adresse } from '../../api/yrkesskade';
 import { merge } from 'lodash';
 
 const oppdaterPaaVegneAv = (state: GlobalState, payload: string) => ({
