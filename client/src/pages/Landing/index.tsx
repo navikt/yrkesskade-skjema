@@ -67,6 +67,7 @@ const Landing = () => {
       return false;
     }
 
+    logMessage('Innlogget bruker har tilgang til skjema');
     return true;
   };
 
