@@ -28,7 +28,8 @@ const TimeframeFormPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-    setValue
+    setValue,
+    control
   } = useForm({
     defaultValues: {
       'hendelsesfakta.tid.tidstype': state.hendelsesfakta.tid.tidstype,
@@ -61,7 +62,7 @@ const TimeframeFormPage = () => {
             >
               Tid og dato
             </Heading>
-            <TimeframeForm errors={errors} register={register} setValue={setValue}/>
+            <TimeframeForm errors={errors} register={register} control={control} setValue={setValue}/>
             <div className="buttonGroup">
               <Button variant="secondary" onClick={handleAbort}>
                 Avbryt

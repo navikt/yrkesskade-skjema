@@ -1,0 +1,35 @@
+@import 'react-datepicker/dist/react-datepicker.css';
+
+.nav-day-picker {
+  input {
+    appearance: none;
+    background-color: var(--navds-select-color-background);
+    border-radius: 4px;
+    border: 1px solid var(--navds-select-color-border);
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 48px;
+    display: inline-block;
+    position: relative;
+    padding: 0.5rem;
+    padding-right: 2.5rem;
+
+    &:hover {
+      border-color: var(--navds-select-color-border-hover);
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: var(--navds-shadow-focus);
+    }
+  }
+}
+
+.periode-container {
+  display: flex;
+  gap: 1rem;
+
+  div {
+    flex: 1;
+  }
+}

@@ -2,53 +2,135 @@ import { useState, useEffect } from 'react';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import { DateUtils } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
-import { Select, RadioGroup, Label } from '@navikt/ds-react';
+import { Select, RadioGroup, Label, TextField } from '@navikt/ds-react';
 import { useStateMachine } from 'little-state-machine';
 
-import './timeframeForm.less';
 import ulykkestid from '../../../assets/Lists/ulykkestid';
-
-import { get } from 'lodash';
 
 import dateFnsFormat from 'date-fns/format';
 import dateFnsParse from 'date-fns/parse';
-
-function parseDate(str: string, format: string) {
-  const parsed = dateFnsParse(str, format, new Date());
-  if (DateUtils.isDate(parsed)) {
-    return parsed;
-  }
-  return undefined;
-}
+import { Controller } from 'react-hook-form';
+import { handleDateValue, handleTimeValue } from '../../../utils/date';
+import './Timeframe.less';
+import { InputClassNames } from 'react-day-picker/types/ClassNames';
 
 function formatDate(date: number | Date, format: string) {
   return dateFnsFormat(date, format);
 }
-
 interface IProps {
   register: any;
   errors: any;
   setValue: any;
+  control: any;
 }
-const TimeframeForm = ({ register, errors, setValue }: IProps) => {
-  const FORMAT:string = 'dd.MM.yyyy';
+const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
+  const FORMAT: string = 'dd.MM.yyyy';
   const { state } = useStateMachine();
 
+  const dayPickerClassNames = {
+    container: 'nav-day-picker',
+    overlay: '',
+    overlayWrapper: ''
+  } as InputClassNames;
+
+  const whenDayPickerClassNames = { ...dayPickerClassNames,
+    container: `timeframe-when-date ${dayPickerClassNames.container}`
+  }
+
+  const fromDayPickerClassNames = { ...dayPickerClassNames,
+    container: `timeframe-from-date ${dayPickerClassNames.container}`
+  }
+
+  const toDayPickerClassNames = { ...dayPickerClassNames,
+    container: `timeframe-from-date ${dayPickerClassNames.container}`
+  }
+
   const [timeType, setTimeType] = useState(state.hendelsesfakta.tid.tidstype);
-  const [specificDate, setSpecificDate] = useState<Date | undefined>(state.hendelsesfakta.tid.tidspunkt);
+  const [specificDate, setSpecificDate] = useState<Date | undefined>(
+    handleDateValue(state.hendelsesfakta.tid.tidspunkt)
+  );
+
+  const [specificTime, setSpecificTime] = useState<string | undefined>(
+    handleTimeValue(state.hendelsesfakta.tid.tidspunkt)
+  )
+
+  const [ toDayInput, setToDayInput ] = useState<DayPickerInput | null>();
+  const [ specificFromDay, setSpecificFromDay ] = useState<Date | undefined>(
+    handleDateValue(state.hendelsesfakta.tid.periode.fra)
+  );
+  const [specificToDay, setSpecificToDay] = useState<Date | undefined>(
+    handleDateValue(state.hendelsesfakta.tid.periode.til)
+  );
+
+  const modifiers = { start: specificFromDay, end: specificToDay};
 
   const handleSpecificDate = (selectedDay: Date) => {
     setSpecificDate(selectedDay);
-    setValue('hendelsesfakta.tid.tidspunkt', selectedDay);
   };
 
-  let specificDateError = '';
+  const handleSpecificFromDay = (selectedDay: Date) => {
+    setSpecificFromDay(selectedDay);
+  }
+
+  const handleSpecificToDay = (selectedDay: Date) => {
+    setSpecificToDay(selectedDay);
+  }
+
+  const handleKlokkeChange = (event: any) => {
+    console.log('klokkeslett: ', event);
+    setSpecificTime(event.target.value);
+  }
 
   useEffect(() => {
-    if(timeType === 'Tidspunkt' && typeof specificDate === undefined) {
+    console.log('set specifict time and date', specificDate, specificTime);
+    if (specificDate && specificTime && specificTime.length === 5) {
+      const timeparts = specificTime.split(':');
+      const newDate = new Date(
+        specificDate.getUTCFullYear(),
+        specificDate?.getUTCMonth(), specificDate?.getUTCDay(),
+        parseInt(timeparts[0]),
+        parseInt(timeparts[1]));
+
+        console.log(newDate);
+        setValue('hendelsesfakta.tid.tidspunkt', newDate);
+    }
+
+  }, [specificTime, specificDate]);
+
+  useEffect(() => {
+    if (timeType !== 'Periode') {
+      return;
+    }
+    console.log('set specific period dates');
+
+    setValue('hendelsesfakta.tid.periode.fra', specificFromDay?.toISOString());
+    setValue('hendelsesfakta.tid.periode.til', specificToDay?.toISOString());
+  }, [timeType, specificFromDay, specificToDay]);
+
+  const parseDate = (str: string, format: string) => {
+    // sjekk at vi har skrevet noe og at noe er 10 tegn
+    if (!str || str.length !== 10) {
+      return undefined;
+    }
+
+    // parse noe til dato om mulig
+    const parsed = dateFnsParse(str, format, new Date());
+    if (DateUtils.isDate(parsed)) {
+      return parsed;
+    }
+
+    // ikke dato
+    return undefined;
+  }
+
+  let specificDateError = '';
+  let specificRangeError = '';
+
+  useEffect(() => {
+    if (timeType === 'Tidspunkt' && typeof specificDate === undefined) {
       specificDateError = 'Dette feltet er påkrevd';
     }
-  },[])
+  }, []);
 
   return (
     <>
@@ -81,19 +163,35 @@ const TimeframeForm = ({ register, errors, setValue }: IProps) => {
         {timeType === 'Tidspunkt' && (
           <div>
             <Label>Dato for ulykken</Label>
-            <DayPickerInput
-              placeholder=""
-              value={specificDate}
-              onDayChange={handleSpecificDate}
-              formatDate={formatDate}
-              format={FORMAT}
-              parseDate={parseDate}
-              dayPickerProps={{
-                disabledDays: {
-                  after: new Date(),
-                },
+            <Controller
+              name="hendelsesfakta.tid.tidspunkt"
+              control={control}
+              rules={{
+                required:
+                  timeType === 'Tidspunkt' &&
+                  specificDate !== null &&
+                  specificDate?.getHours() === 0 &&
+                  specificDate?.getMinutes() === 0 &&
+                  'Dette feltet er påkrevd',
               }}
+              render={({ field: { onChange, onBlur, value, name, ref } }) => (
+                <DayPickerInput
+                  classNames={ { ...whenDayPickerClassNames } }
+                  placeholder=""
+                  value={specificDate}
+                  onDayChange={handleSpecificDate}
+                  formatDate={formatDate}
+                  format={FORMAT}
+                  parseDate={parseDate}
+                  dayPickerProps={{
+                    disabledDays: {
+                      after: new Date(),
+                    },
+                  }}
+                />
+              )}
             />
+
             {specificDateError?.length > 0 && (
               <span className="navds-error-message navds-error-message--medium navds-label">
                 {specificDateError}
@@ -101,6 +199,20 @@ const TimeframeForm = ({ register, errors, setValue }: IProps) => {
             )}
           </div>
         )}
+
+          {timeType === 'Tidspunkt' && specificDate !== null && (
+                <TextField
+                  label="Tid for ulykken"
+                      className="spacer"
+                      onChange={handleKlokkeChange}
+                      value={specificTime || ''}
+                      error={
+                        errors?.hendelsesfakta?.tid?.tidspunktTime &&
+                        errors?.hendelsesfakta?.tid?.tidspunktTime.message
+                      }
+                    />
+
+            )}
 
         <div className="navds-radio navds-radio--medium">
           <input
@@ -123,28 +235,56 @@ const TimeframeForm = ({ register, errors, setValue }: IProps) => {
             Over en periode
           </label>
           {timeType === 'Periode' && (
-          <div>
-            <Label>Dato for ulykken</Label>
-            <DayPickerInput
-              placeholder=""
-              value={specificDate}
-              onDayChange={handleSpecificDate}
-              formatDate={formatDate}
-              format={FORMAT}
-              parseDate={parseDate}
-              dayPickerProps={{
-                disabledDays: {
-                  after: new Date(),
-                },
-              }}
-            />
-            {specificDateError?.length > 0 && (
-              <span className="navds-error-message navds-error-message--medium navds-label">
-                {specificDateError}
-              </span>
-            )}
-          </div>
-        )}
+            <div className="periode-container spacer">
+              <div>
+              <Label>Fra dag</Label>
+              <DayPickerInput
+                classNames={ fromDayPickerClassNames }
+                placeholder=""
+                value={specificFromDay}
+                onDayChange={handleSpecificFromDay}
+                formatDate={formatDate}
+                format={FORMAT}
+                parseDate={parseDate}
+                dayPickerProps={{
+                  toMonth: specificToDay,
+                  disabledDays: {
+                    after: new Date(),
+                  },
+                  modifiers,
+                  onDayClick: () => (toDayInput?.getInput().focus()),
+                }}
+              />
+              </div>
+              <div>
+              <Label>Til dag</Label>
+              <DayPickerInput
+                ref={ el => (setToDayInput(el))}
+                classNames={ toDayPickerClassNames }
+                placeholder=""
+                value={specificToDay}
+                onDayChange={handleSpecificToDay}
+                formatDate={formatDate}
+                format={FORMAT}
+                parseDate={parseDate}
+                dayPickerProps={{
+                  month: specificFromDay,
+                  fromMonth: specificFromDay,
+                  modifiers,
+                  disabledDays: {
+                    after: new Date(),
+                  },
+                }}
+              />
+              </div>
+
+              {specificRangeError?.length > 0 && (
+                <span className="navds-error-message navds-error-message--medium navds-label">
+                  {specificRangeError}
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="navds-radio navds-radio--medium">
