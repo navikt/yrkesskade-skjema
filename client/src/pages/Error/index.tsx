@@ -25,16 +25,18 @@ const Receipt = () => {
           </Heading>
           </Cell>
           <Cell xs={12} lg={6} className="grid-centered--lg">
-            <BodyLong spacing>
-              { error }
-            </BodyLong>
-            <BodyLong spacing>
-              Ullamco ut laboris irure excepteur velit nisi occaecat proident.
-              Amet aliquip dolor eu occaecat. Elit sunt occaecat excepteur ea.
-              Quis commodo adipisicing laborum minim. Culpa duis occaecat
-              adipisicing dolor sint cillum. Non in consequat ex esse exercitation
-              cillum Lorem voluptate officia.
-            </BodyLong>
+            { error ? (
+              <BodyLong spacing>
+                { error }
+              </BodyLong>) : (
+              <BodyLong spacing>
+                Ullamco ut laboris irure excepteur velit nisi occaecat proident.
+                Amet aliquip dolor eu occaecat. Elit sunt occaecat excepteur ea.
+                Quis commodo adipisicing laborum minim. Culpa duis occaecat
+                adipisicing dolor sint cillum. Non in consequat ex esse exercitation
+                cillum Lorem voluptate officia.
+              </BodyLong>
+            )}
         </Cell>
       </Grid>
     </ContentContainer>

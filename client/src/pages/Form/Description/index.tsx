@@ -29,7 +29,7 @@ const DescriptionFormPage = () => {
 
   const onSubmit = (data: any) => {
     actions.formUpdateAction(data);
-    navigate('/yrkesskade/skjema/oppsumering');
+    navigate('/yrkesskade/skjema/oppsummering');
   };
 
   const handleAbort = () => {

@@ -22,10 +22,15 @@ const [StateManagementProvider, useState] = createUseContext(() => {
       return;
     }
 
+    if (!state || !state.innmelder || !state.innmelder.norskIdentitetsnummer) {
+      return;
+    }
+
     if (
-      innloggetBruker.fnr !== state?.innmelder.norskIdentitetsnummer ||
-      selectedCompany.organisasjonsnummer !== state?.innmelder.paaVegneAv
+      innloggetBruker.fnr !== state.innmelder.norskIdentitetsnummer ||
+      selectedCompany.organisasjonsnummer !== state.innmelder.paaVegneAv
     ) {
+
       actions.clearFormAction({});
       // state slettet
       return;

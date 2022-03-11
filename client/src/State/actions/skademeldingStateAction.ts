@@ -1,4 +1,5 @@
 import { GlobalState } from 'little-state-machine';
+import { merge } from 'lodash';
 
 const oppdaterPaaVegneAv = (state: GlobalState, payload: string) => ({
   ...state,
@@ -55,10 +56,22 @@ const oppdaterSetSammeSomVirksomhetsAdresse = (state: GlobalState, payload: bool
   }
 })
 
+const oppdaterUlykkesstedAdresse = (state: GlobalState, payload: { adresselinje1: string, adresselinje2: string, adresselinje3: string, landkode: string}) => ({
+  ...state,
+  hendelsesfakta: {
+    ...state.hendelsesfakta,
+    ulykkessted: {
+      ...state.hendelsesfakta.ulykkessted,
+      adresse: merge(state.hendelsesfakta.ulykkessted.adresse, payload)
+    }
+  }
+})
+
 export {
   oppdaterPaaVegneAv,
   oppdaterInnmelder,
   oppdaterDekningsforholdOrganisasjon,
   oppdaterSkade,
-  oppdaterSetSammeSomVirksomhetsAdresse
+  oppdaterSetSammeSomVirksomhetsAdresse,
+  oppdaterUlykkesstedAdresse
 };

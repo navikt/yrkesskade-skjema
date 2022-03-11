@@ -22,7 +22,7 @@ import formUpdateAction from '../../../State/actions/formUpdateAction';
 import { useStateMachine } from 'little-state-machine';
 import alvorlighetsgrad from '../../../assets/Lists/alvorlighetsgrad';
 import _ from 'lodash';
-import { oppdaterSetSammeSomVirksomhetsAdresse } from '../../../State/actions/skademeldingStateAction';
+import { oppdaterSetSammeSomVirksomhetsAdresse, oppdaterUlykkesstedAdresse } from '../../../State/actions/skademeldingStateAction';
 
 interface IProps {
   register: any;
@@ -31,7 +31,7 @@ interface IProps {
 }
 const AccidentForm = ({ register, errors, control }: IProps) => {
   const { selectedAddress } = useSelectedCompany();
-  const { state, actions } = useStateMachine({ formUpdateAction, oppdaterSetSammeSomVirksomhetsAdresse });
+  const { state, actions } = useStateMachine({ formUpdateAction, oppdaterSetSammeSomVirksomhetsAdresse, oppdaterUlykkesstedAdresse });
 
   const { getValues, setValue } = useForm();
   const [sammeSomVirksomhetensAdresse, setSammeSomVirksomhetensAdresse] =
@@ -44,6 +44,17 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
 
     useEffect(() => {
       actions.oppdaterSetSammeSomVirksomhetsAdresse(sammeSomVirksomhetensAdresse);
+      if (sammeSomVirksomhetensAdresse) {
+        if (!selectedAddress) {
+          return;
+        }
+        actions.oppdaterUlykkesstedAdresse({
+          adresselinje1: selectedAddress.adresser ? selectedAddress.adresser[0] : '',
+          adresselinje2: selectedAddress.postnummer || '',
+          adresselinje3: selectedAddress.poststed || '',
+          landkode: selectedAddress.landkode || ''
+        })
+      }
       setValue('hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse', sammeSomVirksomhetensAdresse);
     }, [sammeSomVirksomhetensAdresse])
 
