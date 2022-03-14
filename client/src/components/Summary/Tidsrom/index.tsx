@@ -1,6 +1,7 @@
 // import { isNil } from "ramda";
 import { Label, BodyShort } from '@navikt/ds-react';
 import { format, parseISO } from 'date-fns';
+import { handleDateValue } from '../../../utils/date';
 interface IProps {
   data: any;
 }
@@ -11,15 +12,15 @@ const TidsromSummary = ({ data }: IProps) => {
   if (timetype === 'tidspunkt') {
     // force the date to a string with +''. Dum hack
     accidentTime = format(
-      parseISO(data.hendelsesfakta.tid.tidspunkt),
+      parseISO(data.hendelsesfakta.tid.tidspunkt + ''),
       'dd.MM.yyyy HH:mm'
     );
   } else if (timetype === 'periode') {
     accidentTime = `${format(
-      parseISO(data.hendelsesfakta.tid.periode.ƒra),
+      parseISO(data.hendelsesfakta.tid.periode.ƒra + ''),
       'dd.MM.yyyy HH:mm'
     )} - ${format(
-      parseISO(data.hendelsesfakta.tid.periode.til),
+      parseISO(data.hendelsesfakta.tid.periode.til + ''),
       'dd.MM.yyyy HH:mm'
     )}`;
   } else {

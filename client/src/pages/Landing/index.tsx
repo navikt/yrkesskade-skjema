@@ -47,7 +47,9 @@ const Landing = () => {
     if (organisationsLength !== 1) {
       if (organisationsLength > 1) {
         // MVP only supports 1 organisation
-        logMessage(`Innlogget bruker har tilgang til ${organisationsLength} organisasjoner.`);
+        logMessage(
+          `Innlogget bruker har tilgang til ${organisationsLength} organisasjoner.`
+        );
       }
 
       if (innloggetBruker.organisasjoner.length === 0) {
@@ -63,7 +65,9 @@ const Landing = () => {
     );
 
     if (!sjekkTilgangTilSkjema(roller)) {
-      logMessage(`Innlogget bruker har ikke nødvendige roller for valgt organisasjon`);
+      logMessage(
+        `Innlogget bruker har ikke nødvendige roller for valgt organisasjon`
+      );
       return false;
     }
 
@@ -76,6 +80,7 @@ const Landing = () => {
       innloggetBruker,
       toggles
     );
+    setContent(<NoAccessContent />);
     if (tilgangTilDigitaltskjema) {
       navigate('/yrkesskade/skjema');
     } else {
@@ -121,13 +126,13 @@ const NoAccessContent = () => {
     <Grid>
       <Cell xs={12} lg={6}>
         <Heading spacing level="3" size="medium">
-          Innmelding av yrkesskade
+          Du må fortsatt sende inn skademeldingen på papir.
         </Heading>
         <BodyLong className="spacer">
-          Det ser ut som du fortsatt må ta i bruk dagens løsning, men vi setter
-          stor pris på at du er interessert i den digitale løsningen. Velkommen
-          tilbake igjen ved neste anledning for å sjekke om din bruker er
-          inkludert. Takk for tålmodigheten.
+          De fleste arbeidsgivere har fortsatt ikke fått tilgang til den
+          digitale innsending. Vi jobber med å inkludere flere virksomheter
+          ukentlig. Vi ønsker deg velkommen tilbake senere. Takk for
+          tålmodigheten.
         </BodyLong>
         <BodyShort>
           <Button onClick={handleClick}>Tilbake til dagens løsning</Button>
