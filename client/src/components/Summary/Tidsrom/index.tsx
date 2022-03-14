@@ -1,7 +1,7 @@
 // import { isNil } from "ramda";
 import { Label, BodyShort } from '@navikt/ds-react';
 import { format, parseISO } from 'date-fns';
-import { handleDateValue } from '../../../utils/date';
+// import { handleDateValue } from '../../../utils/date';
 interface IProps {
   data: any;
 }
