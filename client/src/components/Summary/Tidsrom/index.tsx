@@ -1,22 +1,31 @@
 // import { isNil } from "ramda";
 import { Label, BodyShort } from '@navikt/ds-react';
-// import { format, parseISO } from 'date-fns';
-import { handleDateValue } from '../../../utils/date';
+import { format, parseISO } from 'date-fns';
 interface IProps {
   data: any;
 }
 const TidsromSummary = ({ data }: IProps) => {
-  let accidentTime: Date | string | undefined;
+  let accidentTime: String | undefined;
   const timetype = data.hendelsesfakta.tid.tidstype.toLowerCase();
   // console.log(timetype);
   if (timetype === 'tidspunkt') {
     // force the date to a string with +''. Dum hack
-    accidentTime = handleDateValue(data.hendelsesfakta.tid.tidspunkt);
+    accidentTime = format(
+      parseISO(data.hendelsesfakta.tid.tidspunkt),
+      'dd.MM.yyyy HH:mm'
+    );
   } else if (timetype === 'periode') {
-    accidentTime = `${handleDateValue(data.hendelsesfakta.tid.periode.fra)} - ${handleDateValue(data.hendelsesfakta.tid.periode.til)}`;
+    accidentTime = `${format(
+      parseISO(data.hendelsesfakta.tid.periode.ƒra),
+      'dd.MM.yyyy HH:mm'
+    )} - ${format(
+      parseISO(data.hendelsesfakta.tid.periode.til),
+      'dd.MM.yyyy HH:mm'
+    )}`;
   } else {
     accidentTime = 'Ukjent';
   }
+  console.log(accidentTime);
   return (
     <div className="answerOuterContainer">
       <div className="answerContainer">
