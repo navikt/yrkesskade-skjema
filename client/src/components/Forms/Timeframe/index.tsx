@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import { DateUtils } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
@@ -82,7 +82,7 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
   }
 
   useEffect(() => {
-    console.log('set specifict time and date', specificDate, specificTime);
+    // console.log('set specifict time and date', specificDate, specificTime);
     if (specificDate && specificTime && specificTime.length === 5) {
       const timeparts = specificTime.split(':');
       const newDate = new Date(
@@ -91,21 +91,21 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
         parseInt(timeparts[0]),
         parseInt(timeparts[1]));
 
-        console.log(newDate);
+        // console.log(newDate);
         setValue('hendelsesfakta.tid.tidspunkt', newDate);
     }
 
-  }, [specificTime, specificDate]);
+  }, [specificTime, specificDate, setValue]);
 
   useEffect(() => {
     if (timeType !== 'Periode') {
       return;
     }
-    console.log('set specific period dates');
+    // console.log('set specific period dates');
 
     setValue('hendelsesfakta.tid.periode.fra', specificFromDay?.toISOString());
     setValue('hendelsesfakta.tid.periode.til', specificToDay?.toISOString());
-  }, [timeType, specificFromDay, specificToDay]);
+  }, [timeType, specificFromDay, specificToDay, setValue]);
 
   const parseDate = (str: string, format: string) => {
     // sjekk at vi har skrevet noe og at noe er 10 tegn
@@ -123,14 +123,14 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
     return undefined;
   }
 
-  let specificDateError = '';
+  const specificDateError = useRef('');
   let specificRangeError = '';
 
   useEffect(() => {
     if (timeType === 'Tidspunkt' && typeof specificDate === undefined) {
-      specificDateError = 'Dette feltet er påkrevd';
+      specificDateError.current = 'Dette feltet er påkrevd';
     }
-  }, []);
+  }, [timeType, specificDate]);
 
   return (
     <>
@@ -192,9 +192,9 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
               )}
             />
 
-            {specificDateError?.length > 0 && (
+            {specificDateError.current?.length > 0 && (
               <span className="navds-error-message navds-error-message--medium navds-label">
-                {specificDateError}
+                {specificDateError.current}
               </span>
             )}
           </div>
