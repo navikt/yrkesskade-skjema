@@ -30,7 +30,32 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
 
   return (
     <>
-      <div>
+      <TextField
+        className="fnr"
+        {...register('skadelidt.norskIdentitetsnummer', {
+          required: 'Dette feltet er påkrevd',
+          minLength: 11,
+          maxLength: 11,
+          validate: (value: any) => {
+            const validationResult: any = validator.idnr(value);
+            if (validationResult.status === 'invalid') {
+              return 'Fyll ut et gyldig fødselsnummer';
+            } else if (value === innloggetBruker?.fnr) {
+              return 'Fødselsnummer kan ikke være likt ditt eget';
+            } else {
+              return true;
+            }
+          },
+        })}
+        label="Fyll ut fødselsnummer på den skadelidte"
+        type="number"
+        error={
+          errors?.skadelidt?.norskIdentitetsnummer &&
+          errors.skadelidt.norskIdentitetsnummer.message
+        }
+        data-testid="injured-id-number"
+      />
+      <div className="spacer">
         <Label>Hva er den skadelidtes stilling</Label>
         <Controller
           name="skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte"
@@ -39,6 +64,7 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
             .stillingstittelTilDenSkadelidte) && 'Dette feltet er påkrevd'  }}
           render={({ field: { onChange, onBlur, value, name, ref } }) => (
             <Select
+              components={{ DropdownIndicator:() => null, IndicatorSeparator:() => null }}
               defaultValue={{
                 value:
                   state.skadelidt.dekningsforhold
@@ -66,32 +92,6 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
           </span>
         )}
       </div>
-
-      <TextField
-        className="spacer fnr"
-        {...register('skadelidt.norskIdentitetsnummer', {
-          required: 'Dette feltet er påkrevd',
-          minLength: 11,
-          maxLength: 11,
-          validate: (value: any) => {
-            const validationResult: any = validator.idnr(value);
-            if (validationResult.status === 'invalid') {
-              return 'Fyll ut et gyldig fødselsnummer';
-            } else if (value === innloggetBruker?.fnr) {
-              return 'Fødselsnummer kan ikke være likt ditt eget';
-            } else {
-              return true;
-            }
-          },
-        })}
-        label="Fyll ut fødselsnummer på den skadelidte"
-        type="number"
-        error={
-          errors?.skadelidt?.norskIdentitetsnummer &&
-          errors.skadelidt.norskIdentitetsnummer.message
-        }
-        data-testid="injured-id-number"
-      />
     </>
   );
 };

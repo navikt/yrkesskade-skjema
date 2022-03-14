@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Select, RadioGroup, Table, Button } from '@navikt/ds-react';
 import { injuredBodypart, injuryType } from '../../../assets/injuryEnums';
-import { isEmpty, remove } from 'ramda';
+import { remove } from 'ramda';
+import {isEmpty} from 'lodash';
 import { AddCircle, MinusCircle } from '@navikt/ds-icons';
 import { useStateMachine } from 'little-state-machine';
 import antattSykefravaerTabellH from '../../../assets/Lists/antattSykefravaerTabellH';
@@ -41,6 +42,7 @@ const InjuryForm = ({
   };
 
   useEffect(() => {
+    console.log(isEmpty(injury));
     setValue('skade.skadedeDeler', injury);
   }, [injury, setValue]);
 
