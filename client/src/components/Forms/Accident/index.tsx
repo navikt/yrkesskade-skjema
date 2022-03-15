@@ -52,7 +52,7 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
           adresselinje1: selectedAddress.adresser ? selectedAddress.adresser[0] : '',
           adresselinje2: selectedAddress.postnummer || '',
           adresselinje3: selectedAddress.poststed || '',
-          landkode: selectedAddress.landkode || ''
+          land: selectedAddress.landkode || ''
         })
       }
       setValue('hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse', sammeSomVirksomhetensAdresse);

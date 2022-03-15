@@ -31,6 +31,7 @@ import {
   OrganisasjonDto,
 } from '../../api/yrkesskade';
 import clearFormAction from '../../State/actions/clearAction';
+import { logMessage } from '../../utils/logging';
 // import Description from '../Form/Description';
 
 const Info = () => {
@@ -43,6 +44,7 @@ const Info = () => {
   });
 
   const handleForward = () => {
+    logMessage('Bruker har startet innmelding');
     navigate('/yrkesskade/skjema/tidsrom');
   };
 

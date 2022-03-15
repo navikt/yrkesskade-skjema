@@ -9,3 +9,21 @@ export const logMessage = (message: string) => {
   }
   new LogService().log(messageObject);
 }
+
+export const logErrorMessage = (message: string) => {
+  const messageObject: LogMessage = {
+    message: message,
+    timestamp: new Date().toISOString(),
+    severity: 'ERROR'
+  }
+  new LogService().log(messageObject);
+}
+
+export const logWarningMessage = (message: string) => {
+  const messageObject: LogMessage = {
+    message: message,
+    timestamp: new Date().toISOString(),
+    severity: 'WARN'
+  }
+  new LogService().log(messageObject);
+}

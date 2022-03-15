@@ -40,6 +40,7 @@ import {
   SkademeldingApiControllerService,
 } from '../../api/yrkesskade';
 import clearFormAction from '../../State/actions/clearAction';
+import { logErrorMessage, logMessage } from '../../utils/logging';
 
 const Summary = () => {
   const { state, actions } = useStateMachine({
@@ -139,9 +140,11 @@ const Summary = () => {
       );
 
       actions.clearFormAction({});
+      logMessage('Skademelding innsendt');
       navigate('/yrkesskade/skjema/kvittering');
     } catch (error: any) {
       setError('Det skjedde en feil med innsendingen. Vi jobber med å løse problemet. Prøv igjen senere.');
+      logErrorMessage(`Innsending av skademelding feilet: ${error.message}`);
       navigate('/yrkesskade/skjema/feilmelding');
     }
   };
