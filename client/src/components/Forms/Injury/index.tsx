@@ -42,9 +42,23 @@ const InjuryForm = ({
   };
 
   useEffect(() => {
-    console.log(isEmpty(injury));
     setValue('skade.skadedeDeler', injury);
   }, [injury, setValue]);
+
+  useEffect(() => {
+    // sjekker om vi har minst en verdi i skadedeler listen
+    if (!isEmpty(injury)) {
+      // det har vi - hent ut siste og legg inn i select feltene
+      const siste = injury.length - 1;
+      const skade = injury[siste] as any;
+      setValue('skade.kroppsdelTabellD', skade.kroppsdelTabellD);
+      setValue('skade.skadeartTabellC', skade.skadeartTabellC);
+      removeInjury(siste);
+    }
+
+    setValue('skade.skadedeDeler', injury);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <>
@@ -52,7 +66,6 @@ const InjuryForm = ({
         <Select
           className="spacer"
           label="Hvor på kroppen er skaden"
-          description="Husk å trykke på legg til skade før du går videre"
           {...register('skade.kroppsdelTabellD', {
             required: isEmpty(injury) && 'Dette feltet er påkrevd',
           })}
@@ -94,7 +107,7 @@ const InjuryForm = ({
 
         <Button variant="tertiary" onClick={handleMultipleIjurys} data-testid="add-injury-button">
           <AddCircle />
-          Legg til skade
+          Legg til flere skader
         </Button>
 
         {!isEmpty(injury) && (
