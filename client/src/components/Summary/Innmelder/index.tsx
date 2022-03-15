@@ -33,15 +33,6 @@ const InnmelderSummary = ({ data }: IProps) => {
           <BodyShort>{data.innmelder.innmelderrolle}</BodyShort>
         </div>
       )}
-      {path(['innmelder', 'altinnrolleIDer'], data) !==
-        'undefined' && (
-        <div className="answerContainer">
-          <Label>Altinn rolleIDer</Label>
-          <BodyShort>
-            {data.innmelder.altinnrolleIDer.map((id: string) => id)}
-          </BodyShort>
-        </div>
-      )}
     </div>
   );
 };

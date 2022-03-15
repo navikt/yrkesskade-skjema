@@ -56,7 +56,7 @@ const oppdaterSetSammeSomVirksomhetsAdresse = (state: GlobalState, payload: bool
   }
 })
 
-const oppdaterUlykkesstedAdresse = (state: GlobalState, payload: { adresselinje1: string, adresselinje2: string, adresselinje3: string, landkode: string}) => ({
+const oppdaterUlykkesstedAdresse = (state: GlobalState, payload: { adresselinje1: string, adresselinje2: string, adresselinje3: string, land: string}) => ({
   ...state,
   hendelsesfakta: {
     ...state.hendelsesfakta,
