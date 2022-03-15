@@ -19,6 +19,7 @@ export type Hendelsesfakta = {
 export namespace Hendelsesfakta {
 
     export enum naarSkjeddeUlykken {
+        I_AVTALT_ARBEIDSTID = 'I avtalt arbeidstid',
         UTENFOR_ARBEIDSTID = 'Utenfor arbeidstid',
         UNDER_PERMISJON = 'Under permisjon',
         UNDER_FULL_SYKEMELDING = 'Under full sykemelding',
@@ -26,7 +27,6 @@ export namespace Hendelsesfakta {
         HVILENDE_VAKT = 'Hvilende vakt',
         UNDER_FRIVILLIG_ARBEID = 'Under frivillig arbeid',
         UNDER_REDNINGSARBEID_VAKTHOLD_ELLER_REDNINGS_VELSE = 'Under redningsarbeid, vakthold eller redningsøvelse',
-        I_AVTALT_ARBEIDSTID = 'I avtalt arbeidstid',
         ALTERNATIVENE_PASSER_IKKE = 'Alternativene passer ikke',
     }
 
