@@ -38,6 +38,17 @@ const InjuryFormPage = () => {
   const navigate = useNavigate();
 
   const onSubmit = (data: any) => {
+
+    // dersom brukeren har lagt til en verdi i skade feltene, men ikke lagt til i listen, gjøres dette automatisk
+    if (data.skade.kroppsdelTabellD && data.skade.skadeartTabellC) {
+      // legg til skade til tabell
+      const skade = { kroppsdelTabellD: data.skade.kroppsdelTabellD, skadeartTabellC: data.skade.skadeartTabellC };
+      data.skade.skadedeDeler.push(skade);
+      delete data.skade.kroppsdelTabellD;
+      delete data.skade.skadeartTabellC;
+    }
+
+
     actions.formUpdateAction(data);
     navigate('/yrkesskade/skjema/beskrivelse');
   };
