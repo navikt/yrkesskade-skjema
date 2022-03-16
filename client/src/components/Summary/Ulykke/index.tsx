@@ -6,7 +6,6 @@ interface IProps {
   data: any;
 }
 const UlykkeSummary = ({ data }: IProps) => {
-  console.log(data);
   let adresse: Adresse = {
     adresselinje1: '',
     adresselinje2: '',

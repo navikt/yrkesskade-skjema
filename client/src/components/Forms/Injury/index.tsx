@@ -6,6 +6,8 @@ import {isEmpty} from 'lodash';
 import { AddCircle, MinusCircle } from '@navikt/ds-icons';
 import { useStateMachine } from 'little-state-machine';
 import antattSykefravaerTabellH from '../../../assets/Lists/antattSykefravaerTabellH';
+import { oppdaterSkadedeDeler } from '../../../State/actions/skademeldingStateAction';
+import { SkadetDel } from '../../../api/yrkesskade';
 
 interface IProps {
   register: any;
@@ -21,14 +23,16 @@ const InjuryForm = ({
   reset,
   setValue,
 }: IProps) => {
-  const { state } = useStateMachine();
-  const [injury, setInjury] = useState<{}[]>(state.skade.skadedeDeler);
+  const { state, actions } = useStateMachine({ oppdaterSkadedeDeler });
+  const [injury, setInjury] = useState<SkadetDel[]>(state.skade.skadedeDeler as SkadetDel[]);
 
   const removeInjury = (index: number) => {
-    setInjury(remove(index, 1, injury));
+    const nyInjury = remove(index, 1, injury);
+    actions.oppdaterSkadedeDeler(nyInjury.map((val: SkadetDel) => ({kroppsdelTabellD: val.kroppsdelTabellD, skadeartTabellC: val.skadeartTabellC})));
+    setInjury(remove(index, 1, nyInjury));
   };
 
-  const handleMultipleIjurys = () => {
+  const handleMultipleInjuries = () => {
     const bodypart = getValues('skade.kroppsdelTabellD');
     const damage = getValues('skade.skadeartTabellC');
     if (!isEmpty(bodypart) && !isEmpty(damage)) {
@@ -54,9 +58,9 @@ const InjuryForm = ({
       setValue('skade.kroppsdelTabellD', skade.kroppsdelTabellD);
       setValue('skade.skadeartTabellC', skade.skadeartTabellC);
       removeInjury(siste);
+    } else {
+      setValue('skade.skadedeDeler', injury);
     }
-
-    setValue('skade.skadedeDeler', injury);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -105,7 +109,7 @@ const InjuryForm = ({
           )}
         </Select>
 
-        <Button variant="tertiary" onClick={handleMultipleIjurys} data-testid="add-injury-button">
+        <Button variant="tertiary" onClick={handleMultipleInjuries} data-testid="add-injury-button">
           <AddCircle />
           Legg til flere skader
         </Button>
@@ -130,6 +134,7 @@ const InjuryForm = ({
                       <Table.DataCell>
                         <Button
                           variant="tertiary"
+                          data-testid="skade-tabell-fjern"
                           onClick={() => removeInjury(index)}
                         >
                           <MinusCircle />

@@ -134,7 +134,6 @@ const Summary = () => {
   const navigate = useNavigate();
   const handleSending = async () => {
     try {
-      console.log('send skademelding: ', data);
       await SkademeldingApiControllerService.sendSkademelding(
         data as unknown as Skademelding
       );

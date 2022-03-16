@@ -8,13 +8,18 @@ interface IProps {
 const TidsromSummary = ({ data }: IProps) => {
   let accidentTime: String | undefined;
   const timetype = data.hendelsesfakta.tid.tidstype.toLowerCase();
-  // console.log(timetype);
+
   if (timetype === 'tidspunkt') {
-    // force the date to a string with +''. Dum hack
-    accidentTime = format(
-      parseISO(data.hendelsesfakta.tid.tidspunkt + ''),
-      'dd.MM.yyyy HH:mm'
-    );
+    const tidspunkt = data.hendelsesfakta.tid.tidspunkt;
+    if (tidspunkt instanceof Date) {
+      accidentTime = format(tidspunkt, 'dd.MM.yyyy HH:mm');
+    } else if (tidspunkt) {
+       // force the date to a string with +''. Dum hack
+      accidentTime = format(
+        parseISO(data.hendelsesfakta.tid.tidspunkt + ''),
+        'dd.MM.yyyy HH:mm'
+      );
+    }
   } else if (timetype === 'periode') {
     accidentTime = `${format(
       parseISO(data.hendelsesfakta.tid.periode.ƒra + ''),
@@ -26,7 +31,6 @@ const TidsromSummary = ({ data }: IProps) => {
   } else {
     accidentTime = 'Ukjent';
   }
-  console.log(accidentTime);
   return (
     <div className="answerOuterContainer">
       <div className="answerContainer">

@@ -4,17 +4,6 @@ import { GlobalState } from 'little-state-machine';
 import { merge } from 'lodash';
 
 export default function formUpdateAction(state: GlobalState, payload: any) {
-  console.log('state', state);
-  console.log('payload', payload);
-  // return {
-  //   ...state,
-  //   hendelsesfakta: { ...state.hendelsesfakta, ...payload.hendelsesfakta },
-  //   skade: { ...state.skade, ...payload.skade },
-  //   skadelidt: { ...state.skadelidt, ...payload.skadelidt },
-  //   innmelder: { ...state.innmelder, ...payload.innmelder }
-  // };
-  // uftør en deep merge pga en nested state
-  // return merge(get(state), payload);
   return {
     ...state,
     hendelsesfakta: merge(state.hendelsesfakta, payload.hendelsesfakta),

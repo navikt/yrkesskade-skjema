@@ -77,12 +77,10 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
   }
 
   const handleKlokkeChange = (event: any) => {
-    console.log('klokkeslett: ', event);
     setSpecificTime(event.target.value);
   }
 
   useEffect(() => {
-    // console.log('set specifict time and date', specificDate, specificTime);
     if (specificDate && specificTime && specificTime.length === 5) {
       const timeparts = specificTime.split(':');
       const newDate = new Date(
@@ -91,7 +89,6 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
         parseInt(timeparts[0]),
         parseInt(timeparts[1]));
 
-        // console.log(newDate);
         setValue('hendelsesfakta.tid.tidspunkt', newDate);
     }
 
@@ -101,7 +98,6 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
     if (timeType !== 'Periode') {
       return;
     }
-    // console.log('set specific period dates');
 
     setValue('hendelsesfakta.tid.periode.fra', specificFromDay?.toISOString());
     setValue('hendelsesfakta.tid.periode.til', specificToDay?.toISOString());
@@ -210,6 +206,7 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
                         errors?.hendelsesfakta?.tid?.tidspunktTime &&
                         errors?.hendelsesfakta?.tid?.tidspunktTime.message
                       }
+                      data-testid="timeframe-when-time"
                     />
 
             )}
