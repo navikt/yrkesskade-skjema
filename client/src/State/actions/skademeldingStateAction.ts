@@ -67,11 +67,20 @@ const oppdaterUlykkesstedAdresse = (state: GlobalState, payload: { adresselinje1
   }
 })
 
+const oppdaterSkadedeDeler = (state: GlobalState, payload: {kroppsdelTabellD: string, skadeartTabellC: string}[]) => ({
+  ...state,
+  skade: {
+    ...state.skade,
+    skadedeDeler: payload
+  }
+})
+
 export {
   oppdaterPaaVegneAv,
   oppdaterInnmelder,
   oppdaterDekningsforholdOrganisasjon,
   oppdaterSkade,
   oppdaterSetSammeSomVirksomhetsAdresse,
-  oppdaterUlykkesstedAdresse
+  oppdaterUlykkesstedAdresse,
+  oppdaterSkadedeDeler
 };

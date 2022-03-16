@@ -15,7 +15,7 @@ const BackButton = ({ url }: IProps) => {
   };
   return (
     <div className="backButton no-print">
-      <Button onClick={handleBack} variant="tertiary" size="small">
+      <Button onClick={handleBack} variant="tertiary" size="small" data-testid="tilbake-steg">
         <Left />
         Tilbake
       </Button>

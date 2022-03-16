@@ -65,10 +65,10 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
           <div>
             <Label spacing>Adresse</Label>
 
-            <BodyShort data-test-id="injury-street-address">
+            <BodyShort data-testid="injury-street-address">
               {selectedAddress.adresser && selectedAddress.adresser[0]}
             </BodyShort>
-            <BodyShort data-test-id="injury-postal-code-place">
+            <BodyShort data-testid="injury-postal-code-place">
               {selectedAddress.postnummer} {selectedAddress.poststed}
             </BodyShort>
           </div>
