@@ -20,7 +20,9 @@ describe('Skjema innsending', (): void => {
     network.intercept(endpointUrls.innlogget, 'innlogget.json').as('getInnlogget');
     network.intercept(endpointUrls.brukerinfo, 'brukerinfo/brukerinfo.json').as('brukerinfo');
     network.intercept(endpointUrls.brukerinfoOrganisasjon, 'brukerinfo/organisasjoner/910437127.json').as('getOrganisasjon');
+    network.intercept(endpointUrls.brukerinfoRoller, 'brukerinfo/roller.json').as('getRoller');
     network.intercept(endpointUrls.skademelding, 'skademelding.json').as('postSkademelding');
+    network.intercept(endpointUrls.print, 'skademelding-kopi.pdf').as('postPrintPdf');
    // network.intercept(endpointUrls.log, 'logResult.json').as('postLog');
 
     cy.window().then(win=> {
@@ -86,7 +88,7 @@ describe('Skjema innsending', (): void => {
       expect(location.pathname).to.contain('/skjema/kvittering');
     });
 
-    receipt.print().click();
+    receipt.print().click().wait('@postPrintPdf');
   });
 
   it('legg til skader, angre og fjern enkelte skader', () => {
