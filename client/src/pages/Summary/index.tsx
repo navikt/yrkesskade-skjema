@@ -103,11 +103,13 @@ const Summary = () => {
             Oppsummering
           </Heading>
           <BodyLong className="spacer">
-            Les gjennom oppsummeringen før du sender inn og bekrefter
-            opplysningene du har oppgitt. Hvis du trenger å gjøre endringer kan
-            du gjøre det helt frem til du har fullført innsendingen. Dersom du
-            med viten og vilje oppgir uriktige opplysninger, eller holder
-            tilbake informasjon som kan ha betydning for utbetalinger fra NAV,
+            Les gjennom oppsummeringen før du sender inn og bekrefter opplysningene du har oppgitt.
+            Hvis du trenger å gjøre endringer kan du gjøre det helt frem til du har fullført innsendingen.
+          </BodyLong>
+          <Label>Vi stoler på deg</Label>
+          <BodyLong spacing>
+            Dersom du med viten og vilje oppgir uriktige opplysninger,
+            eller holder tilbake informasjon som kan ha betydning for utbetalinger fra NAV,
             kan dette medføre en politianmeldelse.
           </BodyLong>
 
