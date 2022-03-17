@@ -25,6 +25,7 @@ import {
   oppdaterInnmelder,
   oppdaterPaaVegneAv,
   oppdaterDekningsforholdOrganisasjon,
+  oppdaterRollerForOrganisasjon,
 } from '../../State/actions/skademeldingStateAction';
 import {
   BrukerinfoControllerService,
@@ -40,7 +41,8 @@ const Info = () => {
     oppdaterPaaVegneAv,
     oppdaterInnmelder,
     oppdaterDekningsforholdOrganisasjon,
-    clearFormAction
+    clearFormAction,
+    oppdaterRollerForOrganisasjon
   });
 
   const handleForward = () => {
@@ -82,6 +84,8 @@ const Info = () => {
         return;
       }
 
+      const roller = await BrukerinfoControllerService.hentRoller(organisasjon.organisasjonsnummer);
+
       const adresse =
         organisasjon.beliggenhetsadresse || organisasjon.forretningsadresse;
       setSelectedAddress(adresse);
@@ -91,6 +95,10 @@ const Info = () => {
         organisasjonsnummer: organisasjon.organisasjonsnummer as string,
         navn: organisasjon.navn || '',
       });
+      actions.oppdaterRollerForOrganisasjon(
+        roller
+        .filter(altinnRolle => altinnRolle.RoleDefinitionId)
+        .map(altinnRolle => altinnRolle.RoleDefinitionId ? altinnRolle.RoleDefinitionId.toString() : ''));
     });
   };
 

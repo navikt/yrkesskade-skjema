@@ -1,10 +1,10 @@
-apiVersion: "nais.io/v1alpha1"
-kind: "Application"
+apiVersion: nais.io/v1alpha1
+kind:"Application
 metadata:
-  name: "yrkesskade-skjema"
-  namespace: "yrkesskade"
+  name: yrkesskade-skjema
+  namespace: yrkesskade
   labels:
-    "team": "yrkesskade"
+    team: yrkesskade
 spec:
   image: {{image}}
   port: 3000
@@ -29,7 +29,8 @@ spec:
   accessPolicy:
     outbound:
        rules:
-        - application: "yrkesskade-melding-api"
+        - application: yrkesskade-melding-api
+        - application: yrkesskade-dokgen
   ingresses:
   {{#each ingresses as |url|}}
     - {{url}}

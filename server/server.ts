@@ -16,6 +16,7 @@ import { configureAuthenticationAndVerification } from './routes/authenticate';
 import { configureLoggingEndpoint } from './routes/logging';
 import bodyParser from 'body-parser'
 import { logInfo }from '@navikt/yrkesskade-logging'
+import { configurePrintEndpoint } from './routes/print';
 
 const BUILD_PATH = path.join(__dirname, '../build');
 const PORT = process.env.PORT || 3000;
@@ -48,6 +49,9 @@ configureAllFeatureTogglesEndpoint(app);
 
 // enpoint to send frontend logs to remote logging services
 configureLoggingEndpoint(app);
+
+// print endpoint
+configurePrintEndpoint(app);
 
 // autentisering og verifikasjon
 configureAuthenticationAndVerification(app);

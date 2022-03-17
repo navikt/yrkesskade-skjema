@@ -11,6 +11,7 @@ import { injuredForm } from "../support/selectors/injured-form.selectors";
 import { accidentForm } from "../support/selectors/accident-form.selectors";
 import { injuryForm } from "../support/selectors/injury-form.selectors";
 import { summary } from "../support/selectors/summary.selectors";
+import { receipt } from "../support/selectors/receipt.selectors";
 
 describe('Skjema innsending', (): void => {
 
@@ -19,15 +20,18 @@ describe('Skjema innsending', (): void => {
     network.intercept(endpointUrls.innlogget, 'innlogget.json').as('getInnlogget');
     network.intercept(endpointUrls.brukerinfo, 'brukerinfo/brukerinfo.json').as('brukerinfo');
     network.intercept(endpointUrls.brukerinfoOrganisasjon, 'brukerinfo/organisasjoner/910437127.json').as('getOrganisasjon');
+    network.intercept(endpointUrls.brukerinfoRoller, 'brukerinfo/roller.json').as('getRoller');
     network.intercept(endpointUrls.skademelding, 'skademelding.json').as('postSkademelding');
+    network.intercept(endpointUrls.print, 'skademelding-kopi.pdf').as('postPrintPdf');
    // network.intercept(endpointUrls.log, 'logResult.json').as('postLog');
 
     cy.window().then(win=> {
       win.sessionStorage.removeItem('__LSM__');
+
+      cy.visit('');
+      cy.location().should('to.be', 'http://localhost:3001/yrkesskade/')
     });
 
-    cy.visit('');
-    cy.location().should('to.be', 'http://localhost:3001/yrkesskade/')
   });
 
   it('normal flyt - ingen avvik', () => {
@@ -83,6 +87,8 @@ describe('Skjema innsending', (): void => {
     cy.location().should((location) => {
       expect(location.pathname).to.contain('/skjema/kvittering');
     });
+
+    receipt.print().click().wait('@postPrintPdf');
   });
 
   it('legg til skader, angre og fjern enkelte skader', () => {

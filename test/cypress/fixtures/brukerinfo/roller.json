@@ -1,0 +1,16 @@
+[
+  {
+    "RoleId": null,
+    "RoleType": "Altinn",
+    "RoleDefinitionId": 11,
+    "RoleName": "Reporter/sender",
+    "RoleDescription": "Access to selected forms and services"
+  },
+  {
+    "RoleId": "491069",
+    "RoleType": "External",
+    "RoleDefinitionId": 191,
+    "RoleName": "Bestyrende Leder",
+    "RoleDescription": "Bestyrende Leder"
+  }
+]
