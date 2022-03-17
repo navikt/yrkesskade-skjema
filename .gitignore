@@ -106,3 +106,6 @@ build
 
 # OS Specific files
 .DS_Store
+
+# Cypress
+test/cypress/downloads/*

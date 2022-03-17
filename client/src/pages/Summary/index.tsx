@@ -1,4 +1,3 @@
-// import { useState } from 'react';
 import './summary.less';
 import {
   Heading,
@@ -8,9 +7,8 @@ import {
   Cell,
   Accordion,
   BodyLong,
+  Label,
 } from '@navikt/ds-react';
-import { Print } from '@navikt/ds-icons';
-
 import SystemHeader from '../../components/SystemHeader';
 import BackButton from '../../components/BackButton';
 import InnmelderSummary from '../../components/Summary/Innmelder';
@@ -20,12 +18,7 @@ import UlykkeSummary from '../../components/Summary/Ulykke';
 import SkadeSummary from '../../components/Summary/Skade';
 import BeskrivelseSummary from '../../components/Summary/Beskrivelse';
 import { useNavigate } from 'react-router-dom';
-// import getTexts from '../../utils/getTexts.js';
-// import { IGeneralForm } from '../../Interfaces/generalForm';
 import StepIndicator from '../../components/StepIndicator';
-// import formUpdateAction from '../../State/formUpdateAction';
-
-// import { ISteps } from '../../Interfaces/steps';
 
 import { useStateMachine } from 'little-state-machine';
 import { useSelectedCompany } from '../../context/SelectedCompanyContext';
@@ -41,6 +34,8 @@ import {
 } from '../../api/yrkesskade';
 import clearFormAction from '../../State/actions/clearAction';
 import { logErrorMessage, logMessage } from '../../utils/logging';
+import { Print } from '@navikt/ds-icons';
+import { useFeatureToggles } from '../../context/FeatureTogglesContext';
 
 const Summary = () => {
   const { state, actions } = useStateMachine({
@@ -50,6 +45,7 @@ const Summary = () => {
   });
   const { selectedCompany } = useSelectedCompany();
   const { setError } = useErrorMessageContext();
+  const { toggles } = useFeatureToggles();
 
   useEffect(() => {
     // oppdater state med verdier som ikke har blitt satt av skjema
@@ -65,72 +61,8 @@ const Summary = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCompany.organisasjonsnummer]);
 
-  const handlePrintClicked = () => {
-    window.print()
-  }
-
   const data = state;
-  // const data = {
-  //   innmelder: {
-  //     norskIdentitetsnummer: 20089408750,
-  //     paaVegneAv: 'paaVegneAv',
-  //     innmelderrolle: 'innmelderrolle',
-  //     altinnrolleIDer: ['altinnrolleIDer', 'altinnrolleIDer'],
-  //   },
-  //   skadelidt: {
-  //     norskIdentitetsnummer: 'norskIdentitetsnummer',
-  //     dekningsforhold: {
-  //       organisasjonsnummer: 'organisasjonsnummer',
-  //       navnPaaVirksomheten: 'navnPaaVirksomheten',
-  //       stillingstittelTilDenSkadelidte: 'stillingstittelTilDenSkadelidte',
-  //       rolletype: 'rolletype',
-  //     },
-  //   },
-  //   skade: {
-  //     alvorlighetsgrad: 'alvorlighetsgrad',
-  //     skadedeDeler: [
-  //       {
-  //         kroppsdelTabellD: 'kroppsdelTabellD',
-  //         skadeartTabellC: 'skadeartTabellC',
-  //       },
-  //       {
-  //         kroppsdelTabellD: 'kroppsdelTabellD',
-  //         skadeartTabellC: 'skadeartTabellC',
-  //       },
-  //       {
-  //         kroppsdelTabellD: 'kroppsdelTabellD',
-  //         skadeartTabellC: 'skadeartTabellC',
-  //       },
-  //     ],
-  //     antattSykefravaerTabellH: 'antattSykefravaerTabellH',
-  //   },
-  //   hendelsesfakta: {
-  //     tid: {
-  //       tidspunkt: new Date(),
-  //       periode: {
-  //         fra: new Date(),
-  //         til: new Date(),
-  //       },
-  //       ukjent: false,
-  //       tidstype: 'periode',
-  //     },
-  //     naarSkjeddeUlykken: 'naarSkjeddeUlykken',
-  //     hvorSkjeddeUlykken: 'hvorSkjeddeUlykken',
-  //     ulykkessted: {
-  //       sammeSomVirksomhetensAdresse: false,
-  //       adresse: {
-  //         adresselinje1: 'adresselinje1',
-  //         adresselinje2: 'adresselinje2',
-  //         adresselinje3: 'adresselinje3',
-  //         land: 'land',
-  //       },
-  //     },
-  //     aarsakUlykkeTabellAogE: ['årsak1', 'årsak2', 'årsak3'],
-  //     bakgrunnsaarsakTabellBogG: ['bakgrunn1', 'bakgrunn2', 'bakgrunn3'],
-  //     utfyllendeBeskrivelse: 'utfyllende bla bla bla',
-  //     stedsbeskrivelseTabellF: 'Stedsgreie streng lalala',
-  //   },
-  // };
+
   const navigate = useNavigate();
   const handleSending = async () => {
     try {
@@ -138,9 +70,9 @@ const Summary = () => {
         data as unknown as Skademelding
       );
 
-      actions.clearFormAction({});
       logMessage('Skademelding innsendt');
-      navigate('/yrkesskade/skjema/kvittering');
+      navigate('/yrkesskade/skjema/kvittering', { state: data as unknown as Skademelding });
+      actions.clearFormAction({});
     } catch (error: any) {
       setError('Det skjedde en feil med innsendingen. Vi jobber med å løse problemet. Prøv igjen senere.');
       logErrorMessage(`Innsending av skademelding feilet: ${error.message}`);
@@ -151,6 +83,11 @@ const Summary = () => {
     actions.clearFormAction({});
     window.location.href = 'https://nav.no';
   };
+
+  const handlePrintClicked = () => {
+    window.print()
+  }
+
   return (
     <ContentContainer>
       <SystemHeader />
@@ -171,13 +108,23 @@ const Summary = () => {
             du gjøre det helt frem til du har fullført innsendingen. Dersom du
             med viten og vilje oppgir uriktige opplysninger, eller holder
             tilbake informasjon som kan ha betydning for utbetalinger fra NAV,
-            kan dette medføre en politianmeldelse. Ønsker du kopi av
-            skademeldingen kan du skrive den ut her.
+            kan dette medføre en politianmeldelse.
           </BodyLong>
-          <Button className="no-print" onClick={handlePrintClicked} variant="tertiary">
-            <Print />
-            Skriv ut en kopi av skademeldingen
-          </Button>
+
+          { !toggles.ER_IKKE_PROD && (
+            <>
+              <Label>Skriv ut</Label>
+              <BodyLong spacing>
+                Ønsker du kopi av
+                skademeldingen kan du skrive den ut her.
+              </BodyLong>
+              <Button className="no-print" onClick={handlePrintClicked} variant="tertiary">
+                <Print />
+                Skriv ut en kopi av skademeldingen
+              </Button>
+            </>
+          ) }
+
           <Accordion className="spacer">
             <Accordion.Item renderContentWhenClosed={true}>
               <Accordion.Header>Om deg</Accordion.Header>

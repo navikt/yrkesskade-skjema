@@ -21,13 +21,20 @@ const TidsromSummary = ({ data }: IProps) => {
       );
     }
   } else if (timetype === 'periode') {
-    accidentTime = `${format(
-      parseISO(data.hendelsesfakta.tid.periode.ƒra + ''),
-      'dd.MM.yyyy HH:mm'
-    )} - ${format(
-      parseISO(data.hendelsesfakta.tid.periode.til + ''),
-      'dd.MM.yyyy HH:mm'
-    )}`;
+    const fraDato = data.hendelsesfakta.tid.periode.fra;
+    const tilDato = data.hendelsesfakta.tid.periode.til;
+
+    if (fraDato instanceof Date && tilDato instanceof Date) {
+      accidentTime = `${format(fraDato, 'dd.MM.yyyy')} - ${format(tilDato, 'dd.MM.yyyy')}`
+    } else if (fraDato && tilDato) {
+      accidentTime = `${format(
+        parseISO(fraDato + ''),
+        'dd.MM.yyyy HH:mm'
+      )} - ${format(
+        parseISO(tilDato + ''),
+        'dd.MM.yyyy HH:mm'
+      )}`;
+    }
   } else {
     accidentTime = 'Ukjent';
   }

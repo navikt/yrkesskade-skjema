@@ -44,6 +44,14 @@ module.exports = function (app) {
   )
 
   app.use(
+    '/print',
+    createProxyMiddleware({
+      target: `http://${host}:3000/`,
+      changeOrigin: true
+    })
+  )
+
+  app.use(
     '/api',
     createProxyMiddleware({
       target: `http://${host}:3000/`,

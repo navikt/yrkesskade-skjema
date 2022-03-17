@@ -21,6 +21,17 @@ const oppdaterInnmelder = (
   },
 });
 
+const oppdaterRollerForOrganisasjon = (
+  state: GlobalState,
+  payload: string[]
+) => ({
+  ...state,
+  innmelder: {
+    ...state.innmelder,
+    altinnrolleIDer: payload
+  }
+})
+
 const oppdaterDekningsforholdOrganisasjon = (
   state: GlobalState,
   payload: { organisasjonsnummer: string, navn: string }
@@ -78,6 +89,7 @@ const oppdaterSkadedeDeler = (state: GlobalState, payload: {kroppsdelTabellD: st
 export {
   oppdaterPaaVegneAv,
   oppdaterInnmelder,
+  oppdaterRollerForOrganisasjon,
   oppdaterDekningsforholdOrganisasjon,
   oppdaterSkade,
   oppdaterSetSammeSomVirksomhetsAdresse,

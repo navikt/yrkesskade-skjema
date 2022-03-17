@@ -13,5 +13,7 @@ env:
   value: "dev-gcp:yrkesskade:yrkesskade-melding-api"
 - name: API_URL
   value: https://yrkesskade-melding-api.dev.intern.nav.no
+- name: DOKGEN_URL
+  value: https://yrkesskade-dokgen.dev.intern.nav.no
 externals:
   - "dekoratoren.dev.nav.no"
