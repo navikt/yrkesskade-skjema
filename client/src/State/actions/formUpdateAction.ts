@@ -4,6 +4,8 @@ import { GlobalState } from 'little-state-machine';
 import { merge } from 'lodash';
 
 export default function formUpdateAction(state: GlobalState, payload: any) {
+  console.log('form update action');
+
   return {
     ...state,
     hendelsesfakta: merge(state.hendelsesfakta, payload.hendelsesfakta),

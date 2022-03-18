@@ -14,11 +14,7 @@ const oppdaterInnmelder = (
   payload: { norskIdentitetsnummer: number; innmelderrolle: string }
 ) => ({
   ...state,
-  innmelder: {
-    ...state.innmelder,
-    norskIdentitetsnummer: payload.norskIdentitetsnummer,
-    innmelderrolle: payload.innmelderrolle,
-  },
+  innmelder: merge(state.innmelder, payload)
 });
 
 const oppdaterRollerForOrganisasjon = (
@@ -53,7 +49,7 @@ const oppdaterSkade = (
   payload: any // sett rett type
 ) => ({
   ...state,
-  skade: payload,
+  skade: merge(state.skade, payload),
 });
 
 const oppdaterSetSammeSomVirksomhetsAdresse = (state: GlobalState, payload: boolean) => ({

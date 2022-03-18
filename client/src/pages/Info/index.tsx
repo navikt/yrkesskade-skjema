@@ -61,11 +61,13 @@ const Info = () => {
 
   useEffect(() => {
     if (innloggetBruker?.fnr) {
-      settValgtVirksomhet(innloggetBruker.organisasjoner[0]);
       actions.oppdaterInnmelder({
         norskIdentitetsnummer: innloggetBruker.fnr,
         innmelderrolle: 'Virksomhetsrepresentant',
       });
+
+      settValgtVirksomhet(innloggetBruker.organisasjoner[0]);
+
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
