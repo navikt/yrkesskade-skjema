@@ -3,10 +3,10 @@ import {
   ContentContainer,
   Grid,
   Cell,
-  BodyLong,
   Label,
   BodyShort,
   Button,
+  Alert,
 } from '@navikt/ds-react';
 import SystemHeader from '../../components/SystemHeader';
 import StepIndicator from '../../components/StepIndicator';
@@ -16,6 +16,7 @@ import { logErrorMessage } from '../../utils/logging';
 import { useLocation } from 'react-router';
 import { Skademelding } from '../../api/yrkesskade';
 import { useFeatureToggles } from '../../context/FeatureTogglesContext';
+import { format } from 'date-fns';
 
 const Receipt = () => {
   const { state } = useLocation();
@@ -53,17 +54,10 @@ const Receipt = () => {
         <Cell xs={12} lg={5}>
           <div className="cellContentContainer">
             <div>
-              <Heading
-                size="2xlarge"
-                className="pageNumberTitle spacer"
-                data-number="7"
-              >
-                Kvittering
-              </Heading>
               <Heading size="large" className="spacer">
                 Takk for innmeldingen!
               </Heading>
-              <BodyLong className="spacer">Info info info</BodyLong>
+              <Alert variant="success" className="spacer">Innmeldingen din om yrkesskade er motatt { format(new Date(), 'dd.MM.yyyy')}</Alert>
               { toggles.ER_IKKE_PROD && (
                 <>
                   <Label>Skriv ut</Label>
