@@ -27,21 +27,16 @@ const [StateManagementProvider, useState] = createUseContext(() => {
     }
 
     if (
-      innloggetBruker.fnr !== state.innmelder.norskIdentitetsnummer ||
-      selectedCompany.organisasjonsnummer !== state.innmelder.paaVegneAv
+      (state.innmelder.norskIdentitetsnummer && (innloggetBruker.fnr !== state.innmelder.norskIdentitetsnummer)) ||
+      (state.innmelder.paaVegneAv && (selectedCompany.organisasjonsnummer !== state.innmelder.paaVegneAv))
     ) {
-
       actions.clearFormAction({});
       // state slettet
       return;
     }
   }, [
-    innloggetBruker,
-    innloggetBruker?.fnr,
-    selectedCompany,
-    selectedCompany.organisasjonsnummer,
-    state?.innmelder.norskIdentitetsnummer,
-    state?.innmelder.paaVegneAv,
+    state.innmelder.norskIdentitetsnummer,
+    state.innmelder.paaVegneAv,
   ]);
 
   return {};
