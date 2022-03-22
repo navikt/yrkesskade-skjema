@@ -1,4 +1,7 @@
-import { TextField, Fieldset } from '@navikt/ds-react';
+import { TextField, Fieldset, Select } from '@navikt/ds-react';
+import { KodeverdiDto } from '../../../api/kodeverk';
+import { useAppSelector } from '../../../core/hooks/state.hooks';
+import { selectKodeverkType } from '../../../core/reducers/kodeverk.reducer';
 import './Address.less';
 
 interface IProps {
@@ -7,6 +10,7 @@ interface IProps {
   control: any;
 }
 const Address = ({ register, errors, control }: IProps) => {
+  const landkoder = useAppSelector(state => selectKodeverkType(state, 'landkoder'));
 
   return (
     <Fieldset legend="Fyll ut adressen hvor ulykken skjedde">
@@ -55,19 +59,28 @@ const Address = ({ register, errors, control }: IProps) => {
           }
         />
       </div>
-      <TextField
+      { landkoder && <Select
           className="country spacer"
           {...register('hendelsesfakta.ulykkessted.adresse.land', {
             required: 'Dette feltet er påkrevd',
           })}
           label="Land"
-          type="text"
           data-testid="injury-location-country"
           error={
             errors?.hendelsesfakta?.ulykkessted?.adresse.land &&
             errors?.hendelsesfakta?.ulykkessted?.adresse.land.message
           }
-        />
+        >
+        { [...landkoder].sort((a, b) => {
+           const verdiA = a.verdi || 'ukjent';
+           const verdiB = b.verdi || 'ukjent';
+
+          return verdiA.localeCompare(verdiB);
+        }).map((landkode: KodeverdiDto, index: number) =>
+          <option key={index} value={landkode.kode}>{landkode.verdi}</option>)
+        }
+        </Select>
+      }
     </Fieldset>
   );
 };

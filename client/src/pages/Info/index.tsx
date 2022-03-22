@@ -33,6 +33,9 @@ import {
 } from '../../api/yrkesskade';
 import clearFormAction from '../../State/actions/clearAction';
 import { logMessage } from '../../utils/logging';
+import { useAppDispatch } from '../../core/hooks/state.hooks';
+import { KodeverkControllerService } from '../../api/kodeverk';
+import { addKodeverk } from '../../core/actions/kodeverk.actions';
 // import Description from '../Form/Description';
 
 const Info = () => {
@@ -59,6 +62,8 @@ const Info = () => {
   const { selectedCompany, setSelectedCompany, setSelectedAddress } =
     useSelectedCompany();
 
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
     if (innloggetBruker?.fnr) {
       actions.oppdaterInnmelder({
@@ -75,6 +80,16 @@ const Info = () => {
     innloggetBruker?.organisasjoner,
     setSelectedCompany,
   ]);
+
+  useEffect(() => {
+    hentLandkoder();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const hentLandkoder = async () => {
+    const landkoder = await KodeverkControllerService.hentKodeverdiForTypeOgKategori('landkoder', 'alle');
+    dispatch(addKodeverk({ 'landkoder': landkoder.kodeverdier || []}));
+  }
 
   const settValgtVirksomhet = (virksomhet: Organisasjon) => {
     setSelectedCompany(virksomhet);

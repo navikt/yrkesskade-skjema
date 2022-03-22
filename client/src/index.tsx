@@ -2,17 +2,24 @@ import React from "react";
 import {render} from "react-dom";
 import "./index.less";
 import App from "./App";
-import { BrowserRouter } from "react-router-dom";
-import { OpenAPI } from "./api/yrkesskade";
+import { BrowserRouter } from 'react-router-dom';
+import { OpenAPI as SkjemaOpenApi } from './api/yrkesskade';
+import { OpenAPI as KodeverkOpenApi } from './api/kodeverk';
+import { Provider } from 'react-redux';
+import store from './core/store';
 // import reportWebVitals from "./reportWebVitals";
 
-OpenAPI.BASE = '';
+const API_BASE = '';
+SkjemaOpenApi.BASE = API_BASE;
+KodeverkOpenApi.BASE = '/kodeverk';
 
 render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );
