@@ -199,7 +199,7 @@ const Info = () => {
               <BodyShort>
                 Oppdager du problemer eller har spørsmål kan du ta kontakt på:
               </BodyShort>
-              <BodyShort className="">+47 920 36 454</BodyShort>
+              <BodyShort className="">+47 55 55 33 36</BodyShort>
             </div>
             <div className="buttonSection spacer buttonGroup">
               <Button
