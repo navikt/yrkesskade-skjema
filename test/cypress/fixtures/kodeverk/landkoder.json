@@ -1,0 +1,24 @@
+{
+  "kodeverdier": [
+    { "kode": "NOR", "spraak": "nb", "verdi": "NORGE" },
+    { "kode": "GBR", "spraak": "nb", "verdi": "STORBRITANNIA" },
+    { "kode": "NZL", "spraak": "nb", "verdi": "NEW ZEALAND" },
+    { "kode": "FJI", "spraak": "nb", "verdi": "FIJI" },
+    { "kode": "PNG", "spraak": "nb", "verdi": "PAPUA NY-GUINEA" },
+    { "kode": "GLP", "spraak": "nb", "verdi": "GUADELOUPE" },
+    { "kode": "STP", "spraak": "nb", "verdi": "SAO TOME OG PRINCIPE" },
+    { "kode": "MHL", "spraak": "nb", "verdi": "MARSHALLØYENE" },
+    { "kode": "WLF", "spraak": "nb", "verdi": "WALLIS OG FUTUNA" },
+    { "kode": "CUB", "spraak": "nb", "verdi": "CUBA" },
+    { "kode": "SDN", "spraak": "nb", "verdi": "SUDAN" },
+    { "kode": "GMB", "spraak": "nb", "verdi": "GAMBIA" },
+    { "kode": "CUW", "spraak": "nb", "verdi": "CURACAO" },
+    { "kode": "MYS", "spraak": "nb", "verdi": "MALAYSIA" },
+    { "kode": "MYT", "spraak": "nb", "verdi": "MAYOTTE" },
+    { "kode": "TWN", "spraak": "nb", "verdi": "TAIWAN" },
+    { "kode": "POL", "spraak": "nb", "verdi": "POLEN" },
+    { "kode": "SUR", "spraak": "nb", "verdi": "SURINAM" },
+    { "kode": "OMN", "spraak": "nb", "verdi": "OMAN" },
+    { "kode": "ARE", "spraak": "nb", "verdi": "DE FORENTE ARABISKE EMIRATER" }
+  ]
+}

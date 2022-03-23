@@ -6,5 +6,7 @@ export const endpointUrls = {
   brukerinfoRoller: '**/api/*/brukerinfo/organisasjoner/*/roller',
   toggle: '**/yrkesskade/toggles',
   log: '**/log',
-  print: '**/print*'
+  print: '**/print*',
+  landkoder: '**/api/*/kodeverk/typer/landkoder/kategorier/*/kodeverdier',
+  tidsromkoder: '**/api/*/kodeverk/typer/tidsrom/kategorier/*/kodeverdier'
 };

@@ -42,6 +42,7 @@ app.get([`/internal/isAlive`, `/internal/isReady`], (req: any, res: any) =>
 
 // api endepunkt med proxy til backend
 configureApiEndpoint(app, '/api', config.API_URL);
+configureApiEndpoint(app, '/kodeverk', config.KODEVERK_URL);
 
 // feature toggle endpoints
 configureFeatureTogglesEndpoint(app);

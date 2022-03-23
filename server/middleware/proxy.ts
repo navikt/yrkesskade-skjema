@@ -1,6 +1,4 @@
-import { ClientRequest, IncomingMessage, ServerResponse } from 'http';
 import { createProxyMiddleware, fixRequestBody } from 'http-proxy-middleware';
-import { Request } from 'express';
 import { exchangeToken } from '../tokenx';
 import {
   logError,
@@ -18,6 +16,9 @@ const errorHandler = (err, req, res) => {
 
 export const doProxy = (path: string, target: string) => {
   return createProxyMiddleware(path, {
+    pathRewrite: {
+      '^/kodeverk/': '/'
+    },
     changeOrigin: true,
     secure: false,
     logLevel: process.env.ENV === 'prod' ? 'info' : 'info',
