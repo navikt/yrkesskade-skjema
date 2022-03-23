@@ -23,6 +23,8 @@ describe('Skjema innsending', (): void => {
     network.intercept(endpointUrls.brukerinfoRoller, 'brukerinfo/roller.json').as('getRoller');
     network.intercept(endpointUrls.skademelding, 'skademelding.json').as('postSkademelding');
     network.intercept(endpointUrls.print, 'skademelding-kopi.pdf').as('postPrintPdf');
+    network.intercept(endpointUrls.landkoder, 'kodeverk/landkoder.json').as('getLandkoder');
+    network.intercept(endpointUrls.tidsromkoder, 'kodeverk/tidsromkoder.json').as('getTidsromkoder');
    // network.intercept(endpointUrls.log, 'logResult.json').as('postLog');
 
     cy.window().then(win=> {

@@ -1,0 +1,41 @@
+{
+  "kodeverdier": [
+    {
+      "kode": "alternativenePasserIkke",
+      "spraak": "nb",
+      "verdi": "Alternativene passer ikke"
+    },
+    {
+      "kode": "fritidPrivatAktivitet",
+      "spraak": "nb",
+      "verdi": "Fritid/ privat aktivitet"
+    },
+    { "kode": "hvilendeVakt", "spraak": "nb", "verdi": "Hvilende vakt" },
+    {
+      "kode": "iAvtaltArbeidstid",
+      "spraak": "nb",
+      "verdi": "I avtalt arbeidstid"
+    },
+    {
+      "kode": "underFrivilligArbeid",
+      "spraak": "nb",
+      "verdi": "Under frivillig arbeid"
+    },
+    {
+      "kode": "underFullSykemelding",
+      "spraak": "nb",
+      "verdi": "Under full sykemelding"
+    },
+    { "kode": "underPermisjon", "spraak": "nb", "verdi": "Under Permisjon" },
+    {
+      "kode": "underRedningsarbeid",
+      "spraak": "nb",
+      "verdi": "Under redningsarbeid, vakthold eller redningsøvelse"
+    },
+    {
+      "kode": "utenforArbeidstid",
+      "spraak": "nb",
+      "verdi": "Utenfor arbeidstid"
+    }
+  ]
+}

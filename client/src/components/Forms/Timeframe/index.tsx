@@ -14,6 +14,8 @@ import { Controller } from 'react-hook-form';
 import { handleDateValue, handleTimeValue } from '../../../utils/date';
 import './Timeframe.less';
 import { InputClassNames } from 'react-day-picker/types/ClassNames';
+import { useAppSelector } from '../../../core/hooks/state.hooks';
+import { selectKodeverkType } from '../../../core/reducers/kodeverk.reducer';
 
 function formatDate(date: number | Date, format: string) {
   return dateFnsFormat(date, format);
@@ -27,6 +29,11 @@ interface IProps {
 const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
   const FORMAT: string = 'dd.MM.yyyy';
   const { state } = useStateMachine();
+  const tidsromKoder = useAppSelector(state => selectKodeverkType(state, 'tidsrom'));
+
+  useEffect(() => {
+    console.log('tidsromkoder: ', tidsromKoder);
+  }, [tidsromKoder])
 
   const dayPickerClassNames = {
     container: 'nav-day-picker',

@@ -58,4 +58,12 @@ module.exports = function (app) {
       changeOrigin: true
     })
   )
+
+  app.use(
+    '/kodeverk',
+    createProxyMiddleware({
+      target: `http://${host}:3000/`,
+      changeOrigin: true
+    })
+  )
 }
