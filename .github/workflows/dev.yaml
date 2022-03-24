@@ -1,8 +1,8 @@
-name: "Build and deploy yrkesskade skjema"
+name: "Dev - Build and deploy yrkesskade skjema"
 on:
   push:
     branches:
-      - "main"
+      - "dev"
 env:
   "IMAGE": "ghcr.io/${{ github.repository }}:${{ github.sha }}"
 jobs:
@@ -77,30 +77,31 @@ jobs:
       - name: "Build and push the Docker image"
         run: "docker build --pull --tag ${IMAGE} . && docker push ${IMAGE}"
 
-  deployAppToProd:
-    name: Deploy app to prod
-    needs: [build, cypress-run]
-    runs-on: ubuntu-18.04
+  "deployAppToDev":
+    name: "Deploy app to dev"
+    needs: "build"
+    runs-on: "ubuntu-18.04"
     steps:
       - uses: "actions/checkout@v2"
-      - name: Deploy to PROD
+      - name: "Deploy to DEV"
         uses: "nais/deploy/actions/deploy@v1"
         env:
           "APIKEY": "${{ secrets.NAIS_DEPLOY_APIKEY }}"
-          "CLUSTER": "prod-gcp"
+          "CLUSTER": "dev-gcp"
           "RESOURCE": ".nais/nais.yaml"
-          "VARS": ".nais/prod.yaml"
+          "VARS": ".nais/dev.yaml"
 
-  deployAlertsToProd:
-    name: Deploy alerts to prod
-    needs: [build, cypress-run]
-    runs-on: ubuntu-18.04
+  "deployAlertsToDev":
+    name: "Deploy alerts to dev"
+    needs: "build"
+    runs-on: "ubuntu-18.04"
     steps:
       - uses: "actions/checkout@v2"
-      - name: Deploy alerts to PROD
+      - name: "Deploy alerts to DEV"
         uses: "nais/deploy/actions/deploy@v1"
         env:
           "APIKEY": "${{ secrets.NAIS_DEPLOY_APIKEY }}"
-          "CLUSTER": "prod-gcp"
-          "RESOURCE": ".nais/alerts-prod.yaml"
-          "VARS": ".nais/prod.yaml"
+          "CLUSTER": "dev-gcp"
+          "RESOURCE": ".nais/alerts-dev.yaml"
+          "VARS": ".nais/dev.yaml"
+
