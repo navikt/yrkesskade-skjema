@@ -39,7 +39,7 @@ const oppdaterDekningsforholdOrganisasjon = (
       ...state.skadelidt.dekningsforhold,
       organisasjonsnummer: payload.organisasjonsnummer,
       navnPaaVirksomheten: payload.navn,
-      rolletype: 'Arbeidstaker'
+      // rolletype: 'Arbeidstaker'
     },
   },
 });

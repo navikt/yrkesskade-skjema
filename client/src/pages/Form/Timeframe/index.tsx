@@ -58,7 +58,7 @@ const TimeframeFormPage = () => {
 
   const onSubmit = (data: any) => {
     actions.formUpdateAction(data);
-    navigate('/yrkesskade/skjema/skadelidt');
+    navigate('/yrkesskade/skjema/ulykken');
   };
   const handleAbort = () => {
     actions.clearFormAction({});
@@ -71,7 +71,7 @@ const TimeframeFormPage = () => {
         <Cell xs={12} lg={2}></Cell>
         <Cell xs={12} lg={5}>
           <div className="cellContentContainer">
-            <BackButton url="/yrkesskade/skjema" />
+            <BackButton url="/yrkesskade/skjema/skadelidt" />
             <Heading
               size="2xlarge"
               className="pageNumberTitle spacer"

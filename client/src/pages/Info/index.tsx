@@ -50,7 +50,7 @@ const Info = () => {
 
   const handleForward = () => {
     logMessage('Bruker har startet innmelding');
-    navigate('/yrkesskade/skjema/tidsrom');
+    navigate('/yrkesskade/skjema/skadelidt');
   };
 
   const handleCancel = () => {

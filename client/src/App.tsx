@@ -38,8 +38,8 @@ const App = () => {
                     <Route index element={<Landing />} />
                     <Route path="skjema">
                       <Route index element={<Info />} />
-                      <Route path="tidsrom" element={<TimeframeFormPage />} />
                       <Route path="skadelidt" element={<InjuredFormPage />} />
+                      <Route path="tidsrom" element={<TimeframeFormPage />} />
                       <Route path="ulykken" element={<AccidentFormPage />} />
                       <Route path="skaden" element={<InjuryFormPage />} />
                       <Route

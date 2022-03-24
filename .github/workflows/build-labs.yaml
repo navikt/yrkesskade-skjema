@@ -1,54 +1,54 @@
-name: "Deploy yrkesskade-saksbehandling to labs"
-on:
-  push:
-    branches: [ main ]
-  workflow_dispatch:
-env:
-  "IMAGE": "ghcr.io/${{ github.repository }}:${{ github.sha }}"
-jobs:
-  "build":
-    name: "build"
-    runs-on: "ubuntu-18.04"
-    steps:
-      - uses: "actions/checkout@v2"
-      - uses: "actions/setup-node@v2"
-        with:
-          node-version: "14"
-          cache: "yarn"
-      - name: "install server dependencies Yarn"
-        # if: "steps.cache-server-node-modules.outputs.cache-hit != 'true'"
-        run: "yarn install --frozen-lockfile"
-      - name: "install dependencies Yarn"
-        run: "yarn install --frozen-lockfile"
-        working-directory: "client"
-      # - name: "Bygg klient(yarn run build)"
-      #   run: "yarn run build"
-      # - name: "Bygg server(yarn run build)"
-      #   run: "yarn run build"
-      #   working-directory: "server"
-      - name: "Bygg alt"
-        run: "yarn run build-prod"
-      - name: "Login to GitHub Docker Registry"
-        uses: "docker/login-action@v1"
-        with:
-          "registry": "ghcr.io"
-          "username": "${{ github.actor }}"
-          "password": "${{ secrets.GITHUB_TOKEN }}"
-      - name: "Build and push Docker"
-        uses: "docker/build-push-action@v2"
-        with:
-          context: .
-          tags: "${{ env.IMAGE }}"
-          push: "true"
-  "deployAppToLabs":
-    name: "Deploy app to labs"
-    needs: "build"
-    runs-on: "ubuntu-18.04"
-    steps:
-      - uses: "actions/checkout@v2"
-      - name: "Deploy to LABS"
-        uses: "nais/deploy/actions/deploy@v1"
-        env:
-          "APIKEY": "${{ secrets.NAIS_DEPLOY_APIKEY }}"
-          "CLUSTER": "labs-gcp"
-          "RESOURCE": ".nais/labs-gcp.yaml"
+# name: "Deploy yrkesskade-saksbehandling to labs"
+# on:
+#   push:
+#     branches: [ main ]
+#   workflow_dispatch:
+# env:
+#   "IMAGE": "ghcr.io/${{ github.repository }}:${{ github.sha }}"
+# jobs:
+#   "build":
+#     name: "build"
+#     runs-on: "ubuntu-18.04"
+#     steps:
+#       - uses: "actions/checkout@v2"
+#       - uses: "actions/setup-node@v2"
+#         with:
+#           node-version: "14"
+#           cache: "yarn"
+#       - name: "install server dependencies Yarn"
+#         # if: "steps.cache-server-node-modules.outputs.cache-hit != 'true'"
+#         run: "yarn install --frozen-lockfile"
+#       - name: "install dependencies Yarn"
+#         run: "yarn install --frozen-lockfile"
+#         working-directory: "client"
+#       # - name: "Bygg klient(yarn run build)"
+#       #   run: "yarn run build"
+#       # - name: "Bygg server(yarn run build)"
+#       #   run: "yarn run build"
+#       #   working-directory: "server"
+#       - name: "Bygg alt"
+#         run: "yarn run build-prod"
+#       - name: "Login to GitHub Docker Registry"
+#         uses: "docker/login-action@v1"
+#         with:
+#           "registry": "ghcr.io"
+#           "username": "${{ github.actor }}"
+#           "password": "${{ secrets.GITHUB_TOKEN }}"
+#       - name: "Build and push Docker"
+#         uses: "docker/build-push-action@v2"
+#         with:
+#           context: .
+#           tags: "${{ env.IMAGE }}"
+#           push: "true"
+#   "deployAppToLabs":
+#     name: "Deploy app to labs"
+#     needs: "build"
+#     runs-on: "ubuntu-18.04"
+#     steps:
+#       - uses: "actions/checkout@v2"
+#       - name: "Deploy to LABS"
+#         uses: "nais/deploy/actions/deploy@v1"
+#         env:
+#           "APIKEY": "${{ secrets.NAIS_DEPLOY_APIKEY }}"
+#           "CLUSTER": "labs-gcp"
+#           "RESOURCE": ".nais/labs-gcp.yaml"
