@@ -57,7 +57,7 @@ const InjuredFormPage = () => {
             <Heading
               size="2xlarge"
               className="pageNumberTitle spacer"
-              data-number="3"
+              data-number="2"
             >
               Om den skadelidte
             </Heading>

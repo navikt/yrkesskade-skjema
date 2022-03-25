@@ -75,7 +75,7 @@ const TimeframeFormPage = () => {
             <Heading
               size="2xlarge"
               className="pageNumberTitle spacer"
-              data-number="2"
+              data-number="3"
             >
               Tid og dato
             </Heading>
