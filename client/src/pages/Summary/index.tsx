@@ -34,8 +34,6 @@ import {
 } from '../../api/yrkesskade';
 import clearFormAction from '../../State/actions/clearAction';
 import { logErrorMessage, logMessage } from '../../utils/logging';
-import { Print } from '@navikt/ds-icons';
-import { useFeatureToggles } from '../../context/FeatureTogglesContext';
 
 const Summary = () => {
   const { state, actions } = useStateMachine({
@@ -45,7 +43,6 @@ const Summary = () => {
   });
   const { selectedCompany } = useSelectedCompany();
   const { setError } = useErrorMessageContext();
-  const { toggles } = useFeatureToggles();
 
   useEffect(() => {
     // oppdater state med verdier som ikke har blitt satt av skjema

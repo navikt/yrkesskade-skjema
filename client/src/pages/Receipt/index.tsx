@@ -15,12 +15,10 @@ import { PrintService } from '../../services/PrintService';
 import { logErrorMessage } from '../../utils/logging';
 import { useLocation } from 'react-router';
 import { Skademelding } from '../../api/yrkesskade';
-import { useFeatureToggles } from '../../context/FeatureTogglesContext';
 import { format } from 'date-fns';
 
 const Receipt = () => {
   const { state } = useLocation();
-  const { toggles } = useFeatureToggles();
 
   const handlePrintClicked = async () => {
     if (state) {
