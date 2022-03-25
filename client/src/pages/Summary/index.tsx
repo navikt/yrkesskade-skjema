@@ -84,10 +84,6 @@ const Summary = () => {
     window.location.href = 'https://nav.no';
   };
 
-  const handlePrintClicked = () => {
-    window.print()
-  }
-
   return (
     <ContentContainer>
       <SystemHeader />
@@ -112,20 +108,6 @@ const Summary = () => {
             eller holder tilbake informasjon som kan ha betydning for utbetalinger fra NAV,
             kan dette medføre en politianmeldelse.
           </BodyLong>
-
-          { !toggles.ER_IKKE_PROD && (
-            <>
-              <Label>Skriv ut</Label>
-              <BodyLong spacing>
-                Ønsker du kopi av
-                skademeldingen kan du skrive den ut her.
-              </BodyLong>
-              <Button className="no-print" onClick={handlePrintClicked} variant="tertiary">
-                <Print />
-                Skriv ut en kopi av skademeldingen
-              </Button>
-            </>
-          ) }
 
           <Accordion className="spacer">
             <Accordion.Item renderContentWhenClosed={true}>
