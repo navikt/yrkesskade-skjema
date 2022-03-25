@@ -29,11 +29,13 @@ interface IProps {
 const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
   const FORMAT: string = 'dd.MM.yyyy';
   const { state } = useStateMachine();
-  const tidsromKoder = useAppSelector(state => selectKodeverkType(state, 'tidsrom'));
+  const tidsromKoder = useAppSelector((state) =>
+    selectKodeverkType(state, 'tidsrom')
+  );
 
   useEffect(() => {
     console.log('tidsromkoder: ', tidsromKoder);
-  }, [tidsromKoder])
+  }, [tidsromKoder]);
 
   const dayPickerClassNames = {
     container: 'nav-day-picker',
@@ -168,66 +170,69 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
           </label>
         </div>
 
-        {timeType === 'Tidspunkt' && (
-          <div>
-            <Label>Dato for ulykken</Label>
-            <Controller
-              name="hendelsesfakta.tid.tidspunkt"
-              control={control}
-              rules={{
-                required:
-                  timeType === 'Tidspunkt' &&
-                  specificDate !== null &&
-                  specificDate?.getHours() === 0 &&
-                  specificDate?.getMinutes() === 0 &&
-                  'Dette feltet er påkrevd',
-              }}
-              render={({ field: { onChange, onBlur, value, name, ref } }) => (
-                <DayPickerInput
-                  classNames={{ ...whenDayPickerClassNames }}
-                  placeholder=""
-                  value={specificDate}
-                  onDayChange={handleSpecificDate}
-                  formatDate={formatDate}
-                  format={FORMAT}
-                  parseDate={parseDate}
-                  dayPickerProps={{
-                    disabledDays: {
-                      after: new Date(),
-                    },
-                  }}
-                />
-              )}
-            />
-
-            {specificDateError.current?.length > 0 && (
-              <span className="navds-error-message navds-error-message--medium navds-label">
-                {specificDateError.current}
-              </span>
-            )}
-          </div>
-        )}
-
-        {timeType === 'Tidspunkt' && specificDate !== null && (
-          <div className="spacer">
-            <label htmlFor="timeframe-when-time" className="navds-label">
-              Tid for ulykken
-            </label>
-            <InputMask
-              mask="99:99"
-              onChange={handleKlokkeChange}
-              value={specificTime || ''}
-              data-testid="timeframe-when-time"
-              id="timeframe-when-time"
-              className="navds-text-field__input navds-body-short navds-body-medium"
-            />
-             {errors?.hendelsesfakta?.tid?.tidspunktTime && (
-                  <span className="navds-error-message navds-error-message--medium navds-label">
-                    {errors?.hendelsesfakta?.tid?.tidspunktTime.message}
-                  </span>
+        <div className="dateTime">
+          {timeType === 'Tidspunkt' && (
+            <div className="dateTime-date spacer">
+              {/* <Label>Dato for ulykken</Label> */}
+              <Controller
+                name="hendelsesfakta.tid.tidspunkt"
+                control={control}
+                rules={{
+                  required:
+                    timeType === 'Tidspunkt' &&
+                    specificDate !== null &&
+                    specificDate?.getHours() === 0 &&
+                    specificDate?.getMinutes() === 0 &&
+                    'Dette feltet er påkrevd',
+                }}
+                render={({ field: { onChange, onBlur, value, name, ref } }) => (
+                  <DayPickerInput
+                    classNames={{ ...whenDayPickerClassNames }}
+                    placeholder="DD.MM.ÅÅÅÅ"
+                    value={specificDate}
+                    onDayChange={handleSpecificDate}
+                    formatDate={formatDate}
+                    format={FORMAT}
+                    parseDate={parseDate}
+                    dayPickerProps={{
+                      disabledDays: {
+                        after: new Date(),
+                      },
+                    }}
+                  />
                 )}
-          </div>
-        )}
+              />
+
+              {specificDateError.current?.length > 0 && (
+                <span className="navds-error-message navds-error-message--medium navds-label">
+                  {specificDateError.current}
+                </span>
+              )}
+            </div>
+          )}
+
+          {timeType === 'Tidspunkt' && specificDate !== null && (
+            <div className="dateTime-time spacer">
+              {/* <label htmlFor="timeframe-when-time" className="navds-label">
+                Tid for ulykken
+              </label> */}
+              <InputMask
+                mask="99:99"
+                placeholder="00:00"
+                onChange={handleKlokkeChange}
+                value={specificTime || ''}
+                data-testid="timeframe-when-time"
+                id="timeframe-when-time"
+                className="navds-text-field__input navds-body-short navds-body-medium"
+              />
+              {errors?.hendelsesfakta?.tid?.tidspunktTime && (
+                <span className="navds-error-message navds-error-message--medium navds-label">
+                  {errors?.hendelsesfakta?.tid?.tidspunktTime.message}
+                </span>
+              )}
+            </div>
+          )}
+        </div>
 
         <div className="navds-radio navds-radio--medium">
           <input
