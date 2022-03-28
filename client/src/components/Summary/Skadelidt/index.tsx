@@ -11,6 +11,10 @@ const SkadelidtSummary = ({ data }: IProps) => {
         <BodyShort>{data.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte}</BodyShort>
       </div>
       <div className="answerContainer">
+        <Label>Den skadelidtets tilknyttning til virksomheten</Label>
+        <BodyShort>{data.skadelidt.dekningsforhold.rolletype}</BodyShort>
+      </div>
+      <div className="answerContainer">
         <Label>Hva er skadelidtes fødselsnummer</Label>
         <BodyShort>{data.skadelidt.norskIdentitetsnummer}</BodyShort>
       </div>

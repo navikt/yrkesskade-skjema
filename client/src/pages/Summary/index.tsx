@@ -135,15 +135,15 @@ const Summary = () => {
               </Accordion.Content>
             </Accordion.Item>
             <Accordion.Item renderContentWhenClosed={true}>
-              <Accordion.Header>Tid og sted</Accordion.Header>
-              <Accordion.Content>
-                <TidsromSummary data={data} />
-              </Accordion.Content>
-            </Accordion.Item>
-            <Accordion.Item renderContentWhenClosed={true}>
               <Accordion.Header>Om den skadelidte</Accordion.Header>
               <Accordion.Content>
                 <SkadelidtSummary data={data} />
+              </Accordion.Content>
+            </Accordion.Item>
+            <Accordion.Item renderContentWhenClosed={true}>
+              <Accordion.Header>Tid og sted</Accordion.Header>
+              <Accordion.Content>
+                <TidsromSummary data={data} />
               </Accordion.Content>
             </Accordion.Item>
             <Accordion.Item renderContentWhenClosed={true}>
