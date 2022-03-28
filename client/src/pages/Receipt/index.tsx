@@ -55,7 +55,7 @@ const Receipt = () => {
               <Heading size="large" className="spacer">
                 Takk for innmeldingen!
               </Heading>
-              <Alert variant="success" className="spacer">Innmeldingen din om yrkesskade er motatt { format(new Date(), 'dd.MM.yyyy')}</Alert>
+              <Alert variant="success" className="spacer">Innmeldingen din om yrkesskade er mottatt { format(new Date(), 'dd.MM.yyyy')}</Alert>
               <Label>Skriv ut</Label>
               <BodyShort spacing>
                 Ønsker du kopi av skademeldingen, kan du skrive den ut her
