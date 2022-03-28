@@ -15,12 +15,10 @@ import { PrintService } from '../../services/PrintService';
 import { logErrorMessage } from '../../utils/logging';
 import { useLocation } from 'react-router';
 import { Skademelding } from '../../api/yrkesskade';
-import { useFeatureToggles } from '../../context/FeatureTogglesContext';
 import { format } from 'date-fns';
 
 const Receipt = () => {
   const { state } = useLocation();
-  const { toggles } = useFeatureToggles();
 
   const handlePrintClicked = async () => {
     if (state) {
@@ -42,7 +40,7 @@ const Receipt = () => {
         logErrorMessage(`Nedlasting av kopi feilet: ${error.message}`);
       }
     } else {
-      console.error('Skademelding er null og kan ikke skrives ut');
+      logErrorMessage('Skademelding er null og kan ikke skrives ut');
     }
   };
 
@@ -58,23 +56,19 @@ const Receipt = () => {
                 Takk for innmeldingen!
               </Heading>
               <Alert variant="success" className="spacer">Innmeldingen din om yrkesskade er motatt { format(new Date(), 'dd.MM.yyyy')}</Alert>
-              { toggles.ER_IKKE_PROD && (
-                <>
-                  <Label>Skriv ut</Label>
-                  <BodyShort spacing>
-                    Ønsker du kopi av skademeldingen, kan du skrive den ut her
-                  </BodyShort>
-                  <Button
-                    className="no-print"
-                    onClick={handlePrintClicked}
-                    variant="tertiary"
-                    data-testid="kvittering-print-kopi"
-                  >
-                    <Print />
-                    Skriv ut en kopi av skademeldingen
-                  </Button>
-                </>
-              )}
+              <Label>Skriv ut</Label>
+              <BodyShort spacing>
+                Ønsker du kopi av skademeldingen, kan du skrive den ut her
+              </BodyShort>
+              <Button
+                className="no-print"
+                onClick={handlePrintClicked}
+                variant="tertiary"
+                data-testid="kvittering-print-kopi"
+              >
+                <Print />
+                Skriv ut en kopi av skademeldingen
+              </Button>
             </div>
           </div>
         </Cell>
