@@ -63,7 +63,7 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
         {...register('skadelidt.dekningsforhold.rolletype', {
           required: 'Dette feltet er påkrevd',
         })}
-        data-testid="accident-place"
+        data-testid="injured-role-select"
         error={
           errors?.skadelidt?.dekningsforhold?.rolletype &&
           errors?.skadelidt?.dekningsforhold.rolletype.message
