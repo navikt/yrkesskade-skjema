@@ -51,12 +51,17 @@ const UlykkeSummary = ({ data }: IProps) => {
         </div>
       )}
       {get(data, ['hendelsesfakta', 'stedsbeskrivelseTabellF']) !==
-        'undefined' && (
-        <div className="answerContainer">
-          <Label>Type arbeidsplass</Label>
-          <BodyShort>{data.hendelsesfakta.stedsbeskrivelseTabellF}</BodyShort>
-        </div>
-      )}
+        'undefined' &&
+        get(data, [
+          'skadelidt',
+          'dekningsforhold',
+          'rolletype',
+        ]).toLowerCase() !== 'elev' && (
+          <div className="answerContainer">
+            <Label>Type arbeidsplass</Label>
+            <BodyShort>{data.hendelsesfakta.stedsbeskrivelseTabellF}</BodyShort>
+          </div>
+        )}
       {!isEmpty(data.hendelsesfakta.aarsakUlykkeTabellAogE) && (
         <div className="answerContainer">
           <Label>Årsak og bakgrunn for hendelsen</Label>
