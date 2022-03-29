@@ -13,6 +13,7 @@ export namespace Dekningsforhold {
 
     export enum rolletype {
         ARBEIDSTAKER = 'Arbeidstaker',
+        L_RLING = 'Lærling',
     }
 
 

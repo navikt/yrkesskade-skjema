@@ -9,7 +9,7 @@ import { Provider } from 'react-redux';
 import store from './core/store';
 // import reportWebVitals from "./reportWebVitals";
 
-const API_BASE = '';
+const API_BASE = '/api';
 SkjemaOpenApi.BASE = API_BASE;
 KodeverkOpenApi.BASE = '/kodeverk';
 

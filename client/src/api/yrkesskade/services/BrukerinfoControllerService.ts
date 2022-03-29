@@ -18,7 +18,7 @@ export class BrukerinfoControllerService {
     public static hentUserInfo(): CancelablePromise<BrukerinfoDto> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/brukerinfo',
+            url: '/v1/brukerinfo',
         });
     }
 
@@ -32,7 +32,7 @@ export class BrukerinfoControllerService {
     ): CancelablePromise<OrganisasjonDto> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/brukerinfo/organisasjoner/{organisasjonsnummer}',
+            url: '/v1/brukerinfo/organisasjoner/{organisasjonsnummer}',
             path: {
                 'organisasjonsnummer': organisasjonsnummer,
             },
@@ -49,7 +49,7 @@ export class BrukerinfoControllerService {
     ): CancelablePromise<Array<AltinnRolleDto>> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/brukerinfo/organisasjoner/{organisasjonsnummer}/roller',
+            url: '/v1/brukerinfo/organisasjoner/{organisasjonsnummer}/roller',
             path: {
                 'organisasjonsnummer': organisasjonsnummer,
             },

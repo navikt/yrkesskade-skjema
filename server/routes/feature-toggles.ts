@@ -38,7 +38,7 @@ const hentBrukerinfo = async (req, res: Response, next: NextFunction) => {
 
   try {
     const tokenset = await exchangeToken(req);
-    const response = await axios.get<Brukerinfo>(`${config.API_URL}/api/v1/brukerinfo`, {
+    const response = await axios.get<Brukerinfo>(`${config.API_URL}/v1/brukerinfo`, {
       headers: {
         // bruk cookie i kall mot api
         Authorization: `Bearer ${tokenset.access_token}`,

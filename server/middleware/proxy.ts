@@ -17,7 +17,8 @@ const errorHandler = (err, req, res) => {
 export const doProxy = (path: string, target: string) => {
   return createProxyMiddleware(path, {
     pathRewrite: {
-      '^/kodeverk/': '/'
+      '^/kodeverk/': '/',
+      '^/api/': '/'
     },
     changeOrigin: true,
     secure: false,
