@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Select, RadioGroup, Table, Button } from '@navikt/ds-react';
 import { injuredBodypart, injuryType } from '../../../assets/injuryEnums';
 import { remove } from 'ramda';
-import {isEmpty} from 'lodash';
+import { isEmpty } from 'lodash';
 import { AddCircle, MinusCircle } from '@navikt/ds-icons';
 import { useStateMachine } from 'little-state-machine';
 import antattSykefravaerTabellH from '../../../assets/Lists/antattSykefravaerTabellH';
@@ -24,11 +24,19 @@ const InjuryForm = ({
   setValue,
 }: IProps) => {
   const { state, actions } = useStateMachine({ oppdaterSkadedeDeler });
-  const [injury, setInjury] = useState<SkadetDel[]>(state.skade.skadedeDeler as SkadetDel[]);
+  const rolletype = state.skadelidt.dekningsforhold.rolletype;
+  const [injury, setInjury] = useState<SkadetDel[]>(
+    state.skade.skadedeDeler as SkadetDel[]
+  );
 
   const removeInjury = (index: number) => {
     const nyInjury = remove(index, 1, injury);
-    actions.oppdaterSkadedeDeler(nyInjury.map((val: SkadetDel) => ({kroppsdelTabellD: val.kroppsdelTabellD, skadeartTabellC: val.skadeartTabellC})));
+    actions.oppdaterSkadedeDeler(
+      nyInjury.map((val: SkadetDel) => ({
+        kroppsdelTabellD: val.kroppsdelTabellD,
+        skadeartTabellC: val.skadeartTabellC,
+      }))
+    );
     setInjury(remove(index, 1, nyInjury));
   };
 
@@ -61,8 +69,14 @@ const InjuryForm = ({
     } else {
       setValue('skade.skadedeDeler', injury);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if(rolletype.toLowerCase() === 'elev' ) {
+      setValue('skade.antattSykefravaerTabellH', 'N/A')
+    }
+  }, [rolletype, setValue]);
 
   return (
     <>
@@ -109,13 +123,18 @@ const InjuryForm = ({
           )}
         </Select>
 
-        <Button variant="tertiary" onClick={handleMultipleInjuries} data-testid="add-injury-button">
+        <Button
+          variant="tertiary"
+          onClick={handleMultipleInjuries}
+          data-testid="add-injury-button"
+          className=""
+        >
           <AddCircle />
           Legg til flere skader
         </Button>
 
         {!isEmpty(injury) && (
-          <Table className="spacer">
+          <Table className="">
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell>Område</Table.HeaderCell>
@@ -148,39 +167,38 @@ const InjuryForm = ({
           </Table>
         )}
       </div>
-
-      <RadioGroup
-        legend="Har den skadelidte hatt fravær?"
-        error={
-          errors?.skade?.antattSykefravaerTabellH &&
-          errors?.skade?.antattSykefravaerTabellH.message
-        }
-        className="spacer"
-      >
-        { antattSykefravaerTabellH.map((verdi, index) => (
-          <div className="navds-radio navds-radio--medium" key={verdi.value}>
-          <input
-            type="radio"
-            className="navds-radio__input"
-            {...register('skade.antattSykefravaerTabellH', {
-              required: 'Dette feltet er påkrevd',
-            })}
-            value={verdi.value}
-            data-testid={`injury-absence-${index}`}
-            id={`injury-absence-${index}`}
-          />
-          <label
-            htmlFor={`injury-absence-${index}`}
-            className="navds-radio__label"
-          >
-            {verdi.value}
-          </label>
-        </div>
-        ))
-
-      }
-    </RadioGroup>
-   </>
+      {rolletype.toLowerCase() !== 'elev' && (
+        <RadioGroup
+          legend="Har den skadelidte hatt fravær?"
+          error={
+            errors?.skade?.antattSykefravaerTabellH &&
+            errors?.skade?.antattSykefravaerTabellH.message
+          }
+          className=""
+        >
+          {antattSykefravaerTabellH.map((verdi, index) => (
+            <div className="navds-radio navds-radio--medium" key={verdi.value}>
+              <input
+                type="radio"
+                className="navds-radio__input"
+                {...register('skade.antattSykefravaerTabellH', {
+                  required: 'Dette feltet er påkrevd',
+                })}
+                value={verdi.value}
+                data-testid={`injury-absence-${index}`}
+                id={`injury-absence-${index}`}
+              />
+              <label
+                htmlFor={`injury-absence-${index}`}
+                className="navds-radio__label"
+              >
+                {verdi.value}
+              </label>
+            </div>
+          ))}
+        </RadioGroup>
+      )}
+    </>
   );
 };
 

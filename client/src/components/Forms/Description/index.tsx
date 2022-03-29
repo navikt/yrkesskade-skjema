@@ -11,13 +11,13 @@ const DescriptionForm = ({ register }: IProps) => {
   const [freetext, setFreetext] = useState(
     state.hendelsesfakta.utfyllendeBeskrivelse
   );
-
+  const rolletype = state.skadelidt.dekningsforhold.rolletype;
   return (
     <>
       <Textarea
         className="spacer"
         label="Under kan du tilføre ytterligere opplysninger (valgfri)"
-        description={<TextareaDescription />}
+        description={<TextareaDescription rolletype={rolletype}/>}
         {...register('hendelsesfakta.utfyllendeBeskrivelse')}
         value={freetext}
         maxLength={2000}
@@ -30,7 +30,7 @@ const DescriptionForm = ({ register }: IProps) => {
 
 export default DescriptionForm;
 
-const TextareaDescription = () => {
+const TextareaDescription = (props: {rolletype: string}) => {
   return (
     <>
       Oppgi informasjon som du mener kan ha betydning for saken. Det kan være
@@ -38,7 +38,7 @@ const TextareaDescription = () => {
       <ul>
         <li>Hendelsesforløpet</li>
         <li>Spesielle omstendigheter</li>
-        <li>Avvik fra normale arbeidsoppgaver</li>
+        {props.rolletype.toLowerCase() !== 'elev' &&  <li>Avvik fra normale arbeidsoppgaver</li> }
         <li>Skadelig påvirkning av stoffer</li>
         <li>
           Umiddelbar behandling av skaden/sykdommen hvis det er kjent,

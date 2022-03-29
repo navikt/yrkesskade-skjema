@@ -28,7 +28,8 @@ const InjuredFormPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-    control
+    control,
+    setValue
   } = useForm({
     defaultValues: {
       // 'skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte': state.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte,
@@ -61,7 +62,7 @@ const InjuredFormPage = () => {
             >
               Om den skadelidte
             </Heading>
-            <InjuredForm errors={errors} register={register} control={control}/>
+            <InjuredForm errors={errors} register={register} control={control} setValue={setValue}/>
             <div className="buttonGroup">
               <Button variant="secondary" onClick={handleAbort}>
                 Avbryt

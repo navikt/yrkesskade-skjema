@@ -1,5 +1,6 @@
 // import { isNil } from "ramda";
 import { Label, BodyShort, Table } from '@navikt/ds-react';
+import { get } from 'lodash';
 interface IProps {
   data: any;
 }
@@ -29,10 +30,16 @@ const SkadeSummary = ({ data }: IProps) => {
           </Table.Body>
         </Table>
       </div>
-      <div className="answerContainer spacer">
-        <Label>Har den skadelidte hatt fravær</Label>
-        <BodyShort>{data.skade.antattSykefravaerTabellH}</BodyShort>
-      </div>
+      {get(data, [
+        'skadelidt',
+        'dekningsforhold',
+        'rolletype',
+      ]).toLowerCase() !== 'elev' && (
+        <div className="answerContainer spacer">
+          <Label>Har den skadelidte hatt fravær</Label>
+          <BodyShort>{data.skade.antattSykefravaerTabellH}</BodyShort>
+        </div>
+      )}
     </div>
   );
 };

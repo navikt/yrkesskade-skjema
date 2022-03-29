@@ -22,7 +22,10 @@ import formUpdateAction from '../../../State/actions/formUpdateAction';
 import { useStateMachine } from 'little-state-machine';
 import alvorlighetsgrad from '../../../assets/Lists/alvorlighetsgrad';
 import _ from 'lodash';
-import { oppdaterSetSammeSomVirksomhetsAdresse, oppdaterUlykkesstedAdresse } from '../../../State/actions/skademeldingStateAction';
+import {
+  oppdaterSetSammeSomVirksomhetsAdresse,
+  oppdaterUlykkesstedAdresse,
+} from '../../../State/actions/skademeldingStateAction';
 
 interface IProps {
   register: any;
@@ -31,7 +34,11 @@ interface IProps {
 }
 const AccidentForm = ({ register, errors, control }: IProps) => {
   const { selectedAddress } = useSelectedCompany();
-  const { state, actions } = useStateMachine({ formUpdateAction, oppdaterSetSammeSomVirksomhetsAdresse, oppdaterUlykkesstedAdresse });
+  const { state, actions } = useStateMachine({
+    formUpdateAction,
+    oppdaterSetSammeSomVirksomhetsAdresse,
+    oppdaterUlykkesstedAdresse,
+  });
 
   const { getValues, setValue } = useForm();
   const [sammeSomVirksomhetensAdresse, setSammeSomVirksomhetensAdresse] =
@@ -42,21 +49,35 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
         : false
     );
 
-    useEffect(() => {
-      actions.oppdaterSetSammeSomVirksomhetsAdresse(sammeSomVirksomhetensAdresse);
-      if (sammeSomVirksomhetensAdresse) {
-        if (!selectedAddress) {
-          return;
-        }
-        actions.oppdaterUlykkesstedAdresse({
-          adresselinje1: selectedAddress.adresser ? selectedAddress.adresser[0] : '',
-          adresselinje2: selectedAddress.postnummer || '',
-          adresselinje3: selectedAddress.poststed || '',
-          land: selectedAddress.landkode || ''
-        })
+  useEffect(() => {
+    actions.oppdaterSetSammeSomVirksomhetsAdresse(sammeSomVirksomhetensAdresse);
+    if (sammeSomVirksomhetensAdresse) {
+      if (!selectedAddress) {
+        return;
       }
-      setValue('hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse', sammeSomVirksomhetensAdresse);
-    }, [sammeSomVirksomhetensAdresse])
+      actions.oppdaterUlykkesstedAdresse({
+        adresselinje1: selectedAddress.adresser
+          ? selectedAddress.adresser[0]
+          : '',
+        adresselinje2: selectedAddress.postnummer || '',
+        adresselinje3: selectedAddress.poststed || '',
+        land: selectedAddress.landkode || '',
+      });
+    }
+    setValue(
+      'hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse',
+      sammeSomVirksomhetensAdresse
+    );
+  }, [sammeSomVirksomhetensAdresse]);
+
+  const rolletype = state.skadelidt.dekningsforhold.rolletype;
+
+  useEffect(() => {
+    if(rolletype.toLowerCase() === 'elev' ) {
+      setValue('hendelsesfakta.stedsbeskrivelseTabellF', 'N/A')
+    }
+  }, [rolletype, setValue]);
+
 
   return (
     <>
@@ -91,8 +112,10 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
                 }}
                 onBlur={onBlur}
                 error={
-                  errors?.hendelsesfakta?.ulykkessted?.sammeSomVirksomhetensAdresse &&
-                  errors?.hendelsesfakta?.ulykkessted?.sammeSomVirksomhetensAdresse.message
+                  errors?.hendelsesfakta?.ulykkessted
+                    ?.sammeSomVirksomhetensAdresse &&
+                  errors?.hendelsesfakta?.ulykkessted
+                    ?.sammeSomVirksomhetensAdresse.message
                 }
               >
                 <Radio value="true">Ja</Radio>
@@ -115,27 +138,29 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
           errors?.skade?.alvorlighetsgrad.message
         }
       >
-        { alvorlighetsgrad.map((alvorlighetsgrad, index) => (
-          <div className="navds-radio navds-radio--medium" key={alvorlighetsgrad.label}>
+        {alvorlighetsgrad.map((alvorlighetsgrad, index) => (
+          <div
+            className="navds-radio navds-radio--medium"
+            key={alvorlighetsgrad.label}
+          >
             <input
               type="radio"
               className="navds-radio__input"
               {...register('skade.alvorlighetsgrad', {
-                required: false
+                required: false,
               })}
               value={alvorlighetsgrad.value}
-              data-testid={ `injury-severity-${index}`}
-              id={ `injury-severity-${index}`}
+              data-testid={`injury-severity-${index}`}
+              id={`injury-severity-${index}`}
             />
             <label
-              htmlFor={ `injury-severity-${index}`}
+              htmlFor={`injury-severity-${index}`}
               className="navds-radio__label"
             >
-              { alvorlighetsgrad.value }
+              {alvorlighetsgrad.value}
             </label>
           </div>
-        ))
-      }
+        ))}
       </RadioGroup>
 
       <NAVSelect
@@ -160,27 +185,29 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
         })}
       </NAVSelect>
 
-      <NAVSelect
-        className="spacer"
-        label="Hvilken type arbeidsplass er det?"
-        {...register('hendelsesfakta.stedsbeskrivelseTabellF', {
-          required: 'Dette feltet er påkrevd',
-        })}
-        data-testid="accident-place-type"
-        error={
-          errors?.hendelsesfakta?.stedsbeskrivelseTabellF &&
-          errors?.hendelsesfakta?.stedsbeskrivelseTabellF.message
-        }
-      >
-        <option hidden value=""></option>
-        {stedstype.map((type: { value: string; label: string }) => {
-          return (
-            <option key={encodeURI(type.value)} value={type.value}>
-              {type.label}
-            </option>
-          );
-        })}
-      </NAVSelect>
+      {rolletype.toLowerCase() !== 'elev' && (
+        <NAVSelect
+          className="spacer"
+          label="Hvilken type arbeidsplass er det?"
+          {...register('hendelsesfakta.stedsbeskrivelseTabellF', {
+            required: 'Dette feltet er påkrevd',
+          })}
+          data-testid="accident-place-type"
+          error={
+            errors?.hendelsesfakta?.stedsbeskrivelseTabellF &&
+            errors?.hendelsesfakta?.stedsbeskrivelseTabellF.message
+          }
+        >
+          <option hidden value=""></option>
+          {stedstype.map((type: { value: string; label: string }) => {
+            return (
+              <option key={encodeURI(type.value)} value={type.value}>
+                {type.label}
+              </option>
+            );
+          })}
+        </NAVSelect>
+      )}
 
       <div className="spacer spacer navds-form-field navds-form-field--medium">
         <Label className="navds-select__label navds-label">

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TextField, Label, Select as NAVSelect } from '@navikt/ds-react';
 import { Controller } from 'react-hook-form';
 import stillingstitler from '../../../assets/Lists/stillingstitler';
@@ -15,12 +15,18 @@ interface IProps {
   register: any;
   errors: any;
   control: any;
+  setValue: any;
 }
-const InjuredForm = ({ register, errors, control }: IProps) => {
+const InjuredForm = ({ register, errors, control, setValue }: IProps) => {
   const { innloggetBruker } = useInnloggetContext();
   const { state } = useStateMachine();
   const [openMenu, setOpenMenu] = useState(false);
 
+  const [rolletype, setRolletype] = useState(
+    state.skadelidt.dekningsforhold.rolletype
+  );
+
+  // Åpner stillingsinputen når det er skrevet 2 eller fler tegn
   const handleInputChange = (query: string, action: any) => {
     if (action.action === 'input-change' && query.length >= 2) {
       setOpenMenu(true);
@@ -28,6 +34,12 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
       setOpenMenu(false);
     }
   };
+
+  useEffect(() => {
+    if(rolletype.toLowerCase() === 'elev' ) {
+      setValue('skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte', 'N/A');
+    }
+  }, [rolletype, setValue]);
 
   return (
     <>
@@ -63,7 +75,10 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
         {...register('skadelidt.dekningsforhold.rolletype', {
           required: 'Dette feltet er påkrevd',
         })}
-        data-testid="accident-place"
+        data-testid="injured-role-type"
+        onChange={(e) => {
+          setRolletype(e.target.value);
+        }}
         error={
           errors?.skadelidt?.dekningsforhold?.rolletype &&
           errors?.skadelidt?.dekningsforhold.rolletype.message
@@ -78,50 +93,53 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
           );
         })}
       </NAVSelect>
-      <div className="spacer">
-        <Label>Hva er den skadelidtes stilling</Label>
-        <Controller
-          name="skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte"
-          control={control}
-          rules={{
-            required:
-              _.isEmpty(
-                state.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte
-              ) && 'Dette feltet er påkrevd',
-          }}
-          render={({ field: { onChange, onBlur, value, name, ref } }) => (
-            <Select
-              components={{
-                DropdownIndicator: () => null,
-                IndicatorSeparator: () => null,
-              }}
-              defaultValue={{
-                value:
+      {rolletype.toLowerCase() !== 'elev' && (
+        <div className="spacer">
+          <Label>Hva er den skadelidtes stilling</Label>
+          <Controller
+            name="skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte"
+            control={control}
+            rules={{
+              required:
+                _.isEmpty(
                   state.skadelidt.dekningsforhold
-                    .stillingstittelTilDenSkadelidte,
-                label:
-                  state.skadelidt.dekningsforhold
-                    .stillingstittelTilDenSkadelidte,
-              }}
-              onBlur={onBlur}
-              onChange={(val) => onChange([val?.value])}
-              options={stillingstitler}
-              menuIsOpen={openMenu}
-              onInputChange={handleInputChange}
-              className="injured-position"
-            />
+                    .stillingstittelTilDenSkadelidte
+                ) && 'Dette feltet er påkrevd',
+            }}
+            render={({ field: { onChange, onBlur, value, name, ref } }) => (
+              <Select
+                components={{
+                  DropdownIndicator: () => null,
+                  IndicatorSeparator: () => null,
+                }}
+                defaultValue={{
+                  value:
+                    state.skadelidt.dekningsforhold
+                      .stillingstittelTilDenSkadelidte,
+                  label:
+                    state.skadelidt.dekningsforhold
+                      .stillingstittelTilDenSkadelidte,
+                }}
+                onBlur={onBlur}
+                onChange={(val) => onChange([val?.value])}
+                options={stillingstitler}
+                menuIsOpen={openMenu}
+                onInputChange={handleInputChange}
+                className="injured-position"
+              />
+            )}
+          />
+          {errors?.skadelidt?.dekningsforhold
+            ?.stillingstittelTilDenSkadelidte && (
+            <span className="navds-error-message navds-error-message--medium navds-label">
+              {
+                errors.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte
+                  .message
+              }
+            </span>
           )}
-        />
-        {errors?.skadelidt?.dekningsforhold
-          ?.stillingstittelTilDenSkadelidte && (
-          <span className="navds-error-message navds-error-message--medium navds-label">
-            {
-              errors.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte
-                .message
-            }
-          </span>
-        )}
-      </div>
+        </div>
+      )}
     </>
   );
 };

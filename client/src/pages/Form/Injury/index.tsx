@@ -72,7 +72,7 @@ const InjuryFormPage = () => {
               Om skaden
             </Heading>
             <InjuryForm errors={errors} register={register} getValues={getValues} reset={resetField} setValue={setValue}/>
-            <div className="buttonGroup">
+            <div className="buttonGroup spacer">
               <Button variant="secondary" onClick={handleAbort}>
                 Avbryt
               </Button>
