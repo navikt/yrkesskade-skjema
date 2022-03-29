@@ -33,13 +33,14 @@ const InjuredFormPage = () => {
     defaultValues: {
       // 'skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte': state.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte,
       'skadelidt.norskIdentitetsnummer': state.skadelidt.norskIdentitetsnummer,
+      'skadelidt.dekningsforhold.rolletype': state.skadelidt.dekningsforhold.rolletype,
     }});
 
   const navigate = useNavigate();
 
   const onSubmit = (data: any) => {
     actions.formUpdateAction(data);
-    navigate('/yrkesskade/skjema/Ulykken');
+    navigate('/yrkesskade/skjema/tidsrom');
   };
   const handleAbort = () => {
     actions.clearFormAction({});
@@ -52,11 +53,11 @@ const InjuredFormPage = () => {
         <Cell xs={12} lg={2}></Cell>
         <Cell xs={12} lg={5}>
           <div className="cellContentContainer">
-          <BackButton url="/yrkesskade/skjema/tidsrom" />
+          <BackButton url="/yrkesskade/skjema/" />
             <Heading
               size="2xlarge"
               className="pageNumberTitle spacer"
-              data-number="3"
+              data-number="2"
             >
               Om den skadelidte
             </Heading>
