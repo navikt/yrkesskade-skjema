@@ -6,7 +6,7 @@ export class OrganisasjonsnummerStrategy extends Strategy {
     super('byOrgnummer');
   }
 
-  isEnabled(parameters, context) {
+  isEnabled(parameters, context): boolean {
     const organisasjonsnumre = context.properties.organisasjonsnumre
 
     if (!organisasjonsnumre) {
@@ -16,7 +16,7 @@ export class OrganisasjonsnummerStrategy extends Strategy {
     const toggledOrganisasjonsnumre = parameters.orgnumre?.split(',');
     const contextOrganisasjonsnumre = organisasjonsnumre;
 
-    const enabled = contextOrganisasjonsnumre.find(organisasjonsnummer=> toggledOrganisasjonsnumre.includes(organisasjonsnummer));
+    const enabled: boolean = contextOrganisasjonsnumre.some(organisasjonsnummer=> toggledOrganisasjonsnumre.includes(organisasjonsnummer));
 
     if (!enabled) {
       logInfo(`har ikke nødvendig organisasjonsnumre - har ${organisasjonsnumre}`);

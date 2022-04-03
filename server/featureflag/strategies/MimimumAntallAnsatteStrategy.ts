@@ -6,10 +6,14 @@ export class MinimumAntallAnsatteStrategy extends Strategy {
   }
 
   isEnabled(parameters, context) {
-    const antallAnsatte = context.properties.antallAnsatte
     const minimumAntallAnsatte = parameters.minimumAntallAnsatte
 
-    const enabled = minimumAntallAnsatte > 0 && antallAnsatte >= minimumAntallAnsatte;
+    if (!minimumAntallAnsatte) {
+      return true;
+    }
+
+    const antallAnsatte = context.properties.antallAnsatte
+    const enabled = antallAnsatte >= minimumAntallAnsatte;
 
     if (!enabled) {
       logInfo(`har ikke nødvendig antall ansatte - har ${antallAnsatte}`);

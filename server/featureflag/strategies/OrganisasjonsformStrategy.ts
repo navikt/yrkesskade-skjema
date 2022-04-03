@@ -7,17 +7,15 @@ export class OrganisasjonsformStrategy extends Strategy {
   }
 
   isEnabled(parameters, context) {
+    const toggledOrganisasjonsformer = parameters.organisasjonsformer;
+    if (!toggledOrganisasjonsformer) {
+      return true;
+    }
+
     const organisasjonsformer = context.properties.organisasjonsformer
 
     if (!organisasjonsformer) {
       return false;
-    }
-
-    const toggledOrganisasjonsformer = parameters.organisasjonsformer?.split(',');
-
-    if (!toggledOrganisasjonsformer) {
-      // ingen filter på organisasjonsformer
-      return true;
     }
 
     const contextOrganisasjonsformer = organisasjonsformer.split(',');

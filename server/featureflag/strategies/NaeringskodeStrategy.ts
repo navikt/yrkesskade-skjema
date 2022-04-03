@@ -7,16 +7,19 @@ export class NaeringskodeStrategy extends Strategy {
   }
 
   isEnabled(parameters, context) {
-    const naeringskoderProperty = context.properties.naeringskoder
+    const toggledNaeringskoder = parameters.naeringskoder;
+    if (!toggledNaeringskoder) {
+      return true;
+    }
 
+    const naeringskoderProperty = context.properties.naeringskoder
     if (!naeringskoderProperty) {
       return false;
     }
 
-    const toggledNaeringskoder = parameters.naeringskoder?.split(',');
     const contextNaeringskoder = naeringskoderProperty.split(',');
 
-    const enabled = contextNaeringskoder.find(naeringskode => toggledNaeringskoder.includes(naeringskode));
+    const enabled = contextNaeringskoder.some(naeringskode => toggledNaeringskoder.includes(naeringskode));
 
     if (!enabled) {
       logInfo(`har ikke nødvendig næringskode - har ${naeringskoderProperty}`);
