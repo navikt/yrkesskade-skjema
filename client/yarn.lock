@@ -1568,7 +1568,7 @@
     react-popper "^2.2.5"
     uuid "^8.3.2"
 
-"@navikt/fnrvalidator@^1.2.0":
+"@navikt/fnrvalidator@^1.1.4":
   version "1.1.4"
   resolved "https://npm.pkg.github.com/download/@navikt/fnrvalidator/1.1.4/57aacaca4b4d6c045625ec4e86cc6029f566f6388de258d45f93ef027f888219#b2ce64cb24b3726f715eee110f9f3fde37b907f7"
   integrity sha512-EZBwlNhp886E57GuknLB6G9Bnv4nl+e5K12B/2BeLpWZENxCmcQ+5oFvIThvEsU+LVOdfJxxGOxSvrwe5ZB3pQ==
