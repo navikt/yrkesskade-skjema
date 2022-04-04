@@ -1,4 +1,8 @@
-import { initialize, startUnleash } from "unleash-client";
+/**
+ * @jest-environment node
+ */
+
+import { Context, initialize, startUnleash } from "unleash-client";
 import { IsNotProdStrategy } from "./strategies/IsNotProdStrategy";
 import { MVPStrategy } from "./strategies/MVPStrategy";
 import { OrganisasjonsnummerStrategy } from "./strategies/OrganisasjonsNummerStrategy";
@@ -15,7 +19,7 @@ test.skip('test unleash', async () => {
     ],
   });
 
-  const context = {
+  const context: Context = {
     appName: 'yrkesskade-skjema-test',
     properties: { antallAnsatte: 10, naeringskoder: '64.1', organisasjonsformer: 'AS'}
   }

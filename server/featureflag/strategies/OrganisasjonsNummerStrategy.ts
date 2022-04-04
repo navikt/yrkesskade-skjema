@@ -18,7 +18,7 @@ export class OrganisasjonsnummerStrategy extends Strategy {
     }
 
     const toggledOrganisasjonsnumre = parameters.orgnumre.split(',');
-    const contextOrganisasjonsnumre = organisasjonsnumre;
+    const contextOrganisasjonsnumre = organisasjonsnumre.split(',');
 
     const enabled: boolean = contextOrganisasjonsnumre.some(organisasjonsnummer=> toggledOrganisasjonsnumre.includes(organisasjonsnummer));
 

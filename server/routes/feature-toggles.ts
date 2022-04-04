@@ -6,6 +6,7 @@ import { Brukerinfo, Organisasjon } from '../../client/src/types/brukerinfo';
 import axios from "axios";
 import { exchangeToken } from "../tokenx";
 import { logError } from '@navikt/yrkesskade-logging';
+import { Context } from "unleash-client";
 
 const toggleFetchHandler = (req, res) => {
   const toggleId = req.params.id;
@@ -63,7 +64,7 @@ const fetchAllFeatureTogglesHandler = (req, res) => {
 };
 
 const byggContextFraRequest = (req) => {
-  const context = {
+  const context: Context = {
     appName: process.env.NAIS_APP_NAME ?? 'yrkesskade-skjema',
     environment: process.env.NODE_ENV,
     userId: req.data?.fnr || '',
@@ -74,14 +75,16 @@ const byggContextFraRequest = (req) => {
     // legg på properties dersom vi har fnr i request
     context.properties = {
       ...context.properties,
-      'organisasjonsnumre': req.data.organisasjoner.map(organisasjon => organisasjon.organisasjonsnummer),
+      'organisasjonsnumre': req.data.organisasjoner.map(organisasjon => organisasjon.organisasjonsnummer).join(','),
       'naeringskoder': req.data.organisasjoner
         .filter((organisasjon: Organisasjon) => !!organisasjon.naeringskode)
-        .map((organisasjon: Organisasjon) => organisasjon.naeringskode),
+        .map((organisasjon: Organisasjon) => organisasjon.naeringskode)
+        .join(','),
       'antallAnsatte': Math.max.apply(Math, req.data.organisasjoner.map((organisasjon: Organisasjon) =>  organisasjon.antallAnsatte )),
       'organisasjonsformer': req.data.organisasjoner
         .filter((organisasjon: Organisasjon) => !!organisasjon.organisasjonsform)
-        .map((organisasjon: Organisasjon) => organisasjon.organisasjonsform),
+        .map((organisasjon: Organisasjon) => organisasjon.organisasjonsform)
+        .join(','),
     }
   }
 

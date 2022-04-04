@@ -18,7 +18,7 @@ export class NaeringskodeStrategy extends Strategy {
       return false;
     }
 
-    const contextNaeringskoder = naeringskoderProperty;
+    const contextNaeringskoder = naeringskoderProperty.split(',');
 
     const enabled = contextNaeringskoder.some(naeringskode => toggledNaeringskoder.includes(naeringskode));
 

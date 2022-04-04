@@ -18,7 +18,7 @@ export class OrganisasjonsformStrategy extends Strategy {
       return false;
     }
 
-    const contextOrganisasjonsformer = organisasjonsformer;
+    const contextOrganisasjonsformer = organisasjonsformer.split(',');
 
     const enabled = contextOrganisasjonsformer.find(organisasjonsform => toggledOrganisasjonsformer.includes(organisasjonsform));
 

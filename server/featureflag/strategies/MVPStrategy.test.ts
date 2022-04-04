@@ -10,9 +10,9 @@ test ('is Enabled', () => {
   const context = {
     properties: {
       antallAnsatte: 10,
-      organisasjonsnumre: ['1','2','3','4'],
-      naeringskoder: ['100','300','500'],
-      organisasjonsformer: ['A','C','D']
+      organisasjonsnumre: '1,2,3,4',
+      naeringskoder: '100,300,500',
+      organisasjonsformer: 'A,C,D'
     }
   }
 
@@ -30,9 +30,9 @@ test ('not Enabled', () => {
   const context = {
     properties: {
       antallAnsatte: 1,
-      organisasjonsnumre: ['1','2','3','4'],
-      naeringskoder: ['100','300','500'],
-      organisasjonsformer: ['A','C','D']
+      organisasjonsnumre: '1,2,3,4',
+      naeringskoder: '100,300,500',
+      organisasjonsformer: 'A,C,D'
     }
   }
 
