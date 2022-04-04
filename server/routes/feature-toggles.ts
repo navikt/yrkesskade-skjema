@@ -57,7 +57,7 @@ const hentBrukerinfo = async (req, res: Response, next: NextFunction) => {
 }
 
 const fetchAllFeatureTogglesHandler = (req, res) => {
-  logInfo('Fetch all featuretoggles: ', req);
+  logInfo(`Fetch all featuretoggles: ${JSON.stringify(req)}`);
   const context = byggContextFraRequest(req);
   res.send(Object.keys(ToggleKeys).reduce((keys, key) => ({ ...keys, [key]: isEnabled(ToggleKeys[key], context)}), {}));
 };
