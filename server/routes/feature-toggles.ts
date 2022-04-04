@@ -5,7 +5,7 @@ import { ToggleKeys } from '../../client/src/types/feature-toggles';
 import { Brukerinfo, Organisasjon } from '../../client/src/types/brukerinfo';
 import axios from "axios";
 import { exchangeToken } from "../tokenx";
-import { logError } from '@navikt/yrkesskade-logging';
+import { logError, logInfo } from '@navikt/yrkesskade-logging';
 import { Context } from "unleash-client";
 
 const toggleFetchHandler = (req, res) => {
@@ -24,8 +24,6 @@ export const configureFeatureTogglesEndpoint = (app: Express): Express => {
 };
 
 const hentBrukerinfo = async (req, res: Response, next: NextFunction) => {
-
-
 
   // hent token fra cookie
   let idtoken = req.headers?.authorization?.split(' ')[1];
@@ -59,8 +57,9 @@ const hentBrukerinfo = async (req, res: Response, next: NextFunction) => {
 }
 
 const fetchAllFeatureTogglesHandler = (req, res) => {
-
-  res.send(Object.keys(ToggleKeys).reduce((keys, key) => ({ ...keys, [key]: isEnabled(ToggleKeys[key], byggContextFraRequest(req))}), {}));
+  logInfo('Fetch all featuretoggles: ', req);
+  const context = byggContextFraRequest(req);
+  res.send(Object.keys(ToggleKeys).reduce((keys, key) => ({ ...keys, [key]: isEnabled(ToggleKeys[key], context)}), {}));
 };
 
 const byggContextFraRequest = (req) => {
@@ -70,6 +69,8 @@ const byggContextFraRequest = (req) => {
     userId: req.data?.fnr || '',
     properties: {}
   }
+
+  logInfo('Sjekk organisasjoner: ', req.data.organisasjoner);
 
   if (req.data?.fnr) {
     // legg på properties dersom vi har fnr i request

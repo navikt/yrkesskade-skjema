@@ -1,5 +1,5 @@
 import { Strategy } from 'unleash-client';
-import { logInfo } from '@navikt/yrkesskade-logging';
+import { logWarn } from '@navikt/yrkesskade-logging';
 export class MinimumAntallAnsatteStrategy extends Strategy {
   constructor() {
     super('byMinimumAntall');
@@ -16,7 +16,7 @@ export class MinimumAntallAnsatteStrategy extends Strategy {
     const enabled = antallAnsatte >= minimumAntallAnsatte;
 
     if (!enabled) {
-      logInfo(`har ikke nødvendig antall ansatte - har ${antallAnsatte}`);
+      logWarn(`har ikke nødvendig antall ansatte - har ${antallAnsatte}`);
     }
 
     return enabled;

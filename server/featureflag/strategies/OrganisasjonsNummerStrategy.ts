@@ -1,4 +1,4 @@
-import { logInfo } from "@navikt/yrkesskade-logging";
+import { logWarn } from "@navikt/yrkesskade-logging";
 import { Strategy } from "unleash-client";
 
 export class OrganisasjonsnummerStrategy extends Strategy {
@@ -13,7 +13,8 @@ export class OrganisasjonsnummerStrategy extends Strategy {
 
     const organisasjonsnumre = context.properties.organisasjonsnumre
 
-    if (!organisasjonsnumre) {
+    if (!organisasjonsnumre || organisasjonsnumre.length === 0) {
+      logWarn('Har ingen organisasjoner');
       return false;
     }
 
@@ -23,7 +24,7 @@ export class OrganisasjonsnummerStrategy extends Strategy {
     const enabled: boolean = contextOrganisasjonsnumre.some(organisasjonsnummer=> toggledOrganisasjonsnumre.includes(organisasjonsnummer));
 
     if (!enabled) {
-      logInfo(`har ikke nødvendig organisasjonsnumre - har ${organisasjonsnumre}`);
+      logWarn(`har ikke nødvendig organisasjonsnumre - har ${organisasjonsnumre}`);
     }
 
     return enabled;

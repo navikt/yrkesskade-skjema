@@ -1,5 +1,5 @@
 import { Strategy } from 'unleash-client';
-import { logInfo } from '@navikt/yrkesskade-logging';
+import { logWarn } from '@navikt/yrkesskade-logging';
 
 export class NaeringskodeStrategy extends Strategy {
   constructor() {
@@ -15,6 +15,7 @@ export class NaeringskodeStrategy extends Strategy {
 
     const naeringskoderProperty = context.properties.naeringskoder
     if (!naeringskoderProperty) {
+      logWarn('Har ingen næringskoder')
       return false;
     }
 
@@ -23,7 +24,7 @@ export class NaeringskodeStrategy extends Strategy {
     const enabled = contextNaeringskoder.some(naeringskode => toggledNaeringskoder.includes(naeringskode));
 
     if (!enabled) {
-      logInfo(`har ikke nødvendig næringskode - har ${naeringskoderProperty}`);
+      logWarn(`har ikke nødvendig næringskode - har ${naeringskoderProperty}`);
     }
 
     return enabled;
