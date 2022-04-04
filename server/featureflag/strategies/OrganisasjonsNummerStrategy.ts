@@ -7,13 +7,17 @@ export class OrganisasjonsnummerStrategy extends Strategy {
   }
 
   isEnabled(parameters, context): boolean {
+    if (!parameters.orgnumre) {
+      return false;
+    }
+
     const organisasjonsnumre = context.properties.organisasjonsnumre
 
     if (!organisasjonsnumre) {
       return false;
     }
 
-    const toggledOrganisasjonsnumre = parameters.orgnumre?.split(',');
+    const toggledOrganisasjonsnumre = parameters.orgnumre.split(',');
     const contextOrganisasjonsnumre = organisasjonsnumre;
 
     const enabled: boolean = contextOrganisasjonsnumre.some(organisasjonsnummer=> toggledOrganisasjonsnumre.includes(organisasjonsnummer));

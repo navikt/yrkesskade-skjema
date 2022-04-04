@@ -77,13 +77,11 @@ const byggContextFraRequest = (req) => {
       'organisasjonsnumre': req.data.organisasjoner.map(organisasjon => organisasjon.organisasjonsnummer),
       'naeringskoder': req.data.organisasjoner
         .filter((organisasjon: Organisasjon) => !!organisasjon.naeringskode)
-        .map((organisasjon: Organisasjon) => organisasjon.naeringskode)
-        .join(','),
+        .map((organisasjon: Organisasjon) => organisasjon.naeringskode),
       'antallAnsatte': Math.max.apply(Math, req.data.organisasjoner.map((organisasjon: Organisasjon) =>  organisasjon.antallAnsatte )),
       'organisasjonsformer': req.data.organisasjoner
         .filter((organisasjon: Organisasjon) => !!organisasjon.organisasjonsform)
-        .map((organisasjon: Organisasjon) => organisasjon.organisasjonsform)
-        .join(','),
+        .map((organisasjon: Organisasjon) => organisasjon.organisasjonsform),
     }
   }
 
