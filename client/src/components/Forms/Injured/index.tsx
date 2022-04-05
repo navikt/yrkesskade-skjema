@@ -120,6 +120,7 @@ const InjuredForm = ({ register, errors, control, setValue }: IProps) => {
                     state.skadelidt.dekningsforhold
                       .stillingstittelTilDenSkadelidte,
                 }}
+                isClearable
                 onBlur={onBlur}
                 onChange={(val) => onChange([val?.value])}
                 options={stillingstitler}
