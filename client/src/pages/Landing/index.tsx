@@ -41,6 +41,8 @@ const Landing = () => {
       return false;
     }
 
+    logMessage('Digitalt skjema tilgjengelig: MVP kriterie er oppfylt');
+
     const organisationsLength = innloggetBruker.organisasjoner.length;
 
     // check if user meets the number of organisations requirement
@@ -59,7 +61,7 @@ const Landing = () => {
       return false;
     }
 
-    const organisasjon = innloggetBruker.organisasjoner[2];
+    const organisasjon = innloggetBruker.organisasjoner[0];
     const roller = await BrukerinfoControllerService.hentRoller(
       organisasjon.organisasjonsnummer
     );
