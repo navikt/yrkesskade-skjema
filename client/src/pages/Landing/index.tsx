@@ -37,9 +37,11 @@ const Landing = () => {
     }
     // check if user is part of MVP naeringskoder
     if (!toggles.DIGITAL_SKJEMA_INNSENDING) {
-      logMessage('Feature toggle disabled form');
+      logMessage('Digitalt skjema utilgjengelig');
       return false;
     }
+
+    logMessage('Digitalt skjema tilgjengelig: MVP kriterie er oppfylt');
 
     const organisationsLength = innloggetBruker.organisasjoner.length;
 
@@ -59,7 +61,7 @@ const Landing = () => {
       return false;
     }
 
-    const organisasjon = innloggetBruker.organisasjoner[2];
+    const organisasjon = innloggetBruker.organisasjoner[0];
     const roller = await BrukerinfoControllerService.hentRoller(
       organisasjon.organisasjonsnummer
     );
@@ -82,8 +84,10 @@ const Landing = () => {
     );
     setContent(<NoAccessContent />);
     if (tilgangTilDigitaltskjema) {
+      logMessage('Innlogget bruker har tilgang til skjema');
       navigate('/yrkesskade/skjema');
     } else {
+      logMessage('Innlogget bruker har ikke tilgang til skjema - sendes til NoAccess siden');
       setContent(<NoAccessContent />);
     }
   };

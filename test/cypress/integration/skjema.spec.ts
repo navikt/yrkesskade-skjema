@@ -44,20 +44,20 @@ describe('Skjema innsending', (): void => {
     // start innmelding
     info.startInnmelding().click();
 
-    // velg tidspunkt
+    // info om skadelydte
+    injuredForm.position().type('Programvareutviklere{enter}');
+    injuredForm.idNumber().type('{selectAll}16120101181');
+    injuredForm.positionSelect().select(1);
+
+    // Gå til neste steg
+    general.nextStep().click();
+
+     // velg tidspunkt
     timeframeForm.timeframeWhenDate().clear().type(injuryTime.format('DD.MM.YYYY')).type('{enter}');
     timeframeForm.timeframeWhenTime().type('{selectall}' + injuryTime.format('HH:mm')).type('{enter}'); // ser ikke ut som den liker at dette felter skrives til
    // timeframeForm.timeframeWhenTime().click();
    // timeframeForm.timeframeWhenTimeSelect(13).click();
     timeframeForm.timeframePeriodOptions().select('I avtalt arbeidstid');
-
-    // Gå til neste steg
-    general.nextStep().click();
-
-    // info om skadelydte
-    // injuredForm.roleOptions().select('Rolle');
-    injuredForm.position().type('Programvareutviklere{enter}');
-    injuredForm.idNumber().type('{selectAll}16120101181');
 
     // Gå til neste steg
     general.nextStep().click();
@@ -83,6 +83,12 @@ describe('Skjema innsending', (): void => {
     // Gå til neste steg
     general.nextStep().click();
 
+    // validerer oppsummering
+    summary.accordians.innmelder().click();
+    summary.innmelder.navn().should('have.text', 'ROLF BJØRN'); // se i fixtures/brukerinfo.json
+    summary.innmelder
+      .virksomhetsnavn().should('have.text', 'BIRI OG TORPO REGNSKAP'); // se 1 organisasjon i fixtures/brukerinfo.json
+
     // send inn skjema
     summary.sendInjury().click().wait('@postSkademelding');
 
@@ -101,6 +107,14 @@ describe('Skjema innsending', (): void => {
     // start innmelding
     info.startInnmelding().click();
 
+    // info om skadelydte
+    injuredForm.position().type('Programvareutviklere{enter}');
+    injuredForm.idNumber().type('{selectAll}16120101181');
+    injuredForm.positionSelect().select(2);
+
+    // Gå til neste steg
+    general.nextStep().click();
+
     // velg tidspunkt
     timeframeForm.timeframeWhenDate().clear().type(injuryTime.format('DD.MM.YYYY')).type('{enter}');
     timeframeForm.timeframeWhenTime().type('{selectall}' + injuryTime.format('HH:mm')).type('{enter}'); // ser ikke ut som den liker at dette felter skrives til
@@ -111,13 +125,6 @@ describe('Skjema innsending', (): void => {
     // Gå til neste steg
     general.nextStep().click();
 
-    // info om skadelydte
-    // injuredForm.roleOptions().select('Rolle');
-    injuredForm.position().type('Programvareutviklere{enter}');
-    injuredForm.idNumber().type('{selectAll}16120101181');
-
-    // Gå til neste steg
-    general.nextStep().click();
 
     // info om ulykken
     accidentForm.place().select(1);

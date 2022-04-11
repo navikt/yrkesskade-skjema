@@ -1,36 +1,28 @@
 import { path } from 'ramda';
 import { Label, BodyShort } from '@navikt/ds-react';
+import { useInnloggetContext } from '../../../context/InnloggetContext';
+import { useSelectedCompany } from '../../../context/SelectedCompanyContext';
 interface IProps {
   data: any;
 }
 const InnmelderSummary = ({ data }: IProps) => {
-  // 'innmelder': {
-  //   'norskIdentitetsnummer': 20089408750,
-  //   'paaVegneAv': 'paaVegneAv',
-  //   'innmelderrolle': 'innmelderrolle',
-  //   'altinnrolleIDer': ['altinnrolleIDer', 'altinnrolleIDer'],
-  // },
+  const {innloggetBruker}  = useInnloggetContext();
+  const {selectedCompany} = useSelectedCompany();
+
   return (
     <div className="answerOuterContainer">
       {path(['innmelder', 'norskIdentitetsnummer'], data) !==
         'undefined' && (
         <div className="answerContainer">
-          <Label>Innmelders fødselsnummer</Label>
-          <BodyShort>{data.innmelder.norskIdentitetsnummer}</BodyShort>
+          <Label>Navn</Label>
+          <BodyShort data-testid="summary-name">{innloggetBruker?.navn}</BodyShort>
         </div>
       )}
       {path(['innmelder', 'paaVegneAv'], data) !==
         'undefined' && (
         <div className="answerContainer">
-          <Label>På vegne av</Label>
-          <BodyShort>{data.innmelder.paaVegneAv}</BodyShort>
-        </div>
-      )}
-      {path(['innmelder', 'innmelderrolle'], data) !==
-        'undefined' && (
-        <div className="answerContainer">
-          <Label>Innmelders rolle</Label>
-          <BodyShort>{data.innmelder.innmelderrolle}</BodyShort>
+          <Label>Virksomhet</Label>
+          <BodyShort data-testid="summary-company-name">{selectedCompany.navn}</BodyShort>
         </div>
       )}
     </div>
