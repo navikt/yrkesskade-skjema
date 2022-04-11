@@ -83,6 +83,12 @@ describe('Skjema innsending', (): void => {
     // Gå til neste steg
     general.nextStep().click();
 
+    // validerer oppsummering
+    summary.accordians.innmelder().click();
+    summary.innmelder.navn().should('have.text', 'ROLF BJØRN'); // se i fixtures/brukerinfo.json
+    summary.innmelder
+      .virksomhetsnavn().should('have.text', 'BIRI OG TORPO REGNSKAP'); // se 1 organisasjon i fixtures/brukerinfo.json
+
     // send inn skjema
     summary.sendInjury().click().wait('@postSkademelding');
 

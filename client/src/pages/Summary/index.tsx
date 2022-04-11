@@ -107,7 +107,7 @@ const Summary = () => {
           </BodyLong>
 
           <Accordion className="spacer">
-            <Accordion.Item renderContentWhenClosed={true}>
+            <Accordion.Item renderContentWhenClosed={true} data-testid="oppsummering-accordian-innmelder">
               <Accordion.Header>Om deg</Accordion.Header>
               <Accordion.Content>
                 <InnmelderSummary data={data} />
