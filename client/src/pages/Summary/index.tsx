@@ -71,14 +71,13 @@ const Summary = () => {
       );
 
       logMessage('Skademelding innsendt');
-      logAmplitudeEvent('skademelding.innmelding.fullfort');
-      logAmplitudeEvent('skademelding.innmelding.feilet');
+      logAmplitudeEvent('skademelding.innmelding', { status: 'fullfort' });
       navigate('/yrkesskade/skjema/kvittering', { state: data as unknown as Skademelding });
       actions.clearFormAction({});
     } catch (error: any) {
       setError('Det skjedde en feil med innsendingen. Vi jobber med å løse problemet. Prøv igjen senere.');
       logErrorMessage(`Innsending av skademelding feilet: ${error.message}`);
-      logAmplitudeEvent('skademelding.innmelding.feilet', {feilmelding: error.message});
+      logAmplitudeEvent('skademelding.innmelding', { status: 'feilet', feilmelding: error.message});
       navigate('/yrkesskade/skjema/feilmelding');
     }
   };
