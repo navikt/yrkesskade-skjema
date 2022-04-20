@@ -53,7 +53,7 @@ const Info = () => {
 
   const handleForward = () => {
     logMessage('Bruker har startet innmelding');
-    logAmplitudeEvent('skademelding.innmelding.startet')
+    logAmplitudeEvent('skademelding.innmelding', { status: 'startet'})
     navigate('/yrkesskade/skjema/skadelidt');
   };
 

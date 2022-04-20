@@ -10,7 +10,7 @@ export const useCancel = () => {
 
   const handleCancel = () => {
     logMessage('Brukeren har avsluttet innsending av skademelding');
-    logAmplitudeEvent('skademelding.innmelding.avbrutt');
+    logAmplitudeEvent('skademelding.innmelding', { status: 'avbrutt' });
 
     actions.clearFormAction({});
     window.location.href = 'https://nav.no';
