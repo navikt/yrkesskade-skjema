@@ -19,6 +19,7 @@ import { useStateMachine } from 'little-state-machine';
 import formUpdateAction from '../../../State/actions/formUpdateAction';
 import { useNavigate } from 'react-router-dom';
 import clearFormAction from '../../../State/actions/clearAction';
+import { useCancel } from '../../../core/hooks/cancel.hooks';
 
 const InjuryFormPage = () => {
   const { actions, state } = useStateMachine({ formUpdateAction, clearFormAction });
@@ -34,6 +35,7 @@ const InjuryFormPage = () => {
       'skade.antattSykefravaerTabellH': state.skade.antattSykefravaerTabellH
     }
   });
+  const cancel = useCancel();
 
   const navigate = useNavigate();
 
@@ -52,10 +54,6 @@ const InjuryFormPage = () => {
     actions.formUpdateAction(data);
     navigate('/yrkesskade/skjema/beskrivelse');
   };
-  const handleAbort = () => {
-    actions.clearFormAction({});
-    window.location.href = 'https://nav.no';
-  };
   return (
     <ContentContainer>
       <SystemHeader />
@@ -73,7 +71,7 @@ const InjuryFormPage = () => {
             </Heading>
             <InjuryForm errors={errors} register={register} getValues={getValues} reset={resetField} setValue={setValue}/>
             <div className="buttonGroup spacer">
-              <Button variant="secondary" onClick={handleAbort}>
+              <Button variant="secondary" onClick={cancel}>
                 Avbryt
               </Button>
               <Button onClick={handleSubmit(onSubmit)} data-testid="neste-steg">Neste steg</Button>

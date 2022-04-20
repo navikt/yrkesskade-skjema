@@ -24,6 +24,7 @@ import clearFormAction from '../../../State/actions/clearAction';
 import { KodeverkControllerService } from '../../../api/kodeverk';
 import { useAppDispatch } from '../../../core/hooks/state.hooks';
 import { addKodeverk } from '../../../core/actions/kodeverk.actions';
+import { useCancel } from '../../../core/hooks/cancel.hooks';
 
 const TimeframeFormPage = () => {
   const { actions, state } = useStateMachine({ formUpdateAction, clearFormAction});
@@ -40,6 +41,7 @@ const TimeframeFormPage = () => {
       'hendelsesfakta.naarSkjeddeUlykken': state.hendelsesfakta.naarSkjeddeUlykken
     }
   });
+  const cancel = useCancel();
 
   const dispatch = useAppDispatch();
 
@@ -60,10 +62,6 @@ const TimeframeFormPage = () => {
     actions.formUpdateAction(data);
     navigate('/yrkesskade/skjema/ulykken');
   };
-  const handleAbort = () => {
-    actions.clearFormAction({});
-    window.location.href = 'https://nav.no';
-  };
   return (
     <ContentContainer>
       <SystemHeader />
@@ -81,7 +79,7 @@ const TimeframeFormPage = () => {
             </Heading>
             <TimeframeForm errors={errors} register={register} control={control} setValue={setValue}/>
             <div className="buttonGroup">
-              <Button variant="secondary" onClick={handleAbort}>
+              <Button variant="secondary" onClick={cancel}>
                 Avbryt
               </Button>
               <Button onClick={handleSubmit(onSubmit)} data-testid="neste-steg">Neste steg</Button>
