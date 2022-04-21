@@ -17,6 +17,7 @@ import { useFeatureToggles } from '../../context/FeatureTogglesContext';
 import { useInnloggetContext } from '../../context/InnloggetContext';
 import { Brukerinfo } from '../../types/brukerinfo';
 import { EAllFeatureToggles } from '../../types/feature-toggles';
+import { logAmplitudeEvent } from '../../utils/analytics/amplitude';
 import { logMessage } from '../../utils/logging';
 import { sjekkTilgangTilSkjema } from '../../utils/skjemaTilgangstyring';
 import './Landing.less';
@@ -122,6 +123,7 @@ const LoadingContent = () => {
 
 const NoAccessContent = () => {
   const handleClick = () => {
+    logAmplitudeEvent('skademelding.innmelding', { status: 'papir' });
     window.location.href =
       'https://www.nav.no/no/person/arbeid/yrkesskade-og-yrkessykdom';
   };

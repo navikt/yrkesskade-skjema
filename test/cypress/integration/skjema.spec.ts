@@ -25,7 +25,7 @@ describe('Skjema innsending', (): void => {
     network.intercept(endpointUrls.print, 'skademelding-kopi.pdf').as('postPrintPdf');
     network.intercept(endpointUrls.landkoder, 'kodeverk/landkoder.json').as('getLandkoder');
     network.intercept(endpointUrls.tidsromkoder, 'kodeverk/tidsromkoder.json').as('getTidsromkoder');
-   // network.intercept(endpointUrls.log, 'logResult.json').as('postLog');
+    network.intercept(endpointUrls.log, 'logResult.json').as('postLog');
 
     cy.window().then(win=> {
       win.sessionStorage.removeItem('__LSM__');
@@ -36,7 +36,7 @@ describe('Skjema innsending', (): void => {
 
   });
 
-  it('normal flyt - ingen avvik', () => {
+  it.only('normal flyt - ingen avvik', () => {
     const injuryTime = dayjs();
     // vent til innlogget sjekk er fullført
     cy.wait('@getInnlogget');

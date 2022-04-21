@@ -34,6 +34,8 @@ import {
 } from '../../api/yrkesskade';
 import clearFormAction from '../../State/actions/clearAction';
 import { logErrorMessage, logMessage } from '../../utils/logging';
+import { logAmplitudeEvent } from '../../utils/analytics/amplitude';
+import { useCancel } from '../../core/hooks/cancel.hooks';
 
 const Summary = () => {
   const { state, actions } = useStateMachine({
@@ -43,6 +45,7 @@ const Summary = () => {
   });
   const { selectedCompany } = useSelectedCompany();
   const { setError } = useErrorMessageContext();
+  const cancel = useCancel();
 
   useEffect(() => {
     // oppdater state med verdier som ikke har blitt satt av skjema
@@ -68,17 +71,15 @@ const Summary = () => {
       );
 
       logMessage('Skademelding innsendt');
+      logAmplitudeEvent('skademelding.innmelding', { status: 'fullfort' });
       navigate('/yrkesskade/skjema/kvittering', { state: data as unknown as Skademelding });
       actions.clearFormAction({});
     } catch (error: any) {
       setError('Det skjedde en feil med innsendingen. Vi jobber med å løse problemet. Prøv igjen senere.');
       logErrorMessage(`Innsending av skademelding feilet: ${error.message}`);
+      logAmplitudeEvent('skademelding.innmelding', { status: 'feilet', feilmelding: error.message});
       navigate('/yrkesskade/skjema/feilmelding');
     }
-  };
-  const handleAbort = () => {
-    actions.clearFormAction({});
-    window.location.href = 'https://nav.no';
   };
 
   return (
@@ -145,7 +146,7 @@ const Summary = () => {
             </Accordion.Item>
           </Accordion>
           <div className="buttonGroup no-print">
-            <Button variant="secondary" onClick={handleAbort}>
+            <Button variant="secondary" onClick={cancel}>
               Avbryt
             </Button>
             <Button onClick={handleSending} data-testid="send-injuryform">Send inn</Button>
