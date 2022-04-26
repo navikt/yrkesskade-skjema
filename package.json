@@ -8,13 +8,14 @@
     "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
     "build": "rimraf dist && ncc build server/server.ts -o dist",
     "build-prod": "rimraf build && cd client && yarn && yarn run build && cd .. && yarn && yarn run build",
+    "test": "jest ./server",
     "server": "nodemon --verbose --watch \"server\" --ext \"ts,json\" --exec ts-node server/server.ts",
     "client": "cd client && yarn start && cd ..",
     "dev": "concurrently \"yarn run client\" \"yarn run server\"",
     "docker": "yarn build-prod && docker build -t skjema .",
     "docker-run": "docker run -dp 3000:3000 skjema",
-    "codegen-yrkesskade": "npx openapi -i https://yrkesskade-melding-api.dev.intern.nav.no/v3/api-docs -o ./client/src/api/yrkesskade  --client axios",
-    "codegen-kodeverk" : "npx openapi -i https://yrkesskade-kodeverk.dev.intern.nav.no/v3/api-docs -o ./client/src/api/kodeverk --client axios"
+    "codegen-yrkesskade": "npx openapi -i https://yrkesskade-melding-api.dev.intern.nav.no/api/v3/api-docs -o ./client/src/api/yrkesskade  --client axios",
+    "codegen-kodeverk": "npx openapi -i https://yrkesskade-kodeverk.dev.intern.nav.no/v3/api-docs -o ./client/src/api/kodeverk --client axios"
   },
   "repository": {
     "type": "git",
@@ -31,7 +32,9 @@
     "@navikt/ds-icons": "^0.7.1",
     "@navikt/nav-dekoratoren-moduler": "^1.6.9",
     "@navikt/yrkesskade-logging": "^0.0.2",
+    "@types/jest": "^26.0.24",
     "@types/ramda": "^0.27.62",
+    "@types/uuid4": "^2.0.0",
     "axios": "^0.25.0",
     "body-parser": "^1.19.2",
     "cookie-parser": "^1.4.6",
@@ -39,12 +42,15 @@
     "dotenv": "^11.0.0",
     "express": "^4.17.1",
     "http-proxy-middleware": "^2.0.2",
+    "jest": "26.6.0",
     "jose": "^4.3.8",
     "js-cookie": "^3.0.1",
     "mustache-express": "^1.3.2",
     "openid-client": "^5.1.1",
     "ramda": "^0.27.2",
+    "ts-jest": "^26.5.6",
     "unleash-client": "^3.10.2",
+    "uuid4": "^2.0.2",
     "yup": "^0.32.11"
   },
   "devDependencies": {

@@ -21,12 +21,12 @@ const StepIndicator = () => {
         active: true,
       },
       {
-        text: 'Tid og sted',
+        text: 'Om den skadelidte',
         done: false,
         active: false,
       },
       {
-        text: 'Om den skadelidte',
+        text: 'Tid og sted',
         done: false,
         active: false,
       },
@@ -82,10 +82,10 @@ const StepIndicator = () => {
     if (pathname.toLowerCase() === '/yrkesskade/') {
       updateSteps(1, steps);
     }
-    if (pathname.toLowerCase() === '/yrkesskade/skjema/tidsrom') {
+    if (pathname.toLowerCase() === '/yrkesskade/skjema/skadelidt') {
       updateSteps(2, steps);
     }
-    if (pathname.toLowerCase() === '/yrkesskade/skjema/skadelidt') {
+    if (pathname.toLowerCase() === '/yrkesskade/skjema/tidsrom') {
       updateSteps(3, steps);
     }
     if (pathname.toLowerCase() === '/yrkesskade/skjema/ulykken') {

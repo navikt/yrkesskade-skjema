@@ -1,4 +1,4 @@
-import { logInfo } from "@navikt/yrkesskade-logging";
+import { logWarn } from "@navikt/yrkesskade-logging";
 import { Strategy } from "unleash-client";
 
 export class OrganisasjonsnummerStrategy extends Strategy {
@@ -6,20 +6,25 @@ export class OrganisasjonsnummerStrategy extends Strategy {
     super('byOrgnummer');
   }
 
-  isEnabled(parameters, context) {
-    const organisasjonsnumre = context.properties.organisasjonsnumre
-
-    if (!organisasjonsnumre) {
+  isEnabled(parameters, context): boolean {
+    if (!parameters.orgnumre) {
       return false;
     }
 
-    const toggledOrganisasjonsnumre = parameters.orgnumre?.split(',');
-    const contextOrganisasjonsnumre = organisasjonsnumre;
+    const organisasjonsnumre = context.properties.organisasjonsnumre
 
-    const enabled = contextOrganisasjonsnumre.find(organisasjonsnummer=> toggledOrganisasjonsnumre.includes(organisasjonsnummer));
+    if (!organisasjonsnumre || organisasjonsnumre.length === 0) {
+      logWarn('Har ingen organisasjoner');
+      return false;
+    }
+
+    const toggledOrganisasjonsnumre = parameters.orgnumre.split(',');
+    const contextOrganisasjonsnumre = organisasjonsnumre.split(',');
+
+    const enabled: boolean = contextOrganisasjonsnumre.some(organisasjonsnummer=> toggledOrganisasjonsnumre.includes(organisasjonsnummer));
 
     if (!enabled) {
-      logInfo(`har ikke nødvendig organisasjonsnumre - har ${organisasjonsnumre}`);
+      logWarn(`har ikke nødvendig organisasjonsnumre - har ${organisasjonsnumre}`);
     }
 
     return enabled;

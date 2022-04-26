@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { TextField, Label } from '@navikt/ds-react';
+import { TextField, Label, Select as NAVSelect } from '@navikt/ds-react';
 import { Controller } from 'react-hook-form';
 import stillingstitler from '../../../assets/Lists/stillingstitler';
+import dekningsforhold from '../../../assets/Lists/dekningsforhold';
 import Select from 'react-select';
 import validator from '@navikt/fnrvalidator';
 import { useInnloggetContext } from '../../../context/InnloggetContext';
@@ -20,7 +21,7 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
   const { state } = useStateMachine();
   const [openMenu, setOpenMenu] = useState(false);
 
-  const handleInputChange = (query: string, action:any) => {
+  const handleInputChange = (query: string, action: any) => {
     if (action.action === 'input-change' && query.length >= 2) {
       setOpenMenu(true);
     } else {
@@ -55,16 +56,45 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
         }
         data-testid="injured-id-number"
       />
+
+      <NAVSelect
+        className="spacer"
+        label="Hva er den skadeliteds tilknytning til virksomheten?"
+        {...register('skadelidt.dekningsforhold.rolletype', {
+          required: 'Dette feltet er påkrevd',
+        })}
+        data-testid="injured-role-select"
+        error={
+          errors?.skadelidt?.dekningsforhold?.rolletype &&
+          errors?.skadelidt?.dekningsforhold.rolletype.message
+        }
+      >
+        <option hidden value=""></option>
+        {dekningsforhold.map((dekning: { value: string; label: string }) => {
+          return (
+            <option key={encodeURI(dekning.value)} value={dekning.value}>
+              {dekning.label}
+            </option>
+          );
+        })}
+      </NAVSelect>
       <div className="spacer">
         <Label>Hva er den skadelidtes stilling</Label>
         <Controller
           name="skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte"
           control={control}
-          rules={{ required:  _.isEmpty(state.skadelidt.dekningsforhold
-            .stillingstittelTilDenSkadelidte) && 'Dette feltet er påkrevd'  }}
+          rules={{
+            required:
+              _.isEmpty(
+                state.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte
+              ) && 'Dette feltet er påkrevd',
+          }}
           render={({ field: { onChange, onBlur, value, name, ref } }) => (
             <Select
-              components={{ DropdownIndicator:() => null, IndicatorSeparator:() => null }}
+              components={{
+                DropdownIndicator: () => null,
+                IndicatorSeparator: () => null,
+              }}
               defaultValue={{
                 value:
                   state.skadelidt.dekningsforhold

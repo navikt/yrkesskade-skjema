@@ -20,7 +20,7 @@ export class SkademeldingApiControllerService {
     ): CancelablePromise<Unit> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/v1/skademeldinger',
+            url: '/v1/skademeldinger',
             body: requestBody,
             mediaType: 'application/json',
         });

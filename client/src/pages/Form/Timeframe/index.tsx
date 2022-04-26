@@ -24,6 +24,7 @@ import clearFormAction from '../../../State/actions/clearAction';
 import { KodeverkControllerService } from '../../../api/kodeverk';
 import { useAppDispatch } from '../../../core/hooks/state.hooks';
 import { addKodeverk } from '../../../core/actions/kodeverk.actions';
+import { useCancel } from '../../../core/hooks/cancel.hooks';
 
 const TimeframeFormPage = () => {
   const { actions, state } = useStateMachine({ formUpdateAction, clearFormAction});
@@ -40,6 +41,7 @@ const TimeframeFormPage = () => {
       'hendelsesfakta.naarSkjeddeUlykken': state.hendelsesfakta.naarSkjeddeUlykken
     }
   });
+  const cancel = useCancel();
 
   const dispatch = useAppDispatch();
 
@@ -58,11 +60,7 @@ const TimeframeFormPage = () => {
 
   const onSubmit = (data: any) => {
     actions.formUpdateAction(data);
-    navigate('/yrkesskade/skjema/skadelidt');
-  };
-  const handleAbort = () => {
-    actions.clearFormAction({});
-    window.location.href = 'https://nav.no';
+    navigate('/yrkesskade/skjema/ulykken');
   };
   return (
     <ContentContainer>
@@ -71,17 +69,17 @@ const TimeframeFormPage = () => {
         <Cell xs={12} lg={2}></Cell>
         <Cell xs={12} lg={5}>
           <div className="cellContentContainer">
-            <BackButton url="/yrkesskade/skjema" />
+            <BackButton url="/yrkesskade/skjema/skadelidt" />
             <Heading
               size="2xlarge"
               className="pageNumberTitle spacer"
-              data-number="2"
+              data-number="3"
             >
               Tid og dato
             </Heading>
             <TimeframeForm errors={errors} register={register} control={control} setValue={setValue}/>
             <div className="buttonGroup">
-              <Button variant="secondary" onClick={handleAbort}>
+              <Button variant="secondary" onClick={cancel}>
                 Avbryt
               </Button>
               <Button onClick={handleSubmit(onSubmit)} data-testid="neste-steg">Neste steg</Button>

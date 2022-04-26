@@ -5,6 +5,7 @@ import {
   logSecure,
   stdoutLogger,
 } from '@navikt/yrkesskade-logging';
+import { v4 as uuidv4} from 'uuid';
 
 const errorHandler = (err, req, res) => {
   if (process.env.ENV !== 'production') {
@@ -17,7 +18,8 @@ const errorHandler = (err, req, res) => {
 export const doProxy = (path: string, target: string) => {
   return createProxyMiddleware(path, {
     pathRewrite: {
-      '^/kodeverk/': '/'
+      '^/kodeverk/': '/',
+      '^/api/': '/'
     },
     changeOrigin: true,
     secure: false,
@@ -30,6 +32,8 @@ export const doProxy = (path: string, target: string) => {
       if (!tokenSet?.expired() && tokenSet?.access_token) {
         req.headers.authorization = `Bearer ${tokenSet.access_token}`;
       }
+
+      req.headers['Nav-CallId'] = uuidv4();
 
       return undefined;
     },

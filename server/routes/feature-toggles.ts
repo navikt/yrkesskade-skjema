@@ -5,7 +5,8 @@ import { ToggleKeys } from '../../client/src/types/feature-toggles';
 import { Brukerinfo, Organisasjon } from '../../client/src/types/brukerinfo';
 import axios from "axios";
 import { exchangeToken } from "../tokenx";
-import { logError } from '@navikt/yrkesskade-logging';
+import { logError, logInfo } from '@navikt/yrkesskade-logging';
+import { Context } from "unleash-client";
 
 const toggleFetchHandler = (req, res) => {
   const toggleId = req.params.id;
@@ -24,8 +25,6 @@ export const configureFeatureTogglesEndpoint = (app: Express): Express => {
 
 const hentBrukerinfo = async (req, res: Response, next: NextFunction) => {
 
-
-
   // hent token fra cookie
   let idtoken = req.headers?.authorization?.split(' ')[1];
 
@@ -38,7 +37,7 @@ const hentBrukerinfo = async (req, res: Response, next: NextFunction) => {
 
   try {
     const tokenset = await exchangeToken(req);
-    const response = await axios.get<Brukerinfo>(`${config.API_URL}/api/v1/brukerinfo`, {
+    const response = await axios.get<Brukerinfo>(`${config.API_URL}/v1/brukerinfo`, {
       headers: {
         // bruk cookie i kall mot api
         Authorization: `Bearer ${tokenset.access_token}`,
@@ -58,23 +57,25 @@ const hentBrukerinfo = async (req, res: Response, next: NextFunction) => {
 }
 
 const fetchAllFeatureTogglesHandler = (req, res) => {
-
-  res.send(Object.keys(ToggleKeys).reduce((keys, key) => ({ ...keys, [key]: isEnabled(ToggleKeys[key], byggContextFraRequest(req))}), {}));
+  const context = byggContextFraRequest(req);
+  res.send(Object.keys(ToggleKeys).reduce((keys, key) => ({ ...keys, [key]: isEnabled(ToggleKeys[key], context)}), {}));
 };
 
 const byggContextFraRequest = (req) => {
-  const context = {
+  const context: Context = {
     appName: process.env.NAIS_APP_NAME ?? 'yrkesskade-skjema',
     environment: process.env.NODE_ENV,
     userId: req.data?.fnr || '',
     properties: {}
   }
 
+  logInfo('Sjekk organisasjoner: ', req.data.organisasjoner);
+
   if (req.data?.fnr) {
     // legg på properties dersom vi har fnr i request
     context.properties = {
       ...context.properties,
-      'organisasjonsnumre': req.data.organisasjoner.map(organisasjon => organisasjon.organisasjonsnummer),
+      'organisasjonsnumre': req.data.organisasjoner.map(organisasjon => organisasjon.organisasjonsnummer).join(','),
       'naeringskoder': req.data.organisasjoner
         .filter((organisasjon: Organisasjon) => !!organisasjon.naeringskode)
         .map((organisasjon: Organisasjon) => organisasjon.naeringskode)

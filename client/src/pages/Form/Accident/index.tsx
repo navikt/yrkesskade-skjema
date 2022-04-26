@@ -17,6 +17,7 @@ import { useStateMachine } from 'little-state-machine';
 import formUpdateAction from '../../../State/actions/formUpdateAction';
 import { useNavigate } from 'react-router-dom';
 import clearFormAction from '../../../State/actions/clearAction';
+import { useCancel } from '../../../core/hooks/cancel.hooks';
 
 const AccidentFormPage = () => {
   const { actions, state } = useStateMachine({ formUpdateAction, clearFormAction });
@@ -37,15 +38,11 @@ const AccidentFormPage = () => {
   });
 
   const navigate = useNavigate();
+  const cancel = useCancel();
 
   const onSubmit = (data: any) => {
     actions.formUpdateAction(data);
     navigate('/yrkesskade/skjema/skaden');
-  };
-
-  const handleAbort = () => {
-    actions.clearFormAction({});
-    window.location.href = 'https://nav.no';
   };
 
   return (
@@ -65,7 +62,7 @@ const AccidentFormPage = () => {
             </Heading>
             <AccidentForm errors={errors} register={register} control={control} />
             <div className="buttonGroup">
-              <Button variant="secondary" onClick={handleAbort}>
+              <Button variant="secondary" onClick={cancel}>
                 Avbryt
               </Button>
               <Button onClick={handleSubmit(onSubmit)} data-testid="neste-steg">Neste steg</Button>

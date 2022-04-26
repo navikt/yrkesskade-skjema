@@ -19,7 +19,7 @@ export type OpenAPIConfig = {
 };
 
 export const OpenAPI: OpenAPIConfig = {
-    BASE: 'https://yrkesskade-melding-api.dev.intern.nav.no',
+    BASE: 'https://yrkesskade-melding-api.dev.intern.nav.no/api',
     VERSION: '0',
     WITH_CREDENTIALS: false,
     CREDENTIALS: 'include',
