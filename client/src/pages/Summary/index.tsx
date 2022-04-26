@@ -19,6 +19,7 @@ import SkadeSummary from '../../components/Summary/Skade';
 import BeskrivelseSummary from '../../components/Summary/Beskrivelse';
 import { useNavigate } from 'react-router-dom';
 import StepIndicator from '../../components/StepIndicator';
+import ExitButton from '../../components/ExitButton';
 
 import { useStateMachine } from 'little-state-machine';
 import { useSelectedCompany } from '../../context/SelectedCompanyContext';
@@ -35,7 +36,6 @@ import {
 import clearFormAction from '../../State/actions/clearAction';
 import { logErrorMessage, logMessage } from '../../utils/logging';
 import { logAmplitudeEvent } from '../../utils/analytics/amplitude';
-import { useCancel } from '../../core/hooks/cancel.hooks';
 
 const Summary = () => {
   const { state, actions } = useStateMachine({
@@ -45,7 +45,6 @@ const Summary = () => {
   });
   const { selectedCompany } = useSelectedCompany();
   const { setError } = useErrorMessageContext();
-  const cancel = useCancel();
 
   useEffect(() => {
     // oppdater state med verdier som ikke har blitt satt av skjema
@@ -146,9 +145,7 @@ const Summary = () => {
             </Accordion.Item>
           </Accordion>
           <div className="buttonGroup no-print">
-            <Button variant="secondary" onClick={cancel}>
-              Avbryt
-            </Button>
+            <ExitButton />
             <Button onClick={handleSending} data-testid="send-injuryform">Send inn</Button>
           </div>
         </Cell>

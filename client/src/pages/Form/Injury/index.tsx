@@ -13,13 +13,14 @@ import BackButton from '../../../components/BackButton';
 
 import StepIndicator from '../../../components/StepIndicator';
 // import { ISteps } from '../../../Interfaces/steps';
+import ExitButton from '../../../components/ExitButton';
 
 import { useForm } from 'react-hook-form';
 import { useStateMachine } from 'little-state-machine';
 import formUpdateAction from '../../../State/actions/formUpdateAction';
 import { useNavigate } from 'react-router-dom';
 import clearFormAction from '../../../State/actions/clearAction';
-import { useCancel } from '../../../core/hooks/cancel.hooks';
+// import { useCancel } from '../../../core/hooks/cancel.hooks';
 
 const InjuryFormPage = () => {
   const { actions, state } = useStateMachine({ formUpdateAction, clearFormAction });
@@ -35,7 +36,7 @@ const InjuryFormPage = () => {
       'skade.antattSykefravaerTabellH': state.skade.antattSykefravaerTabellH
     }
   });
-  const cancel = useCancel();
+  // const cancel = useCancel();
 
   const navigate = useNavigate();
 
@@ -71,9 +72,7 @@ const InjuryFormPage = () => {
             </Heading>
             <InjuryForm errors={errors} register={register} getValues={getValues} reset={resetField} setValue={setValue}/>
             <div className="buttonGroup">
-              <Button variant="secondary" onClick={cancel}>
-                Avbryt
-              </Button>
+              <ExitButton />
               <Button onClick={handleSubmit(onSubmit)} data-testid="neste-steg">Neste steg</Button>
             </div>
           </div>

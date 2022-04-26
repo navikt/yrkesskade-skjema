@@ -1,19 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Button, Modal, Heading, BodyLong } from '@navikt/ds-react';
+import { Button, Modal, Heading } from '@navikt/ds-react';
 
-// import { useStateMachine } from 'little-state-machine';
-// import clearFormAction from '../../State/actions/clearAction';
+import './ExitButton.less';
+
 import { useCancel } from '../../core/hooks/cancel.hooks';
 
-// import './BackButton.less';
-
-// import { useNavigate } from 'react-router-dom';
-
 const ExitButton = () => {
-  // const navigate = useNavigate();
-  // const { actions } = useStateMachine({
-  //   clearFormAction,
-  // });
   const cancel = useCancel();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -24,46 +16,34 @@ const ExitButton = () => {
     setIsOpen(false);
   };
 
-
-
-  // const handleCancel = () => {
-  //   actions.clearFormAction({});
-  //   navigate('https://nav.no');
-  // };
-
-  // useEffect(() => {
-  //   if (typeof window !== 'undefined') {
-  //     Modal.setAppElement('#root');
-  //   }
-  // });
+  useEffect(() => {
+    if (Modal && Modal.setAppElement) {
+      Modal.setAppElement('#root');
+    }
+  }, []);
 
   return (
     <>
       <Button
         onClick={handleButtonClick}
         variant="secondary"
-        size="small"
+        // size="small"
         data-testid="avbryt-innmelding"
       >
         Avbryt
       </Button>
-      <Modal open={isOpen} onClose={onCloseModal} aria-label="{false}">
-        <Modal.Content>
-          <Heading className="spacer" level="1" size="large">
-            Header
+      <Modal
+        open={isOpen}
+        onClose={onCloseModal}
+        aria-label="Modal for å lukke skjemadialogen"
+      >
+        <Modal.Content className="ModalContent">
+          <Heading className="spacer" level="1" size="medium">
+          Er du sikker på at du vil avbryte?
           </Heading>
-          <Heading className="spacer" level="2" size="medium">
-            Subheading
-          </Heading>
-          <BodyLong className="spacer">
-            Cupidatat irure ipsum veniam ad in esse.
-          </BodyLong>
-          <BodyLong className="spacer">
-            Cillum tempor pariatur amet ut laborum Lorem enim enim.
-          </BodyLong>
-          <div>
-            <Button onClick={onCloseModal}>Til skjema</Button>
-            <Button onClick={cancel}>Adios</Button>
+          <div className="buttonSection buttonGroup">
+            <Button onClick={onCloseModal}>Nei, tilbake</Button>
+            <Button variant="tertiary" onClick={cancel}>Avbryt</Button>
           </div>
         </Modal.Content>
       </Modal>
