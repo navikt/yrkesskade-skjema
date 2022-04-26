@@ -1,18 +1,20 @@
 import { useState, useEffect } from 'react';
 import { Button, Modal, Heading, BodyLong } from '@navikt/ds-react';
 
-import { useStateMachine } from 'little-state-machine';
-import clearFormAction from '../../State/actions/clearAction';
+// import { useStateMachine } from 'little-state-machine';
+// import clearFormAction from '../../State/actions/clearAction';
+import { useCancel } from '../../core/hooks/cancel.hooks';
 
 // import './BackButton.less';
 
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 const ExitButton = () => {
-  const navigate = useNavigate();
-  const { actions } = useStateMachine({
-    clearFormAction,
-  });
+  // const navigate = useNavigate();
+  // const { actions } = useStateMachine({
+  //   clearFormAction,
+  // });
+  const cancel = useCancel();
 
   const [isOpen, setIsOpen] = useState(false);
   const handleButtonClick = () => {
@@ -22,10 +24,12 @@ const ExitButton = () => {
     setIsOpen(false);
   };
 
-  const handleCancel = () => {
-    actions.clearFormAction({});
-    navigate('https://nav.no');
-  };
+
+
+  // const handleCancel = () => {
+  //   actions.clearFormAction({});
+  //   navigate('https://nav.no');
+  // };
 
   // useEffect(() => {
   //   if (typeof window !== 'undefined') {
@@ -59,7 +63,7 @@ const ExitButton = () => {
           </BodyLong>
           <div>
             <Button onClick={onCloseModal}>Til skjema</Button>
-            <Button onClick={handleCancel}>Adios</Button>
+            <Button onClick={cancel}>Adios</Button>
           </div>
         </Modal.Content>
       </Modal>
