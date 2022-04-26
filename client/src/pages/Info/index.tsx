@@ -14,6 +14,7 @@ import SystemHeader from '../../components/SystemHeader';
 // import getTexts from '../../utils/getTexts';
 import { useNavigate } from 'react-router-dom';
 import StepIndicator from '../../components/StepIndicator';
+import ExitButton from '../../components/ExitButton';
 
 // import { ISteps } from '../../Interfaces/steps';
 import { useInnloggetContext } from '../../context/InnloggetContext';
@@ -37,7 +38,6 @@ import { useAppDispatch } from '../../core/hooks/state.hooks';
 import { KodeverkControllerService } from '../../api/kodeverk';
 import { addKodeverk } from '../../core/actions/kodeverk.actions';
 import { logAmplitudeEvent } from '../../utils/analytics/amplitude';
-import { useCancel } from '../../core/hooks/cancel.hooks';
 // import Description from '../Form/Description';
 
 const Info = () => {
@@ -49,7 +49,7 @@ const Info = () => {
     clearFormAction,
     oppdaterRollerForOrganisasjon
   });
-  const cancel = useCancel();
+  // const cancel = useCancel();
 
   const handleForward = () => {
     logMessage('Bruker har startet innmelding');
@@ -216,14 +216,7 @@ const Info = () => {
               <BodyShort className="">+47 55 55 33 36</BodyShort>
             </div>
             <div className="buttonSection spacer buttonGroup">
-              <Button
-                variant="secondary"
-                onClick={cancel}
-                data-testid="avbryt-innmelding"
-                className=""
-              >
-                Avbryt
-              </Button>
+              <ExitButton />
               <Button
                 variant="primary"
                 onClick={handleForward}

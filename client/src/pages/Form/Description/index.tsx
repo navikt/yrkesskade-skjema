@@ -10,13 +10,14 @@ import SystemHeader from '../../../components/SystemHeader';
 import BackButton from '../../../components/BackButton';
 
 import StepIndicator from '../../../components/StepIndicator';
+import ExitButton from '../../../components/ExitButton';
 
 import { useForm } from 'react-hook-form';
 import { useStateMachine } from 'little-state-machine';
 import formUpdateAction from '../../../State/actions/formUpdateAction';
 import { useNavigate } from 'react-router-dom';
 import clearFormAction from '../../../State/actions/clearAction';
-import { useCancel } from '../../../core/hooks/cancel.hooks';
+// import { useCancel } from '../../../core/hooks/cancel.hooks';
 
 const DescriptionFormPage = () => {
   const { actions } = useStateMachine({ formUpdateAction, clearFormAction });
@@ -25,7 +26,7 @@ const DescriptionFormPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({});
-  const cancel = useCancel();
+  // const cancel = useCancel();
 
   const navigate = useNavigate();
 
@@ -53,9 +54,7 @@ const DescriptionFormPage = () => {
             </Heading>
             <DescriptionForm errors={errors} register={register} />
             <div className="buttonGroup">
-              <Button variant="secondary" onClick={cancel}>
-                Avbryt
-              </Button>
+              <ExitButton />
               <Button onClick={handleSubmit(onSubmit)} data-testid="neste-steg">Neste steg</Button>
             </div>
           </div>
