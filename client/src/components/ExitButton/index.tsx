@@ -38,12 +38,15 @@ const ExitButton = () => {
         aria-label="Modal for å lukke skjemadialogen"
       >
         <Modal.Content className="ModalContent">
-          <Heading className="spacer" level="1" size="medium">
+          <Heading className="spacer" level="1" size="large">
+          Avbryt
+          </Heading>
+          <Heading className="spacer" level="2" size="medium">
           Er du sikker på at du vil avbryte?
           </Heading>
           <div className="buttonSection buttonGroup">
             <Button onClick={onCloseModal}>Nei, tilbake</Button>
-            <Button variant="tertiary" onClick={cancel}>Avbryt</Button>
+            <Button variant="tertiary" onClick={cancel}>Ja, avbryt</Button>
           </div>
         </Modal.Content>
       </Modal>
