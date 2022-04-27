@@ -19,6 +19,7 @@ import SkadeSummary from '../../components/Summary/Skade';
 import BeskrivelseSummary from '../../components/Summary/Beskrivelse';
 import { useNavigate } from 'react-router-dom';
 import StepIndicator from '../../components/StepIndicator';
+import ExitButton from '../../components/ExitButton';
 
 import { useStateMachine } from 'little-state-machine';
 import { useSelectedCompany } from '../../context/SelectedCompanyContext';
@@ -34,6 +35,7 @@ import {
 } from '../../api/yrkesskade';
 import clearFormAction from '../../State/actions/clearAction';
 import { logErrorMessage, logMessage } from '../../utils/logging';
+import { logAmplitudeEvent } from '../../utils/analytics/amplitude';
 
 const Summary = () => {
   const { state, actions } = useStateMachine({
@@ -68,17 +70,15 @@ const Summary = () => {
       );
 
       logMessage('Skademelding innsendt');
+      logAmplitudeEvent('skademelding.innmelding', { status: 'fullfort' });
       navigate('/yrkesskade/skjema/kvittering', { state: data as unknown as Skademelding });
       actions.clearFormAction({});
     } catch (error: any) {
       setError('Det skjedde en feil med innsendingen. Vi jobber med å løse problemet. Prøv igjen senere.');
       logErrorMessage(`Innsending av skademelding feilet: ${error.message}`);
+      logAmplitudeEvent('skademelding.innmelding', { status: 'feilet', feilmelding: error.message});
       navigate('/yrkesskade/skjema/feilmelding');
     }
-  };
-  const handleAbort = () => {
-    actions.clearFormAction({});
-    window.location.href = 'https://nav.no';
   };
 
   return (
@@ -107,7 +107,7 @@ const Summary = () => {
           </BodyLong>
 
           <Accordion className="spacer">
-            <Accordion.Item renderContentWhenClosed={true}>
+            <Accordion.Item renderContentWhenClosed={true} data-testid="oppsummering-accordian-innmelder">
               <Accordion.Header>Om deg</Accordion.Header>
               <Accordion.Content>
                 <InnmelderSummary data={data} />
@@ -145,9 +145,7 @@ const Summary = () => {
             </Accordion.Item>
           </Accordion>
           <div className="buttonGroup no-print">
-            <Button variant="secondary" onClick={handleAbort}>
-              Avbryt
-            </Button>
+            <ExitButton />
             <Button onClick={handleSending} data-testid="send-injuryform">Send inn</Button>
           </div>
         </Cell>

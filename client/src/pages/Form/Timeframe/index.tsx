@@ -15,6 +15,7 @@ import BackButton from '../../../components/BackButton';
 
 import StepIndicator from '../../../components/StepIndicator';
 // import { ISteps } from '../../../Interfaces/steps';
+import ExitButton from '../../../components/ExitButton';
 
 import { useForm } from 'react-hook-form';
 import { useStateMachine } from 'little-state-machine';
@@ -24,6 +25,7 @@ import clearFormAction from '../../../State/actions/clearAction';
 import { KodeverkControllerService } from '../../../api/kodeverk';
 import { useAppDispatch } from '../../../core/hooks/state.hooks';
 import { addKodeverk } from '../../../core/actions/kodeverk.actions';
+// import { useCancel } from '../../../core/hooks/cancel.hooks';
 
 const TimeframeFormPage = () => {
   const { actions, state } = useStateMachine({ formUpdateAction, clearFormAction});
@@ -40,6 +42,7 @@ const TimeframeFormPage = () => {
       'hendelsesfakta.naarSkjeddeUlykken': state.hendelsesfakta.naarSkjeddeUlykken
     }
   });
+  // const cancel = useCancel();
 
   const dispatch = useAppDispatch();
 
@@ -60,10 +63,6 @@ const TimeframeFormPage = () => {
     actions.formUpdateAction(data);
     navigate('/yrkesskade/skjema/ulykken');
   };
-  const handleAbort = () => {
-    actions.clearFormAction({});
-    window.location.href = 'https://nav.no';
-  };
   return (
     <ContentContainer>
       <SystemHeader />
@@ -81,9 +80,7 @@ const TimeframeFormPage = () => {
             </Heading>
             <TimeframeForm errors={errors} register={register} control={control} setValue={setValue}/>
             <div className="buttonGroup">
-              <Button variant="secondary" onClick={handleAbort}>
-                Avbryt
-              </Button>
+             <ExitButton />
               <Button onClick={handleSubmit(onSubmit)} data-testid="neste-steg">Neste steg</Button>
             </div>
           </div>

@@ -9,7 +9,7 @@ import InjuredFormPage from './pages/Form/Injured';
 import AccidentFormPage from './pages/Form/Accident';
 import DescriptionFormPage from './pages/Form/Description';
 
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { StateMachineProvider, createStore } from 'little-state-machine';
 
 import { InnloggetProvider } from './context/InnloggetContext';
@@ -20,9 +20,17 @@ import Landing from './pages/Landing';
 import { ErrorMessageProvider } from './context/ErrorMessageContext';
 import { formState } from './State/formState';
 import { StateManagementProvider } from './context/StateManagementContext';
+import { useEffect } from 'react';
+import { logAmplitudeEvent } from './utils/analytics/amplitude';
 
 const App = () => {
   createStore(formState, {});
+  const location = useLocation();
+
+  useEffect(() => {
+    console.log(location);
+    logAmplitudeEvent('skademelding.sidevisning', { pathname: location.pathname });
+  }, [location])
 
   autentiseringsInterceptor();
 
