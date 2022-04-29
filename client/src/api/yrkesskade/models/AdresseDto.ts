@@ -3,9 +3,9 @@
 /* eslint-disable */
 
 export type AdresseDto = {
-    landkode?: string;
-    land?: string;
-    postnummer?: string;
-    poststed?: string;
-    adresser?: Array<string>;
+    landkode: string;
+    land: string;
+    postnummer: string;
+    poststed: string;
+    adresser: Array<string>;
 };

@@ -5,15 +5,6 @@
 export type Innmelder = {
     norskIdentitetsnummer: string;
     paaVegneAv: string;
-    innmelderrolle: Innmelder.innmelderrolle;
+    innmelderrolle: string;
     altinnrolleIDer?: Array<string>;
 };
-
-export namespace Innmelder {
-
-    export enum innmelderrolle {
-        VIRKSOMHETSREPRESENTANT = 'Virksomhetsrepresentant',
-    }
-
-
-}

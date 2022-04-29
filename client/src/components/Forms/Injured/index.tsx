@@ -1,16 +1,16 @@
+/* eslint-disable no-mixed-operators */
 import { useEffect, useState } from 'react';
 import { TextField, Label, Select as NAVSelect } from '@navikt/ds-react';
 import { Controller } from 'react-hook-form';
-import stillingstitler from '../../../assets/Lists/stillingstitler';
 import Select from 'react-select';
 import validator from '@navikt/fnrvalidator';
 import { useInnloggetContext } from '../../../context/InnloggetContext';
-import { useStateMachine } from 'little-state-machine';
 import _ from 'lodash';
 
 import './Injured.less';
 import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks';
 import { hentKodeverkForKategori, selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
+import { selectSkademelding } from '../../../core/reducers/skademelding.reducer';
 
 interface IProps {
   register: any;
@@ -20,9 +20,10 @@ interface IProps {
 const InjuredForm = ({ register, errors, control }: IProps) => {
   const { innloggetBruker } = useInnloggetContext();
   const dispatch = useAppDispatch();
-  const { state } = useStateMachine();
+  const skademelding = useAppSelector((state) => selectSkademelding(state));
+
   const [openMenu, setOpenMenu] = useState(false);
-  const [ rolletype, setRolletype ] = useState<string>(state.skadelidt.dekningsforhold.rolletype || '');
+  const [ rolletype, setRolletype ] = useState<string>(skademelding.skadelidt?.dekningsforhold.rolletype || '');
   const rolletypekoder = useAppSelector((state) => selectKodeverk(state, 'rolletype'));
   const stillingstittelkoder = useAppSelector((state) => selectKodeverk(state, 'stillingstittel'));
 
@@ -37,6 +38,9 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
   const handleRolletypeEndring = (event: any) => {
     setRolletype(event.target.value);
   }
+
+  // skjema felter
+  const [stillingstitler, setStillingstitler] = useState<string[]>(skademelding.skadelidt?.dekningsforhold.stillingstittelTilDenSkadelidte || []);
 
   useEffect(() => {
     if (!rolletype) {
@@ -88,7 +92,7 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
 
       <NAVSelect
         className="spacer"
-        label="Hva er den skadeliteds tilknytning til virksomheten?"
+        label="Hva er den skadelidtes tilknytning til virksomheten?"
         {...register('skadelidt.dekningsforhold.rolletype', {
           required: 'Dette feltet er påkrevd',
         })}
@@ -98,6 +102,7 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
           errors?.skadelidt?.dekningsforhold?.rolletype &&
           errors?.skadelidt?.dekningsforhold.rolletype.message
         }
+        value={rolletype}
       >
         <option hidden value=""></option>
         {rolletypekoder && Object.keys(rolletypekoder).map((kode: string) => {
@@ -110,13 +115,15 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
       </NAVSelect>
       <div className="spacer">
         <Label>Hva er den skadelidtes stilling</Label>
-        <Controller
+        {stillingstittelkoder && (
+          <>
+            <Controller
           name="skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte"
           control={control}
           rules={{
             required:
               _.isEmpty(
-                state.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte
+                skademelding.skadelidt?.dekningsforhold.stillingstittelTilDenSkadelidte
               ) && 'Dette feltet er påkrevd',
           }}
           render={({ field: { onChange, onBlur, value, name, ref } }) => (
@@ -125,17 +132,13 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
                 DropdownIndicator: () => null,
                 IndicatorSeparator: () => null,
               }}
-              defaultValue={{
-                value:
-                  state.skadelidt.dekningsforhold
-                    .stillingstittelTilDenSkadelidte,
-                label:
-                  state.skadelidt.dekningsforhold
-                    .stillingstittelTilDenSkadelidte,
-              }}
+              defaultValue={!_.isEmpty(skademelding.skadelidt?.dekningsforhold) ? skademelding.skadelidt?.dekningsforhold.stillingstittelTilDenSkadelidte.map(stilling => {
+                return {value: stilling, label: (stillingstittelkoder && stillingstittelkoder[stilling]?.verdi || 'UKJENT')};
+              }) : []
+            }
               onBlur={onBlur}
               onChange={(val) => onChange([val?.value])}
-              options={stillingstittelkoder && Object.keys(stillingstittelkoder).map(kode => ({value: kode, label: stillingstittelkoder[kode]?.verdi || 'UKJENT' }))}
+              options={Object.keys(stillingstittelkoder).map(kode => ({value: kode, label: stillingstittelkoder[kode]?.verdi || 'UKJENT' }))}
               menuIsOpen={openMenu}
               onInputChange={handleInputChange}
               className="injured-position"
@@ -151,9 +154,13 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
             }
           </span>
         )}
+          </>
+        )}
+
       </div>
     </>
   );
 };
 
 export default InjuredForm;
+

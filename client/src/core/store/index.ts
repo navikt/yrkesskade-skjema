@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import kodeverkReducer from '../reducers/kodeverk.reducer';
+import skademeldingReducer from '../reducers/skademelding.reducer';
 
 const store = configureStore({
   reducer: {
-    kodeverk: kodeverkReducer
+    kodeverk: kodeverkReducer,
+    skademelding: skademeldingReducer,
   }
 })
 

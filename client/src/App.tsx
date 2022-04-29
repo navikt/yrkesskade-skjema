@@ -23,7 +23,7 @@ import { StateManagementProvider } from './context/StateManagementContext';
 import { useEffect } from 'react';
 import { logAmplitudeEvent } from './utils/analytics/amplitude';
 import { useAppDispatch } from './core/hooks/state.hooks';
-import { hentKodeverk } from './core/reducers/kodeverk.reducer';
+import { hentKodeverk, hentKodeverkForKategori } from './core/reducers/kodeverk.reducer';
 
 const App = () => {
   createStore(formState, {});
@@ -37,6 +37,9 @@ const App = () => {
   useEffect(() => {
       dispatch(hentKodeverk('landkoderISO2'));
       dispatch(hentKodeverk('rolletype'));
+
+      // preload av stillingstitler
+      dispatch(hentKodeverkForKategori({typenavn: 'stillingstittel', kategorinavn: 'arbeidstaker'}))
   });
 
   autentiseringsInterceptor();

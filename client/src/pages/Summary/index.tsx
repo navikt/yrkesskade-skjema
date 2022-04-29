@@ -19,67 +19,71 @@ import SkadeSummary from '../../components/Summary/Skade';
 import BeskrivelseSummary from '../../components/Summary/Beskrivelse';
 import { useNavigate } from 'react-router-dom';
 import StepIndicator from '../../components/StepIndicator';
+import ExitButton from '../../components/ExitButton';
 
-import { useStateMachine } from 'little-state-machine';
 import { useSelectedCompany } from '../../context/SelectedCompanyContext';
-import { useEffect } from 'react';
-import {
-  oppdaterDekningsforholdOrganisasjon,
-  oppdaterSkade,
-} from '../../State/actions/skademeldingStateAction';
+import { useEffect, useState } from 'react';
+
 import { useErrorMessageContext } from '../../context/ErrorMessageContext';
 import {
-  Skademelding,
+  Dekningsforhold,
+  Skade,
   SkademeldingApiControllerService,
 } from '../../api/yrkesskade';
-import clearFormAction from '../../State/actions/clearAction';
 import { logErrorMessage, logMessage } from '../../utils/logging';
 import { logAmplitudeEvent } from '../../utils/analytics/amplitude';
-import { useCancel } from '../../core/hooks/cancel.hooks';
+import { useAppDispatch, useAppSelector } from '../../core/hooks/state.hooks';
+import { oppdaterDekningsforhold, oppdaterSkade, reset, selectSkademelding } from '../../core/reducers/skademelding.reducer';
 
 const Summary = () => {
-  const { state, actions } = useStateMachine({
-    oppdaterDekningsforholdOrganisasjon,
-    oppdaterSkade,
-    clearFormAction
-  });
   const { selectedCompany } = useSelectedCompany();
   const { setError } = useErrorMessageContext();
-  const cancel = useCancel();
+  const skademelding = useAppSelector((state) => selectSkademelding(state));
+  const dispatch = useAppDispatch();
+
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     // oppdater state med verdier som ikke har blitt satt av skjema
-    actions.oppdaterDekningsforholdOrganisasjon({
-      organisasjonsnummer: selectedCompany.organisasjonsnummer as string,
-      navn: selectedCompany.navn,
-    });
-    actions.oppdaterSkade({
-      alvorlighetsgrad: state.skade.alvorlighetsgrad,
-      skadedeDeler: state.skade.skadedeDeler,
-      antattSykefravaerTabellH: state.skade.antattSykefravaerTabellH,
-    });
+    if (skademelding.skadelidt && skademelding.skadelidt.dekningsforhold) {
+      const dekningsforhold: Dekningsforhold = {
+        organisasjonsnummer: selectedCompany.organisasjonsnummer as string,
+        stillingstittelTilDenSkadelidte: skademelding.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte,
+        rolletype: skademelding.skadelidt.dekningsforhold.rolletype
+      };
+
+      dekningsforhold.organisasjonsnummer = selectedCompany.organisasjonsnummer as string;
+      dispatch(oppdaterDekningsforhold(dekningsforhold));
+    }
+
+    const skade: Skade = {
+      alvorlighetsgrad: skademelding.skade?.alvorlighetsgrad,
+      skadedeDeler: skademelding.skade?.skadedeDeler || [],
+      antattSykefravaerTabellH: skademelding.skade?.antattSykefravaerTabellH || ''
+    }
+    dispatch(oppdaterSkade(skade));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCompany.organisasjonsnummer]);
 
-  const data = state;
+  const data = skademelding;
 
   const navigate = useNavigate();
   const handleSending = async () => {
     try {
-      await SkademeldingApiControllerService.sendSkademelding(
-        data as unknown as Skademelding
-      );
+      setLoading(true);
+      await SkademeldingApiControllerService.sendSkademelding(data);
 
       logMessage('Skademelding innsendt');
       logAmplitudeEvent('skademelding.innmelding', { status: 'fullfort' });
-      navigate('/yrkesskade/skjema/kvittering', { state: data as unknown as Skademelding });
-      actions.clearFormAction({});
+      navigate('/yrkesskade/skjema/kvittering', { state: data });
+      dispatch(reset());
     } catch (error: any) {
       setError('Det skjedde en feil med innsendingen. Vi jobber med å løse problemet. Prøv igjen senere.');
       logErrorMessage(`Innsending av skademelding feilet: ${error.message}`);
       logAmplitudeEvent('skademelding.innmelding', { status: 'feilet', feilmelding: error.message});
       navigate('/yrkesskade/skjema/feilmelding');
     }
+    setLoading(false);
   };
 
   return (
@@ -146,10 +150,8 @@ const Summary = () => {
             </Accordion.Item>
           </Accordion>
           <div className="buttonGroup no-print">
-            <Button variant="secondary" onClick={cancel}>
-              Avbryt
-            </Button>
-            <Button onClick={handleSending} data-testid="send-injuryform">Send inn</Button>
+            <ExitButton />
+            <Button onClick={handleSending} data-testid="send-injuryform" loading={loading}>Send inn</Button>
           </div>
         </Cell>
         <Cell xs={12} sm={12} lg={2}>
