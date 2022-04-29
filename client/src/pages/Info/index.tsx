@@ -13,6 +13,7 @@ import {
 import SystemHeader from '../../components/SystemHeader';
 import { useNavigate } from 'react-router-dom';
 import StepIndicator from '../../components/StepIndicator';
+import ExitButton from '../../components/ExitButton';
 
 import { useInnloggetContext } from '../../context/InnloggetContext';
 import { Organisasjon } from '../../types/brukerinfo';
@@ -32,7 +33,6 @@ import {
 import clearFormAction from '../../State/actions/clearAction';
 import { logMessage } from '../../utils/logging';
 import { logAmplitudeEvent } from '../../utils/analytics/amplitude';
-import { useCancel } from '../../core/hooks/cancel.hooks';
 
 const Info = () => {
   const navigate = useNavigate();
@@ -43,7 +43,7 @@ const Info = () => {
     clearFormAction,
     oppdaterRollerForOrganisasjon
   });
-  const cancel = useCancel();
+  // const cancel = useCancel();
 
   const handleForward = () => {
     logMessage('Bruker har startet innmelding');
@@ -198,14 +198,7 @@ const Info = () => {
               <BodyShort className="">+47 55 55 33 36</BodyShort>
             </div>
             <div className="buttonSection spacer buttonGroup">
-              <Button
-                variant="secondary"
-                onClick={cancel}
-                data-testid="avbryt-innmelding"
-                className=""
-              >
-                Avbryt
-              </Button>
+              <ExitButton />
               <Button
                 variant="primary"
                 onClick={handleForward}

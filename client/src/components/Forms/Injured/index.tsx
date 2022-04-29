@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { TextField, Label, Select as NAVSelect } from '@navikt/ds-react';
 import { Controller } from 'react-hook-form';
-import stillingstitler from '../../../assets/Lists/stillingstitler';
 import Select from 'react-select';
 import validator from '@navikt/fnrvalidator';
 import { useInnloggetContext } from '../../../context/InnloggetContext';
@@ -110,7 +109,9 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
       </NAVSelect>
       <div className="spacer">
         <Label>Hva er den skadelidtes stilling</Label>
-        <Controller
+        {stillingstittelkoder && (
+          <>
+            <Controller
           name="skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte"
           control={control}
           rules={{
@@ -130,12 +131,12 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
                   state.skadelidt.dekningsforhold
                     .stillingstittelTilDenSkadelidte,
                 label:
-                  state.skadelidt.dekningsforhold
-                    .stillingstittelTilDenSkadelidte,
+                  // eslint-disable-next-line no-mixed-operators
+                  stillingstittelkoder[state.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte]?.verdi || 'UKJENT',
               }}
               onBlur={onBlur}
               onChange={(val) => onChange([val?.value])}
-              options={stillingstittelkoder && Object.keys(stillingstittelkoder).map(kode => ({value: kode, label: stillingstittelkoder[kode]?.verdi || 'UKJENT' }))}
+              options={Object.keys(stillingstittelkoder).map(kode => ({value: kode, label: stillingstittelkoder[kode]?.verdi || 'UKJENT' }))}
               menuIsOpen={openMenu}
               onInputChange={handleInputChange}
               className="injured-position"
@@ -151,6 +152,9 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
             }
           </span>
         )}
+          </>
+        )}
+
       </div>
     </>
   );
