@@ -22,15 +22,22 @@ import { formState } from './State/formState';
 import { StateManagementProvider } from './context/StateManagementContext';
 import { useEffect } from 'react';
 import { logAmplitudeEvent } from './utils/analytics/amplitude';
+import { useAppDispatch } from './core/hooks/state.hooks';
+import { hentKodeverk } from './core/reducers/kodeverk.reducer';
 
 const App = () => {
   createStore(formState, {});
   const location = useLocation();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    console.log(location);
     logAmplitudeEvent('skademelding.sidevisning', { pathname: location.pathname });
   }, [location])
+
+  useEffect(() => {
+      dispatch(hentKodeverk('landkoderISO2'));
+      dispatch(hentKodeverk('rolletype'));
+  });
 
   autentiseringsInterceptor();
 

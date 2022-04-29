@@ -14,8 +14,8 @@
     "dev": "concurrently \"yarn run client\" \"yarn run server\"",
     "docker": "yarn build-prod && docker build -t skjema .",
     "docker-run": "docker run -dp 3000:3000 skjema",
-    "codegen-yrkesskade": "npx openapi -i https://yrkesskade-melding-api.dev.intern.nav.no/api/v3/api-docs -o ./client/src/api/yrkesskade  --client axios",
-    "codegen-kodeverk": "npx openapi -i https://yrkesskade-kodeverk.dev.intern.nav.no/v3/api-docs -o ./client/src/api/kodeverk --client axios"
+    "codegen:yrkesskade": "npx openapi -i https://yrkesskade-melding-api.dev.intern.nav.no/api/v3/api-docs -o ./client/src/api/yrkesskade  --client axios",
+    "codegen:kodeverk": "npx openapi -i https://yrkesskade-kodeverk.dev.intern.nav.no/v3/api-docs -o ./client/src/api/kodeverk --client axios"
   },
   "repository": {
     "type": "git",

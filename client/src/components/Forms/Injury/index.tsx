@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Select, RadioGroup, Table, Button } from '@navikt/ds-react';
-import { injuredBodypart, injuryType } from '../../../assets/injuryEnums';
 import { remove } from 'ramda';
 import {isEmpty} from 'lodash';
 import { AddCircle, MinusCircle } from '@navikt/ds-icons';
 import { useStateMachine } from 'little-state-machine';
-import antattSykefravaerTabellH from '../../../assets/Lists/antattSykefravaerTabellH';
 import { oppdaterSkadedeDeler } from '../../../State/actions/skademeldingStateAction';
 import { SkadetDel } from '../../../api/yrkesskade';
+import { useAppSelector } from '../../../core/hooks/state.hooks';
+import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
 
 interface IProps {
   register: any;
@@ -25,6 +25,10 @@ const InjuryForm = ({
 }: IProps) => {
   const { state, actions } = useStateMachine({ oppdaterSkadedeDeler });
   const [injury, setInjury] = useState<SkadetDel[]>(state.skade.skadedeDeler as SkadetDel[]);
+  const skadetKroppsdelkoder = useAppSelector((state) => selectKodeverk(state, 'skadetKroppsdel'));
+  const skadetypekoder = useAppSelector((state) => selectKodeverk(state, 'skadetype'));
+
+  const harSkadelidtHattFravaerkoder = useAppSelector((state) => selectKodeverk(state, 'harSkadelidtHattFravaer'));
 
   const removeInjury = (index: number) => {
     const nyInjury = remove(index, 1, injury);
@@ -77,12 +81,10 @@ const InjuryForm = ({
           data-testid="injury-body-location-options"
         >
           <option hidden value=""></option>
-          {(
-            Object.keys(injuredBodypart) as Array<keyof typeof injuredBodypart>
-          ).map((key) => {
+          { skadetKroppsdelkoder && Object.keys(skadetKroppsdelkoder).map((kode: string) => {
             return (
-              <option key={key} value={injuredBodypart[key]}>
-                {injuredBodypart[key]}
+              <option key={kode} value={kode}>
+                {skadetKroppsdelkoder[kode]?.verdi}
               </option>
             );
           })}
@@ -98,11 +100,11 @@ const InjuryForm = ({
           data-testid="injury-type-options"
         >
           <option hidden value=""></option>
-          {(Object.keys(injuryType) as Array<keyof typeof injuryType>).map(
-            (key) => {
+          { skadetypekoder && Object.keys(skadetypekoder).map(
+            (kode: string) => {
               return (
-                <option key={key} value={injuryType[key]}>
-                  {injuryType[key]}
+                <option key={kode} value={kode}>
+                  {skadetypekoder[kode]?.verdi}
                 </option>
               );
             }
@@ -157,15 +159,15 @@ const InjuryForm = ({
         }
         className="spacer"
       >
-        { antattSykefravaerTabellH.map((verdi, index) => (
-          <div className="navds-radio navds-radio--medium" key={verdi.value}>
+        { harSkadelidtHattFravaerkoder && Object.keys(harSkadelidtHattFravaerkoder).map((kode: string, index: number) => (
+          <div className="navds-radio navds-radio--medium" key={kode}>
           <input
             type="radio"
             className="navds-radio__input"
             {...register('skade.antattSykefravaerTabellH', {
               required: 'Dette feltet er påkrevd',
             })}
-            value={verdi.value}
+            value={kode}
             data-testid={`injury-absence-${index}`}
             id={`injury-absence-${index}`}
           />
@@ -173,7 +175,7 @@ const InjuryForm = ({
             htmlFor={`injury-absence-${index}`}
             className="navds-radio__label"
           >
-            {verdi.value}
+            {harSkadelidtHattFravaerkoder[kode]?.verdi}
           </label>
         </div>
         ))

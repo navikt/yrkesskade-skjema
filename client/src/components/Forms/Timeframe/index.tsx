@@ -5,9 +5,6 @@ import 'react-day-picker/lib/style.css';
 import { Select, RadioGroup, Label } from '@navikt/ds-react';
 import { useStateMachine } from 'little-state-machine';
 import InputMask from 'react-input-mask';
-
-import ulykkestid from '../../../assets/Lists/ulykkestid';
-
 import dateFnsFormat from 'date-fns/format';
 import dateFnsParse from 'date-fns/parse';
 import { Controller } from 'react-hook-form';
@@ -15,7 +12,7 @@ import { handleDateValue, handleTimeValue } from '../../../utils/date';
 import './Timeframe.less';
 import { InputClassNames } from 'react-day-picker/types/ClassNames';
 import { useAppSelector } from '../../../core/hooks/state.hooks';
-import { selectKodeverkType } from '../../../core/reducers/kodeverk.reducer';
+import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
 
 function formatDate(date: number | Date, format: string) {
   return dateFnsFormat(date, format);
@@ -29,13 +26,9 @@ interface IProps {
 const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
   const FORMAT: string = 'dd.MM.yyyy';
   const { state } = useStateMachine();
-  const tidsromKoder = useAppSelector((state) =>
-    selectKodeverkType(state, 'tidsrom')
+  const tidsromkoder = useAppSelector((state) =>
+    selectKodeverk(state, 'tidsrom')
   );
-
-  useEffect(() => {
-    console.log('tidsromkoder: ', tidsromKoder);
-  }, [tidsromKoder]);
 
   const dayPickerClassNames = {
     container: 'nav-day-picker',
@@ -173,7 +166,6 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
         <div className="dateTime">
           {timeType === 'Tidspunkt' && (
             <div className="dateTime-date spacer">
-              {/* <Label>Dato for ulykken</Label> */}
               <Controller
                 name="hendelsesfakta.tid.tidspunkt"
                 control={control}
@@ -342,10 +334,10 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
         data-testid="timeframe-period-options"
       >
         <option hidden value=""></option>
-        {ulykkestid.map((time: { value: string; label: string }) => {
+        {tidsromkoder && Object.keys(tidsromkoder).map((tidsromkode: string, index: number) => {
           return (
-            <option key={encodeURIComponent(time.value)} value={time.value}>
-              {time.label}
+            <option key={encodeURIComponent(tidsromkode)} value={tidsromkode}>
+              {tidsromkoder[tidsromkode]?.verdi}
             </option>
           );
         })}

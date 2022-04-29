@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import TimeframeForm from '../../../components/Forms/Timeframe';
 import {
   ContentContainer,
@@ -21,9 +20,6 @@ import { useStateMachine } from 'little-state-machine';
 import formUpdateAction from '../../../State/actions/formUpdateAction';
 import { useNavigate } from 'react-router-dom';
 import clearFormAction from '../../../State/actions/clearAction';
-import { KodeverkControllerService } from '../../../api/kodeverk';
-import { useAppDispatch } from '../../../core/hooks/state.hooks';
-import { addKodeverk } from '../../../core/actions/kodeverk.actions';
 import { useCancel } from '../../../core/hooks/cancel.hooks';
 
 const TimeframeFormPage = () => {
@@ -42,19 +38,6 @@ const TimeframeFormPage = () => {
     }
   });
   const cancel = useCancel();
-
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    hentTidsrom();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const hentTidsrom = async () => {
-    const tidsromKoder = await KodeverkControllerService.hentKodeverdiForTypeOgKategori('tidsrom', 'arbeidstaker');
-    dispatch(addKodeverk({ 'tidsrom': tidsromKoder.kodeverdier || []}));
-  }
-
 
   const navigate = useNavigate();
 

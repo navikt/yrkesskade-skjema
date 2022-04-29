@@ -1,37 +1,79 @@
-import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { merge } from "lodash";
-import { KodeverdiDto } from "../../api/kodeverk";
+import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
+import { KodeverdiDto, KodeverdiResponsDto } from "../../api/kodeverk";
+import { KodeverkApiService } from "../../api/kodeverk/services/KodeverkApiService";
+import { logErrorMessage } from "../../utils/logging";
 import { RootState } from "../store";
 
+
 interface KodeverkState {
-  typer: {[key: string]: KodeverdiDto[]}
+  kodeverk: Record<
+    string,
+    Record<string, KodeverdiDto | undefined> | undefined
+  >;
 }
 
 const initialState: KodeverkState = {
-  typer: {}
-}
+  kodeverk: {},
+};
 
 export const kodeverkSlice = createSlice({
   name: 'kodeverk',
   initialState,
-  reducers: {
-    addKodeverk: (state, payload: PayloadAction<{[key: string]: KodeverdiDto[]}>) => {
-      state.typer = merge(state.typer, payload.payload)
-    }
-  }
-})
+  reducers: {},
+  extraReducers(builder) {
+    builder
+      .addCase(hentKodeverk.fulfilled, (state, action) => {
+        state.kodeverk[action.payload.typenavn] =
+          action.payload.kodeverdier.kodeverdierMap;
+      })
+      .addCase(hentKodeverk.rejected, (state, action) => {
+        logErrorMessage(`Klarte ikke hente kodeverk. Årsak: ${action.error}`);
+      })
+      .addCase(hentKodeverkForKategori.fulfilled, (state, action) => {
+        state.kodeverk[action.payload.typenavn] =
+          action.payload.kodeverdier.kodeverdierMap;
+      })
+      .addCase(hentKodeverkForKategori.rejected, (state, action) => {
+        logErrorMessage(`Klarte ikke hente kodeverk. Årsak: ${action.error}`);
+      });
+  },
+});
 
-// selectors
-const getType = (_: any, type: string) => type;
+export const hentKodeverk = createAsyncThunk(
+  'kodeverk/hent',
+  async (typenavn: string): Promise<KodeverkResponsPayload> => {
+    const kodeverdier = await KodeverkApiService.hentKodeverdierForType(
+      typenavn
+    );
 
-export const selectKodeverk = (state: RootState) => state.kodeverk
-export const selectKodeverkType = createSelector(
-  selectKodeverk,
-  getType,
-  (kodeverk, type) => {
-    return kodeverk.typer[type]
+    return { typenavn: typenavn, kodeverdier: kodeverdier };
   }
 );
 
-// default export
+export const hentKodeverkForKategori = createAsyncThunk(
+  'kodeverk/kategori/hent',
+  async (kodeverkRequest: KodeverkRequest): Promise<KodeverkResponsPayload> => {
+    const kodeverdier = await KodeverkApiService.hentMapMedKodeverdierForTypeOgKategori(kodeverkRequest.typenavn, kodeverkRequest.kategorinavn);
+
+    return {typenavn: kodeverkRequest.typenavn, kodeverdier: kodeverdier }
+  }
+)
+
 export default kodeverkSlice.reducer;
+
+interface KodeverkResponsPayload {
+  typenavn: string;
+  kodeverdier: KodeverdiResponsDto;
+}
+
+export interface KodeverkRequest {
+  typenavn: string; kategorinavn: string;
+}
+
+export const selectAlleKodeverk = (state: RootState) => state.kodeverk;
+export const selectKodeverk = createSelector(
+  selectAlleKodeverk,
+  (_: any, typenavn: string) => typenavn,
+  (kodeverk, typenavn) => kodeverk.kodeverk[typenavn]
+);
+

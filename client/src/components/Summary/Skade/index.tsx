@@ -1,9 +1,15 @@
 // import { isNil } from "ramda";
 import { Label, BodyShort, Table } from '@navikt/ds-react';
+import { useAppSelector } from '../../../core/hooks/state.hooks';
+import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
 interface IProps {
   data: any;
 }
 const SkadeSummary = ({ data }: IProps) => {
+  const skadetKroppsdelkoder = useAppSelector((state) => selectKodeverk(state, 'skadetKroppsdel'));
+  const skadetypekoder = useAppSelector((state) => selectKodeverk(state, 'skadetype'));
+  const fravaerkoder = useAppSelector((state) => selectKodeverk(state, 'harSkadelidtHattFravaer'));
+
   return (
     <div className="answerOuterContainer">
       <div className="answerContainer">
@@ -16,12 +22,11 @@ const SkadeSummary = ({ data }: IProps) => {
           </Table.Header>
           <Table.Body>
             {data.skade.skadedeDeler.map(
-              // (item: { damage?: string; bodypart?: string }, index: number) => {
               (item: any, index: number) => {
                 return (
                   <Table.Row key={index}>
-                    <Table.DataCell>{item.kroppsdelTabellD}</Table.DataCell>
-                    <Table.DataCell>{item.skadeartTabellC}</Table.DataCell>
+                    <Table.DataCell>{skadetKroppsdelkoder && skadetKroppsdelkoder[item.kroppsdelTabellD]?.verdi}</Table.DataCell>
+                    <Table.DataCell>{skadetypekoder && skadetypekoder[item.skadeartTabellC]?.verdi}</Table.DataCell>
                   </Table.Row>
                 );
               }
@@ -31,7 +36,7 @@ const SkadeSummary = ({ data }: IProps) => {
       </div>
       <div className="answerContainer spacer">
         <Label>Har den skadelidte hatt fravær</Label>
-        <BodyShort>{data.skade.antattSykefravaerTabellH}</BodyShort>
+        <BodyShort>{fravaerkoder && fravaerkoder[data.skade.antattSykefravaerTabellH]?.verdi}</BodyShort>
       </div>
     </div>
   );

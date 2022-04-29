@@ -2,6 +2,8 @@ import { Label, BodyShort } from '@navikt/ds-react';
 import { useSelectedCompany } from '../../../context/SelectedCompanyContext';
 import { Adresse } from '../../../api/yrkesskade';
 import { isEmpty, get } from 'lodash';
+import { useAppSelector } from '../../../core/hooks/state.hooks';
+import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
 interface IProps {
   data: any;
 }
@@ -13,6 +15,14 @@ const UlykkeSummary = ({ data }: IProps) => {
     land: '',
   };
   const { selectedAddress } = useSelectedCompany();
+  const hvorSkjeddeUlykkenkoder = useAppSelector((state) => selectKodeverk(state, 'hvorSkjeddeUlykken'));
+  const typeArbeidsplasskoder = useAppSelector((state) => selectKodeverk(state, 'typeArbeidsplass'));
+  const aarsakOgBakgrunnkoder = useAppSelector((state) => selectKodeverk(state, 'aarsakOgBakgrunn'));
+  const bakgrunnForHendelsenkoder = useAppSelector((state) => selectKodeverk(state, 'bakgrunnForHendelsen'));
+  const alvorlighetsgradkoder = useAppSelector((state) =>
+    selectKodeverk(state, 'alvorlighetsgrad')
+  );
+  const landkoder = useAppSelector((state) => selectKodeverk(state, 'landkoderISO2'));
 
   const ulykkessted = data.hendelsesfakta.ulykkessted;
 
@@ -24,7 +34,7 @@ const UlykkeSummary = ({ data }: IProps) => {
         (selectedAddress.adresser && selectedAddress.adresser[0]) || '',
       adresselinje2: selectedAddress.postnummer || '',
       adresselinje3: selectedAddress.poststed || '',
-      land: selectedAddress.land,
+      land: selectedAddress.landkode,
     };
   }
 
@@ -36,25 +46,25 @@ const UlykkeSummary = ({ data }: IProps) => {
         <BodyShort>
           {`${adresse.adresselinje2} ${adresse.adresselinje3}`}
         </BodyShort>
-        <BodyShort>{adresse.land}</BodyShort>
+        <BodyShort>{landkoder && landkoder[adresse.land || 'NO']?.verdi}</BodyShort>
       </div>
       {!isEmpty(data.skade.alvorlighetsgrad) && (
         <div className="answerContainer">
           <Label>Hvor Alvorlig var hendelsen</Label>
-          <BodyShort>{data.skade.alvorlighetsgrad}</BodyShort>
+          <BodyShort>{alvorlighetsgradkoder && alvorlighetsgradkoder[data.skade.alvorlighetsgrad]?.verdi}</BodyShort>
         </div>
       )}
       {get(data, ['hendelsesfakta', 'hvorSkjeddeUlykken']) !== 'undefined' && (
         <div className="answerContainer">
           <Label>Hvor skjedde ulykken</Label>
-          <BodyShort>{data.hendelsesfakta.hvorSkjeddeUlykken}</BodyShort>
+          <BodyShort>{hvorSkjeddeUlykkenkoder && hvorSkjeddeUlykkenkoder[data.hendelsesfakta.hvorSkjeddeUlykken]?.verdi}</BodyShort>
         </div>
       )}
       {get(data, ['hendelsesfakta', 'stedsbeskrivelseTabellF']) !==
         'undefined' && (
         <div className="answerContainer">
           <Label>Type arbeidsplass</Label>
-          <BodyShort>{data.hendelsesfakta.stedsbeskrivelseTabellF}</BodyShort>
+          <BodyShort>{typeArbeidsplasskoder && typeArbeidsplasskoder[data.hendelsesfakta.stedsbeskrivelseTabellF]?.verdi}</BodyShort>
         </div>
       )}
       {!isEmpty(data.hendelsesfakta.aarsakUlykkeTabellAogE) && (
@@ -63,9 +73,9 @@ const UlykkeSummary = ({ data }: IProps) => {
           <BodyShort>
             {data.hendelsesfakta.aarsakUlykkeTabellAogE.map(
               (background: string) => {
-                return `${background}, `;
+                return `${aarsakOgBakgrunnkoder && aarsakOgBakgrunnkoder[background]?.verdi}`;
               }
-            )}
+            ).join(', ')}
           </BodyShort>
         </div>
       )}
@@ -75,9 +85,9 @@ const UlykkeSummary = ({ data }: IProps) => {
           <BodyShort>
             {data.hendelsesfakta.bakgrunnsaarsakTabellBogG.map(
               (background: string) => {
-                return `${background}, `;
+                return `${bakgrunnForHendelsenkoder && bakgrunnForHendelsenkoder[background]?.verdi}`;
               }
-            )}
+            ).join(', ')}
           </BodyShort>
         </div>
       )}

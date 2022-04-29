@@ -1,8 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TextField, Label, Select as NAVSelect } from '@navikt/ds-react';
 import { Controller } from 'react-hook-form';
 import stillingstitler from '../../../assets/Lists/stillingstitler';
-import dekningsforhold from '../../../assets/Lists/dekningsforhold';
 import Select from 'react-select';
 import validator from '@navikt/fnrvalidator';
 import { useInnloggetContext } from '../../../context/InnloggetContext';
@@ -10,6 +9,8 @@ import { useStateMachine } from 'little-state-machine';
 import _ from 'lodash';
 
 import './Injured.less';
+import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks';
+import { hentKodeverkForKategori, selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
 
 interface IProps {
   register: any;
@@ -18,8 +19,12 @@ interface IProps {
 }
 const InjuredForm = ({ register, errors, control }: IProps) => {
   const { innloggetBruker } = useInnloggetContext();
+  const dispatch = useAppDispatch();
   const { state } = useStateMachine();
   const [openMenu, setOpenMenu] = useState(false);
+  const [ rolletype, setRolletype ] = useState<string>(state.skadelidt.dekningsforhold.rolletype || '');
+  const rolletypekoder = useAppSelector((state) => selectKodeverk(state, 'rolletype'));
+  const stillingstittelkoder = useAppSelector((state) => selectKodeverk(state, 'stillingstittel'));
 
   const handleInputChange = (query: string, action: any) => {
     if (action.action === 'input-change' && query.length >= 2) {
@@ -28,6 +33,30 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
       setOpenMenu(false);
     }
   };
+
+  const handleRolletypeEndring = (event: any) => {
+    setRolletype(event.target.value);
+  }
+
+  useEffect(() => {
+    if (!rolletype) {
+      // rolletype er ikke satt og vi kan ikke laste kodeverk
+      return;
+    }
+    const rolletypeverdi = rolletype.toLocaleLowerCase();
+    ['tidsrom',
+     'alvorlighetsgrad',
+     'hvorSkjeddeUlykken',
+     'typeArbeidsplass',
+     'aarsakOgBakgrunn',
+     'bakgrunnForHendelsen',
+     'harSkadelidtHattFravaer',
+     'skadetKroppsdel',
+     'skadetype',
+     'stillingstittel',
+    ].forEach(typenavn => dispatch(hentKodeverkForKategori({typenavn: typenavn, kategorinavn: rolletypeverdi})))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rolletype]);
 
   return (
     <>
@@ -63,6 +92,7 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
         {...register('skadelidt.dekningsforhold.rolletype', {
           required: 'Dette feltet er påkrevd',
         })}
+        onChange={handleRolletypeEndring}
         data-testid="injured-role-select"
         error={
           errors?.skadelidt?.dekningsforhold?.rolletype &&
@@ -70,10 +100,10 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
         }
       >
         <option hidden value=""></option>
-        {dekningsforhold.map((dekning: { value: string; label: string }) => {
+        {rolletypekoder && Object.keys(rolletypekoder).map((kode: string) => {
           return (
-            <option key={encodeURI(dekning.value)} value={dekning.value}>
-              {dekning.label}
+            <option key={encodeURI(kode)} value={kode}>
+              {rolletypekoder[kode]?.verdi || 'UKJENT'}
             </option>
           );
         })}
@@ -105,7 +135,7 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
               }}
               onBlur={onBlur}
               onChange={(val) => onChange([val?.value])}
-              options={stillingstitler}
+              options={stillingstittelkoder && Object.keys(stillingstittelkoder).map(kode => ({value: kode, label: stillingstittelkoder[kode]?.verdi || 'UKJENT' }))}
               menuIsOpen={openMenu}
               onInputChange={handleInputChange}
               className="injured-position"

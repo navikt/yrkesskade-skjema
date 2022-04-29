@@ -11,11 +11,9 @@ import {
   Detail,
 } from '@navikt/ds-react';
 import SystemHeader from '../../components/SystemHeader';
-// import getTexts from '../../utils/getTexts';
 import { useNavigate } from 'react-router-dom';
 import StepIndicator from '../../components/StepIndicator';
 
-// import { ISteps } from '../../Interfaces/steps';
 import { useInnloggetContext } from '../../context/InnloggetContext';
 import { Organisasjon } from '../../types/brukerinfo';
 import { useEffect } from 'react';
@@ -33,12 +31,8 @@ import {
 } from '../../api/yrkesskade';
 import clearFormAction from '../../State/actions/clearAction';
 import { logMessage } from '../../utils/logging';
-import { useAppDispatch } from '../../core/hooks/state.hooks';
-import { KodeverkControllerService } from '../../api/kodeverk';
-import { addKodeverk } from '../../core/actions/kodeverk.actions';
 import { logAmplitudeEvent } from '../../utils/analytics/amplitude';
 import { useCancel } from '../../core/hooks/cancel.hooks';
-// import Description from '../Form/Description';
 
 const Info = () => {
   const navigate = useNavigate();
@@ -61,8 +55,6 @@ const Info = () => {
   const { selectedCompany, setSelectedCompany, setSelectedAddress } =
     useSelectedCompany();
 
-  const dispatch = useAppDispatch();
-
   useEffect(() => {
     if (innloggetBruker?.fnr) {
       actions.oppdaterInnmelder({
@@ -79,16 +71,6 @@ const Info = () => {
     innloggetBruker?.organisasjoner,
     setSelectedCompany,
   ]);
-
-  useEffect(() => {
-    hentLandkoder();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const hentLandkoder = async () => {
-    const landkoder = await KodeverkControllerService.hentKodeverdiForTypeOgKategori('landkoder', 'alle');
-    dispatch(addKodeverk({ 'landkoder': landkoder.kodeverdier || []}));
-  }
 
   const settValgtVirksomhet = (virksomhet: Organisasjon) => {
     setSelectedCompany(virksomhet);
