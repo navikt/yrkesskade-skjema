@@ -9,6 +9,8 @@ import { useInnloggetContext } from '../../../context/InnloggetContext';
 import { useStateMachine } from 'little-state-machine';
 import _ from 'lodash';
 
+import {isFieldHidden, isFieldMandatory} from '../../../utils/feltStyring';
+
 import './Injured.less';
 
 interface IProps {
@@ -35,11 +37,17 @@ const InjuredForm = ({ register, errors, control, setValue }: IProps) => {
     }
   };
 
-  useEffect(() => {
-    if(rolletype.toLowerCase() === 'elev' ) {
-      setValue('skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte', 'N/A');
-    }
-  }, [rolletype, setValue]);
+  // useEffect(() => {
+  //   if(rolletype.toLowerCase() === 'elev' ) {
+  //     setValue('skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte', 'N/A');
+  //   }
+  // }, [rolletype, setValue]);
+
+
+  // feltroller blacklist
+  const fnrfelt = [];
+  const tilknytning = [];
+  const stilling = ['elev'];
 
   return (
     <>
@@ -93,7 +101,7 @@ const InjuredForm = ({ register, errors, control, setValue }: IProps) => {
           );
         })}
       </NAVSelect>
-      {rolletype.toLowerCase() !== 'elev' && (
+      {isFieldHidden(stilling, rolletype) && (
         <div className="spacer">
           <Label>Hva er den skadelidtes stilling</Label>
           <Controller
@@ -104,7 +112,7 @@ const InjuredForm = ({ register, errors, control, setValue }: IProps) => {
                 _.isEmpty(
                   state.skadelidt.dekningsforhold
                     .stillingstittelTilDenSkadelidte
-                ) && 'Dette feltet er påkrevd',
+                ) && isFieldMandatory(stilling, rolletype) && 'Dette feltet er påkrevd',
             }}
             render={({ field: { onChange, onBlur, value, name, ref } }) => (
               <Select
