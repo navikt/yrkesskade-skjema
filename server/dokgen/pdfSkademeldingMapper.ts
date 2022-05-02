@@ -13,7 +13,11 @@ import {
   PdfUlykkessted,
 } from './models';
 import { Adresse, Hendelsesfakta, Innmelder, Skade, Skadelidt, Skademelding, SkadetDel, Tid, Ulykkessted } from '../../client/src/api/yrkesskade';
-import dayjs from 'dayjs';
+import { format, parseISO } from 'date-fns';
+import { nb } from 'date-fns/locale';
+
+export const formatDate = (date: any, formatStr: string) =>
+  format(date, formatStr, { locale: nb });
 
 const DATO_FORMAT = 'DD.MM.YYYY';
 const KLOKKESLETT_FORMAT = 'HH:mm';
@@ -87,14 +91,26 @@ const mapHendelsesfakta = (hendelsesfakta: Hendelsesfakta): PdfHendelsesfakta =>
 const mapTid = (tid: Tid): PdfTid => {
   if (tid.tidstype === Tid.tidstype.TIDSPUNKT) {
     return {
-      tidspunkt: { label: 'Tidspunkt', verdi: { dato: dayjs(tid.tidspunkt).format(DATO_FORMAT),  klokkeslett: dayjs(tid.tidspunkt).format(KLOKKESLETT_FORMAT) } as PdfTidspunkt },
+      tidspunkt: {
+        label: 'Tidspunkt',
+        verdi: {
+          dato: formatDate(parseISO(tid.tidspunkt), DATO_FORMAT),
+          klokkeslett: formatDate(parseISO(tid.tidspunkt), KLOKKESLETT_FORMAT),
+        } as PdfTidspunkt,
+      },
       tidstype: tid.tidstype,
-    }
+    };
   } else if (tid.tidstype === Tid.tidstype.PERIODE) {
     return {
       tidstype: tid.tidstype,
-      periode: { label: 'Periode', verdi: {fra: dayjs(tid.periode.fra).format(DATO_FORMAT), til: dayjs(tid.periode.til).format(DATO_FORMAT) } as PdfPeriode }
-    }
+      periode: {
+        label: 'Periode',
+        verdi: {
+          fra: formatDate(parseISO(tid.periode.fra), DATO_FORMAT),
+          til: formatDate(parseISO(tid.periode.til), DATO_FORMAT),
+        } as PdfPeriode,
+      },
+    };
   }
 
   return {
@@ -122,7 +138,7 @@ const hentDokumentinfo = (): PdfDokumentInfo => {
   return {
     dokumentnavn: 'Kopi av skademelding',
     dokumentDatoPrefix: 'Kopi generert',
-    dokumentDato: dayjs(new Date()).format(DATO_FORMAT),
+    dokumentDato: formatDate(new Date(), DATO_FORMAT),
     dokumentnummer: 'Dette dokumenter er en oppsummering av det som er sendt til NAV',
     tekster: hentDokumenttekster(),
   };
