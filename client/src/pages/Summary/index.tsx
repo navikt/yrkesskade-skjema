@@ -41,7 +41,7 @@ const Summary = () => {
   const skademelding = useAppSelector((state) => selectSkademelding(state));
   const dispatch = useAppDispatch();
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const [clicked, setClicked] = useState<boolean>(false);
 
   useEffect(() => {
     // oppdater state med verdier som ikke har blitt satt av skjema
@@ -69,13 +69,13 @@ const Summary = () => {
 
   const navigate = useNavigate();
   const handleSending = async () => {
+    setClicked(true);
     try {
-      setLoading(true);
       await SkademeldingApiControllerService.sendSkademelding(data);
 
       logMessage('Skademelding innsendt');
       logAmplitudeEvent('skademelding.innmelding', { status: 'fullfort' });
-      navigate('/yrkesskade/skjema/kvittering', { state: data });
+      navigate('/yrkesskade/skjema/kvittering');
       dispatch(reset());
     } catch (error: any) {
       setError('Det skjedde en feil med innsendingen. Vi jobber med å løse problemet. Prøv igjen senere.');
@@ -83,7 +83,6 @@ const Summary = () => {
       logAmplitudeEvent('skademelding.innmelding', { status: 'feilet', feilmelding: error.message});
       navigate('/yrkesskade/skjema/feilmelding');
     }
-    setLoading(false);
   };
 
   return (
@@ -151,7 +150,13 @@ const Summary = () => {
           </Accordion>
           <div className="buttonGroup no-print">
             <ExitButton />
-            <Button onClick={handleSending} data-testid="send-injuryform" loading={loading}>Send inn</Button>
+            <Button
+              onClick={handleSending}
+              data-testid="send-injuryform"
+              loading={clicked}
+              disabled={clicked}>
+                Send inn
+            </Button>
           </div>
         </Cell>
         <Cell xs={12} sm={12} lg={2}>

@@ -7,13 +7,14 @@ import InputMask from 'react-input-mask';
 import dateFnsFormat from 'date-fns/format';
 import dateFnsParse from 'date-fns/parse';
 import { Controller } from 'react-hook-form';
-import { handleDateValue, handleTimeValue } from '../../../utils/date';
+import { handleDateValue, handleTimeValue, isKlokkeslett } from '../../../utils/date';
 import './Timeframe.less';
 import { InputClassNames } from 'react-day-picker/types/ClassNames';
 import { useAppSelector } from '../../../core/hooks/state.hooks';
 import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
 import { selectSkademelding } from '../../../core/reducers/skademelding.reducer';
 import { Tid } from '../../../api/yrkesskade';
+import { nb } from 'date-fns/locale';
 
 function formatDate(date: number | Date, format: string) {
   return dateFnsFormat(date, format);
@@ -26,6 +27,8 @@ interface IProps {
 }
 const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
   const FORMAT: string = 'dd.MM.yyyy';
+  const TIDSPUNKT_FORMAT: string = `${FORMAT} HH:mm`;
+
   const state = useAppSelector((state) => selectSkademelding(state));
   const tidsromkoder = useAppSelector((state) =>
     selectKodeverk(state, 'tidsrom')
@@ -88,19 +91,18 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
   };
 
   useEffect(() => {
-    if (specificDate && specificTime && specificTime.length === 5) {
-      const timeparts = specificTime.split(':');
-      const newDate = new Date(
-        specificDate.getUTCFullYear(),
-        specificDate?.getUTCMonth(),
-        specificDate?.getUTCDay(),
-        parseInt(timeparts[0]),
-        parseInt(timeparts[1])
-      );
+    if (specificDate && specificTime && isKlokkeslett(specificTime)) {
+      const dato = formatDate(specificDate, FORMAT);
+      const tidspunkt = `${dato} ${specificTime}`;
+      console.log('tidspunkt: ', tidspunkt, TIDSPUNKT_FORMAT, new Date());
 
-      setValue('hendelsesfakta.tid.tidspunkt', newDate.toISOString());
+      const isoDate = dateFnsParse(tidspunkt, TIDSPUNKT_FORMAT, new Date(), {
+        locale: nb,
+      }).toISOString();
+
+      setValue('hendelsesfakta.tid.tidspunkt', isoDate);
     }
-  }, [specificTime, specificDate, setValue]);
+  }, [specificTime, specificDate, setValue, TIDSPUNKT_FORMAT]);
 
   useEffect(() => {
     if (timeType !== 'Periode') {

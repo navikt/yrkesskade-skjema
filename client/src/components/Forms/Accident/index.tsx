@@ -10,7 +10,7 @@ import {
 import Select from 'react-select';
 import { Controller, useForm } from 'react-hook-form';
 import { useSelectedCompany } from '../../../context/SelectedCompanyContext';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import Address from '../Address';
 import _ from 'lodash';
 import { useAppSelector } from '../../../core/hooks/state.hooks';
@@ -54,6 +54,12 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
   const [alvorlighetsgrad, setAlvorlighetsgrad] = useState<string>(
     skademelding.skade?.alvorlighetsgrad || ''
   );
+
+  const handleAlvorlighetsgradChange = (event: ChangeEvent<HTMLInputElement>) => {
+    console.log('event', event);
+    setAlvorlighetsgrad(event.currentTarget.value);
+
+  }
 
   useEffect(() => {
     if (sammeSomVirksomhetensAdresse) {
@@ -139,7 +145,8 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
         <RadioGroup
           className="spacer"
           legend="Hvor alvorlig var hendelsen? (Valgfritt)"
-          value={skademelding.skade?.alvorlighetsgrad || ''}
+          value={alvorlighetsgrad}
+          {...register('skade.alvorlighetsgrad')}
           error={
             errors?.skade?.alvorlighetsgrad &&
             errors?.skade?.alvorlighetsgrad.message
@@ -158,6 +165,7 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
                   value={alvorlighetsgradkode}
                   data-testid={`injury-severity-${index}`}
                   id={`injury-severity-${index}`}
+                  onChange={handleAlvorlighetsgradChange}
                 />
                 <label
                   htmlFor={`injury-severity-${index}`}
