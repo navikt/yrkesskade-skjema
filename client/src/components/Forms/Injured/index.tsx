@@ -1,15 +1,16 @@
-import { useState, useEffect } from 'react';
+/* eslint-disable no-mixed-operators */
+import { useEffect, useState } from 'react';
 import { TextField, Label, Select as NAVSelect } from '@navikt/ds-react';
 import { Controller } from 'react-hook-form';
-import stillingstitler from '../../../assets/Lists/stillingstitler';
-import dekningsforhold from '../../../assets/Lists/dekningsforhold';
 import Select from 'react-select';
 import validator from '@navikt/fnrvalidator';
 import { useInnloggetContext } from '../../../context/InnloggetContext';
-import { useStateMachine } from 'little-state-machine';
 import _ from 'lodash';
 
 import './Injured.less';
+import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks';
+import { hentKodeverkForKategori, selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
+import { selectSkademelding } from '../../../core/reducers/skademelding.reducer';
 
 interface IProps {
   register: any;
@@ -19,12 +20,13 @@ interface IProps {
 }
 const InjuredForm = ({ register, errors, control, setValue }: IProps) => {
   const { innloggetBruker } = useInnloggetContext();
-  const { state } = useStateMachine();
-  const [openMenu, setOpenMenu] = useState(false);
+  const dispatch = useAppDispatch();
+  const skademelding = useAppSelector((state) => selectSkademelding(state));
 
-  const [rolletype, setRolletype] = useState(
-    state.skadelidt.dekningsforhold.rolletype
-  );
+  const [openMenu, setOpenMenu] = useState(false);
+  const [ rolletype, setRolletype ] = useState<string>(skademelding.skadelidt?.dekningsforhold.rolletype || '');
+  const rolletypekoder = useAppSelector((state) => selectKodeverk(state, 'rolletype'));
+  const stillingstittelkoder = useAppSelector((state) => selectKodeverk(state, 'stillingstittel'));
 
   // Åpner stillingsinputen når det er skrevet 2 eller fler tegn
   const handleInputChange = (query: string, action: any) => {
@@ -37,9 +39,33 @@ const InjuredForm = ({ register, errors, control, setValue }: IProps) => {
 
   useEffect(() => {
     if(rolletype.toLowerCase() === 'elev' ) {
-      setValue('skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte', 'N/A');
+      setValue('skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte', undefined);
     }
   }, [rolletype, setValue]);
+
+  const handleRolletypeEndring = (event: any) => {
+    setRolletype(event.target.value);
+  }
+
+  useEffect(() => {
+    if (!rolletype) {
+      // rolletype er ikke satt og vi kan ikke laste kodeverk
+      return;
+    }
+    const rolletypeverdi = rolletype.toLocaleLowerCase();
+    ['tidsrom',
+     'alvorlighetsgrad',
+     'hvorSkjeddeUlykken',
+     'typeArbeidsplass',
+     'aarsakOgBakgrunn',
+     'bakgrunnForHendelsen',
+     'harSkadelidtHattFravaer',
+     'skadetKroppsdel',
+     'skadetype',
+     'stillingstittel',
+    ].forEach(typenavn => dispatch(hentKodeverkForKategori({typenavn: typenavn, kategorinavn: rolletypeverdi})))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rolletype]);
 
   return (
     <>
@@ -71,78 +97,77 @@ const InjuredForm = ({ register, errors, control, setValue }: IProps) => {
 
       <NAVSelect
         className="spacer"
-        label="Hva er den skadeliteds tilknytning til virksomheten?"
+        label="Hva er den skadelidtes tilknytning til virksomheten?"
         {...register('skadelidt.dekningsforhold.rolletype', {
           required: 'Dette feltet er påkrevd',
         })}
+        onChange={handleRolletypeEndring}
         data-testid="injured-role-select"
-        onChange={(e) => {
-          setRolletype(e.target.value);
-        }}
         error={
           errors?.skadelidt?.dekningsforhold?.rolletype &&
           errors?.skadelidt?.dekningsforhold.rolletype.message
         }
+        value={rolletype}
       >
         <option hidden value=""></option>
-        {dekningsforhold.map((dekning: { value: string; label: string }) => {
+        {rolletypekoder && Object.keys(rolletypekoder).map((kode: string) => {
           return (
-            <option key={encodeURI(dekning.value)} value={dekning.value}>
-              {dekning.label}
+            <option key={encodeURI(kode)} value={kode}>
+              {rolletypekoder[kode]?.verdi || 'UKJENT'}
             </option>
           );
         })}
       </NAVSelect>
-      {rolletype.toLowerCase() !== 'elev' && (
-        <div className="spacer">
-          <Label>Hva er den skadelidtes stilling</Label>
-          <Controller
-            name="skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte"
-            control={control}
-            rules={{
-              required:
-                _.isEmpty(
-                  state.skadelidt.dekningsforhold
-                    .stillingstittelTilDenSkadelidte
-                ) && 'Dette feltet er påkrevd',
-            }}
-            render={({ field: { onChange, onBlur, value, name, ref } }) => (
-              <Select
-                components={{
-                  DropdownIndicator: () => null,
-                  IndicatorSeparator: () => null,
-                }}
-                defaultValue={{
-                  value:
-                    state.skadelidt.dekningsforhold
-                      .stillingstittelTilDenSkadelidte,
-                  label:
-                    state.skadelidt.dekningsforhold
-                      .stillingstittelTilDenSkadelidte,
-                }}
-                isClearable
-                onBlur={onBlur}
-                onChange={(val) => onChange([val?.value])}
-                options={stillingstitler}
-                menuIsOpen={openMenu}
-                onInputChange={handleInputChange}
-                className="injured-position"
-              />
-            )}
-          />
-          {errors?.skadelidt?.dekningsforhold
-            ?.stillingstittelTilDenSkadelidte && (
-            <span className="navds-error-message navds-error-message--medium navds-label">
-              {
-                errors.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte
-                  .message
-              }
-            </span>
+    {rolletype.toLowerCase() !== 'elev' && (
+      <div className="spacer">
+        <Label>Hva er den skadelidtes stilling</Label>
+        {stillingstittelkoder && (
+          <>
+            <Controller
+          name="skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte"
+          control={control}
+          rules={{
+            required:
+              _.isEmpty(
+                skademelding.skadelidt?.dekningsforhold.stillingstittelTilDenSkadelidte
+              ) && 'Dette feltet er påkrevd',
+          }}
+          render={({ field: { onChange, onBlur, value, name, ref } }) => (
+            <Select
+              components={{
+                DropdownIndicator: () => null,
+                IndicatorSeparator: () => null,
+              }}
+              defaultValue={!_.isEmpty(skademelding.skadelidt?.dekningsforhold) ? skademelding.skadelidt?.dekningsforhold.stillingstittelTilDenSkadelidte.map(stilling => {
+                return {value: stilling, label: (stillingstittelkoder && stillingstittelkoder[stilling]?.verdi || 'UKJENT')};
+              }) : []
+            }
+              onBlur={onBlur}
+              onChange={(val) => onChange([val?.value])}
+              options={Object.keys(stillingstittelkoder).map(kode => ({value: kode, label: stillingstittelkoder[kode]?.verdi || 'UKJENT' }))}
+              menuIsOpen={openMenu}
+              onInputChange={handleInputChange}
+              className="injured-position"
+            />
           )}
-        </div>
-      )}
+        />
+        {errors?.skadelidt?.dekningsforhold
+          ?.stillingstittelTilDenSkadelidte && (
+          <span className="navds-error-message navds-error-message--medium navds-label">
+            {
+              errors.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte
+                .message
+            }
+          </span>
+        )}
+          </>
+        )}
+
+      </div>
+    )}
     </>
   );
 };
 
 export default InjuredForm;
+

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import InjuredForm from '../../../components/Forms/Injured';
 import {
   ContentContainer,
@@ -6,46 +6,43 @@ import {
   Cell,
   Button,
   Heading,
-  // Link
 } from '@navikt/ds-react';
 import SystemHeader from '../../../components/SystemHeader';
 import BackButton from '../../../components/BackButton';
 
-// import { IGeneralForm } from '../../Interfaces/generalForm';
-
 import StepIndicator from '../../../components/StepIndicator';
-// import { ISteps } from '../../../Interfaces/steps';
 import ExitButton from '../../../components/ExitButton';
 
 import { useForm } from 'react-hook-form';
-import { useStateMachine } from 'little-state-machine';
-import formUpdateAction from '../../../State/actions/formUpdateAction';
-import { useNavigate } from 'react-router-dom';
-import clearFormAction from '../../../State/actions/clearAction';
-// import { useCancel } from '../../../core/hooks/cancel.hooks';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Skademelding } from '../../../api/yrkesskade';
+import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks';
+import { oppdaterSkademelding, selectSkademelding } from '../../../core/reducers/skademelding.reducer';
 
 const InjuredFormPage = () => {
-  const { actions, state } = useStateMachine({ formUpdateAction, clearFormAction });
+  const dispatch = useAppDispatch();
+  const skademelding = useAppSelector((state) => selectSkademelding(state))
   const {
     register,
     handleSubmit,
     formState: { errors },
     control,
     setValue
-  } = useForm({
-    defaultValues: {
-      // 'skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte': state.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte,
-      'skadelidt.norskIdentitetsnummer': state.skadelidt.norskIdentitetsnummer,
-      'skadelidt.dekningsforhold.rolletype': state.skadelidt.dekningsforhold.rolletype,
-    }});
-  // const cancel = useCancel();
+  } = useForm<Skademelding>();
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const onSubmit = (data: any) => {
-    actions.formUpdateAction(data);
+    dispatch(oppdaterSkademelding(data));
     navigate('/yrkesskade/skjema/tidsrom');
   };
+
+  useEffect(() => {
+    setValue('skadelidt.norskIdentitetsnummer', skademelding.skadelidt?.norskIdentitetsnummer || '');
+    setValue('skadelidt.dekningsforhold.rolletype', skademelding.skadelidt?.dekningsforhold.rolletype || '')
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location, setValue])
 
   return (
     <ContentContainer>

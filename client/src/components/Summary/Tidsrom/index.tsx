@@ -1,11 +1,14 @@
 // import { isNil } from "ramda";
 import { Label, BodyShort } from '@navikt/ds-react';
 import { format, parseISO } from 'date-fns';
+import { useAppSelector } from '../../../core/hooks/state.hooks';
+import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
 // import { handleDateValue } from '../../../utils/date';
 interface IProps {
   data: any;
 }
 const TidsromSummary = ({ data }: IProps) => {
+  const tidsromkoder = useAppSelector((state) => selectKodeverk(state, 'tidsrom'));
   let accidentTime: String | undefined;
   const timetype = data.hendelsesfakta.tid.tidstype.toLowerCase();
 
@@ -46,7 +49,7 @@ const TidsromSummary = ({ data }: IProps) => {
       </div>
       <div className="answerContainer">
         <Label>Innenfor hvilket tidsrom inntraff skaden</Label>
-        <BodyShort>{data.hendelsesfakta.naarSkjeddeUlykken}</BodyShort>
+        <BodyShort>{tidsromkoder && tidsromkoder[data.hendelsesfakta.naarSkjeddeUlykken]?.verdi}</BodyShort>
       </div>
     </div>
   );

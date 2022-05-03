@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import InjuryForm from '../../../components/Forms/Injury';
 import {
   ContentContainer,
@@ -12,18 +12,17 @@ import SystemHeader from '../../../components/SystemHeader';
 import BackButton from '../../../components/BackButton';
 
 import StepIndicator from '../../../components/StepIndicator';
-// import { ISteps } from '../../../Interfaces/steps';
 import ExitButton from '../../../components/ExitButton';
 
 import { useForm } from 'react-hook-form';
-import { useStateMachine } from 'little-state-machine';
-import formUpdateAction from '../../../State/actions/formUpdateAction';
-import { useNavigate } from 'react-router-dom';
-import clearFormAction from '../../../State/actions/clearAction';
-// import { useCancel } from '../../../core/hooks/cancel.hooks';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Skademelding } from '../../../api/yrkesskade';
+import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks';
+import { oppdaterSkademelding, selectSkademelding } from '../../../core/reducers/skademelding.reducer';
 
 const InjuryFormPage = () => {
-  const { actions, state } = useStateMachine({ formUpdateAction, clearFormAction });
+  const dispatch = useAppDispatch();
+  const skademelding = useAppSelector((state) => selectSkademelding(state));
   const {
     register,
     handleSubmit,
@@ -31,14 +30,16 @@ const InjuryFormPage = () => {
     getValues,
     resetField,
     setValue
-  } = useForm({
-    defaultValues: {
-      'skade.antattSykefravaerTabellH': state.skade.antattSykefravaerTabellH
-    }
-  });
+  } = useForm<Skademelding>();
   // const cancel = useCancel();
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    setValue('skade.antattSykefravaerTabellH', skademelding.skade?.antattSykefravaerTabellH || '');
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location])
 
   const onSubmit = (data: any) => {
 
@@ -51,8 +52,7 @@ const InjuryFormPage = () => {
       delete data.skade.skadeartTabellC;
     }
 
-
-    actions.formUpdateAction(data);
+    dispatch(oppdaterSkademelding(data));
     navigate('/yrkesskade/skjema/beskrivelse');
   };
   return (

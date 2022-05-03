@@ -3,21 +3,18 @@ import DayPickerInput from 'react-day-picker/DayPickerInput';
 import { DateUtils } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import { Select, RadioGroup, Label } from '@navikt/ds-react';
-import { useStateMachine } from 'little-state-machine';
 import InputMask from 'react-input-mask';
-
-import ulykkestid from '../../../assets/Lists/ulykkestid';
-
 import dateFnsFormat from 'date-fns/format';
 import dateFnsParse from 'date-fns/parse';
 import { Controller } from 'react-hook-form';
-import { handleDateValue, handleTimeValue } from '../../../utils/date';
+import { handleDateValue, handleTimeValue, isKlokkeslett } from '../../../utils/date';
 import './Timeframe.less';
 import { InputClassNames } from 'react-day-picker/types/ClassNames';
 import { useAppSelector } from '../../../core/hooks/state.hooks';
-import { selectKodeverkType } from '../../../core/reducers/kodeverk.reducer';
+import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
+import { selectSkademelding } from '../../../core/reducers/skademelding.reducer';
+import { Tid } from '../../../api/yrkesskade';
 import { nb } from 'date-fns/locale';
-import parse from 'date-fns/parse';
 
 function formatDate(date: number | Date, format: string) {
   return dateFnsFormat(date, format);
@@ -32,14 +29,10 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
   const FORMAT: string = 'dd.MM.yyyy';
   const TIDSPUNKT_FORMAT: string = `${FORMAT} HH:mm`;
 
-  const { state } = useStateMachine();
-  const tidsromKoder = useAppSelector((state) =>
-    selectKodeverkType(state, 'tidsrom')
+  const state = useAppSelector((state) => selectSkademelding(state));
+  const tidsromkoder = useAppSelector((state) =>
+    selectKodeverk(state, 'tidsrom')
   );
-
-  useEffect(() => {
-    console.log('tidsromkoder: ', tidsromKoder);
-  }, [tidsromKoder]);
 
   const dayPickerClassNames = {
     container: 'nav-day-picker',
@@ -62,21 +55,21 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
     container: `timeframe-from-date ${dayPickerClassNames.container}`,
   };
 
-  const [timeType, setTimeType] = useState(state.hendelsesfakta.tid.tidstype);
+  const [timeType, setTimeType] = useState(state.hendelsesfakta?.tid.tidstype);
   const [specificDate, setSpecificDate] = useState<Date | undefined>(
-    handleDateValue(state.hendelsesfakta.tid.tidspunkt)
+    handleDateValue(state.hendelsesfakta?.tid.tidspunkt)
   );
 
   const [specificTime, setSpecificTime] = useState<string | undefined>(
-    handleTimeValue(state.hendelsesfakta.tid.tidspunkt)
+    handleTimeValue(state.hendelsesfakta?.tid.tidspunkt)
   );
 
   const [toDayInput, setToDayInput] = useState<DayPickerInput | null>();
   const [specificFromDay, setSpecificFromDay] = useState<Date | undefined>(
-    handleDateValue(state.hendelsesfakta.tid.periode.fra)
+    handleDateValue(state.hendelsesfakta?.tid.periode?.fra)
   );
   const [specificToDay, setSpecificToDay] = useState<Date | undefined>(
-    handleDateValue(state.hendelsesfakta.tid.periode.til)
+    handleDateValue(state.hendelsesfakta?.tid.periode?.til)
   );
 
   const modifiers = { start: specificFromDay, end: specificToDay };
@@ -98,10 +91,12 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
   };
 
   useEffect(() => {
-    if (specificDate && specificTime && specificTime.length === 5) {
+    if (specificDate && specificTime && isKlokkeslett(specificTime)) {
       const dato = formatDate(specificDate, FORMAT);
       const tidspunkt = `${dato} ${specificTime}`;
-      const isoDate = parse(tidspunkt, TIDSPUNKT_FORMAT, new Date(), {
+      console.log('tidspunkt: ', tidspunkt, TIDSPUNKT_FORMAT, new Date());
+
+      const isoDate = dateFnsParse(tidspunkt, TIDSPUNKT_FORMAT, new Date(), {
         locale: nb,
       }).toISOString();
 
@@ -163,7 +158,7 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
             data-testid="timeframe-when-date"
             id="timeframe-when-date"
             onChange={(e) => {
-              setTimeType(e.target.value);
+              setTimeType(Tid.tidstype.TIDSPUNKT);
             }}
           />
           <label htmlFor="timeframe-when-date" className="navds-radio__label">
@@ -174,7 +169,6 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
         <div className="dateTime">
           {timeType === 'Tidspunkt' && (
             <div className="dateTime-date spacer">
-              {/* <Label>Dato for ulykken</Label> */}
               <Controller
                 name="hendelsesfakta.tid.tidspunkt"
                 control={control}
@@ -246,7 +240,7 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
             data-testid="timeframe-when-over-period"
             id="timeframe-when-over-period"
             onChange={(e) => {
-              setTimeType(e.target.value);
+              setTimeType(Tid.tidstype.PERIODE);
             }}
           />
           <label
@@ -319,7 +313,7 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
             data-testid="timeframe-when-unknown"
             id="timeframe-when-unknown"
             onChange={(e) => {
-              setTimeType(e.target.value);
+              setTimeType(Tid.tidstype.UKJENT);
             }}
           />
           <label
@@ -343,10 +337,10 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
         data-testid="timeframe-period-options"
       >
         <option hidden value=""></option>
-        {ulykkestid.map((time: { value: string; label: string }) => {
+        {tidsromkoder && Object.keys(tidsromkoder).map((tidsromkode: string, index: number) => {
           return (
-            <option key={encodeURIComponent(time.value)} value={time.value}>
-              {time.label}
+            <option key={encodeURIComponent(tidsromkode)} value={tidsromkode}>
+              {tidsromkoder[tidsromkode]?.verdi}
             </option>
           );
         })}

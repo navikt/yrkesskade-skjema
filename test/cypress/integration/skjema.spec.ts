@@ -12,8 +12,38 @@ import { accidentForm } from "../support/selectors/accident-form.selectors";
 import { injuryForm } from "../support/selectors/injury-form.selectors";
 import { summary } from "../support/selectors/summary.selectors";
 import { receipt } from "../support/selectors/receipt.selectors";
+import { Tid } from '../../../client/src/api/yrkesskade';
+interface TestSkademelding {
+  innmeldernavn: string;
+  virksomhetsnavn: string;
+  tidstype: Tid.tidstype;
+  tidspunkt?: dayjs.Dayjs;
+  stilling: string;
+  skadelidtIdentifikator: string,
+  fra?: Date;
+  til?: Date;
+  timeframe: string;
+  aarsak: string;
+  bakgrunn: string;
+  kroppsdel: string;
+  skadetype: string;
+}
 
 describe('Skjema innsending', (): void => {
+
+  const test: TestSkademelding = {
+    innmeldernavn: 'ROLF BJØRN',
+    virksomhetsnavn: 'BIRI OG TORPO REGNSKAP',
+    stilling: 'Administrerende direktører',
+    skadelidtIdentifikator: '16120101181',
+    tidstype: Tid.tidstype.TIDSPUNKT,
+    tidspunkt: dayjs(),
+    timeframe: 'I avtalt arbeidstid',
+    aarsak: 'Trafikkulykke',
+    bakgrunn: 'Manglende merking',
+    kroppsdel: 'Øye, venstre',
+    skadetype: 'Tap av legemsdel',
+  }
 
   beforeEach(() => {
     network.intercept(endpointUrls.toggle, 'toggles/enabled.json').as('toggles');
@@ -23,9 +53,15 @@ describe('Skjema innsending', (): void => {
     network.intercept(endpointUrls.brukerinfoRoller, 'brukerinfo/roller.json').as('getRoller');
     network.intercept(endpointUrls.skademelding, 'skademelding.json').as('postSkademelding');
     network.intercept(endpointUrls.print, 'skademelding-kopi.pdf').as('postPrintPdf');
-    network.intercept(endpointUrls.landkoder, 'kodeverk/landkoder.json').as('getLandkoder');
-    network.intercept(endpointUrls.tidsromkoder, 'kodeverk/tidsromkoder.json').as('getTidsromkoder');
     network.intercept(endpointUrls.log, 'logResult.json').as('postLog');
+
+    ['landkoderISO2', 'rolletype'].forEach(kodeverk => {
+      network.intercept(endpointUrls.kodeverkUtenKategori(kodeverk), `kodeverk/${kodeverk}.json`);
+    });
+
+    ['stillingstittel', 'aarsakOgBakgrunn', 'alvorlighetsgrad', 'bakgrunnForHendelsen', 'fravaertype', 'hvorSkjeddeUlykken', 'harSkadelidtHattFravaer', 'skadetKroppsdel', 'skadetype', 'tidsrom', 'typeArbeidsplass'].forEach(kodeverk => {
+      network.intercept(endpointUrls.kodeverk(kodeverk), `kodeverk/${kodeverk}.json`);
+    })
 
     cy.window().then(win=> {
       win.sessionStorage.removeItem('__LSM__');
@@ -37,7 +73,7 @@ describe('Skjema innsending', (): void => {
   });
 
   it.only('normal flyt - ingen avvik', () => {
-    const injuryTime = dayjs();
+    const injuryTime = test.tidspunkt;
     // vent til innlogget sjekk er fullført
     cy.wait('@getInnlogget');
 
@@ -45,8 +81,8 @@ describe('Skjema innsending', (): void => {
     info.startInnmelding().click();
 
     // info om skadelydte
-    injuredForm.position().type('Programvareutviklere{enter}');
-    injuredForm.idNumber().type('{selectAll}16120101181');
+    injuredForm.idNumber().type(`{selectAll}${test.skadelidtIdentifikator}`);
+    injuredForm.position().type(`${test.stilling}{enter}`);
     injuredForm.positionSelect().select(1);
 
     // Gå til neste steg
@@ -57,7 +93,7 @@ describe('Skjema innsending', (): void => {
     timeframeForm.timeframeWhenTime().type('{selectall}' + injuryTime.format('HH:mm')).type('{enter}'); // ser ikke ut som den liker at dette felter skrives til
    // timeframeForm.timeframeWhenTime().click();
    // timeframeForm.timeframeWhenTimeSelect(13).click();
-    timeframeForm.timeframePeriodOptions().select('I avtalt arbeidstid');
+    timeframeForm.timeframePeriodOptions().select(test.timeframe);
 
     // Gå til neste steg
     general.nextStep().click();
@@ -65,15 +101,15 @@ describe('Skjema innsending', (): void => {
     // info om ulykken
     accidentForm.place().select(1);
     accidentForm.placeType().select(2);
-    accidentForm.reasonOptions().type('Trafikkulykke{enter}{esc}');
-    accidentForm.backgroundOptions().type('Manglende merking{enter}{esc}')
+    accidentForm.reasonOptions().type(`${test.aarsak}{enter}{esc}`);
+    accidentForm.backgroundOptions().type(`${test.bakgrunn}{enter}{esc}`)
 
     // Gå til neste steg
     general.nextStep().click();
 
     // info om skaden
-    injuryForm.bodylocationOptions().select('Øye, venstre');
-    injuryForm.injuryTypeOptions().select('Tap av legemsdel');
+    injuryForm.bodylocationOptions().select(test.kroppsdel);
+    injuryForm.injuryTypeOptions().select(test.skadetype);
     injuryForm.addInjuryButton().click();
     injuryForm.injuryAbsentRadio(2).click();
 
@@ -85,9 +121,9 @@ describe('Skjema innsending', (): void => {
 
     // validerer oppsummering
     summary.accordians.innmelder().click();
-    summary.innmelder.navn().should('have.text', 'ROLF BJØRN'); // se i fixtures/brukerinfo.json
+    summary.innmelder.navn().should('have.text', test.innmeldernavn); // se i fixtures/brukerinfo.json
     summary.innmelder
-      .virksomhetsnavn().should('have.text', 'BIRI OG TORPO REGNSKAP'); // se 1 organisasjon i fixtures/brukerinfo.json
+      .virksomhetsnavn().should('have.text', test.virksomhetsnavn); // se 1 organisasjon i fixtures/brukerinfo.json
 
     // send inn skjema
     summary.sendInjury().click().wait('@postSkademelding');

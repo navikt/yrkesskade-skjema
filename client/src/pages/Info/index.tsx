@@ -11,45 +11,30 @@ import {
   Detail,
 } from '@navikt/ds-react';
 import SystemHeader from '../../components/SystemHeader';
-// import getTexts from '../../utils/getTexts';
 import { useNavigate } from 'react-router-dom';
 import StepIndicator from '../../components/StepIndicator';
 import ExitButton from '../../components/ExitButton';
 
-// import { ISteps } from '../../Interfaces/steps';
 import { useInnloggetContext } from '../../context/InnloggetContext';
 import { Organisasjon } from '../../types/brukerinfo';
 import { useEffect } from 'react';
 import { useSelectedCompany } from '../../context/SelectedCompanyContext';
-import { useStateMachine } from 'little-state-machine';
-import {
-  oppdaterInnmelder,
-  oppdaterPaaVegneAv,
-  oppdaterDekningsforholdOrganisasjon,
-  oppdaterRollerForOrganisasjon,
-} from '../../State/actions/skademeldingStateAction';
+
 import {
   BrukerinfoControllerService,
+  Dekningsforhold,
+  Innmelder,
   OrganisasjonDto,
+  Skadelidt,
 } from '../../api/yrkesskade';
-import clearFormAction from '../../State/actions/clearAction';
 import { logMessage } from '../../utils/logging';
-import { useAppDispatch } from '../../core/hooks/state.hooks';
-import { KodeverkControllerService } from '../../api/kodeverk';
-import { addKodeverk } from '../../core/actions/kodeverk.actions';
 import { logAmplitudeEvent } from '../../utils/analytics/amplitude';
-// import Description from '../Form/Description';
+import { useAppDispatch } from '../../core/hooks/state.hooks';
+import { oppdaterAltinnRoller, oppdaterInnmelder, oppdaterPaaVegneAv, oppdaterSkadelidt } from '../../core/reducers/skademelding.reducer';
 
 const Info = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { actions } = useStateMachine({
-    oppdaterPaaVegneAv,
-    oppdaterInnmelder,
-    oppdaterDekningsforholdOrganisasjon,
-    clearFormAction,
-    oppdaterRollerForOrganisasjon
-  });
-  // const cancel = useCancel();
 
   const handleForward = () => {
     logMessage('Bruker har startet innmelding');
@@ -61,14 +46,14 @@ const Info = () => {
   const { selectedCompany, setSelectedCompany, setSelectedAddress } =
     useSelectedCompany();
 
-  const dispatch = useAppDispatch();
-
   useEffect(() => {
     if (innloggetBruker?.fnr) {
-      actions.oppdaterInnmelder({
-        norskIdentitetsnummer: innloggetBruker.fnr,
-        innmelderrolle: 'Virksomhetsrepresentant',
-      });
+      const innmelder: Innmelder = {
+        norskIdentitetsnummer: innloggetBruker.fnr as unknown as string,
+        innmelderrolle: 'virksomhetsrepresentant',
+        paaVegneAv: ''
+      };
+      dispatch(oppdaterInnmelder(innmelder));
 
       settValgtVirksomhet(innloggetBruker.organisasjoner[0]);
 
@@ -79,16 +64,6 @@ const Info = () => {
     innloggetBruker?.organisasjoner,
     setSelectedCompany,
   ]);
-
-  useEffect(() => {
-    hentLandkoder();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const hentLandkoder = async () => {
-    const landkoder = await KodeverkControllerService.hentKodeverdiForTypeOgKategori('landkoder', 'alle');
-    dispatch(addKodeverk({ 'landkoder': landkoder.kodeverdier || []}));
-  }
 
   const settValgtVirksomhet = (virksomhet: Organisasjon) => {
     setSelectedCompany(virksomhet);
@@ -106,15 +81,24 @@ const Info = () => {
         organisasjon.beliggenhetsadresse || organisasjon.forretningsadresse;
       setSelectedAddress(adresse);
 
-      actions.oppdaterPaaVegneAv(organisasjon.organisasjonsnummer);
-      actions.oppdaterDekningsforholdOrganisasjon({
+      const dekningsforhold: Dekningsforhold = {
         organisasjonsnummer: organisasjon.organisasjonsnummer as string,
-        navn: organisasjon.navn || '',
-      });
-      actions.oppdaterRollerForOrganisasjon(
-        roller
-        .filter(altinnRolle => altinnRolle.RoleDefinitionId)
-        .map(altinnRolle => altinnRolle.RoleDefinitionId ? altinnRolle.RoleDefinitionId.toString() : ''));
+        stillingstittelTilDenSkadelidte: [],
+        rolletype: ''
+      };
+      const skadelidt: Skadelidt = {
+        dekningsforhold: dekningsforhold,
+        norskIdentitetsnummer: ''
+      };
+
+      dispatch(oppdaterSkadelidt(skadelidt));
+
+      const altinnRollerIder = roller
+      .filter(altinnRolle => altinnRolle.RoleDefinitionId)
+      .map(altinnRolle => altinnRolle.RoleDefinitionId ? altinnRolle.RoleDefinitionId.toString() : '');
+      dispatch(oppdaterAltinnRoller(altinnRollerIder));
+      dispatch(oppdaterPaaVegneAv(organisasjon.organisasjonsnummer));
+
     });
   };
 

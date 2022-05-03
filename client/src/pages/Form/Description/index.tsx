@@ -13,14 +13,12 @@ import StepIndicator from '../../../components/StepIndicator';
 import ExitButton from '../../../components/ExitButton';
 
 import { useForm } from 'react-hook-form';
-import { useStateMachine } from 'little-state-machine';
-import formUpdateAction from '../../../State/actions/formUpdateAction';
 import { useNavigate } from 'react-router-dom';
-import clearFormAction from '../../../State/actions/clearAction';
-// import { useCancel } from '../../../core/hooks/cancel.hooks';
+import { useAppDispatch } from '../../../core/hooks/state.hooks';
+import { oppdaterSkademelding } from '../../../core/reducers/skademelding.reducer';
 
 const DescriptionFormPage = () => {
-  const { actions } = useStateMachine({ formUpdateAction, clearFormAction });
+  const dispatch = useAppDispatch();
   const {
     register,
     handleSubmit,
@@ -31,7 +29,7 @@ const DescriptionFormPage = () => {
   const navigate = useNavigate();
 
   const onSubmit = (data: any) => {
-    actions.formUpdateAction(data);
+    dispatch(oppdaterSkademelding(data));
     navigate('/yrkesskade/skjema/oppsummering');
   };
 

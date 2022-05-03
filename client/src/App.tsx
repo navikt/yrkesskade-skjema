@@ -1,38 +1,43 @@
 import NotFound from './pages/404';
-import Info from './pages/Info';
-import Summary from './pages/Summary';
-import Receipt from './pages/Receipt';
-import Error from './pages/Error';
-import TimeframeFormPage from './pages/Form/Timeframe';
-import InjuryFormPage from './pages/Form/Injury';
-import InjuredFormPage from './pages/Form/Injured';
 import AccidentFormPage from './pages/Form/Accident';
 import DescriptionFormPage from './pages/Form/Description';
+import InjuredFormPage from './pages/Form/Injured';
+import InjuryFormPage from './pages/Form/Injury';
+import TimeframeFormPage from './pages/Form/Timeframe';
+import Info from './pages/Info';
 import Landing from './pages/Landing';
-// import TemporaryDown from './pages/TemporaryDown';
-
-
+import Summary from './pages/Summary';
+import Error from './pages/Error';
+import Receipt from './pages/Receipt';
 import { Route, Routes, useLocation } from 'react-router-dom';
-import { StateMachineProvider, createStore } from 'little-state-machine';
 
 import { InnloggetProvider } from './context/InnloggetContext';
 import { FeatureTogglesProvider } from './context/FeatureTogglesContext';
 import { autentiseringsInterceptor } from './utils/autentisering';
 import { SelectedCompanyProvider } from './context/SelectedCompanyContext';
 import { ErrorMessageProvider } from './context/ErrorMessageContext';
-import { formState } from './State/formState';
 import { StateManagementProvider } from './context/StateManagementContext';
 import { useEffect } from 'react';
 import { logAmplitudeEvent } from './utils/analytics/amplitude';
+import { useAppDispatch } from './core/hooks/state.hooks';
+import { hentKodeverk, hentKodeverkForKategori } from './core/reducers/kodeverk.reducer';
+
 
 const App = () => {
-  createStore(formState, {});
   const location = useLocation();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    console.log(location);
     logAmplitudeEvent('skademelding.sidevisning', { pathname: location.pathname });
   }, [location])
+
+  useEffect(() => {
+      dispatch(hentKodeverk('landkoderISO2'));
+      dispatch(hentKodeverk('rolletype'));
+
+      // preload av stillingstitler
+      dispatch(hentKodeverkForKategori({typenavn: 'stillingstittel', kategorinavn: 'arbeidstaker'}))
+  });
 
   autentiseringsInterceptor();
 
@@ -41,7 +46,6 @@ const App = () => {
       <InnloggetProvider>
         <FeatureTogglesProvider>
           <SelectedCompanyProvider>
-            <StateMachineProvider>
               <StateManagementProvider>
                 <Routes>
                   <Route path="yrkesskade/">
@@ -66,7 +70,6 @@ const App = () => {
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </StateManagementProvider>
-            </StateMachineProvider>
           </SelectedCompanyProvider>
         </FeatureTogglesProvider>
       </InnloggetProvider>

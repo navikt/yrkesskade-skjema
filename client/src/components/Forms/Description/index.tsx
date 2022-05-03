@@ -1,17 +1,19 @@
 import { useState } from 'react';
 import { Textarea } from '@navikt/ds-react';
-import { useStateMachine } from 'little-state-machine';
+import { useAppSelector } from '../../../core/hooks/state.hooks';
+import { selectSkademelding } from '../../../core/reducers/skademelding.reducer';
 
 interface IProps {
   register: any;
   errors: any;
 }
 const DescriptionForm = ({ register }: IProps) => {
-  const { state } = useStateMachine({});
+  const skademelding = useAppSelector((state) => selectSkademelding(state));
   const [freetext, setFreetext] = useState(
-    state.hendelsesfakta.utfyllendeBeskrivelse
+    skademelding.hendelsesfakta?.utfyllendeBeskrivelse || ''
   );
-  const rolletype = state.skadelidt.dekningsforhold.rolletype;
+  const [rolletype] = useState<string>(skademelding.skadelidt?.dekningsforhold.rolletype || '');
+
   return (
     <>
       <Textarea

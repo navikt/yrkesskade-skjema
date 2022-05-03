@@ -1,16 +1,14 @@
 import { TextField, Fieldset, Select } from '@navikt/ds-react';
-import { KodeverdiDto } from '../../../api/kodeverk';
 import { useAppSelector } from '../../../core/hooks/state.hooks';
-import { selectKodeverkType } from '../../../core/reducers/kodeverk.reducer';
+import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
 import './Address.less';
-
 interface IProps {
   register: any;
   errors: any;
   control: any;
 }
 const Address = ({ register, errors, control }: IProps) => {
-  const landkoder = useAppSelector(state => selectKodeverkType(state, 'landkoder'));
+  const landkoder = useAppSelector(state => selectKodeverk(state, 'landkoderISO2'));
 
   return (
     <Fieldset legend="Fyll ut adressen hvor ulykken skjedde">
@@ -71,13 +69,13 @@ const Address = ({ register, errors, control }: IProps) => {
             errors?.hendelsesfakta?.ulykkessted?.adresse.land.message
           }
         >
-        { [...landkoder].sort((a, b) => {
-           const verdiA = a.verdi || 'ukjent';
-           const verdiB = b.verdi || 'ukjent';
+        { landkoder && Object.keys(landkoder).sort((a, b) => {
+           const verdiA = landkoder[a]?.verdi || 'ukjent';
+           const verdiB = landkoder[b]?.verdi || 'ukjent';
 
           return verdiA.localeCompare(verdiB);
-        }).map((landkode: KodeverdiDto, index: number) =>
-          <option key={index} value={landkode.kode}>{landkode.verdi}</option>)
+        }).map(landkode =>
+          <option key={landkode} value={landkode}>{landkoder[landkode]?.verdi || 'UKJENT'}</option>)
         }
         </Select>
       }
