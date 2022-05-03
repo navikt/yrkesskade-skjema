@@ -79,7 +79,8 @@ jobs:
 
   deployAppToProd:
     name: Deploy app to prod
-    needs: [build, cypress-run]
+    # needs: [build, cypress-run]
+    needs: [build]
     runs-on: ubuntu-18.04
     steps:
       - uses: "actions/checkout@v2"
@@ -93,7 +94,8 @@ jobs:
 
   deployAlertsToProd:
     name: Deploy alerts to prod
-    needs: [build, cypress-run]
+    # needs: [build, cypress-run]
+    needs: [build]
     runs-on: ubuntu-18.04
     steps:
       - uses: "actions/checkout@v2"
