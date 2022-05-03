@@ -14,7 +14,6 @@ import { useEffect } from 'react';
 import { logAmplitudeEvent } from './utils/analytics/amplitude';
 import { useAppDispatch } from './core/hooks/state.hooks';
 import { hentKodeverk, hentKodeverkForKategori } from './core/reducers/kodeverk.reducer';
-import { Receipt } from '@navikt/ds-icons';
 import AccidentFormPage from './pages/Form/Accident';
 import DescriptionFormPage from './pages/Form/Description';
 import InjuredFormPage from './pages/Form/Injured';
@@ -24,6 +23,7 @@ import Info from './pages/Info';
 import Landing from './pages/Landing';
 import Summary from './pages/Summary';
 import Error from './pages/Error';
+import Receipt from './pages/Receipt';
 
 const App = () => {
   createStore(formState, {});
