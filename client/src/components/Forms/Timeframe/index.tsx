@@ -16,6 +16,8 @@ import './Timeframe.less';
 import { InputClassNames } from 'react-day-picker/types/ClassNames';
 import { useAppSelector } from '../../../core/hooks/state.hooks';
 import { selectKodeverkType } from '../../../core/reducers/kodeverk.reducer';
+import { nb } from 'date-fns/locale';
+import parse from 'date-fns/parse';
 
 function formatDate(date: number | Date, format: string) {
   return dateFnsFormat(date, format);
@@ -28,6 +30,8 @@ interface IProps {
 }
 const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
   const FORMAT: string = 'dd.MM.yyyy';
+  const TIDSPUNKT_FORMAT: string = `${FORMAT} HH:mm`;
+
   const { state } = useStateMachine();
   const tidsromKoder = useAppSelector((state) =>
     selectKodeverkType(state, 'tidsrom')
@@ -95,18 +99,15 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
 
   useEffect(() => {
     if (specificDate && specificTime && specificTime.length === 5) {
-      const timeparts = specificTime.split(':');
-      const newDate = new Date(
-        specificDate.getUTCFullYear(),
-        specificDate?.getUTCMonth(),
-        specificDate?.getUTCDay(),
-        parseInt(timeparts[0]),
-        parseInt(timeparts[1])
-      );
+      const dato = formatDate(specificDate, FORMAT);
+      const tidspunkt = `${dato} ${specificTime}`;
+      const isoDate = parse(tidspunkt, TIDSPUNKT_FORMAT, new Date(), {
+        locale: nb,
+      }).toISOString();
 
-      setValue('hendelsesfakta.tid.tidspunkt', newDate);
+      setValue('hendelsesfakta.tid.tidspunkt', isoDate);
     }
-  }, [specificTime, specificDate, setValue]);
+  }, [specificTime, specificDate, setValue, TIDSPUNKT_FORMAT]);
 
   useEffect(() => {
     if (timeType !== 'Periode') {
