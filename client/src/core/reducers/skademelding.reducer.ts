@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { merge } from "lodash";
-import { Dekningsforhold, Innmelder, Skade, Skadelidt, Skademelding, Tid } from "../../api/yrkesskade";
+import { Dekningsforhold, Innmelder, Skade, Skadelidt, Skademelding, SkadetDel, Tid } from "../../api/yrkesskade";
 import { RootState } from "../store";
 
 interface SkademeldingState {
@@ -98,6 +98,11 @@ export const skademeldingSlice = createSlice({
     oppdaterSkade: (state, action: PayloadAction<Skade>) => {
       state.skademelding.skade = action.payload;
     },
+    oppdaterSkadedeDeler: (state, action: PayloadAction<SkadetDel[]>) => {
+      if (state.skademelding && state.skademelding.skade) {
+        state.skademelding.skade.skadedeDeler = merge(state.skademelding?.skade.skadedeDeler, action.payload);
+      }
+    },
     reset: (state) => {
       state = initialState;
     }
@@ -115,6 +120,7 @@ export const {
   oppdaterAltinnRoller,
   oppdaterSkade,
   oppdaterDekningsforhold,
+  oppdaterSkadedeDeler,
   reset
 } = skademeldingSlice.actions;
 export default skademeldingSlice.reducer;

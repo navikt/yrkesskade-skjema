@@ -1,14 +1,12 @@
 import NotFound from './pages/404';
 
 import { Route, Routes, useLocation } from 'react-router-dom';
-import { StateMachineProvider, createStore } from 'little-state-machine';
 
 import { InnloggetProvider } from './context/InnloggetContext';
 import { FeatureTogglesProvider } from './context/FeatureTogglesContext';
 import { autentiseringsInterceptor } from './utils/autentisering';
 import { SelectedCompanyProvider } from './context/SelectedCompanyContext';
 import { ErrorMessageProvider } from './context/ErrorMessageContext';
-import { formState } from './State/formState';
 import { StateManagementProvider } from './context/StateManagementContext';
 import { useEffect } from 'react';
 import { logAmplitudeEvent } from './utils/analytics/amplitude';
@@ -26,7 +24,6 @@ import Error from './pages/Error';
 import Receipt from './pages/Receipt';
 
 const App = () => {
-  createStore(formState, {});
   const location = useLocation();
   const dispatch = useAppDispatch();
 
@@ -49,7 +46,6 @@ const App = () => {
       <InnloggetProvider>
         <FeatureTogglesProvider>
           <SelectedCompanyProvider>
-            <StateMachineProvider>
               <StateManagementProvider>
                 <Routes>
                   <Route path="yrkesskade/">
@@ -73,7 +69,6 @@ const App = () => {
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </StateManagementProvider>
-            </StateMachineProvider>
           </SelectedCompanyProvider>
         </FeatureTogglesProvider>
       </InnloggetProvider>

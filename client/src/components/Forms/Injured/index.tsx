@@ -39,9 +39,6 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
     setRolletype(event.target.value);
   }
 
-  // skjema felter
-  const [stillingstitler, setStillingstitler] = useState<string[]>(skademelding.skadelidt?.dekningsforhold.stillingstittelTilDenSkadelidte || []);
-
   useEffect(() => {
     if (!rolletype) {
       // rolletype er ikke satt og vi kan ikke laste kodeverk

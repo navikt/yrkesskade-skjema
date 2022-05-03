@@ -3,11 +3,11 @@ import { Select, RadioGroup, Table, Button } from '@navikt/ds-react';
 import { remove } from 'ramda';
 import {isEmpty} from 'lodash';
 import { AddCircle, MinusCircle } from '@navikt/ds-icons';
-import { useStateMachine } from 'little-state-machine';
-import { oppdaterSkadedeDeler } from '../../../State/actions/skademeldingStateAction';
 import { SkadetDel } from '../../../api/yrkesskade';
-import { useAppSelector } from '../../../core/hooks/state.hooks';
+import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks';
 import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
+import { oppdaterSkadedeDeler, selectSkademelding } from '../../../core/reducers/skademelding.reducer';
+import { useLocation } from 'react-router';
 
 interface IProps {
   register: any;
@@ -23,8 +23,10 @@ const InjuryForm = ({
   reset,
   setValue,
 }: IProps) => {
-  const { state, actions } = useStateMachine({ oppdaterSkadedeDeler });
-  const [injury, setInjury] = useState<SkadetDel[]>(state.skade.skadedeDeler as SkadetDel[]);
+  const location = useLocation();
+  const dispatch = useAppDispatch();
+  const skademelding = useAppSelector((state) => selectSkademelding(state));
+  const [injury, setInjury] = useState<SkadetDel[]>(skademelding.skade?.skadedeDeler || []);
   const skadetKroppsdelkoder = useAppSelector((state) => selectKodeverk(state, 'skadetKroppsdel'));
   const skadetypekoder = useAppSelector((state) => selectKodeverk(state, 'skadetype'));
 
@@ -32,7 +34,11 @@ const InjuryForm = ({
 
   const removeInjury = (index: number) => {
     const nyInjury = remove(index, 1, injury);
-    actions.oppdaterSkadedeDeler(nyInjury.map((val: SkadetDel) => ({kroppsdelTabellD: val.kroppsdelTabellD, skadeartTabellC: val.skadeartTabellC})));
+    console.log(injury);
+    console.log(nyInjury);
+
+
+    dispatch(oppdaterSkadedeDeler(nyInjury));
     setInjury(remove(index, 1, nyInjury));
   };
 
@@ -66,7 +72,7 @@ const InjuryForm = ({
       setValue('skade.skadedeDeler', injury);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [location])
 
   return (
     <>
