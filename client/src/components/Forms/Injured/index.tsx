@@ -125,6 +125,7 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
           }}
           render={({ field: { onChange, onBlur, value, name, ref } }) => (
             <Select
+              placeholder=""
               components={{
                 DropdownIndicator: () => null,
                 IndicatorSeparator: () => null,
