@@ -19,7 +19,7 @@ import { nb } from 'date-fns/locale';
 export const formatDate = (date: any, formatStr: string) =>
   format(date, formatStr, { locale: nb });
 
-const DATO_FORMAT = 'DD.MM.YYYY';
+const DATO_FORMAT = 'dd.MM.yyyy';
 const KLOKKESLETT_FORMAT = 'HH:mm';
 
 export const pdfSkademeldingMapper = (
