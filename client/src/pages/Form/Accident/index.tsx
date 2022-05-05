@@ -18,6 +18,7 @@ import { useEffect } from 'react';
 import { Skademelding } from '../../../api/yrkesskade';
 import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks';
 import { oppdaterSkademelding, selectSkademelding } from '../../../core/reducers/skademelding.reducer';
+import { useSelectedCompany } from '../../../context/SelectedCompanyContext';
 
 const AccidentFormPage = () => {
   const dispatch = useAppDispatch();
@@ -31,7 +32,7 @@ const AccidentFormPage = () => {
 
   const navigate = useNavigate();
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: Skademelding) => {
     dispatch(oppdaterSkademelding(data));
     navigate('/yrkesskade/skjema/skaden');
   };
