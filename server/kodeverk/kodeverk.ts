@@ -12,8 +12,6 @@ export class KodeverkLoader {
     kodelister: {},
   };
 
-  constructor() {}
-
   init = async (kategori: string) => {
     this.kodeverkholder = await this.hentKodeverk(kategori);
   };
