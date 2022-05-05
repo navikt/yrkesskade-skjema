@@ -6,27 +6,37 @@ interface IProps {
   data: any;
 }
 const SkadelidtSummary = ({ data }: IProps) => {
-  const rolletypekoder = useAppSelector((state) => selectKodeverk(state, 'rolletype'));
-  const stillingstittelkoder = useAppSelector((state) => selectKodeverk(state, 'stillingstittel'));
+  const rolletypekoder = useAppSelector((state) =>
+    selectKodeverk(state, 'rolletype')
+  );
+  const stillingstittelkoder = useAppSelector((state) =>
+    selectKodeverk(state, 'stillingstittel')
+  );
 
   return (
     <div className="answerOuterContainer">
-      <div className="answerContainer">
-        <Label>Hva er skadelidtes stilling</Label>
-        <BodyShort>{stillingstittelkoder && stillingstittelkoder[data.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte]?.verdi}</BodyShort>
-      </div>
-      <div className="answerContainer">
-        <Label>Den skadelidtets tilknyttning til virksomheten</Label>
-        <BodyShort>{rolletypekoder && rolletypekoder[data.skadelidt.dekningsforhold.rolletype]?.verdi}</BodyShort>
-      </div>
       {data.skadelidt.dekningsforhold.rolletype.toLowerCase() !== 'elev' && (
         <div className="answerContainer">
           <Label>Hva er skadelidtes stilling</Label>
           <BodyShort>
-            {data.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte}
+            {stillingstittelkoder &&
+              stillingstittelkoder[
+                data.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte
+              ]?.verdi}
           </BodyShort>
         </div>
       )}
+      <div className="answerContainer">
+        <Label>Den skadelidtets tilknyttning til virksomheten</Label>
+        <BodyShort>
+          {rolletypekoder &&
+            rolletypekoder[data.skadelidt.dekningsforhold.rolletype]?.verdi}
+        </BodyShort>
+      </div>
+      <div className="answerContainer">
+        <Label>Hva er skadelidtes fødselsnummer</Label>
+        <BodyShort>{data.skadelidt.norskIdentitetsnummer}</BodyShort>
+      </div>
     </div>
   );
 };
