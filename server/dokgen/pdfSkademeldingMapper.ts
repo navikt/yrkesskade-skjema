@@ -15,6 +15,7 @@ import {
 import { Adresse, Hendelsesfakta, Innmelder, Skade, Skadelidt, Skademelding, SkadetDel, Tid, Ulykkessted } from '../../client/src/api/yrkesskade';
 import { format, parseISO } from 'date-fns';
 import { nb } from 'date-fns/locale';
+import { KodeverkLoader } from '../kodeverk/kodeverk';
 
 export const formatDate = (date: any, formatStr: string) =>
   format(date, formatStr, { locale: nb });
@@ -22,14 +23,19 @@ export const formatDate = (date: any, formatStr: string) =>
 const DATO_FORMAT = 'dd.MM.yyyy';
 const KLOKKESLETT_FORMAT = 'HH:mm';
 
-export const pdfSkademeldingMapper = (
+export const pdfSkademeldingMapper = async (
   skademelding: Skademelding
-): PdfSkademelding => {
+): Promise<PdfSkademelding> => {
+
+  // hent kodeverk
+  const kodeverkLoader = new KodeverkLoader();
+  await kodeverkLoader.init(skademelding.skadelidt.dekningsforhold.rolletype);
+
   return {
     innmelder: mapInnmelder(skademelding.innmelder),
-    skadelidt: mapSkadelidt(skademelding.skadelidt),
-    skade: mapSkade(skademelding.skade),
-    hendelsesfakta: mapHendelsesfakta(skademelding.hendelsesfakta),
+    skadelidt: mapSkadelidt(skademelding.skadelidt, kodeverkLoader),
+    skade: mapSkade(skademelding.skade, kodeverkLoader),
+    hendelsesfakta: mapHendelsesfakta(skademelding.hendelsesfakta, kodeverkLoader),
     dokumentInfo: hentDokumentinfo(),
   };
 };
@@ -53,42 +59,42 @@ const mapInnmelder = (innmelder: Innmelder): PdfInnmelder => {
   };
 };
 
-const mapSkadelidt = (skadelidt: Skadelidt): PdfSkadelidt => {
+const mapSkadelidt = (skadelidt: Skadelidt, kodeverk: KodeverkLoader): PdfSkadelidt => {
   return {
     norskIdentitetsnummer: { label: 'Fødselsnummer', verdi: skadelidt.norskIdentitetsnummer},
     dekningsforhold: {
       organisasjonsnummer: { label: 'Org.nr', verdi: skadelidt.dekningsforhold.organisasjonsnummer},
-      rolletype: { label: 'Rolle', verdi: skadelidt.dekningsforhold.rolletype },
-      stillingstittelTilDenSkadelidte: { label: 'Stilling', verdi: skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte }
+      rolletype: { label: 'Rolle', verdi: kodeverk.mapKodeTilVerdi(skadelidt.dekningsforhold.rolletype, 'rolletype') },
+      stillingstittelTilDenSkadelidte: { label: 'Stilling', verdi: kodeverk.mapKoderTilVerdier(skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte, 'stillingstittel') }
     }
    }
 }
 
-const mapSkade = (skade: Skade): PdfSkade => {
+const mapSkade = (skade: Skade, kodeverk: KodeverkLoader): PdfSkade => {
   return {
-    antattSykefravaerTabellH: { label: 'Antatt sykefravær', verdi: skade.antattSykefravaerTabellH},
+    antattSykefravaerTabellH: { label: 'Antatt sykefravær', verdi: kodeverk.mapKodeTilVerdi(skade.antattSykefravaerTabellH, 'harSkadelidtHattFravaer') },
     skadedeDeler: skade.skadedeDeler.map((skadetDel: SkadetDel) => ({
-      kroppsdelTabellD: { label: 'Hvor på kroppen er skaden', verdi: skadetDel.kroppsdelTabellD},
-      skadeartTabellC: { label: 'Hva slags skade er det', verdi: skadetDel.skadeartTabellC }
+      kroppsdelTabellD: { label: 'Hvor på kroppen er skaden', verdi: kodeverk.mapKodeTilVerdi(skadetDel.kroppsdelTabellD, 'skadetKroppsdel')},
+      skadeartTabellC: { label: 'Hva slags skade er det', verdi: kodeverk.mapKodeTilVerdi(skadetDel.skadeartTabellC, 'skadetype') }
     })),
-    alvorlighetsgrad: { label: 'Hvor alvorlig var hendelsen', verdi: skade.alvorlighetsgrad || ''},
+    alvorlighetsgrad: { label: 'Hvor alvorlig var hendelsen', verdi: skade.alvorlighetsgrad ? kodeverk.mapKodeTilVerdi(skade.alvorlighetsgrad, 'alvorlighetsgrad') : ''},
   }
 }
 
-const mapHendelsesfakta = (hendelsesfakta: Hendelsesfakta): PdfHendelsesfakta => {
+const mapHendelsesfakta = (hendelsesfakta: Hendelsesfakta, kodeverk: KodeverkLoader): PdfHendelsesfakta => {
   return {
-    tid: mapTid(hendelsesfakta.tid),
-    naarSkjeddeUlykken: { label: 'Innenfor hvilket tidsrom inntraff ulykken', verdi: hendelsesfakta.naarSkjeddeUlykken },
-    hvorSkjeddeUlykken: { label: 'Hvor skjedde ulykken', verdi: hendelsesfakta.hvorSkjeddeUlykken },
-    ulykkessted: mapUlykkessted(hendelsesfakta.ulykkessted),
-    aarsakUlykkeTabellAogE: { label: 'Hva var årsaken til hendelsen og bakgrunn for årsaken', verdi: hendelsesfakta.aarsakUlykkeTabellAogE },
-    bakgrunnsaarsakTabellBogG: { label: 'Hva var bakgrunnen til hendelsen', verdi: hendelsesfakta.bakgrunnsaarsakTabellBogG },
-    stedsbeskrivelseTabellF: { label: 'Hvilken type arbeidsplass er det', verdi: hendelsesfakta.stedsbeskrivelseTabellF },
+    tid: mapTid(hendelsesfakta.tid, kodeverk),
+    naarSkjeddeUlykken: { label: 'Innenfor hvilket tidsrom inntraff ulykken', verdi: kodeverk.mapKodeTilVerdi(hendelsesfakta.naarSkjeddeUlykken, 'tidsrom') },
+    hvorSkjeddeUlykken: { label: 'Hvor skjedde ulykken', verdi: kodeverk.mapKodeTilVerdi(hendelsesfakta.hvorSkjeddeUlykken, 'hvorSkjeddeUlykken') },
+    ulykkessted: mapUlykkessted(hendelsesfakta.ulykkessted, kodeverk),
+    aarsakUlykkeTabellAogE: { label: 'Hva var årsaken til hendelsen og bakgrunn for årsaken', verdi: kodeverk.mapKoderTilVerdier(hendelsesfakta.aarsakUlykkeTabellAogE, 'aarsakOgBakgrunn') },
+    bakgrunnsaarsakTabellBogG: { label: 'Hva var bakgrunnen til hendelsen', verdi: kodeverk.mapKoderTilVerdier(hendelsesfakta.bakgrunnsaarsakTabellBogG, 'bakgrunnForHendelsen') },
+    stedsbeskrivelseTabellF: { label: 'Hvilken type arbeidsplass er det', verdi: kodeverk.mapKodeTilVerdi(hendelsesfakta.stedsbeskrivelseTabellF, 'typeArbeidsplass') },
     utfyllendeBeskrivelse: { label: 'Utfyllende beskrivelse', verdi: hendelsesfakta.utfyllendeBeskrivelse || '' }
   }
 }
 
-const mapTid = (tid: Tid): PdfTid => {
+const mapTid = (tid: Tid, kodeverk: KodeverkLoader): PdfTid => {
   if (tid.tidstype === Tid.tidstype.TIDSPUNKT) {
     return {
       tidspunkt: {
@@ -118,19 +124,19 @@ const mapTid = (tid: Tid): PdfTid => {
   }
 }
 
-const mapUlykkessted = (ulykkessted: Ulykkessted): PdfUlykkessted => {
+const mapUlykkessted = (ulykkessted: Ulykkessted, kodeverk: KodeverkLoader): PdfUlykkessted => {
   return {
     sammeSomVirksomhetensAdresse: { label: 'Skjedde ulykken på samme adresse', verdi: ulykkessted.sammeSomVirksomhetensAdresse ? 'Ja' : 'Nei'},
-    adresse: { label: 'Adresse', verdi: mapAdresse(ulykkessted.adresse) }
+    adresse: { label: 'Adresse', verdi: mapAdresse(ulykkessted.adresse, kodeverk) }
   }
 }
 
-const mapAdresse = (adresse: Adresse): PdfAdresse => {
+const mapAdresse = (adresse: Adresse, kodeverk: KodeverkLoader): PdfAdresse => {
   return {
     adresselinje1: adresse.adresselinje1,
     adresselinje2: adresse.adresselinje2,
     adresselinje3: adresse.adresselinje3,
-    land: adresse.land,
+    land: kodeverk.mapKodeTilVerdi(adresse.land, 'landkoderISO2'),
   }
 }
 
