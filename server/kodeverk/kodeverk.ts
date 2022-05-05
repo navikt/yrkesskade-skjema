@@ -16,7 +16,6 @@ export class KodeverkLoader {
 
   init = async (kategori: string) => {
     this.kodeverkholder = await this.hentKodeverk(kategori);
-    console.log(this.kodeverkholder);
   };
 
   private hentKodeverk = async (kategori: string): Promise<Kodeverk> => {
@@ -41,18 +40,10 @@ export class KodeverkLoader {
       kodeverkholder.kodelister[kodeverk] = resultat;
     }
 
-    console.log('kodeverkholder: ', kodeverkholder);
-
     return kodeverkholder;
   };
 
   mapKodeTilVerdi = (kode: string, kodelistenavn: string): string => {
-    console.log(`hent verdi fro ${kode} fra ${kodelistenavn}`);
-    console.log(this.kodeverkholder.kodelister[kodelistenavn]);
-    console.log(this.kodeverkholder.kodelister[kodelistenavn]?.kodeverdierMap[kode]);
-
-
-
     return (
       this.kodeverkholder.kodelister[kodelistenavn]?.kodeverdierMap[kode]?.verdi || `Ukjent: ${kode}`
     );
