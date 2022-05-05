@@ -17,14 +17,15 @@ import { useAppSelector } from '../../../core/hooks/state.hooks';
 import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
 import { selectSkademelding } from '../../../core/reducers/skademelding.reducer';
 import { Skademelding } from '../../../api/yrkesskade';
+import { useLocation } from 'react-router';
 
 const AccidentForm = () => {
   const { selectedAddress } = useSelectedCompany();
+  const location = useLocation();
   const {
     register,
     formState: { errors },
     setValue,
-    getValues,
     control,
   } = useFormContext<Skademelding>();
 
@@ -44,13 +45,7 @@ const AccidentForm = () => {
   const bakgrunnForHendelsenkoder = useAppSelector((state) =>
     selectKodeverk(state, 'bakgrunnForHendelsen')
   );
-  const [sammeSomVirksomhetensAdresse, setSammeSomVirksomhetensAdresse] =
-    useState<boolean>(
-      getValues('hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse') ||
-        selectedAddress
-        ? true
-        : false
-    );
+  const [sammeSomVirksomhetensAdresse, setSammeSomVirksomhetensAdresse] = useState<string>(skademelding.hendelsesfakta?.ulykkessted.sammeSomVirksomhetensAdresse ? 'true' : 'false');
 
   const [alvorlighetsgrad, setAlvorlighetsgrad] = useState<string>(
     skademelding.skade?.alvorlighetsgrad || ''
@@ -59,35 +54,6 @@ const AccidentForm = () => {
   const handleAlvorlighetsgradChange = (value: string) => {
     setAlvorlighetsgrad(value);
   };
-
-  useEffect(() => {
-    if (sammeSomVirksomhetensAdresse) {
-      if (!selectedAddress) {
-        return;
-      }
-
-      setValue(
-        'hendelsesfakta.ulykkessted.adresse.adresselinje1',
-        selectedAddress.adresser ? selectedAddress.adresser[0] : ''
-      );
-      setValue(
-        'hendelsesfakta.ulykkessted.adresse.adresselinje2',
-        selectedAddress.postnummer || ''
-      );
-      setValue(
-        'hendelsesfakta.ulykkessted.adresse.adresselinje3',
-        selectedAddress.poststed || ''
-      );
-      setValue(
-        'hendelsesfakta.ulykkessted.adresse.land',
-        selectedAddress.landkode || ''
-      );
-    }
-    setValue(
-      'hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse',
-      sammeSomVirksomhetensAdresse
-    );
-  }, [sammeSomVirksomhetensAdresse]);
 
   return (
     <>
@@ -115,9 +81,9 @@ const AccidentForm = () => {
               <RadioGroup
                 className="spacer"
                 legend="Skjedde ulykken på samme adresse?"
-                defaultValue="true"
+                value={sammeSomVirksomhetensAdresse}
                 onChange={(val) => {
-                  setSammeSomVirksomhetensAdresse(val === 'true');
+                  setSammeSomVirksomhetensAdresse(val);
                   onChange(val === 'true');
                 }}
                 onBlur={onBlur}
@@ -128,17 +94,15 @@ const AccidentForm = () => {
                     ?.sammeSomVirksomhetensAdresse.message
                 }
               >
-                <Radio value="true">Ja</Radio>
-                <Radio value="false">Nei</Radio>
+                <Radio value="true" {...register('hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse')}>Ja</Radio>
+                <Radio value="false" {...register('hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse')}>Nei</Radio>
               </RadioGroup>
             )}
           />
         </>
       )}
 
-      {(!selectedAddress || !sammeSomVirksomhetensAdresse) && (
-        <Address register={register} errors={errors} control={control} />
-      )}
+      <Address sammeSomVirksomhetensAdresse={sammeSomVirksomhetensAdresse} adresse={selectedAddress} />
 
       {alvorlighetsgradkoder && (
         <RadioGroup

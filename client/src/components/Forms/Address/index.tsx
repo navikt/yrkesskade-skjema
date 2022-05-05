@@ -1,16 +1,59 @@
 import { TextField, Fieldset, Select } from '@navikt/ds-react';
+import { useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
+import { AdresseDto, Skademelding } from '../../../api/yrkesskade';
+import { useSelectedCompany } from '../../../context/SelectedCompanyContext';
 import { useAppSelector } from '../../../core/hooks/state.hooks';
 import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
 import './Address.less';
-interface IProps {
-  register: any;
-  errors: any;
-  control: any;
-}
-const Address = ({ register, errors, control }: IProps) => {
-  const landkoder = useAppSelector(state => selectKodeverk(state, 'landkoderISO2'));
 
-  return (
+interface IProps {
+  sammeSomVirksomhetensAdresse: string;
+  adresse: AdresseDto | null | undefined;
+}
+
+const Address = ({ sammeSomVirksomhetensAdresse, adresse }: IProps) => {
+  const {
+    register,
+    formState: { errors },
+    setValue
+  } = useFormContext<Skademelding>();
+  const { selectedAddress } = useSelectedCompany();
+
+  const landkoder = useAppSelector((state) =>
+    selectKodeverk(state, 'landkoderISO2')
+  );
+
+  const [skalBrukeValgtAdresse, setSkalBrukeValgtAdresse] = useState<boolean>(false);
+
+  useEffect(() => {
+    setSkalBrukeValgtAdresse(sammeSomVirksomhetensAdresse === 'true' && adresse !== null);
+  }, [sammeSomVirksomhetensAdresse, adresse])
+
+  useEffect(() => {
+    if (skalBrukeValgtAdresse) {
+      setValue(
+        'hendelsesfakta.ulykkessted.adresse.adresselinje1',
+        selectedAddress?.adresser ? selectedAddress.adresser[0] : ''
+      );
+      setValue(
+        'hendelsesfakta.ulykkessted.adresse.adresselinje2',
+        selectedAddress?.postnummer || ''
+      );
+      setValue(
+        'hendelsesfakta.ulykkessted.adresse.adresselinje3',
+        selectedAddress?.poststed || ''
+      );
+      setValue(
+        'hendelsesfakta.ulykkessted.adresse.land',
+        selectedAddress?.landkode || ''
+      );
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [skalBrukeValgtAdresse]);
+
+
+  return !skalBrukeValgtAdresse ? (
     <Fieldset legend="Fyll ut adressen hvor ulykken skjedde">
       <TextField
         className=""
@@ -32,8 +75,8 @@ const Address = ({ register, errors, control }: IProps) => {
             required: 'Dette feltet er påkrevd',
             pattern: {
               value: /[0-9]/,
-              message: 'Postnummer kan kun inneholde siffer'
-            }
+              message: 'Postnummer kan kun inneholde siffer',
+            },
           })}
           label="Postnummer"
           type="text"
@@ -57,7 +100,8 @@ const Address = ({ register, errors, control }: IProps) => {
           }
         />
       </div>
-      { landkoder && <Select
+      {landkoder && (
+        <Select
           className="country spacer"
           {...register('hendelsesfakta.ulykkessted.adresse.land', {
             required: 'Dette feltet er påkrevd',
@@ -65,21 +109,28 @@ const Address = ({ register, errors, control }: IProps) => {
           label="Land"
           data-testid="injury-location-country"
           error={
-            errors?.hendelsesfakta?.ulykkessted?.adresse.land &&
-            errors?.hendelsesfakta?.ulykkessted?.adresse.land.message
+            errors?.hendelsesfakta?.ulykkessted?.adresse?.land &&
+            errors?.hendelsesfakta?.ulykkessted?.adresse?.land?.message
           }
         >
-        { landkoder && Object.keys(landkoder).sort((a, b) => {
-           const verdiA = landkoder[a]?.verdi || 'ukjent';
-           const verdiB = landkoder[b]?.verdi || 'ukjent';
+          {landkoder &&
+            Object.keys(landkoder)
+              .sort((a, b) => {
+                const verdiA = landkoder[a]?.verdi || 'ukjent';
+                const verdiB = landkoder[b]?.verdi || 'ukjent';
 
-          return verdiA.localeCompare(verdiB);
-        }).map(landkode =>
-          <option key={landkode} value={landkode}>{landkoder[landkode]?.verdi || 'UKJENT'}</option>)
-        }
+                return verdiA.localeCompare(verdiB);
+              })
+              .map((landkode) => (
+                <option key={landkode} value={landkode}>
+                  {landkoder[landkode]?.verdi || 'UKJENT'}
+                </option>
+              ))}
         </Select>
-      }
+      )}
     </Fieldset>
+  ) : (
+    <></>
   );
 };
 
