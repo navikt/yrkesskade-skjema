@@ -47,7 +47,7 @@ const App = () => {
         kategorinavn: 'arbeidstaker',
       })
     );
-  });
+  }, []);
 
   autentiseringsInterceptor();
 
