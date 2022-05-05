@@ -25,7 +25,7 @@ const SkadeSummary = ({ data }: IProps) => {
             {data.skade.skadedeDeler.map(
               (item: any, index: number) => {
                 return (
-                  <Table.Row key={index}>
+                  <Table.Row key={index} data-testid="skade-tabell-rad">
                     <Table.DataCell>{skadetKroppsdelkoder && skadetKroppsdelkoder[item.kroppsdelTabellD]?.verdi}</Table.DataCell>
                     <Table.DataCell>{skadetypekoder && skadetypekoder[item.skadeartTabellC]?.verdi}</Table.DataCell>
                   </Table.Row>

@@ -8,9 +8,9 @@ import {
   Radio,
 } from '@navikt/ds-react';
 import Select from 'react-select';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { useSelectedCompany } from '../../../context/SelectedCompanyContext';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Address from '../Address';
 import _ from 'lodash';
 import { useAppSelector } from '../../../core/hooks/state.hooks';
@@ -18,13 +18,15 @@ import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
 import { selectSkademelding } from '../../../core/reducers/skademelding.reducer';
 import { Skademelding } from '../../../api/yrkesskade';
 
-interface IProps {
-  register: any;
-  errors: any;
-  control: any;
-}
-const AccidentForm = ({ register, errors, control }: IProps) => {
+const AccidentForm = () => {
   const { selectedAddress } = useSelectedCompany();
+  const {
+    register,
+    formState: { errors },
+    setValue,
+    getValues,
+    control,
+  } = useFormContext<Skademelding>();
 
   const alvorlighetsgradkoder = useAppSelector((state) =>
     selectKodeverk(state, 'alvorlighetsgrad')
@@ -42,7 +44,6 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
   const bakgrunnForHendelsenkoder = useAppSelector((state) =>
     selectKodeverk(state, 'bakgrunnForHendelsen')
   );
-  const { getValues, setValue } = useForm<Skademelding>();
   const [sammeSomVirksomhetensAdresse, setSammeSomVirksomhetensAdresse] =
     useState<boolean>(
       getValues('hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse') ||
@@ -55,11 +56,8 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
     skademelding.skade?.alvorlighetsgrad || ''
   );
 
-  const handleAlvorlighetsgradChange = (
-    event: ChangeEvent<HTMLInputElement>
-  ) => {
-    console.log('event', event);
-    setAlvorlighetsgrad(event.currentTarget.value);
+  const handleAlvorlighetsgradChange = (value: string) => {
+    setAlvorlighetsgrad(value);
   };
 
   useEffect(() => {
@@ -156,35 +154,25 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
         <RadioGroup
           className="spacer"
           legend="Hvor alvorlig var hendelsen? (Valgfritt)"
-          value={alvorlighetsgrad}
-          {...register('skade.alvorlighetsgrad')}
           error={
             errors?.skade?.alvorlighetsgrad &&
             errors?.skade?.alvorlighetsgrad.message
           }
+          {...register('skade.alvorlighetsgrad')}
+          value={alvorlighetsgrad}
+          onChange={(e) => handleAlvorlighetsgradChange(e)}
         >
           {Object.keys(alvorlighetsgradkoder).map(
             (alvorlighetsgradkode: string, index: number) => (
-              <div
-                className="navds-radio navds-radio--medium"
+              <Radio
+                value={alvorlighetsgradkode}
                 key={alvorlighetsgradkode}
+                data-testid={`injury-severity-${index}`}
+                id={`injury-severity-${index}`}
+                {...register('skade.alvorlighetsgrad')}
               >
-                <input
-                  type="radio"
-                  className="navds-radio__input"
-                  {...register('skade.alvorlighetsgrad')}
-                  value={alvorlighetsgradkode}
-                  data-testid={`injury-severity-${index}`}
-                  id={`injury-severity-${index}`}
-                  onChange={handleAlvorlighetsgradChange}
-                />
-                <label
-                  htmlFor={`injury-severity-${index}`}
-                  className="navds-radio__label"
-                >
-                  {alvorlighetsgradkoder[alvorlighetsgradkode]?.verdi}
-                </label>
-              </div>
+                {alvorlighetsgradkoder[alvorlighetsgradkode]?.verdi}
+              </Radio>
             )
           )}
         </RadioGroup>
@@ -288,7 +276,9 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
         />
         {errors?.hendelsesfakta?.aarsakUlykkeTabellAogE && (
           <span className="navds-error-message navds-error-message--medium navds-label">
-            {errors.hendelsesfakta.aarsakUlykkeTabellAogE.message}
+            {errors.hendelsesfakta.aarsakUlykkeTabellAogE.map(
+              (fieldError) => fieldError.message
+            )}
           </span>
         )}
       </div>
@@ -345,7 +335,9 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
         />
         {errors?.hendelsesfakta?.bakgrunnsaarsakTabellBogG && (
           <span className="navds-error-message navds-error-message--medium navds-label">
-            {errors.hendelsesfakta.bakgrunnsaarsakTabellBogG.message}
+            {errors.hendelsesfakta.bakgrunnsaarsakTabellBogG?.map(
+              (fieldError) => fieldError.message
+            )}
           </span>
         )}
       </div>

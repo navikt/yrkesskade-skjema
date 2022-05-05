@@ -2,17 +2,16 @@ import { useState } from 'react';
 import { Textarea } from '@navikt/ds-react';
 import { useAppSelector } from '../../../core/hooks/state.hooks';
 import { selectSkademelding } from '../../../core/reducers/skademelding.reducer';
+import { Skademelding } from '../../../api/yrkesskade';
+import { useFormContext } from 'react-hook-form';
 
-interface IProps {
-  register: any;
-  errors: any;
-}
-const DescriptionForm = ({ register }: IProps) => {
+const DescriptionForm = () => {
   const skademelding = useAppSelector((state) => selectSkademelding(state));
   const [freetext, setFreetext] = useState(
     skademelding.hendelsesfakta?.utfyllendeBeskrivelse || ''
   );
   const [rolletype] = useState<string>(skademelding.skadelidt?.dekningsforhold.rolletype || '');
+  const { register } = useFormContext<Skademelding>();
 
   return (
     <>

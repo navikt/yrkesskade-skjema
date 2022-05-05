@@ -1,7 +1,7 @@
 /* eslint-disable no-mixed-operators */
 import { useEffect, useState } from 'react';
 import { TextField, Label, Select as NAVSelect } from '@navikt/ds-react';
-import { Controller } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import Select from 'react-select';
 import validator from '@navikt/fnrvalidator';
 import { useInnloggetContext } from '../../../context/InnloggetContext';
@@ -11,14 +11,11 @@ import './Injured.less';
 import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks';
 import { hentKodeverkForKategori, selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
 import { selectSkademelding } from '../../../core/reducers/skademelding.reducer';
+import { Skademelding } from '../../../api/yrkesskade';
 
-interface IProps {
-  register: any;
-  errors: any;
-  control: any;
-  setValue: any;
-}
-const InjuredForm = ({ register, errors, control, setValue }: IProps) => {
+
+const InjuredForm = () => {
+  const { register, formState: { errors }, control, setValue } = useFormContext<Skademelding>();
   const { innloggetBruker } = useInnloggetContext();
   const dispatch = useAppDispatch();
   const skademelding = useAppSelector((state) => selectSkademelding(state));
@@ -39,7 +36,7 @@ const InjuredForm = ({ register, errors, control, setValue }: IProps) => {
 
   useEffect(() => {
     if(rolletype.toLowerCase() === 'elev' ) {
-      setValue('skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte', undefined);
+      setValue('skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte', []);
     }
   }, [rolletype, setValue]);
 
@@ -157,7 +154,6 @@ const InjuredForm = ({ register, errors, control, setValue }: IProps) => {
           <span className="navds-error-message navds-error-message--medium navds-label">
             {
               errors.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte
-                .message
             }
           </span>
         )}
