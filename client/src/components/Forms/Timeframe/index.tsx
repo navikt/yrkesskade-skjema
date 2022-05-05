@@ -6,28 +6,29 @@ import { Select, RadioGroup, Label } from '@navikt/ds-react';
 import InputMask from 'react-input-mask';
 import dateFnsFormat from 'date-fns/format';
 import dateFnsParse from 'date-fns/parse';
-import { Controller } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { handleDateValue, handleTimeValue, isKlokkeslett } from '../../../utils/date';
 import './Timeframe.less';
 import { InputClassNames } from 'react-day-picker/types/ClassNames';
 import { useAppSelector } from '../../../core/hooks/state.hooks';
 import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
 import { selectSkademelding } from '../../../core/reducers/skademelding.reducer';
-import { Tid } from '../../../api/yrkesskade';
+import { Skademelding, Tid } from '../../../api/yrkesskade';
 import { nb } from 'date-fns/locale';
 
 function formatDate(date: number | Date, format: string) {
   return dateFnsFormat(date, format);
 }
-interface IProps {
-  register: any;
-  errors: any;
-  setValue: any;
-  control: any;
-}
-const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
+const TimeframeForm = () => {
   const FORMAT: string = 'dd.MM.yyyy';
   const TIDSPUNKT_FORMAT: string = `${FORMAT} HH:mm`;
+
+  const {
+    register,
+    formState: { errors },
+    setValue,
+    control,
+  } = useFormContext<Skademelding>();
 
   const state = useAppSelector((state) => selectSkademelding(state));
   const tidsromkoder = useAppSelector((state) =>
@@ -94,7 +95,6 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
     if (specificDate && specificTime && isKlokkeslett(specificTime)) {
       const dato = formatDate(specificDate, FORMAT);
       const tidspunkt = `${dato} ${specificTime}`;
-      console.log('tidspunkt: ', tidspunkt, TIDSPUNKT_FORMAT, new Date());
 
       const isoDate = dateFnsParse(tidspunkt, TIDSPUNKT_FORMAT, new Date(), {
         locale: nb,
@@ -190,6 +190,7 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
                     format={FORMAT}
                     parseDate={parseDate}
                     dayPickerProps={{
+                      firstDayOfWeek: 1,
                       disabledDays: {
                         after: new Date(),
                       },
@@ -220,9 +221,9 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
                 id="timeframe-when-time"
                 className="navds-text-field__input navds-body-short navds-body-medium"
               />
-              {errors?.hendelsesfakta?.tid?.tidspunktTime && (
+              {errors?.hendelsesfakta?.tid?.tidspunkt && (
                 <span className="navds-error-message navds-error-message--medium navds-label">
-                  {errors?.hendelsesfakta?.tid?.tidspunktTime.message}
+                  {errors?.hendelsesfakta?.tid?.tidspunkt?.message}
                 </span>
               )}
             </div>

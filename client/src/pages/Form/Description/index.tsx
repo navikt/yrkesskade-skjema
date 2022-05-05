@@ -12,7 +12,7 @@ import BackButton from '../../../components/BackButton';
 import StepIndicator from '../../../components/StepIndicator';
 import ExitButton from '../../../components/ExitButton';
 
-import { useForm } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../../core/hooks/state.hooks';
 import { oppdaterSkademelding } from '../../../core/reducers/skademelding.reducer';
@@ -20,11 +20,8 @@ import { oppdaterSkademelding } from '../../../core/reducers/skademelding.reduce
 const DescriptionFormPage = () => {
   const dispatch = useAppDispatch();
   const {
-    register,
     handleSubmit,
-    formState: { errors },
-  } = useForm({});
-  // const cancel = useCancel();
+  } = useFormContext();
 
   const navigate = useNavigate();
 
@@ -50,7 +47,7 @@ const DescriptionFormPage = () => {
             >
               Utfyllende beskrivelse
             </Heading>
-            <DescriptionForm errors={errors} register={register} />
+            <DescriptionForm />
             <div className="buttonGroup">
               <ExitButton />
               <Button onClick={handleSubmit(onSubmit)} data-testid="neste-steg">Neste steg</Button>

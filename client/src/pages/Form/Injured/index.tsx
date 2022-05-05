@@ -14,7 +14,7 @@ import BackButton from '../../../components/BackButton';
 import StepIndicator from '../../../components/StepIndicator';
 import ExitButton from '../../../components/ExitButton';
 
-import { useForm } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Skademelding } from '../../../api/yrkesskade';
 import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks';
@@ -24,12 +24,9 @@ const InjuredFormPage = () => {
   const dispatch = useAppDispatch();
   const skademelding = useAppSelector((state) => selectSkademelding(state))
   const {
-    register,
     handleSubmit,
-    formState: { errors },
-    control,
     setValue
-  } = useForm<Skademelding>();
+  } = useFormContext<Skademelding>();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -60,7 +57,7 @@ const InjuredFormPage = () => {
             >
               Om den skadelidte
             </Heading>
-            <InjuredForm errors={errors} register={register} control={control}/>
+            <InjuredForm />
             <div className="buttonGroup">
              <ExitButton />
               <Button onClick={handleSubmit(onSubmit)} data-testid="neste-steg">Neste steg</Button>

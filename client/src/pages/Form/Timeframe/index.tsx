@@ -4,19 +4,14 @@ import {
   Grid,
   Cell,
   Button,
-  Heading,
-  // Link
+  Heading
 } from '@navikt/ds-react';
 import SystemHeader from '../../../components/SystemHeader';
 import BackButton from '../../../components/BackButton';
-
-// import { IGeneralForm } from '../../Interfaces/generalForm';
-
 import StepIndicator from '../../../components/StepIndicator';
-// import { ISteps } from '../../../Interfaces/steps';
 import ExitButton from '../../../components/ExitButton';
 
-import { useForm } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks';
 import { useEffect } from 'react';
@@ -28,12 +23,9 @@ const TimeframeFormPage = () => {
   const skademelding = useAppSelector((state) => selectSkademelding(state));
 
   const {
-    register,
     handleSubmit,
-    formState: { errors },
     setValue,
-    control
-  } = useForm<Skademelding>();
+  } = useFormContext<Skademelding>();
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -63,7 +55,7 @@ const TimeframeFormPage = () => {
             >
               Tid og dato
             </Heading>
-            <TimeframeForm errors={errors} register={register} control={control} setValue={setValue}/>
+            <TimeframeForm />
             <div className="buttonGroup">
              <ExitButton />
               <Button onClick={handleSubmit(onSubmit)} data-testid="neste-steg">Neste steg</Button>

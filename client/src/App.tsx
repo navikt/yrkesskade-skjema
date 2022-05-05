@@ -11,7 +11,10 @@ import { StateManagementProvider } from './context/StateManagementContext';
 import { useEffect } from 'react';
 import { logAmplitudeEvent } from './utils/analytics/amplitude';
 import { useAppDispatch } from './core/hooks/state.hooks';
-import { hentKodeverk, hentKodeverkForKategori } from './core/reducers/kodeverk.reducer';
+import {
+  hentKodeverk,
+  hentKodeverkForKategori,
+} from './core/reducers/kodeverk.reducer';
 import AccidentFormPage from './pages/Form/Accident';
 import DescriptionFormPage from './pages/Form/Description';
 import InjuredFormPage from './pages/Form/Injured';
@@ -22,21 +25,31 @@ import Landing from './pages/Landing';
 import Summary from './pages/Summary';
 import Error from './pages/Error';
 import Receipt from './pages/Receipt';
+import { useForm, FormProvider } from 'react-hook-form';
+import { Skademelding } from './api/yrkesskade';
 
 const App = () => {
   const location = useLocation();
   const dispatch = useAppDispatch();
+  const methods = useForm<Skademelding>();
 
   useEffect(() => {
-    logAmplitudeEvent('skademelding.sidevisning', { pathname: location.pathname });
-  }, [location])
+    logAmplitudeEvent('skademelding.sidevisning', {
+      pathname: location.pathname,
+    });
+  }, [location]);
 
   useEffect(() => {
-      dispatch(hentKodeverk('landkoderISO2'));
-      dispatch(hentKodeverk('rolletype'));
+    dispatch(hentKodeverk('landkoderISO2'));
+    dispatch(hentKodeverk('rolletype'));
 
-      // preload av stillingstitler
-      dispatch(hentKodeverkForKategori({typenavn: 'stillingstittel', kategorinavn: 'arbeidstaker'}))
+    // preload av stillingstitler
+    dispatch(
+      hentKodeverkForKategori({
+        typenavn: 'stillingstittel',
+        kategorinavn: 'arbeidstaker',
+      })
+    );
   });
 
   autentiseringsInterceptor();
@@ -45,11 +58,12 @@ const App = () => {
     <ErrorMessageProvider>
       <InnloggetProvider>
         <FeatureTogglesProvider>
-          <SelectedCompanyProvider>
+          <FormProvider {...methods}>
+            <SelectedCompanyProvider>
               <StateManagementProvider>
                 <Routes>
                   <Route path="yrkesskade/">
-                  <Route index element={<Landing />} />
+                    <Route index element={<Landing />} />
                     <Route path="skjema">
                       <Route index element={<Info />} />
                       <Route path="skadelidt" element={<InjuredFormPage />} />
@@ -69,7 +83,8 @@ const App = () => {
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </StateManagementProvider>
-          </SelectedCompanyProvider>
+            </SelectedCompanyProvider>
+          </FormProvider>
         </FeatureTogglesProvider>
       </InnloggetProvider>
     </ErrorMessageProvider>

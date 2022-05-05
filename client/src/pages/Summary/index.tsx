@@ -27,13 +27,12 @@ import { useEffect, useState } from 'react';
 import { useErrorMessageContext } from '../../context/ErrorMessageContext';
 import {
   Dekningsforhold,
-  Skade,
   SkademeldingApiControllerService,
 } from '../../api/yrkesskade';
 import { logErrorMessage, logMessage } from '../../utils/logging';
 import { logAmplitudeEvent } from '../../utils/analytics/amplitude';
 import { useAppDispatch, useAppSelector } from '../../core/hooks/state.hooks';
-import { oppdaterDekningsforhold, oppdaterSkade, reset, selectSkademelding } from '../../core/reducers/skademelding.reducer';
+import { oppdaterDekningsforhold, reset, selectSkademelding } from '../../core/reducers/skademelding.reducer';
 
 const Summary = () => {
   const { selectedCompany } = useSelectedCompany();
@@ -55,14 +54,7 @@ const Summary = () => {
       dekningsforhold.organisasjonsnummer = selectedCompany.organisasjonsnummer as string;
       dispatch(oppdaterDekningsforhold(dekningsforhold));
     }
-
-    const skade: Skade = {
-      alvorlighetsgrad: skademelding.skade?.alvorlighetsgrad,
-      skadedeDeler: skademelding.skade?.skadedeDeler || [],
-      antattSykefravaerTabellH: skademelding.skade?.antattSykefravaerTabellH || ''
-    }
-    dispatch(oppdaterSkade(skade));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCompany.organisasjonsnummer]);
 
   const data = skademelding;
@@ -135,7 +127,7 @@ const Summary = () => {
                 <UlykkeSummary data={data} />
               </Accordion.Content>
             </Accordion.Item>
-            <Accordion.Item renderContentWhenClosed={true}>
+            <Accordion.Item renderContentWhenClosed={true} data-testid="oppsummering-accordian-skade">
               <Accordion.Header>Om skaden</Accordion.Header>
               <Accordion.Content>
                 <SkadeSummary data={data} />

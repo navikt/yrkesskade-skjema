@@ -1,7 +1,7 @@
 /* eslint-disable no-mixed-operators */
 import { useEffect, useState } from 'react';
 import { TextField, Label, Select as NAVSelect } from '@navikt/ds-react';
-import { Controller } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import Select from 'react-select';
 import validator from '@navikt/fnrvalidator';
 import { useInnloggetContext } from '../../../context/InnloggetContext';
@@ -11,13 +11,11 @@ import './Injured.less';
 import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks';
 import { hentKodeverkForKategori, selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
 import { selectSkademelding } from '../../../core/reducers/skademelding.reducer';
+import { Skademelding } from '../../../api/yrkesskade';
 
-interface IProps {
-  register: any;
-  errors: any;
-  control: any;
-}
-const InjuredForm = ({ register, errors, control }: IProps) => {
+
+const InjuredForm = () => {
+  const { register, formState: { errors }, control } = useFormContext<Skademelding>();
   const { innloggetBruker } = useInnloggetContext();
   const dispatch = useAppDispatch();
   const skademelding = useAppSelector((state) => selectSkademelding(state));
@@ -148,7 +146,6 @@ const InjuredForm = ({ register, errors, control }: IProps) => {
           <span className="navds-error-message navds-error-message--medium navds-label">
             {
               errors.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte
-                .message
             }
           </span>
         )}
