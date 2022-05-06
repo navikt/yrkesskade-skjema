@@ -18,7 +18,6 @@ import { useEffect } from 'react';
 import { Skademelding } from '../../../api/yrkesskade';
 import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks';
 import { oppdaterSkademelding, selectSkademelding } from '../../../core/reducers/skademelding.reducer';
-import { useSelectedCompany } from '../../../context/SelectedCompanyContext';
 
 const AccidentFormPage = () => {
   const dispatch = useAppDispatch();
