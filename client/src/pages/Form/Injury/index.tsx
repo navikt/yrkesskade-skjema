@@ -29,7 +29,7 @@ const InjuryFormPage = () => {
   const navigate = useNavigate();
 
   const onSubmit = (data: Skademelding) => {
-    if (!data.skade?.skadedeDeler || data.skade.skadedeDeler.length == 0) {
+    if (!data.skade?.skadedeDeler || data.skade.skadedeDeler.length === 0) {
       setError('skade.skadedeDeler', {
         type: 'manual',
         message: 'Dette feltet er påkrevd'
@@ -40,6 +40,7 @@ const InjuryFormPage = () => {
     dispatch(oppdaterSkademelding(data));
     navigate('/yrkesskade/skjema/beskrivelse');
   };
+
   return (
     <ContentContainer>
       <SystemHeader />
