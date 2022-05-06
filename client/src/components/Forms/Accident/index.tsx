@@ -10,22 +10,19 @@ import {
 import Select from 'react-select';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useSelectedCompany } from '../../../context/SelectedCompanyContext';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Address from '../Address';
 import _ from 'lodash';
 import { useAppSelector } from '../../../core/hooks/state.hooks';
 import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
 import { selectSkademelding } from '../../../core/reducers/skademelding.reducer';
 import { Skademelding } from '../../../api/yrkesskade';
-import { useLocation } from 'react-router';
 
 const AccidentForm = () => {
   const { selectedAddress } = useSelectedCompany();
-  const location = useLocation();
   const {
     register,
     formState: { errors },
-    setValue,
     control,
   } = useFormContext<Skademelding>();
 
