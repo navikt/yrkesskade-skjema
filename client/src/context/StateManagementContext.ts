@@ -5,15 +5,12 @@ import { useAppDispatch, useAppSelector } from '../core/hooks/state.hooks';
 import { reset, selectSkademelding } from '../core/reducers/skademelding.reducer';
 import { useInnloggetContext } from './InnloggetContext';
 import { useSelectedCompany } from './SelectedCompanyContext';
-import { useAppSelector } from '../core/hooks/state.hooks';
-import { selectOrganisasjon } from '../core/reducers/app.reducer';
 
 const [StateManagementProvider, useState] = createUseContext(() => {
   const dispatch = useAppDispatch();
   const skademelding = useAppSelector((state) => selectSkademelding(state));
   const { innloggetBruker } = useInnloggetContext();
   const { selectedCompany } = useSelectedCompany();
-  const valgtOrganisasjon = useAppSelector((state) => selectOrganisasjon(state))
 
   useEffect(() => {
     if (!innloggetBruker) {
