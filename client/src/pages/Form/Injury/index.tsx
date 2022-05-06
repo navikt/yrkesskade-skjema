@@ -23,11 +23,20 @@ const InjuryFormPage = () => {
   const dispatch = useAppDispatch();
   const {
     handleSubmit,
+    setError
   } = useFormContext<Skademelding>();
 
   const navigate = useNavigate();
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: Skademelding) => {
+    if (!data.skade?.skadedeDeler || data.skade.skadedeDeler.length == 0) {
+      setError('skade.skadedeDeler', {
+        type: 'manual',
+        message: 'Dette feltet er påkrevd'
+      });
+      return;
+    }
+
     dispatch(oppdaterSkademelding(data));
     navigate('/yrkesskade/skjema/beskrivelse');
   };

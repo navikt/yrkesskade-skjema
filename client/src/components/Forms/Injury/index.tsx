@@ -45,12 +45,6 @@ const InjuryForm = () => {
       <Controller
         name="skade.skadedeDeler"
         control={control}
-        rules={{
-          required: {
-            value: true,
-            message: 'Dette feltet er påkrevd'
-          }
-        }}
         render={({ field: { onChange, onBlur, value, name, ref } }) => (
           <SkadedeDeler
             onSkadededelerChange={(skadedeDeler) => {
