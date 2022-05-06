@@ -18,8 +18,10 @@ import { useEffect } from 'react';
 import { Skademelding } from '../../../api/yrkesskade';
 import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks';
 import { oppdaterSkademelding, selectSkademelding } from '../../../core/reducers/skademelding.reducer';
+import { useCheckIfReloaded } from '../../../core/hooks/reloadCheck.hooks';
 
 const AccidentFormPage = () => {
+  useCheckIfReloaded();
   const dispatch = useAppDispatch();
   const skademelding =  useAppSelector((state) => selectSkademelding(state));
 
