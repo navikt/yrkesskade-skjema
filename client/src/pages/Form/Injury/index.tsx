@@ -23,6 +23,7 @@ import clearFormAction from '../../../State/actions/clearAction';
 // import { useCancel } from '../../../core/hooks/cancel.hooks';
 
 const InjuryFormPage = () => {
+  useCheckIfReloaded();
   const { actions, state } = useStateMachine({ formUpdateAction, clearFormAction });
   const {
     register,

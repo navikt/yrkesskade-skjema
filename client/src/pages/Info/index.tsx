@@ -18,7 +18,7 @@ import ExitButton from '../../components/ExitButton';
 
 // import { ISteps } from '../../Interfaces/steps';
 import { useInnloggetContext } from '../../context/InnloggetContext';
-import { Organisasjon } from '../../types/brukerinfo';
+import { Adresse, Organisasjon } from '../../types/brukerinfo';
 import { useEffect } from 'react';
 import { useSelectedCompany } from '../../context/SelectedCompanyContext';
 import { useStateMachine } from 'little-state-machine';
@@ -38,6 +38,7 @@ import { useAppDispatch } from '../../core/hooks/state.hooks';
 import { KodeverkControllerService } from '../../api/kodeverk';
 import { addKodeverk } from '../../core/actions/kodeverk.actions';
 import { logAmplitudeEvent } from '../../utils/analytics/amplitude';
+import { addOrganisasjon } from '../../core/reducers/app.reducer';
 // import Description from '../Form/Description';
 
 const Info = () => {
@@ -105,6 +106,11 @@ const Info = () => {
       const adresse =
         organisasjon.beliggenhetsadresse || organisasjon.forretningsadresse;
       setSelectedAddress(adresse);
+
+
+      virksomhet.beliggenhetsadresse = organisasjon.beliggenhetsadresse as Adresse;
+      virksomhet.forretningsadresse = organisasjon.forretningsadresse as Adresse;
+      dispatch(addOrganisasjon(virksomhet));
 
       actions.oppdaterPaaVegneAv(organisasjon.organisasjonsnummer);
       actions.oppdaterDekningsforholdOrganisasjon({

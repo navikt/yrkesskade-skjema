@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import InjuredForm from '../../../components/Forms/Injured';
 import {
   ContentContainer,
@@ -22,9 +22,11 @@ import { useStateMachine } from 'little-state-machine';
 import formUpdateAction from '../../../State/actions/formUpdateAction';
 import { useNavigate } from 'react-router-dom';
 import clearFormAction from '../../../State/actions/clearAction';
+import { useCheckIfReloaded } from '../../../core/hooks/reloadCheck.hooks';
 // import { useCancel } from '../../../core/hooks/cancel.hooks';
 
 const InjuredFormPage = () => {
+  useCheckIfReloaded();
   const { actions, state } = useStateMachine({ formUpdateAction, clearFormAction });
   const {
     register,
@@ -37,14 +39,13 @@ const InjuredFormPage = () => {
       'skadelidt.norskIdentitetsnummer': state.skadelidt.norskIdentitetsnummer,
       'skadelidt.dekningsforhold.rolletype': state.skadelidt.dekningsforhold.rolletype,
     }});
-  // const cancel = useCancel();
 
   const navigate = useNavigate();
-
   const onSubmit = (data: any) => {
     actions.formUpdateAction(data);
     navigate('/yrkesskade/skjema/tidsrom');
   };
+
 
   return (
     <ContentContainer>

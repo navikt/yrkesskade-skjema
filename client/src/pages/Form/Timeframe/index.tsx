@@ -25,9 +25,11 @@ import clearFormAction from '../../../State/actions/clearAction';
 import { KodeverkControllerService } from '../../../api/kodeverk';
 import { useAppDispatch } from '../../../core/hooks/state.hooks';
 import { addKodeverk } from '../../../core/actions/kodeverk.actions';
+import { useCheckIfReloaded } from '../../../core/hooks/reloadCheck.hooks';
 // import { useCancel } from '../../../core/hooks/cancel.hooks';
 
 const TimeframeFormPage = () => {
+  useCheckIfReloaded();
   const { actions, state } = useStateMachine({ formUpdateAction, clearFormAction});
 
   const {

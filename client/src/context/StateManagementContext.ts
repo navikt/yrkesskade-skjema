@@ -5,11 +5,14 @@ import clearFormAction from '../State/actions/clearAction';
 import { useEffect } from 'react';
 import { useInnloggetContext } from './InnloggetContext';
 import { useSelectedCompany } from './SelectedCompanyContext';
+import { useAppSelector } from '../core/hooks/state.hooks';
+import { selectOrganisasjon } from '../core/reducers/app.reducer';
 
 const [StateManagementProvider, useState] = createUseContext(() => {
   const { state, actions } = useStateMachine({ clearFormAction });
   const { innloggetBruker } = useInnloggetContext();
   const { selectedCompany } = useSelectedCompany();
+  const valgtOrganisasjon = useAppSelector((state) => selectOrganisasjon(state))
 
   useEffect(() => {
     if (!innloggetBruker) {

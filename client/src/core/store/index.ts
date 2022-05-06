@@ -1,8 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 import kodeverkReducer from '../reducers/kodeverk.reducer';
+import appReducer from '../reducers/app.reducer';
 
 const store = configureStore({
   reducer: {
+    app: appReducer,
     kodeverk: kodeverkReducer
   }
 })
