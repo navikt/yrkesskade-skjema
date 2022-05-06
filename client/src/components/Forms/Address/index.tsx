@@ -27,7 +27,7 @@ const Address = ({ sammeSomVirksomhetensAdresse, adresse }: IProps) => {
   const [skalBrukeValgtAdresse, setSkalBrukeValgtAdresse] = useState<boolean>(false);
 
   useEffect(() => {
-    setSkalBrukeValgtAdresse(sammeSomVirksomhetensAdresse === 'true' && adresse !== null);
+    setSkalBrukeValgtAdresse(sammeSomVirksomhetensAdresse === 'true' && adresse !== null && adresse !== undefined);
   }, [sammeSomVirksomhetensAdresse, adresse])
 
   useEffect(() => {
@@ -53,7 +53,7 @@ const Address = ({ sammeSomVirksomhetensAdresse, adresse }: IProps) => {
   }, [skalBrukeValgtAdresse]);
 
 
-  return !skalBrukeValgtAdresse ? (
+  return skalBrukeValgtAdresse ? (<></>) : (
     <Fieldset legend="Fyll ut adressen hvor ulykken skjedde">
       <TextField
         className=""
@@ -129,8 +129,6 @@ const Address = ({ sammeSomVirksomhetensAdresse, adresse }: IProps) => {
         </Select>
       )}
     </Fieldset>
-  ) : (
-    <></>
   );
 };
 

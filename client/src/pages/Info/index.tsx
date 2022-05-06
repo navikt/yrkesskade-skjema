@@ -79,7 +79,7 @@ const Info = () => {
 
       const adresse =
         organisasjon.beliggenhetsadresse || organisasjon.forretningsadresse;
-      setSelectedAddress(adresse);
+        setSelectedAddress(adresse);
 
       const dekningsforhold: Dekningsforhold = {
         organisasjonsnummer: organisasjon.organisasjonsnummer as string,
