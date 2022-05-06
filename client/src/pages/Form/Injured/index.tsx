@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import InjuredForm from '../../../components/Forms/Injured';
 import {
   ContentContainer,

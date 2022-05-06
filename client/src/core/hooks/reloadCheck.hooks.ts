@@ -8,6 +8,7 @@ export const useCheckIfReloaded = () => {
   const valgtOrganisasjon =  useAppSelector((state) => selectOrganisasjon(state));
   const navigate = useNavigate();
   const location = useLocation();
+
   useEffect(() => {
 
     if (valgtOrganisasjon) {

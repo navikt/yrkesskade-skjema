@@ -20,6 +20,7 @@ import { useStateMachine } from 'little-state-machine';
 import formUpdateAction from '../../../State/actions/formUpdateAction';
 import { useNavigate } from 'react-router-dom';
 import clearFormAction from '../../../State/actions/clearAction';
+import { useCheckIfReloaded } from '../../../core/hooks/reloadCheck.hooks';
 // import { useCancel } from '../../../core/hooks/cancel.hooks';
 
 const InjuryFormPage = () => {

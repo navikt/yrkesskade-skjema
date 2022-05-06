@@ -107,10 +107,11 @@ const Info = () => {
         organisasjon.beliggenhetsadresse || organisasjon.forretningsadresse;
       setSelectedAddress(adresse);
 
-
-      virksomhet.beliggenhetsadresse = organisasjon.beliggenhetsadresse as Adresse;
-      virksomhet.forretningsadresse = organisasjon.forretningsadresse as Adresse;
-      dispatch(addOrganisasjon(virksomhet));
+      // lag en mutert kopi
+      const oppdatertVirksomhet = {...virksomhet};
+      oppdatertVirksomhet.beliggenhetsadresse = organisasjon.beliggenhetsadresse as Adresse;
+      oppdatertVirksomhet.forretningsadresse = organisasjon.forretningsadresse as Adresse;
+      dispatch(addOrganisasjon(oppdatertVirksomhet));
 
       actions.oppdaterPaaVegneAv(organisasjon.organisasjonsnummer);
       actions.oppdaterDekningsforholdOrganisasjon({
