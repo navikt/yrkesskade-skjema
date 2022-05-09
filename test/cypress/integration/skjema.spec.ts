@@ -75,7 +75,7 @@ describe('Skjema innsending', (): void => {
   it('normal flyt - ingen avvik', () => {
     const injuryTime = test.tidspunkt;
     // vent til innlogget sjekk er fullført
-    cy.wait('@getInnlogget').wait('@postLog').wait('@getLandkoder').wait('@getRoller');
+    cy.wait('@getInnlogget').wait('@postLog').wait('@getRoller');
 
     // start innmelding
     info.startInnmelding().click();
