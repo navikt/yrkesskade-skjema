@@ -8,5 +8,6 @@ export const endpointUrls = {
   log: '**/log',
   print: '**/print*',
   landkoder: '**/api/*/kodeverk/typer/landkoder/kategorier/*/kodeverdier',
-  tidsromkoder: '**/api/*/kodeverk/typer/tidsrom/kategorier/*/kodeverdier'
+  tidsromkoder: '**/api/*/kodeverk/typer/tidsrom/kategorier/*/kodeverdier',
+  amplitude: '**/collect-auto',
 };

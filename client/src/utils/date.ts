@@ -25,3 +25,9 @@ export const handleTimeValue = (tidspunkt: Date | string | undefined): string | 
 
   return formatDate(datevalue, 'HH:mm');
 }
+
+export const isKlokkeslett = (value: string): boolean => {
+  const regexp = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
+
+  return value.match(regexp) ? true : false;
+};
