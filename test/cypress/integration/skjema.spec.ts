@@ -53,14 +53,14 @@ describe('Skjema innsending', (): void => {
     network.intercept(endpointUrls.skademelding, 'skademelding.json').as('postSkademelding');
     network.intercept(endpointUrls.print, 'skademelding-kopi.pdf').as('postPrintPdf');
     network.intercept(endpointUrls.log, 'logResult.json').as('postLog');
-    network.intercept(endpointUrls.amplitude, '').as('amplitude');
+    network.intercept(endpointUrls.amplitude, 'amplitude.json').as('amplitude');
 
     ['landkoderISO2', 'rolletype'].forEach(kodeverk => {
       network.intercept(endpointUrls.kodeverkUtenKategori(kodeverk), `kodeverk/${kodeverk}.json`);
     });
 
     ['stillingstittel', 'aarsakOgBakgrunn', 'alvorlighetsgrad', 'bakgrunnForHendelsen', 'fravaertype', 'hvorSkjeddeUlykken', 'harSkadelidtHattFravaer', 'skadetKroppsdel', 'skadetype', 'tidsrom', 'typeArbeidsplass'].forEach(kodeverk => {
-      network.intercept(endpointUrls.kodeverk(kodeverk), `kodeverk/${kodeverk}.json`);
+      network.intercept(endpointUrls.kodeverk(kodeverk), `kodeverk/${kodeverk}.json`).as(kodeverk);
     })
 
     cy.window().then(win=> {
@@ -81,9 +81,11 @@ describe('Skjema innsending', (): void => {
     info.startInnmelding().click();
 
     // info om skadelydte
-    injuredForm.idNumber().type('{selectAll}16120101181');
+    injuredForm.idNumber().type(`{selectAll}${test.skadelidtIdentifikator}`);
+    injuredForm.position().type(test.stilling);
     injuredForm.positionSelect().select(1);
-    injuredForm.position().type('Programvareutviklere{enter}');
+
+    cy.wait('@stillingstittel').wait('@bakgrunnForHendelsen')
 
     // Gå til neste steg
     general.nextStep().click();
@@ -91,8 +93,6 @@ describe('Skjema innsending', (): void => {
      // velg tidspunkt
     timeframeForm.timeframeWhenDate().clear().type(injuryTime.format('DD.MM.YYYY')).type('{enter}');
     timeframeForm.timeframeWhenTime().type(injuryTime.format('HH:mm')).type('{enter}'); // ser ikke ut som den liker at dette felter skrives til
-   // timeframeForm.timeframeWhenTime().click();
-   // timeframeForm.timeframeWhenTimeSelect(13).click();
     timeframeForm.timeframePeriodOptions().select(test.timeframe);
 
     // Gå til neste steg
