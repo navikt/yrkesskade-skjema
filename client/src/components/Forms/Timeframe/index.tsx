@@ -11,7 +11,7 @@ import ulykkestid from '../../../assets/Lists/ulykkestid';
 import dateFnsFormat from 'date-fns/format';
 import dateFnsParse from 'date-fns/parse';
 import { Controller } from 'react-hook-form';
-import { handleDateValue, handleTimeValue } from '../../../utils/date';
+import { handleDateValue, handleTimeValue, isKlokkeslett } from '../../../utils/date';
 import './Timeframe.less';
 import { InputClassNames } from 'react-day-picker/types/ClassNames';
 import { useAppSelector } from '../../../core/hooks/state.hooks';
@@ -98,7 +98,7 @@ const TimeframeForm = ({ register, errors, control, setValue }: IProps) => {
   };
 
   useEffect(() => {
-    if (specificDate && specificTime && specificTime.length === 5) {
+    if (specificDate && specificTime && isKlokkeslett(specificTime)) {
       const dato = formatDate(specificDate, FORMAT);
       const tidspunkt = `${dato} ${specificTime}`;
       const isoDate = parse(tidspunkt, TIDSPUNKT_FORMAT, new Date(), {

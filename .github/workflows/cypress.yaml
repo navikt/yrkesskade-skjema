@@ -39,3 +39,9 @@ jobs:
           build: yarn build-prod
           start: yarn dev
           wait-on: 'http://localhost:3001'
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+            name: cypress-screenshots
+            path: test/cypress/screenshots
