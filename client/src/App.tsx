@@ -12,18 +12,21 @@ import Receipt from './pages/Receipt';
 import { Route, Routes, useLocation } from 'react-router-dom';
 
 import { InnloggetProvider } from './context/InnloggetContext';
-import { FeatureTogglesProvider } from './context/FeatureTogglesContext';
+import {
+  FeatureTogglesProvider,
+  useFeatureToggles,
+} from './context/FeatureTogglesContext';
 import { autentiseringsInterceptor } from './utils/autentisering';
 import { SelectedCompanyProvider } from './context/SelectedCompanyContext';
 import { ErrorMessageProvider } from './context/ErrorMessageContext';
 import { StateManagementProvider } from './context/StateManagementContext';
 import { useEffect } from 'react';
 import { logAmplitudeEvent } from './utils/analytics/amplitude';
-import { useAppDispatch } from './core/hooks/state.hooks';
-import { hentKodeverk, hentKodeverkForKategori } from './core/reducers/kodeverk.reducer';
+import TemporaryDown from './pages/TemporaryDown';
 import { useForm, FormProvider } from 'react-hook-form';
 import { Skademelding } from './api/yrkesskade';
-
+import { useAppDispatch } from './core/hooks/state.hooks';
+import { hentKodeverk, hentKodeverkForKategori } from './core/reducers/kodeverk.reducer';
 
 const App = () => {
   const location = useLocation();
@@ -31,6 +34,7 @@ const App = () => {
   const methods = useForm<Skademelding>();
 
   useEffect(() => {
+    console.log(location);
     logAmplitudeEvent('skademelding.sidevisning', {
       pathname: location.pathname,
     });
@@ -60,34 +64,47 @@ const App = () => {
           <FormProvider {...methods}>
             <SelectedCompanyProvider>
               <StateManagementProvider>
-                <Routes>
-                  <Route path="yrkesskade/">
-                    {/* <Route index element={<TemporaryDown />} /> */}
-                    <Route index element={<Landing />} />
-                    <Route path="skjema">
-                      <Route index element={<Info />} />
-                      <Route path="skadelidt" element={<InjuredFormPage />} />
-                      <Route path="tidsrom" element={<TimeframeFormPage />} />
-                      <Route path="ulykken" element={<AccidentFormPage />} />
-                      <Route path="skaden" element={<InjuryFormPage />} />
-                      <Route
-                        path="beskrivelse"
-                        element={<DescriptionFormPage />}
-                      />
-                      <Route path="oppsummering" element={<Summary />} />
-                      <Route path="kvittering" element={<Receipt />} />
-                      <Route path="feilmelding" element={<Error />} />
-                    </Route>
-                    <Route path="feilmelding" element={<Error />} />
-                  </Route>
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
+                <AppContent />
               </StateManagementProvider>
             </SelectedCompanyProvider>
           </FormProvider>
         </FeatureTogglesProvider>
       </InnloggetProvider>
     </ErrorMessageProvider>
+  );
+};
+
+const AppContent = () => {
+  const { toggles } = useFeatureToggles();
+
+  return (
+    <Routes>
+      <Route path="yrkesskade/">
+        {toggles && !toggles.SKADEMELDING_TILGJENGELIG ? (
+          <>
+          <Route index element={<TemporaryDown />} />
+          <Route path="*" element={<TemporaryDown />} />
+          </>
+        ) : (
+          <>
+            <Route index element={<Landing />} />
+            <Route path="skjema">
+              <Route index element={<Info />} />
+              <Route path="skadelidt" element={<InjuredFormPage />} />
+              <Route path="tidsrom" element={<TimeframeFormPage />} />
+              <Route path="ulykken" element={<AccidentFormPage />} />
+              <Route path="skaden" element={<InjuryFormPage />} />
+              <Route path="beskrivelse" element={<DescriptionFormPage />} />
+              <Route path="oppsummering" element={<Summary />} />
+              <Route path="kvittering" element={<Receipt />} />
+              <Route path="feilmelding" element={<Error />} />
+            </Route>
+
+          </>
+        )}
+      </Route>
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 };
 

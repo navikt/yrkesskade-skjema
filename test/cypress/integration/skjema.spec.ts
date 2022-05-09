@@ -6,7 +6,6 @@ import { endpointUrls } from "../support/utils/endpointUrls";
 import { network } from "../support/utils/network";
 
 import * as dayjs from 'dayjs'
-import { homeForm } from "../support/selectors/home-fom.selectors";
 import { injuredForm } from "../support/selectors/injured-form.selectors";
 import { accidentForm } from "../support/selectors/accident-form.selectors";
 import { injuryForm } from "../support/selectors/injury-form.selectors";
@@ -54,6 +53,7 @@ describe('Skjema innsending', (): void => {
     network.intercept(endpointUrls.skademelding, 'skademelding.json').as('postSkademelding');
     network.intercept(endpointUrls.print, 'skademelding-kopi.pdf').as('postPrintPdf');
     network.intercept(endpointUrls.log, 'logResult.json').as('postLog');
+    network.intercept(endpointUrls.amplitude, '').as('amplitude');
 
     ['landkoderISO2', 'rolletype'].forEach(kodeverk => {
       network.intercept(endpointUrls.kodeverkUtenKategori(kodeverk), `kodeverk/${kodeverk}.json`);
@@ -75,22 +75,22 @@ describe('Skjema innsending', (): void => {
   it('normal flyt - ingen avvik', () => {
     const injuryTime = test.tidspunkt;
     // vent til innlogget sjekk er fullført
-    cy.wait('@getInnlogget');
+    cy.wait('@getInnlogget').wait('@postLog').wait('@getLandkoder').wait('@getRoller');
 
     // start innmelding
     info.startInnmelding().click();
 
     // info om skadelydte
-    injuredForm.idNumber().type(`{selectAll}${test.skadelidtIdentifikator}`);
-    injuredForm.position().type(`${test.stilling}{enter}`);
+    injuredForm.idNumber().type('{selectAll}16120101181');
     injuredForm.positionSelect().select(1);
+    injuredForm.position().type('Programvareutviklere{enter}');
 
     // Gå til neste steg
     general.nextStep().click();
 
      // velg tidspunkt
     timeframeForm.timeframeWhenDate().clear().type(injuryTime.format('DD.MM.YYYY')).type('{enter}');
-    timeframeForm.timeframeWhenTime().type('{selectall}' + injuryTime.format('HH:mm')).type('{enter}'); // ser ikke ut som den liker at dette felter skrives til
+    timeframeForm.timeframeWhenTime().type(injuryTime.format('HH:mm')).type('{enter}'); // ser ikke ut som den liker at dette felter skrives til
    // timeframeForm.timeframeWhenTime().click();
    // timeframeForm.timeframeWhenTimeSelect(13).click();
     timeframeForm.timeframePeriodOptions().select(test.timeframe);
