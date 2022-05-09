@@ -8,7 +8,7 @@ export class ByEnvironmentParam extends Strategy {
 
   isEnabled(parameters, context) {
     const environments = parameters.environment ? parameters.environment.split(",") : [];
-    if (environments && environments.length == 0) {
+    if (environments && environments.length === 0) {
       return true;
     }
 
