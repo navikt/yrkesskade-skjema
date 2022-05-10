@@ -25,10 +25,11 @@ const UlykkeSummary = ({ data }: IProps) => {
   const landkoder = useAppSelector((state) => selectKodeverk(state, 'landkoderISO2'));
 
   const ulykkessted = data.hendelsesfakta.ulykkessted;
+  const sammeSomVirksomhetensAdresse = (ulykkessted.sammeSomVirksomhetens || ulykkessted.sammeSomVirksomhetens === 'true')
 
-  if (!ulykkessted.sammeSomVirksomhetensAdresse && ulykkessted.adresse) {
+  if (!sammeSomVirksomhetensAdresse && ulykkessted.adresse) {
     adresse = ulykkessted.adresse;
-  } else if (ulykkessted.sammeSomVirksomhetensAdresse && selectedAddress) {
+  } else if (sammeSomVirksomhetensAdresse && selectedAddress) {
     adresse = {
       adresselinje1:
         (selectedAddress.adresser && selectedAddress.adresser[0]) || '',
