@@ -39,13 +39,12 @@ const AccidentFormPage = () => {
   };
 
   useEffect(() => {
-        setValue('hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse', skademelding.hendelsesfakta?.ulykkessted.sammeSomVirksomhetensAdresse || true);
-        setValue('hendelsesfakta.ulykkessted.adresse.adresselinje1', skademelding.hendelsesfakta?.ulykkessted.adresse?.adresselinje1 || '');
-        setValue('hendelsesfakta.ulykkessted.adresse.adresselinje2', skademelding.hendelsesfakta?.ulykkessted.adresse?.adresselinje2 || '');
-        setValue('hendelsesfakta.ulykkessted.adresse.adresselinje3', skademelding.hendelsesfakta?.ulykkessted.adresse?.adresselinje3);
-        setValue('hendelsesfakta.ulykkessted.adresse.land', skademelding.hendelsesfakta?.ulykkessted.adresse?.land || '');
-        setValue('hendelsesfakta.hvorSkjeddeUlykken', skademelding.hendelsesfakta?.hvorSkjeddeUlykken || '');
-        setValue('hendelsesfakta.stedsbeskrivelseTabellF', skademelding.hendelsesfakta?.stedsbeskrivelseTabellF || '');
+      setValue('hendelsesfakta.ulykkessted.adresse.adresselinje1', skademelding.hendelsesfakta?.ulykkessted.adresse?.adresselinje1 || '');
+      setValue('hendelsesfakta.ulykkessted.adresse.adresselinje2', skademelding.hendelsesfakta?.ulykkessted.adresse?.adresselinje2 || '');
+      setValue('hendelsesfakta.ulykkessted.adresse.adresselinje3', skademelding.hendelsesfakta?.ulykkessted.adresse?.adresselinje3);
+      setValue('hendelsesfakta.ulykkessted.adresse.land', skademelding.hendelsesfakta?.ulykkessted.adresse?.land || '');
+      setValue('hendelsesfakta.hvorSkjeddeUlykken', skademelding.hendelsesfakta?.hvorSkjeddeUlykken || '');
+      setValue('hendelsesfakta.stedsbeskrivelseTabellF', skademelding.hendelsesfakta?.stedsbeskrivelseTabellF || '');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 

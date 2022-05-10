@@ -43,7 +43,7 @@ const AccidentForm = () => {
   const bakgrunnForHendelsenkoder = useAppSelector((state) =>
     selectKodeverk(state, 'bakgrunnForHendelsen')
   );
-  const [sammeSomVirksomhetensAdresse, setSammeSomVirksomhetensAdresse] = useState<string>(skademelding.hendelsesfakta?.ulykkessted.sammeSomVirksomhetensAdresse ? 'true' : 'false');
+  const [sammeSomVirksomhetensAdresse, setSammeSomVirksomhetensAdresse] = useState<string>(skademelding.hendelsesfakta?.ulykkessted.sammeSomVirksomhetensAdresse.toString() || 'true');
 
   const [alvorlighetsgrad, setAlvorlighetsgrad] = useState<string>(
     skademelding.skade?.alvorlighetsgrad || ''
