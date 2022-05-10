@@ -8,6 +8,8 @@ import { useLocation } from 'react-router';
 import { Controller, useFormContext } from 'react-hook-form';
 import SkadedeDeler from '../../SkadedeDeler';
 
+import roller from '../../../utils/roller';
+
 const InjuryForm = () => {
   const {
     formState: { errors },
@@ -62,39 +64,39 @@ const InjuryForm = () => {
         </span>
       )}
 
-      {rolletype.toLowerCase() !== 'elev' && (
-        <RadioGroup
-          legend="Har den skadelidte hatt fravær?"
-          error={
-            errors?.skade?.antattSykefravaerTabellH &&
-            errors?.skade?.antattSykefravaerTabellH.message
-          }
-          className="spacer"
-        >
-          {harSkadelidtHattFravaerkoder &&
-            Object.keys(harSkadelidtHattFravaerkoder).map(
-              (kode: string, index: number) => (
-                <div className="navds-radio navds-radio--medium" key={kode}>
-                  <input
-                    type="radio"
-                    className="navds-radio__input"
-                    {...register('skade.antattSykefravaerTabellH', {
-                      required: 'Dette feltet er påkrevd',
-                    })}
-                    value={kode}
-                    data-testid={`injury-absence-${index}`}
-                    id={`injury-absence-${index}`}
-                  />
-                  <label
-                    htmlFor={`injury-absence-${index}`}
-                    className="navds-radio__label"
-                  >
-                    {harSkadelidtHattFravaerkoder[kode]?.verdi}
-                  </label>
-                </div>
-              )
-            )}
-        </RadioGroup>
+      {roller[rolletype] && !roller[rolletype].isElevEllerStudent && (
+      <RadioGroup
+        legend="Har den skadelidte hatt fravær?"
+        error={
+          errors?.skade?.antattSykefravaerTabellH &&
+          errors?.skade?.antattSykefravaerTabellH.message
+        }
+        className="spacer"
+      >
+        {harSkadelidtHattFravaerkoder &&
+          Object.keys(harSkadelidtHattFravaerkoder).map(
+            (kode: string, index: number) => (
+              <div className="navds-radio navds-radio--medium" key={kode}>
+                <input
+                  type="radio"
+                  className="navds-radio__input"
+                  {...register('skade.antattSykefravaerTabellH', {
+                    required: 'Dette feltet er påkrevd',
+                  })}
+                  value={kode}
+                  data-testid={`injury-absence-${index}`}
+                  id={`injury-absence-${index}`}
+                />
+                <label
+                  htmlFor={`injury-absence-${index}`}
+                  className="navds-radio__label"
+                >
+                  {harSkadelidtHattFravaerkoder[kode]?.verdi}
+                </label>
+              </div>
+            )
+          )}
+      </RadioGroup>
       )}
     </>
   );
