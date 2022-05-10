@@ -80,10 +80,10 @@ describe('Skjema innsending', (): void => {
     // start innmelding
     info.startInnmelding().click();
 
-    // info om skadelydte
+    // info om skadelidte
     injuredForm.idNumber().type(`{selectAll}${test.skadelidtIdentifikator}`);
-    injuredForm.position().type(`${test.stilling}{enter}`);
     injuredForm.positionSelect().select(1);
+    injuredForm.position().type(`${test.stilling}{enter}`);
 
     // Gå til neste steg
     general.nextStep().click();
