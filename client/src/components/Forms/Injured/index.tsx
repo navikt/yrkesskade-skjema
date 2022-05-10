@@ -8,11 +8,18 @@ import { useInnloggetContext } from '../../../context/InnloggetContext';
 import _ from 'lodash';
 
 import './Injured.less';
-import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks';
-import { hentKodeverkForKategori, selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../core/hooks/state.hooks';
+import {
+  hentKodeverkForKategori,
+  selectKodeverk,
+} from '../../../core/reducers/kodeverk.reducer';
 import { selectSkademelding } from '../../../core/reducers/skademelding.reducer';
 import { Skademelding } from '../../../api/yrkesskade';
 
+import roller from '../../../utils/roller';
 
 const InjuredForm = () => {
   const { register, formState: { errors }, control, setValue } = useFormContext<Skademelding>();
@@ -21,9 +28,15 @@ const InjuredForm = () => {
   const skademelding = useAppSelector((state) => selectSkademelding(state));
 
   const [openMenu, setOpenMenu] = useState(false);
-  const [ rolletype, setRolletype ] = useState<string>(skademelding.skadelidt?.dekningsforhold.rolletype || '');
-  const rolletypekoder = useAppSelector((state) => selectKodeverk(state, 'rolletype'));
-  const stillingstittelkoder = useAppSelector((state) => selectKodeverk(state, 'stillingstittel'));
+  const [rolletype, setRolletype] = useState<string>(
+    skademelding.skadelidt?.dekningsforhold.rolletype || ''
+  );
+  const rolletypekoder = useAppSelector((state) =>
+    selectKodeverk(state, 'rolletype')
+  );
+  const stillingstittelkoder = useAppSelector((state) =>
+    selectKodeverk(state, 'stillingstittel')
+  );
 
   // Åpner stillingsinputen når det er skrevet 2 eller fler tegn
   const handleInputChange = (query: string, action: any) => {
@@ -42,7 +55,7 @@ const InjuredForm = () => {
 
   const handleRolletypeEndring = (event: any) => {
     setRolletype(event.target.value);
-  }
+  };
 
   useEffect(() => {
     if (!rolletype) {
@@ -50,18 +63,26 @@ const InjuredForm = () => {
       return;
     }
     const rolletypeverdi = rolletype.toLocaleLowerCase();
-    ['tidsrom',
-     'alvorlighetsgrad',
-     'hvorSkjeddeUlykken',
-     'typeArbeidsplass',
-     'aarsakOgBakgrunn',
-     'bakgrunnForHendelsen',
-     'harSkadelidtHattFravaer',
-     'skadetKroppsdel',
-     'skadetype',
-     'stillingstittel',
-    ].forEach(typenavn => dispatch(hentKodeverkForKategori({typenavn: typenavn, kategorinavn: rolletypeverdi})))
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      'tidsrom',
+      'alvorlighetsgrad',
+      'hvorSkjeddeUlykken',
+      'typeArbeidsplass',
+      'aarsakOgBakgrunn',
+      'bakgrunnForHendelsen',
+      'harSkadelidtHattFravaer',
+      'skadetKroppsdel',
+      'skadetype',
+      'stillingstittel',
+    ].forEach((typenavn) =>
+      dispatch(
+        hentKodeverkForKategori({
+          typenavn: typenavn,
+          kategorinavn: rolletypeverdi,
+        })
+      )
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rolletype]);
 
   return (
@@ -107,59 +128,75 @@ const InjuredForm = () => {
         value={rolletype}
       >
         <option hidden value=""></option>
-        {rolletypekoder && Object.keys(rolletypekoder).map((kode: string) => {
-          return (
-            <option key={encodeURI(kode)} value={kode}>
-              {rolletypekoder[kode]?.verdi || 'UKJENT'}
-            </option>
-          );
-        })}
+        {rolletypekoder &&
+          Object.keys(rolletypekoder).map((kode: string) => {
+            return (
+              <option key={encodeURI(kode)} value={kode}>
+                {rolletypekoder[kode]?.verdi || 'UKJENT'}
+              </option>
+            );
+          })}
       </NAVSelect>
-    {rolletype.toLowerCase() !== 'elev' && (
+      {roller[rolletype] && !roller[rolletype].isElevEllerStudent && (
       <div className="spacer">
         <Label>Hva er den skadelidtes stilling</Label>
         {stillingstittelkoder && (
           <>
             <Controller
-          name="skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte"
-          control={control}
-          rules={{
-            required:
-              _.isEmpty(
-                skademelding.skadelidt?.dekningsforhold.stillingstittelTilDenSkadelidte
-              ) && 'Dette feltet er påkrevd',
-          }}
-          render={({ field: { onChange, onBlur, value, name, ref } }) => (
-            <Select
-              placeholder=""
-              components={{
-                DropdownIndicator: () => null,
-                IndicatorSeparator: () => null,
+              name="skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte"
+              control={control}
+              rules={{
+                required:
+                  _.isEmpty(
+                    skademelding.skadelidt?.dekningsforhold
+                      .stillingstittelTilDenSkadelidte
+                  ) && 'Dette feltet er påkrevd',
               }}
-              defaultValue={!_.isEmpty(skademelding.skadelidt?.dekningsforhold) ? skademelding.skadelidt?.dekningsforhold.stillingstittelTilDenSkadelidte.map(stilling => {
-                return {value: stilling, label: (stillingstittelkoder && stillingstittelkoder[stilling]?.verdi || 'UKJENT')};
-              }) : []
-            }
-              onBlur={onBlur}
-              onChange={(val) => onChange([val?.value])}
-              options={Object.keys(stillingstittelkoder).map(kode => ({value: kode, label: stillingstittelkoder[kode]?.verdi || 'UKJENT' }))}
-              menuIsOpen={openMenu}
-              onInputChange={handleInputChange}
-              className="injured-position"
+              render={({ field: { onChange, onBlur, value, name, ref } }) => (
+                <Select
+                  placeholder=""
+                  components={{
+                    DropdownIndicator: () => null,
+                    IndicatorSeparator: () => null,
+                  }}
+                  defaultValue={
+                    !_.isEmpty(skademelding.skadelidt?.dekningsforhold)
+                      ? skademelding.skadelidt?.dekningsforhold.stillingstittelTilDenSkadelidte.map(
+                          (stilling) => {
+                            return {
+                              value: stilling,
+                              label:
+                                (stillingstittelkoder &&
+                                  stillingstittelkoder[stilling]?.verdi) ||
+                                'UKJENT',
+                            };
+                          }
+                        )
+                      : []
+                  }
+                  onBlur={onBlur}
+                  onChange={(val) => onChange([val?.value])}
+                  options={Object.keys(stillingstittelkoder).map((kode) => ({
+                    value: kode,
+                    label: stillingstittelkoder[kode]?.verdi || 'UKJENT',
+                  }))}
+                  menuIsOpen={openMenu}
+                  onInputChange={handleInputChange}
+                  className="injured-position"
+                />
+              )}
             />
-          )}
-        />
-        {errors?.skadelidt?.dekningsforhold
-          ?.stillingstittelTilDenSkadelidte && (
-          <span className="navds-error-message navds-error-message--medium navds-label">
-            {
-              errors.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte
-            }
-          </span>
-        )}
+            {errors?.skadelidt?.dekningsforhold
+              ?.stillingstittelTilDenSkadelidte && (
+              <span className="navds-error-message navds-error-message--medium navds-label">
+                {
+                  errors.skadelidt.dekningsforhold
+                    .stillingstittelTilDenSkadelidte
+                }
+              </span>
+            )}
           </>
         )}
-
       </div>
     )}
     </>
@@ -167,4 +204,3 @@ const InjuredForm = () => {
 };
 
 export default InjuredForm;
-
