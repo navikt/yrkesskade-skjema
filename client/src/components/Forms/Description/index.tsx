@@ -16,7 +16,7 @@ const DescriptionForm = () => {
     <>
       <Textarea
         className="spacer"
-        label="Under kan du tilføre ytterligere opplysninger (valgfri)"
+        label="Under kan du tilføre ytterligere opplysninger."
         description={<TextareaDescription />}
         {...register('hendelsesfakta.utfyllendeBeskrivelse')}
         value={freetext}

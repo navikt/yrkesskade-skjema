@@ -10,6 +10,8 @@ import { useLocation } from 'react-router';
 import { Controller, useFormContext } from 'react-hook-form';
 import SkadedeDeler from '../../SkadedeDeler';
 
+import roller from '../../../utils/roller';
+
 const InjuryForm = () => {
   const {
     formState: { errors },
@@ -40,6 +42,9 @@ const InjuryForm = () => {
   }, [location]);
 
 
+  const rolletype = skademelding.skadelidt?.dekningsforhold.rolletype || '';
+
+
   return (
     <>
       <Controller
@@ -62,6 +67,7 @@ const InjuryForm = () => {
           </span>
       )}
 
+      {roller[rolletype] && !roller[rolletype].isElevEllerStudent && (
       <RadioGroup
         legend="Har den skadelidte hatt fravær?"
         error={
@@ -94,6 +100,7 @@ const InjuryForm = () => {
             )
           )}
       </RadioGroup>
+      )}
     </>
   );
 };

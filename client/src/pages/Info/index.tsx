@@ -30,7 +30,12 @@ import {
 import { logMessage } from '../../utils/logging';
 import { logAmplitudeEvent } from '../../utils/analytics/amplitude';
 import { useAppDispatch } from '../../core/hooks/state.hooks';
-import { oppdaterAltinnRoller, oppdaterInnmelder, oppdaterPaaVegneAv, oppdaterSkadelidt } from '../../core/reducers/skademelding.reducer';
+import {
+  oppdaterAltinnRoller,
+  oppdaterInnmelder,
+  oppdaterPaaVegneAv,
+  oppdaterSkadelidt,
+} from '../../core/reducers/skademelding.reducer';
 
 const Info = () => {
   const dispatch = useAppDispatch();
@@ -38,7 +43,7 @@ const Info = () => {
 
   const handleForward = () => {
     logMessage('Bruker har startet innmelding');
-    logAmplitudeEvent('skademelding.innmelding', { status: 'startet'})
+    logAmplitudeEvent('skademelding.innmelding', { status: 'startet' });
     navigate('/yrkesskade/skjema/skadelidt');
   };
 
@@ -51,12 +56,11 @@ const Info = () => {
       const innmelder: Innmelder = {
         norskIdentitetsnummer: innloggetBruker.fnr as unknown as string,
         innmelderrolle: 'virksomhetsrepresentant',
-        paaVegneAv: ''
+        paaVegneAv: '',
       };
       dispatch(oppdaterInnmelder(innmelder));
 
       settValgtVirksomhet(innloggetBruker.organisasjoner[0]);
-
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -75,30 +79,35 @@ const Info = () => {
         return;
       }
 
-      const roller = await BrukerinfoControllerService.hentRoller(organisasjon.organisasjonsnummer);
+      const roller = await BrukerinfoControllerService.hentRoller(
+        organisasjon.organisasjonsnummer
+      );
 
       const adresse =
         organisasjon.beliggenhetsadresse || organisasjon.forretningsadresse;
-        setSelectedAddress(adresse);
+      setSelectedAddress(adresse);
 
       const dekningsforhold: Dekningsforhold = {
         organisasjonsnummer: organisasjon.organisasjonsnummer as string,
         stillingstittelTilDenSkadelidte: [],
-        rolletype: ''
+        rolletype: '',
       };
       const skadelidt: Skadelidt = {
         dekningsforhold: dekningsforhold,
-        norskIdentitetsnummer: ''
+        norskIdentitetsnummer: '',
       };
 
       dispatch(oppdaterSkadelidt(skadelidt));
 
       const altinnRollerIder = roller
-      .filter(altinnRolle => altinnRolle.RoleDefinitionId)
-      .map(altinnRolle => altinnRolle.RoleDefinitionId ? altinnRolle.RoleDefinitionId.toString() : '');
+        .filter((altinnRolle) => altinnRolle.RoleDefinitionId)
+        .map((altinnRolle) =>
+          altinnRolle.RoleDefinitionId
+            ? altinnRolle.RoleDefinitionId.toString()
+            : ''
+        );
       dispatch(oppdaterAltinnRoller(altinnRollerIder));
       dispatch(oppdaterPaaVegneAv(organisasjon.organisasjonsnummer));
-
     });
   };
 
@@ -139,7 +148,7 @@ const Info = () => {
             </div>
             <div>
               <Heading size="large" className="spacer">
-                Arbeidsgivers meldeplikt
+                Virksomhetens meldeplikt
               </Heading>
               <BodyLong className="spacer">
                 Arbeidsgiver og andre i tilsvarende stilling er pålagt
@@ -159,12 +168,12 @@ const Info = () => {
               </Heading>
               <BodyLong className="spacer">
                 Opplysningene som oppgis skal være riktige og relevante, slik at
-                NAV effektivt kan behandle saken. Anonymiserte data vil også bli
-                brukt av Statistisk sentralbyrå og tilsynsmyndighet for analyse
-                og statistikkformål. Personopplysninger om andre personer enn
-                den skadelidte selv ansees ikke å være relevante for saken.
-                Personopplysninger om den skadelidte skal avgrenses til
-                behandlingens formål for å beskrive fakta om hendelsen og
+                NAV effektivt kan behandle saken. Statistisk sentralbyrå og
+                tilsynsmyndigheter bruker data om arbeidstakeres yrkesskader til
+                analyse og statistikkformål. Personopplysninger om andre
+                personer enn den skadelidte selv ansees ikke å være relevante
+                for saken. Personopplysninger om den skadelidte skal avgrenses
+                til behandlingens formål for å beskrive fakta om hendelsen og
                 hvilken skade arbeidsulykken påførte den skadelidte.
               </BodyLong>
               <BodyShort>
