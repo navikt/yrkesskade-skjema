@@ -9,9 +9,9 @@ import InjuredFormPage from './pages/Form/Injured';
 import AccidentFormPage from './pages/Form/Accident';
 import DescriptionFormPage from './pages/Form/Description';
 import Landing from './pages/Landing';
+import TemporaryDown from './pages/TemporaryDown';
 
 import { Route, Routes, useLocation } from 'react-router-dom';
-import { StateMachineProvider, createStore } from 'little-state-machine';
 
 import { InnloggetProvider } from './context/InnloggetContext';
 import {
@@ -21,22 +21,41 @@ import {
 import { autentiseringsInterceptor } from './utils/autentisering';
 import { SelectedCompanyProvider } from './context/SelectedCompanyContext';
 import { ErrorMessageProvider } from './context/ErrorMessageContext';
-import { formState } from './State/formState';
 import { StateManagementProvider } from './context/StateManagementContext';
 import { useEffect } from 'react';
 import { logAmplitudeEvent } from './utils/analytics/amplitude';
-import TemporaryDown from './pages/TemporaryDown';
+import { useAppDispatch } from './core/hooks/state.hooks';
+import {
+  hentKodeverk,
+  hentKodeverkForKategori,
+} from './core/reducers/kodeverk.reducer';
+import { useForm, FormProvider } from 'react-hook-form';
+import { Skademelding } from './api/yrkesskade';
 
 const App = () => {
-  createStore(formState, {});
   const location = useLocation();
+  const dispatch = useAppDispatch();
+  const methods = useForm<Skademelding>();
 
   useEffect(() => {
-    console.log(location);
     logAmplitudeEvent('skademelding.sidevisning', {
       pathname: location.pathname,
     });
   }, [location]);
+
+  useEffect(() => {
+    dispatch(hentKodeverk('landkoderISO2'));
+    dispatch(hentKodeverk('rolletype'));
+
+    // preload av stillingstitler
+    dispatch(
+      hentKodeverkForKategori({
+        typenavn: 'stillingstittel',
+        kategorinavn: 'arbeidstaker',
+      })
+    );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   autentiseringsInterceptor();
 
@@ -44,13 +63,13 @@ const App = () => {
     <ErrorMessageProvider>
       <InnloggetProvider>
         <FeatureTogglesProvider>
-          <SelectedCompanyProvider>
-            <StateMachineProvider>
+          <FormProvider {...methods}>
+            <SelectedCompanyProvider>
               <StateManagementProvider>
                 <AppContent />
               </StateManagementProvider>
-            </StateMachineProvider>
-          </SelectedCompanyProvider>
+            </SelectedCompanyProvider>
+          </FormProvider>
         </FeatureTogglesProvider>
       </InnloggetProvider>
     </ErrorMessageProvider>

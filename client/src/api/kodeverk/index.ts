@@ -13,4 +13,4 @@ export type { KodetypeResponsDto } from './models/KodetypeResponsDto';
 export type { KodeverdiDto } from './models/KodeverdiDto';
 export type { KodeverdiResponsDto } from './models/KodeverdiResponsDto';
 
-export { KodeverkControllerService } from './services/KodeverkControllerService';
+export { KodeverkApiService } from './services/KodeverkApiService';

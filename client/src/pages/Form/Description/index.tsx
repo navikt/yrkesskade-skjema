@@ -12,26 +12,21 @@ import BackButton from '../../../components/BackButton';
 import StepIndicator from '../../../components/StepIndicator';
 import ExitButton from '../../../components/ExitButton';
 
-import { useForm } from 'react-hook-form';
-import { useStateMachine } from 'little-state-machine';
-import formUpdateAction from '../../../State/actions/formUpdateAction';
+import { useFormContext } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import clearFormAction from '../../../State/actions/clearAction';
-// import { useCancel } from '../../../core/hooks/cancel.hooks';
+import { useAppDispatch } from '../../../core/hooks/state.hooks';
+import { oppdaterSkademelding } from '../../../core/reducers/skademelding.reducer';
 
 const DescriptionFormPage = () => {
-  const { actions } = useStateMachine({ formUpdateAction, clearFormAction });
+  const dispatch = useAppDispatch();
   const {
-    register,
     handleSubmit,
-    formState: { errors },
-  } = useForm({});
-  // const cancel = useCancel();
+  } = useFormContext();
 
   const navigate = useNavigate();
 
   const onSubmit = (data: any) => {
-    actions.formUpdateAction(data);
+    dispatch(oppdaterSkademelding(data));
     navigate('/yrkesskade/skjema/oppsummering');
   };
 
@@ -52,7 +47,7 @@ const DescriptionFormPage = () => {
             >
               Utfyllende beskrivelse
             </Heading>
-            <DescriptionForm errors={errors} register={register} />
+            <DescriptionForm />
             <div className="buttonGroup">
               <ExitButton />
               <Button onClick={handleSubmit(onSubmit)} data-testid="neste-steg">Neste steg</Button>

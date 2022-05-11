@@ -1,13 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useStateMachine } from 'little-state-machine';
 import createUseContext from 'constate';
-import clearFormAction from '../State/actions/clearAction';
 import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../core/hooks/state.hooks';
+import { reset, selectSkademelding } from '../core/reducers/skademelding.reducer';
 import { useInnloggetContext } from './InnloggetContext';
 import { useSelectedCompany } from './SelectedCompanyContext';
 
 const [StateManagementProvider, useState] = createUseContext(() => {
-  const { state, actions } = useStateMachine({ clearFormAction });
+  const dispatch = useAppDispatch();
+  const skademelding = useAppSelector((state) => selectSkademelding(state));
   const { innloggetBruker } = useInnloggetContext();
   const { selectedCompany } = useSelectedCompany();
 
@@ -22,21 +23,21 @@ const [StateManagementProvider, useState] = createUseContext(() => {
       return;
     }
 
-    if (!state || !state.innmelder || !state.innmelder.norskIdentitetsnummer) {
+    if (!skademelding || !skademelding.innmelder || !skademelding.innmelder.norskIdentitetsnummer) {
       return;
     }
 
     if (
-      (state.innmelder.norskIdentitetsnummer && (innloggetBruker.fnr !== state.innmelder.norskIdentitetsnummer)) ||
-      (state.innmelder.paaVegneAv && (selectedCompany.organisasjonsnummer !== state.innmelder.paaVegneAv))
+      (skademelding.innmelder.norskIdentitetsnummer && (innloggetBruker.fnr.toString() !== skademelding.innmelder.norskIdentitetsnummer)) ||
+      (skademelding.innmelder.paaVegneAv && (selectedCompany.organisasjonsnummer !== skademelding.innmelder.paaVegneAv))
     ) {
-      actions.clearFormAction({});
+      dispatch(reset());
       // state slettet
       return;
     }
   }, [
-    state.innmelder.norskIdentitetsnummer,
-    state.innmelder.paaVegneAv,
+    skademelding.innmelder?.norskIdentitetsnummer,
+    skademelding.innmelder?.paaVegneAv,
   ]);
 
   return {};

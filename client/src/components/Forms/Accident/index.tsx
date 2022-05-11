@@ -1,3 +1,4 @@
+/* eslint-disable no-mixed-operators */
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   Select as NAVSelect,
@@ -7,56 +8,49 @@ import {
   Radio,
 } from '@navikt/ds-react';
 import Select from 'react-select';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { useSelectedCompany } from '../../../context/SelectedCompanyContext';
-
-// import { accidentType, accidentBackground } from '../../../assets/injuryEnums';
-// import alvorlighetsgrad from '../../../assets/alvorlighetsgrad';
-import ulykkessted from '../../../assets/Lists/ulykkessted';
-import stedstype from '../../../assets/Lists/stedstype';
-import aarsakUlykkeTabellAogE from '../../../assets/Lists/aarsakUlykkeTabellAogE';
-import bakgrunnsaarsakTabellBogG from '../../../assets/Lists/bakgrunnsaarsakTabellBogG';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Address from '../Address';
-import formUpdateAction from '../../../State/actions/formUpdateAction';
-import { useStateMachine } from 'little-state-machine';
-import alvorlighetsgrad from '../../../assets/Lists/alvorlighetsgrad';
 import _ from 'lodash';
-import { oppdaterSetSammeSomVirksomhetsAdresse, oppdaterUlykkesstedAdresse } from '../../../State/actions/skademeldingStateAction';
+import { useAppSelector } from '../../../core/hooks/state.hooks';
+import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
+import { selectSkademelding } from '../../../core/reducers/skademelding.reducer';
+import { Skademelding } from '../../../api/yrkesskade';
 
-interface IProps {
-  register: any;
-  errors: any;
-  control: any;
-}
-const AccidentForm = ({ register, errors, control }: IProps) => {
+const AccidentForm = () => {
   const { selectedAddress } = useSelectedCompany();
-  const { state, actions } = useStateMachine({ formUpdateAction, oppdaterSetSammeSomVirksomhetsAdresse, oppdaterUlykkesstedAdresse });
+  const {
+    register,
+    formState: { errors },
+    control,
+  } = useFormContext<Skademelding>();
 
-  const { getValues, setValue } = useForm();
-  const [sammeSomVirksomhetensAdresse, setSammeSomVirksomhetensAdresse] =
-    useState<boolean>(
-      getValues('hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse') ||
-        selectedAddress
-        ? true
-        : false
-    );
+  const alvorlighetsgradkoder = useAppSelector((state) =>
+    selectKodeverk(state, 'alvorlighetsgrad')
+  );
+  const skademelding = useAppSelector((state) => selectSkademelding(state));
+  const hvorSkjeddeUlykkenkoder = useAppSelector((state) =>
+    selectKodeverk(state, 'hvorSkjeddeUlykken')
+  );
+  const typeArbeidsplasskoder = useAppSelector((state) =>
+    selectKodeverk(state, 'typeArbeidsplass')
+  );
+  const aarsakOgBakgrunnkoder = useAppSelector((state) =>
+    selectKodeverk(state, 'aarsakOgBakgrunn')
+  );
+  const bakgrunnForHendelsenkoder = useAppSelector((state) =>
+    selectKodeverk(state, 'bakgrunnForHendelsen')
+  );
+  const [sammeSomVirksomhetensAdresse, setSammeSomVirksomhetensAdresse] = useState<string>(skademelding.hendelsesfakta?.ulykkessted.sammeSomVirksomhetensAdresse.toString() || 'true');
 
-    useEffect(() => {
-      actions.oppdaterSetSammeSomVirksomhetsAdresse(sammeSomVirksomhetensAdresse);
-      if (sammeSomVirksomhetensAdresse) {
-        if (!selectedAddress) {
-          return;
-        }
-        actions.oppdaterUlykkesstedAdresse({
-          adresselinje1: selectedAddress.adresser ? selectedAddress.adresser[0] : '',
-          adresselinje2: selectedAddress.postnummer || '',
-          adresselinje3: selectedAddress.poststed || '',
-          land: selectedAddress.landkode || ''
-        })
-      }
-      setValue('hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse', sammeSomVirksomhetensAdresse);
-    }, [sammeSomVirksomhetensAdresse])
+  const [alvorlighetsgrad, setAlvorlighetsgrad] = useState<string>(
+    skademelding.skade?.alvorlighetsgrad || ''
+  );
+
+  const handleAlvorlighetsgradChange = (value: string) => {
+    setAlvorlighetsgrad(value);
+  };
 
   return (
     <>
@@ -84,59 +78,56 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
               <RadioGroup
                 className="spacer"
                 legend="Skjedde ulykken på samme adresse?"
-                defaultValue="true"
+                value={sammeSomVirksomhetensAdresse}
                 onChange={(val) => {
-                  setSammeSomVirksomhetensAdresse(val === 'true');
+                  setSammeSomVirksomhetensAdresse(val);
                   onChange(val === 'true');
                 }}
                 onBlur={onBlur}
                 error={
-                  errors?.hendelsesfakta?.ulykkessted?.sammeSomVirksomhetensAdresse &&
-                  errors?.hendelsesfakta?.ulykkessted?.sammeSomVirksomhetensAdresse.message
+                  errors?.hendelsesfakta?.ulykkessted
+                    ?.sammeSomVirksomhetensAdresse &&
+                  errors?.hendelsesfakta?.ulykkessted
+                    ?.sammeSomVirksomhetensAdresse.message
                 }
               >
-                <Radio value="true">Ja</Radio>
-                <Radio value="false">Nei</Radio>
+                <Radio value="true" {...register('hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse')}>Ja</Radio>
+                <Radio value="false" {...register('hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse')}>Nei</Radio>
               </RadioGroup>
             )}
           />
         </>
       )}
 
-      {(!selectedAddress || !sammeSomVirksomhetensAdresse) && (
-        <Address register={register} errors={errors} control={control} />
-      )}
+      <Address sammeSomVirksomhetensAdresse={sammeSomVirksomhetensAdresse} adresse={selectedAddress} />
 
-      <RadioGroup
-        className="spacer"
-        legend="Hvor alvorlig var hendelsen? (Valgfritt)"
-        error={
-          errors?.skade?.alvorlighetsgrad &&
-          errors?.skade?.alvorlighetsgrad.message
-        }
-      >
-        { alvorlighetsgrad.map((alvorlighetsgrad, index) => (
-          <div className="navds-radio navds-radio--medium" key={alvorlighetsgrad.label}>
-            <input
-              type="radio"
-              className="navds-radio__input"
-              {...register('skade.alvorlighetsgrad', {
-                required: false
-              })}
-              value={alvorlighetsgrad.value}
-              data-testid={ `injury-severity-${index}`}
-              id={ `injury-severity-${index}`}
-            />
-            <label
-              htmlFor={ `injury-severity-${index}`}
-              className="navds-radio__label"
-            >
-              { alvorlighetsgrad.value }
-            </label>
-          </div>
-        ))
-      }
-      </RadioGroup>
+      {alvorlighetsgradkoder && (
+        <RadioGroup
+          className="spacer"
+          legend="Hvor alvorlig var hendelsen? (Valgfritt)"
+          error={
+            errors?.skade?.alvorlighetsgrad &&
+            errors?.skade?.alvorlighetsgrad.message
+          }
+          {...register('skade.alvorlighetsgrad')}
+          value={alvorlighetsgrad}
+          onChange={(e) => handleAlvorlighetsgradChange(e)}
+        >
+          {Object.keys(alvorlighetsgradkoder).map(
+            (alvorlighetsgradkode: string, index: number) => (
+              <Radio
+                value={alvorlighetsgradkode}
+                key={alvorlighetsgradkode}
+                data-testid={`injury-severity-${index}`}
+                id={`injury-severity-${index}`}
+                {...register('skade.alvorlighetsgrad')}
+              >
+                {alvorlighetsgradkoder[alvorlighetsgradkode]?.verdi}
+              </Radio>
+            )
+          )}
+        </RadioGroup>
+      )}
 
       <NAVSelect
         className="spacer"
@@ -151,13 +142,14 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
         }
       >
         <option hidden value=""></option>
-        {ulykkessted.map((sted: { value: string; label: string }) => {
-          return (
-            <option key={encodeURI(sted.value)} value={sted.value}>
-              {sted.label}
-            </option>
-          );
-        })}
+        {hvorSkjeddeUlykkenkoder &&
+          Object.keys(hvorSkjeddeUlykkenkoder).map((kode: string) => {
+            return (
+              <option key={encodeURI(kode)} value={kode}>
+                {hvorSkjeddeUlykkenkoder[kode]?.verdi}
+              </option>
+            );
+          })}
       </NAVSelect>
 
       <NAVSelect
@@ -173,13 +165,14 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
         }
       >
         <option hidden value=""></option>
-        {stedstype.map((type: { value: string; label: string }) => {
-          return (
-            <option key={encodeURI(type.value)} value={type.value}>
-              {type.label}
-            </option>
-          );
-        })}
+        {typeArbeidsplasskoder &&
+          Object.keys(typeArbeidsplasskoder).map((kode: string) => {
+            return (
+              <option key={encodeURI(kode)} value={kode}>
+                {typeArbeidsplasskoder[kode]?.verdi}
+              </option>
+            );
+          })}
       </NAVSelect>
 
       <div className="spacer spacer navds-form-field navds-form-field--medium">
@@ -195,7 +188,7 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
           control={control}
           rules={{
             required:
-              _.isEmpty(state.hendelsesfakta.aarsakUlykkeTabellAogE) &&
+              _.isEmpty(skademelding.hendelsesfakta?.aarsakUlykkeTabellAogE) &&
               'Dette feltet er påkrevd',
           }}
           render={({ field }) => (
@@ -203,12 +196,26 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
               className="aarsak-ulykke-tabell-a-e"
               closeMenuOnSelect={false}
               isMulti
-              options={aarsakUlykkeTabellAogE}
+              options={
+                aarsakOgBakgrunnkoder &&
+                Object.keys(aarsakOgBakgrunnkoder).map((kode: string) => ({
+                  value: kode,
+                  label: aarsakOgBakgrunnkoder[kode]?.verdi || 'UKJENT',
+                }))
+              }
               defaultValue={
-                !_.isEmpty(state.hendelsesfakta.aarsakUlykkeTabellAogE)
-                  ? state.hendelsesfakta.aarsakUlykkeTabellAogE.map((i) => {
-                      return { value: i, label: i };
-                    })
+                !_.isEmpty(skademelding.hendelsesfakta?.aarsakUlykkeTabellAogE)
+                  ? skademelding.hendelsesfakta?.aarsakUlykkeTabellAogE.map(
+                      (i) => {
+                        return {
+                          value: i,
+                          label:
+                            (aarsakOgBakgrunnkoder &&
+                              aarsakOgBakgrunnkoder[i]?.verdi) ||
+                            'UKJENT',
+                        };
+                      }
+                    )
                   : []
               }
               placeholder=""
@@ -218,7 +225,9 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
         />
         {errors?.hendelsesfakta?.aarsakUlykkeTabellAogE && (
           <span className="navds-error-message navds-error-message--medium navds-label">
-            {errors.hendelsesfakta.aarsakUlykkeTabellAogE.message}
+            {errors.hendelsesfakta.aarsakUlykkeTabellAogE.map(
+              (fieldError) => fieldError.message
+            )}
           </span>
         )}
       </div>
@@ -235,22 +244,39 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
           control={control}
           rules={{
             required:
-              _.isEmpty(state.hendelsesfakta.bakgrunnsaarsakTabellBogG) &&
-              'Dette feltet er påkrevd',
+              _.isEmpty(
+                skademelding.hendelsesfakta?.bakgrunnsaarsakTabellBogG
+              ) && 'Dette feltet er påkrevd',
           }}
           render={({ field }) => (
             <Select
               className="bakgrunnsaarsak-b-g"
               defaultValue={
-                !_.isEmpty(state.hendelsesfakta.bakgrunnsaarsakTabellBogG)
-                  ? state.hendelsesfakta.bakgrunnsaarsakTabellBogG.map((i) => {
-                      return { value: i, label: i };
-                    })
+                !_.isEmpty(
+                  skademelding.hendelsesfakta?.bakgrunnsaarsakTabellBogG
+                )
+                  ? skademelding.hendelsesfakta?.bakgrunnsaarsakTabellBogG.map(
+                      (i) => {
+                        return {
+                          value: i,
+                          label:
+                            (bakgrunnForHendelsenkoder &&
+                              bakgrunnForHendelsenkoder[i]?.verdi) ||
+                            'UKJENT',
+                        };
+                      }
+                    )
                   : []
               }
               closeMenuOnSelect={false}
               isMulti
-              options={bakgrunnsaarsakTabellBogG}
+              options={
+                bakgrunnForHendelsenkoder &&
+                Object.keys(bakgrunnForHendelsenkoder).map((kode: string) => ({
+                  value: kode,
+                  label: bakgrunnForHendelsenkoder[kode]?.verdi || 'UKJENT',
+                }))
+              }
               placeholder=""
               onChange={(val) => field.onChange(val.map((i) => i.value))}
             />
@@ -258,7 +284,9 @@ const AccidentForm = ({ register, errors, control }: IProps) => {
         />
         {errors?.hendelsesfakta?.bakgrunnsaarsakTabellBogG && (
           <span className="navds-error-message navds-error-message--medium navds-label">
-            {errors.hendelsesfakta.bakgrunnsaarsakTabellBogG.message}
+            {errors.hendelsesfakta.bakgrunnsaarsakTabellBogG?.map(
+              (fieldError) => fieldError.message
+            )}
           </span>
         )}
       </div>

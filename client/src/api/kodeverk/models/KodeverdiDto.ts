@@ -4,6 +4,5 @@
 
 export type KodeverdiDto = {
     kode?: string;
-    spraak?: string;
     verdi?: string;
 };
