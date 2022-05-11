@@ -10,5 +10,6 @@ export const endpointUrls = {
   landkoder: '**/api/*/kodeverk/typer/landkoder/kategorier/*/kodeverdier',
   tidsromkoder: '**/api/*/kodeverk/typer/tidsrom/kategorier/*/kodeverdier',
   kodeverk: (kodeverk: string) => `**/api/*/kodeverk/typer/${kodeverk}/kategorier/*/kodeverdier`,
-  kodeverkUtenKategori: (kodeverk: string) => `**/api/*/kodeverk/typer/${kodeverk}/kodeverdier`
+  kodeverkUtenKategori: (kodeverk: string) => `**/api/*/kodeverk/typer/${kodeverk}/kodeverdier`,
+  amplitude: '**/collect-auto',
 };
