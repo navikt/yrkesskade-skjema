@@ -8,7 +8,7 @@ import { IsNotProdStrategy } from "./strategies/IsNotProdStrategy";
 import { MVPStrategy } from "./strategies/MVPStrategy";
 import { OrganisasjonsnummerStrategy } from "./strategies/OrganisasjonsNummerStrategy";
 
-test('test unleash', async () => {
+test.skip('test unleash', async () => {
 
   const unleash = await startUnleash({
     url: 'https://unleash.nais.io/api/',

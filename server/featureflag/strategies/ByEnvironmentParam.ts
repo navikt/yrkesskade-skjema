@@ -1,4 +1,4 @@
-import { logInfo, logWarn } from "@navikt/yrkesskade-logging";
+import { logWarn } from "@navikt/yrkesskade-logging";
 import { Strategy } from "unleash-client";
 
 export class ByEnvironmentParam extends Strategy {

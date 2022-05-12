@@ -161,7 +161,7 @@ const InjuredForm = () => {
                   }}
                   defaultValue={
                     !_.isEmpty(skademelding.skadelidt?.dekningsforhold)
-                      ? skademelding.skadelidt?.dekningsforhold.stillingstittelTilDenSkadelidte.map(
+                      ? skademelding.skadelidt?.dekningsforhold.stillingstittelTilDenSkadelidte?.map(
                           (stilling) => {
                             return {
                               value: stilling,

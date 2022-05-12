@@ -56,7 +56,7 @@ describe('Skjema innsending', (): void => {
     network.intercept(endpointUrls.amplitude, 'amplitude.json').as('amplitude');
 
     ['landkoderISO2', 'rolletype'].forEach(kodeverk => {
-      network.intercept(endpointUrls.kodeverkUtenKategori(kodeverk), `kodeverk/${kodeverk}.json`);
+      network.intercept(endpointUrls.kodeverkUtenKategori(kodeverk), `kodeverk/${kodeverk}.json`).as(kodeverk);
     });
 
     ['stillingstittel', 'aarsakOgBakgrunn', 'alvorlighetsgrad', 'bakgrunnForHendelsen', 'fravaertype', 'hvorSkjeddeUlykken', 'harSkadelidtHattFravaer', 'skadetKroppsdel', 'skadetype', 'tidsrom', 'typeArbeidsplass'].forEach(kodeverk => {
@@ -75,7 +75,7 @@ describe('Skjema innsending', (): void => {
   it('normal flyt - ingen avvik', () => {
     const injuryTime = test.tidspunkt;
     // vent til innlogget sjekk er fullført
-    cy.wait('@getInnlogget').wait('@postLog').wait('@getRoller');
+    cy.wait('@getInnlogget').wait('@postLog').wait('@landkoderISO2').wait('@rolletype');
 
     // start innmelding
     info.startInnmelding().click();

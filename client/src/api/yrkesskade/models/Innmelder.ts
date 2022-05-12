@@ -6,5 +6,5 @@ export type Innmelder = {
     norskIdentitetsnummer: string;
     paaVegneAv: string;
     innmelderrolle: string;
-    altinnrolleIDer?: Array<string>;
+    altinnrolleIDer: Array<string>;
 };

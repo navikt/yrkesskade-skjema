@@ -54,6 +54,7 @@ const Info = () => {
         norskIdentitetsnummer: innloggetBruker.fnr as unknown as string,
         innmelderrolle: 'virksomhetsrepresentant',
         paaVegneAv: '',
+        altinnrolleIDer: []
       };
       dispatch(oppdaterInnmelder(innmelder));
 

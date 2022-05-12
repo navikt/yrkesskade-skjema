@@ -1,14 +1,16 @@
 import NotFound from './pages/404';
+import Info from './pages/Info';
+import Summary from './pages/Summary';
+import Receipt from './pages/Receipt';
+import Error from './pages/Error';
+import TimeframeFormPage from './pages/Form/Timeframe';
+import InjuryFormPage from './pages/Form/Injury';
 import AccidentFormPage from './pages/Form/Accident';
 import DescriptionFormPage from './pages/Form/Description';
 import InjuredFormPage from './pages/Form/Injured';
-import InjuryFormPage from './pages/Form/Injury';
-import TimeframeFormPage from './pages/Form/Timeframe';
-import Info from './pages/Info';
 import Landing from './pages/Landing';
-import Summary from './pages/Summary';
-import Error from './pages/Error';
-import Receipt from './pages/Receipt';
+import TemporaryDown from './pages/TemporaryDown';
+
 import { Route, Routes, useLocation } from 'react-router-dom';
 
 import { InnloggetProvider } from './context/InnloggetContext';
@@ -22,11 +24,13 @@ import { ErrorMessageProvider } from './context/ErrorMessageContext';
 import { StateManagementProvider } from './context/StateManagementContext';
 import { useEffect } from 'react';
 import { logAmplitudeEvent } from './utils/analytics/amplitude';
-import TemporaryDown from './pages/TemporaryDown';
+import { useAppDispatch } from './core/hooks/state.hooks';
+import {
+  hentKodeverk,
+  hentKodeverkForKategori,
+} from './core/reducers/kodeverk.reducer';
 import { useForm, FormProvider } from 'react-hook-form';
 import { Skademelding } from './api/yrkesskade';
-import { useAppDispatch } from './core/hooks/state.hooks';
-import { hentKodeverk, hentKodeverkForKategori } from './core/reducers/kodeverk.reducer';
 
 const App = () => {
   const location = useLocation();
@@ -53,7 +57,6 @@ const App = () => {
     );
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
 
   autentiseringsInterceptor();
 
