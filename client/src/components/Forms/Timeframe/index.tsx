@@ -7,7 +7,11 @@ import InputMask from 'react-input-mask';
 import dateFnsFormat from 'date-fns/format';
 import dateFnsParse from 'date-fns/parse';
 import { Controller, useFormContext } from 'react-hook-form';
-import { handleDateValue, handleTimeValue, isKlokkeslett } from '../../../utils/date';
+import {
+  handleDateValue,
+  handleTimeValue,
+  isKlokkeslett,
+} from '../../../utils/date';
 import './Timeframe.less';
 import { InputClassNames } from 'react-day-picker/types/ClassNames';
 import { useAppSelector } from '../../../core/hooks/state.hooks';
@@ -53,7 +57,7 @@ const TimeframeForm = () => {
 
   const toDayPickerClassNames = {
     ...dayPickerClassNames,
-    container: `timeframe-from-date ${dayPickerClassNames.container}`,
+    container: `timeframe-to-date ${dayPickerClassNames.container}`,
   };
 
   const [timeType, setTimeType] = useState(state.hendelsesfakta?.tid.tidstype);
@@ -254,51 +258,85 @@ const TimeframeForm = () => {
             <div className="periode-container spacer">
               <div>
                 <Label>Fra dag</Label>
-                <DayPickerInput
-                  classNames={fromDayPickerClassNames}
-                  placeholder=""
-                  value={specificFromDay}
-                  onDayChange={handleSpecificFromDay}
-                  formatDate={formatDate}
-                  format={FORMAT}
-                  parseDate={parseDate}
-                  dayPickerProps={{
-                    toMonth: specificToDay,
-                    disabledDays: {
-                      after: new Date(),
-                    },
-                    modifiers,
-                    onDayClick: () => toDayInput?.getInput().focus(),
+                <Controller
+                  name="hendelsesfakta.tid.periode.fra"
+                  control={control}
+                  rules={{
+                    required:
+                      timeType === 'Periode' &&
+                      specificFromDay !== null &&
+                      'Dette feltet er påkrevd',
                   }}
+                  render={({
+                    field: { onChange, onBlur, value, name, ref },
+                  }) => (
+                    <DayPickerInput
+                      classNames={fromDayPickerClassNames}
+                      placeholder=""
+                      value={specificFromDay}
+                      onDayChange={handleSpecificFromDay}
+                      formatDate={formatDate}
+                      format={FORMAT}
+                      parseDate={parseDate}
+                      dayPickerProps={{
+                        toMonth: specificToDay,
+                        disabledDays: {
+                          after: new Date(),
+                        },
+                        modifiers,
+                        onDayClick: () => toDayInput?.getInput().focus(),
+                      }}
+                    />
+                  )}
                 />
+                {errors?.hendelsesfakta?.tid?.periode?.fra &&
+                  errors?.hendelsesfakta?.tid?.periode?.fra?.message && (
+                    <span className="navds-error-message navds-error-message--medium navds-label">
+                      Fra dato er påkrevd
+                    </span>
+                  )}
               </div>
               <div>
                 <Label>Til dag</Label>
-                <DayPickerInput
-                  ref={(el) => setToDayInput(el)}
-                  classNames={toDayPickerClassNames}
-                  placeholder=""
-                  value={specificToDay}
-                  onDayChange={handleSpecificToDay}
-                  formatDate={formatDate}
-                  format={FORMAT}
-                  parseDate={parseDate}
-                  dayPickerProps={{
-                    month: specificFromDay,
-                    fromMonth: specificFromDay,
-                    modifiers,
-                    disabledDays: {
-                      after: new Date(),
-                    },
+                <Controller
+                  name="hendelsesfakta.tid.periode.til"
+                  control={control}
+                  rules={{
+                    required:
+                      timeType === 'Periode' &&
+                      specificToDay !== null &&
+                      'Dette feltet er påkrevd',
                   }}
+                  render={({
+                    field: { onChange, onBlur, value, name, ref },
+                  }) => (
+                    <DayPickerInput
+                      ref={(el) => setToDayInput(el)}
+                      classNames={toDayPickerClassNames}
+                      placeholder=""
+                      value={specificToDay}
+                      onDayChange={handleSpecificToDay}
+                      formatDate={formatDate}
+                      format={FORMAT}
+                      parseDate={parseDate}
+                      dayPickerProps={{
+                        month: specificFromDay,
+                        fromMonth: specificFromDay,
+                        modifiers,
+                        disabledDays: {
+                          after: new Date(),
+                        },
+                      }}
+                    />
+                  )}
                 />
+                {errors?.hendelsesfakta?.tid?.periode?.til &&
+                  errors?.hendelsesfakta?.tid?.periode?.til?.message && (
+                    <span className="navds-error-message navds-error-message--medium navds-label">
+                      Til dato er påkrevd
+                    </span>
+                  )}
               </div>
-
-              {specificRangeError?.length > 0 && (
-                <span className="navds-error-message navds-error-message--medium navds-label">
-                  {specificRangeError}
-                </span>
-              )}
             </div>
           )}
         </div>
@@ -338,13 +376,19 @@ const TimeframeForm = () => {
         data-testid="timeframe-period-options"
       >
         <option hidden value=""></option>
-        {tidsromkoder && Object.keys(tidsromkoder).map((tidsromkode: string, index: number) => {
-          return (
-            <option key={encodeURIComponent(tidsromkode)} value={tidsromkode}>
-              {tidsromkoder[tidsromkode]?.verdi}
-            </option>
-          );
-        })}
+        {tidsromkoder &&
+          Object.keys(tidsromkoder).map(
+            (tidsromkode: string, index: number) => {
+              return (
+                <option
+                  key={encodeURIComponent(tidsromkode)}
+                  value={tidsromkode}
+                >
+                  {tidsromkoder[tidsromkode]?.verdi}
+                </option>
+              );
+            }
+          )}
       </Select>
     </>
   );
