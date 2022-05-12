@@ -13,34 +13,29 @@ import StepIndicator from '../../components/StepIndicator';
 import { Print } from '@navikt/ds-icons';
 import { PrintService } from '../../services/PrintService';
 import { logErrorMessage } from '../../utils/logging';
+import { format } from 'date-fns';
 import { useLocation } from 'react-router';
 import { Skademelding } from '../../api/yrkesskade';
-import { format } from 'date-fns';
 
 const Receipt = () => {
   const { state } = useLocation();
 
   const handlePrintClicked = async () => {
-    if (state) {
-      try {
-        const response = await new PrintService().print(state as Skademelding);
+    try {
+      const response = await new PrintService().print(state as Skademelding);
 
-        const file = new Blob([response.data], { type: 'application/pdf' });
-        const fileURL = URL.createObjectURL(file);
+      const file = new Blob([response.data], { type: 'application/pdf' });
+      const fileURL = URL.createObjectURL(file);
 
-        const pdfWindow = window.open();
+      const pdfWindow = window.open();
 
-        if (pdfWindow) {
-          pdfWindow.location.href = fileURL;
-        } else {
-          console.error('Kunne ikke åpne pdf vindu/tab');
-        }
-
-      } catch (error: any) {
-        logErrorMessage(`Nedlasting av kopi feilet: ${error.message}`);
+      if (pdfWindow) {
+        pdfWindow.location.href = fileURL;
+      } else {
+        console.error('Kunne ikke åpne pdf vindu/tab');
       }
-    } else {
-      logErrorMessage('Skademelding er null og kan ikke skrives ut');
+    } catch (error: any) {
+      logErrorMessage(`Nedlasting av kopi feilet: ${error.message}`);
     }
   };
 
@@ -55,7 +50,10 @@ const Receipt = () => {
               <Heading size="large" className="spacer">
                 Takk for innmeldingen!
               </Heading>
-              <Alert variant="success" className="spacer">Innmeldingen din om yrkesskade er mottatt { format(new Date(), 'dd.MM.yyyy')}</Alert>
+              <Alert variant="success" className="spacer">
+                Innmeldingen din om yrkesskade er mottatt{' '}
+                {format(new Date(), 'dd.MM.yyyy')}
+              </Alert>
               <Label>Skriv ut</Label>
               <BodyShort spacing>
                 Ønsker du kopi av skademeldingen, kan du skrive den ut her

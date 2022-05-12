@@ -8,8 +8,8 @@ import type { Skade } from './Skade';
 import type { Skadelidt } from './Skadelidt';
 
 export type Skademelding = {
-    innmelder?: Innmelder;
-    skadelidt?: Skadelidt;
-    skade?: Skade;
-    hendelsesfakta?: Hendelsesfakta;
+    innmelder: Innmelder;
+    skadelidt: Skadelidt;
+    skade: Skade;
+    hendelsesfakta: Hendelsesfakta;
 };

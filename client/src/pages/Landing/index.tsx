@@ -20,6 +20,7 @@ import { EAllFeatureToggles } from '../../types/feature-toggles';
 import { logAmplitudeEvent } from '../../utils/analytics/amplitude';
 import { logMessage } from '../../utils/logging';
 import { sjekkTilgangTilSkjema } from '../../utils/skjemaTilgangstyring';
+import TemporaryDown from '../TemporaryDown';
 import './Landing.less';
 
 const Landing = () => {
@@ -94,6 +95,10 @@ const Landing = () => {
   };
 
   useEffect(() => {
+    if (!toggles.SKADEMELDING_TILGJENGELIG) {
+      setContent(<TemporaryDown />);
+      return;
+    }
     if (innloggetBruker) {
       sjekkTilgang(innloggetBruker);
     }

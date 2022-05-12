@@ -5,7 +5,7 @@
 import type { OrganisasjonDto } from './OrganisasjonDto';
 
 export type BrukerinfoDto = {
-    fnr?: string;
-    navn?: string;
-    organisasjoner?: Array<OrganisasjonDto>;
+    fnr: string;
+    navn: string;
+    organisasjoner: Array<OrganisasjonDto>;
 };

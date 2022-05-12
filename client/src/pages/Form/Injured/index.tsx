@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import InjuredForm from '../../../components/Forms/Injured';
 import {
   ContentContainer,
@@ -10,41 +11,45 @@ import {
 import SystemHeader from '../../../components/SystemHeader';
 import BackButton from '../../../components/BackButton';
 
-// import { IGeneralForm } from '../../Interfaces/generalForm';
-
 import StepIndicator from '../../../components/StepIndicator';
-// import { ISteps } from '../../../Interfaces/steps';
 import ExitButton from '../../../components/ExitButton';
 
-import { useForm } from 'react-hook-form';
-import { useStateMachine } from 'little-state-machine';
-import formUpdateAction from '../../../State/actions/formUpdateAction';
-import { useNavigate } from 'react-router-dom';
-import clearFormAction from '../../../State/actions/clearAction';
+import { useFormContext } from 'react-hook-form';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Skademelding } from '../../../api/yrkesskade';
+import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks';
+import { oppdaterSkademelding, selectSkademelding } from '../../../core/reducers/skademelding.reducer';
+import { useSelectedCompany } from '../../../context/SelectedCompanyContext';
 import { useCheckIfReloaded } from '../../../core/hooks/reloadCheck.hooks';
-// import { useCancel } from '../../../core/hooks/cancel.hooks';
 
 const InjuredFormPage = () => {
   useCheckIfReloaded();
-  const { actions, state } = useStateMachine({ formUpdateAction, clearFormAction });
+  const dispatch = useAppDispatch();
+  const skademelding = useAppSelector((state) => selectSkademelding(state))
   const {
-    register,
     handleSubmit,
-    formState: { errors },
-    control
-  } = useForm({
-    defaultValues: {
-      // 'skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte': state.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte,
-      'skadelidt.norskIdentitetsnummer': state.skadelidt.norskIdentitetsnummer,
-      'skadelidt.dekningsforhold.rolletype': state.skadelidt.dekningsforhold.rolletype,
-    }});
+    setValue
+  } = useFormContext<Skademelding>();
+  const valgtVirksomhet = useSelectedCompany();
 
   const navigate = useNavigate();
+  const location = useLocation();
+
   const onSubmit = (data: any) => {
-    actions.formUpdateAction(data);
+    dispatch(oppdaterSkademelding(data));
     navigate('/yrkesskade/skjema/tidsrom');
   };
 
+  useEffect(() => {
+    setValue('skadelidt.norskIdentitetsnummer', skademelding.skadelidt?.norskIdentitetsnummer || '');
+    setValue('skadelidt.dekningsforhold.rolletype', skademelding.skadelidt?.dekningsforhold.rolletype || '')
+    setValue('skadelidt.dekningsforhold.navnPaaVirksomheten', valgtVirksomhet.selectedCompany.navn)
+    setValue('skadelidt.dekningsforhold.virksomhetensAdresse.adresselinje1', valgtVirksomhet.selectedAddress?.adresser[0] || '');
+    setValue('skadelidt.dekningsforhold.virksomhetensAdresse.adresselinje2', valgtVirksomhet.selectedAddress?.postnummer);
+    setValue('skadelidt.dekningsforhold.virksomhetensAdresse.adresselinje3', valgtVirksomhet.selectedAddress?.poststed);
+    setValue('skadelidt.dekningsforhold.virksomhetensAdresse.land', valgtVirksomhet.selectedAddress?.landkode);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location, setValue])
 
   return (
     <ContentContainer>
@@ -61,7 +66,7 @@ const InjuredFormPage = () => {
             >
               Om den skadelidte
             </Heading>
-            <InjuredForm errors={errors} register={register} control={control}/>
+            <InjuredForm />
             <div className="buttonGroup">
              <ExitButton />
               <Button onClick={handleSubmit(onSubmit)} data-testid="neste-steg">Neste steg</Button>

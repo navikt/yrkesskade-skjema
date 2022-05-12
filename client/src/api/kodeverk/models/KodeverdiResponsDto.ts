@@ -5,5 +5,5 @@
 import type { KodeverdiDto } from './KodeverdiDto';
 
 export type KodeverdiResponsDto = {
-    kodeverdier?: Array<KodeverdiDto>;
+    kodeverdierMap?: Record<string, KodeverdiDto>;
 };

@@ -15,7 +15,8 @@ const [FeatureTogglesProvider, useFeatureToggles] = createUseContext(() => {
   const [toggles, setToggles] = useState<EAllFeatureToggles>({
     DIGITAL_SKJEMA_INNSENDING: false,
     TEST: false,
-    ER_IKKE_PROD: false
+    ER_IKKE_PROD: false,
+    SKADEMELDING_TILGJENGELIG: true,
   });
 
   useEffect(() => {

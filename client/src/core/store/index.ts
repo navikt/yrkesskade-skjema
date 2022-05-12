@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
-import kodeverkReducer from '../reducers/kodeverk.reducer';
 import appReducer from '../reducers/app.reducer';
+import kodeverkReducer from '../reducers/kodeverk.reducer';
+import skademeldingReducer from '../reducers/skademelding.reducer';
 
 const store = configureStore({
   reducer: {
     app: appReducer,
-    kodeverk: kodeverkReducer
+    kodeverk: kodeverkReducer,
+    skademelding: skademeldingReducer,
   }
 })
 
