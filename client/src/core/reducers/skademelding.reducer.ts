@@ -20,6 +20,7 @@ const initialState: SkademeldingState = {
       dekningsforhold: {
         organisasjonsnummer: '',
         navnPaaVirksomheten: '',
+        virksomhetensAdresse: undefined,
         stillingstittelTilDenSkadelidte: [],
         rolletype: '',
       },

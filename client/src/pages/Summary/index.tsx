@@ -21,41 +21,23 @@ import { useNavigate } from 'react-router-dom';
 import StepIndicator from '../../components/StepIndicator';
 import ExitButton from '../../components/ExitButton';
 
-import { useSelectedCompany } from '../../context/SelectedCompanyContext';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { useErrorMessageContext } from '../../context/ErrorMessageContext';
 import {
-  Dekningsforhold,
   SkademeldingApiControllerService,
 } from '../../api/yrkesskade';
 import { logErrorMessage, logMessage } from '../../utils/logging';
 import { logAmplitudeEvent } from '../../utils/analytics/amplitude';
 import { useAppDispatch, useAppSelector } from '../../core/hooks/state.hooks';
-import { oppdaterDekningsforhold, reset, selectSkademelding } from '../../core/reducers/skademelding.reducer';
+import { reset, selectSkademelding } from '../../core/reducers/skademelding.reducer';
 
 const Summary = () => {
-  const { selectedCompany } = useSelectedCompany();
   const { setError } = useErrorMessageContext();
   const skademelding = useAppSelector((state) => selectSkademelding(state));
   const dispatch = useAppDispatch();
 
   const [clicked, setClicked] = useState<boolean>(false);
-
-  useEffect(() => {
-    // oppdater state med verdier som ikke har blitt satt av skjema
-    if (skademelding.skadelidt && skademelding.skadelidt.dekningsforhold) {
-      const dekningsforhold: Dekningsforhold = {
-        organisasjonsnummer: selectedCompany.organisasjonsnummer as string,
-        stillingstittelTilDenSkadelidte: skademelding.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte,
-        rolletype: skademelding.skadelidt.dekningsforhold.rolletype
-      };
-
-      dekningsforhold.organisasjonsnummer = selectedCompany.organisasjonsnummer as string;
-      dispatch(oppdaterDekningsforhold(dekningsforhold));
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCompany.organisasjonsnummer]);
 
   const data = skademelding;
 
@@ -67,7 +49,7 @@ const Summary = () => {
 
       logMessage('Skademelding innsendt');
       logAmplitudeEvent('skademelding.innmelding', { status: 'fullfort' });
-      navigate('/yrkesskade/skjema/kvittering');
+      navigate('/yrkesskade/skjema/kvittering',  { state: data });
       dispatch(reset());
     } catch (error: any) {
       setError('Det skjedde en feil med innsendingen. Vi jobber med å løse problemet. Prøv igjen senere.');

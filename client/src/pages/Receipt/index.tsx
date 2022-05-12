@@ -14,15 +14,15 @@ import { Print } from '@navikt/ds-icons';
 import { PrintService } from '../../services/PrintService';
 import { logErrorMessage } from '../../utils/logging';
 import { format } from 'date-fns';
-import { useAppSelector } from '../../core/hooks/state.hooks';
-import { selectSkademelding } from '../../core/reducers/skademelding.reducer';
+import { useLocation } from 'react-router';
+import { Skademelding } from '../../api/yrkesskade';
 
 const Receipt = () => {
-  const skademelding = useAppSelector((state) => selectSkademelding(state));
+  const { state } = useLocation();
 
   const handlePrintClicked = async () => {
     try {
-      const response = await new PrintService().print(skademelding);
+      const response = await new PrintService().print(state as Skademelding);
 
       const file = new Blob([response.data], { type: 'application/pdf' });
       const fileURL = URL.createObjectURL(file);
