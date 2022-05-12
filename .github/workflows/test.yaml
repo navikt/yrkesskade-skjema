@@ -3,7 +3,7 @@ name: Cypress Tests
 on:
   push:
     branches-ignore:
-      - main # deploy-dev.yml har egen cypress test
+      - main
       - dev
 
 jobs:
@@ -18,6 +18,16 @@ jobs:
           cache: "yarn"
           registry-url: 'https://npm.pkg.github.com'
           scope: '@navikt'
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+      - uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
       - name: "install server dependencies Yarn"
         # if: "steps.cache-server-node-modules.outputs.cache-hit != 'true'"
         run: "yarn install --frozen-lockfile"
@@ -46,3 +56,28 @@ jobs:
         with:
             name: cypress-screenshots
             path: test/cypress/screenshots
+
+  frackend-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: "actions/checkout@v2"
+      - uses: "actions/setup-node@v2"
+        with:
+          node-version: "14"
+          cache: "yarn"
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@navikt'
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+      - uses: actions/cache@v3
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Run frackend test
+        run: yarn test

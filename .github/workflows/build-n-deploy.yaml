@@ -1,8 +1,9 @@
-name: "Dev - Build and deploy yrkesskade skjema"
+name: "Build and deploy yrkesskade skjema"
 on:
   push:
     branches:
-      - "dev"
+      - main
+      - dev
 env:
   "IMAGE": "ghcr.io/${{ github.repository }}:${{ github.sha }}"
 jobs:
@@ -22,14 +23,13 @@ jobs:
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
       - uses: actions/cache@v3
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
       - name: "install server dependencies Yarn"
-        # if: "steps.cache-server-node-modules.outputs.cache-hit != 'true'"
         run: "yarn install --frozen-lockfile"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
@@ -79,7 +79,7 @@ jobs:
 
   build:
     name: build
-    runs-on: ubuntu-latest
+    runs-on: "ubuntu-latest"
     steps:
       - uses: "actions/checkout@v2"
       - uses: "actions/setup-node@v2"
@@ -88,18 +88,7 @@ jobs:
           cache: "yarn"
           registry-url: 'https://npm.pkg.github.com'
           scope: '@navikt'
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
-      - uses: actions/cache@v3
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
       - name: "install server dependencies Yarn"
-        # if: "steps.cache-server-node-modules.outputs.cache-hit != 'true'"
         run: "yarn install --frozen-lockfile"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
@@ -108,11 +97,6 @@ jobs:
         working-directory: "client"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
-      # - name: "Bygg klient(yarn run build)"
-      #   run: "yarn run build"
-      # - name: "Bygg server(yarn run build)"
-      #   run: "yarn run build"
-      #   working-directory: "server"
       - name: "Bygg alt"
         run: "yarn run build-prod"
       - name: "Login to GitHub Docker Registry"
@@ -124,7 +108,8 @@ jobs:
       - name: "Build and push the Docker image"
         run: "docker build --pull --tag ${IMAGE} . && docker push ${IMAGE}"
 
-  "deployAppToDev":
+  deployAppToDev:
+    if: github.ref == 'refs/heads/dev'
     name: "Deploy app to dev"
     needs: "build"
     runs-on: "ubuntu-18.04"
@@ -138,7 +123,8 @@ jobs:
           "RESOURCE": ".nais/nais.yaml"
           "VARS": ".nais/dev.yaml"
 
-  "deployAlertsToDev":
+  deployAlertsToDev:
+    if: github.ref == 'refs/heads/dev'
     name: "Deploy alerts to dev"
     needs: "build"
     runs-on: "ubuntu-18.04"
@@ -152,3 +138,32 @@ jobs:
           "RESOURCE": ".nais/alerts-dev.yaml"
           "VARS": ".nais/dev.yaml"
 
+  deployAppToProd:
+    if: github.ref == 'refs/heads/main'
+    name: Deploy app to prod
+    needs: [cypress-run, frackend-test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: "actions/checkout@v2"
+      - name: Deploy to PROD
+        uses: "nais/deploy/actions/deploy@v1"
+        env:
+          "APIKEY": "${{ secrets.NAIS_DEPLOY_APIKEY }}"
+          "CLUSTER": "prod-gcp"
+          "RESOURCE": ".nais/nais.yaml"
+          "VARS": ".nais/prod.yaml"
+
+  deployAlertsToProd:
+    if: github.ref == 'refs/heads/main'
+    name: Deploy alerts to prod
+    needs: [cypress-run, frackend-test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: "actions/checkout@v2"
+      - name: Deploy alerts to PROD
+        uses: "nais/deploy/actions/deploy@v1"
+        env:
+          "APIKEY": "${{ secrets.NAIS_DEPLOY_APIKEY }}"
+          "CLUSTER": "prod-gcp"
+          "RESOURCE": ".nais/alerts-prod.yaml"
+          "VARS": ".nais/prod.yaml"
