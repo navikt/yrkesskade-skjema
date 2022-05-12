@@ -134,7 +134,6 @@ const TimeframeForm = () => {
   };
 
   const specificDateError = useRef('');
-  let specificRangeError = '';
 
   useEffect(() => {
     if (timeType === 'Tidspunkt' && typeof specificDate === undefined) {
