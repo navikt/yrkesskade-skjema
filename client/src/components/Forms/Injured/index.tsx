@@ -128,7 +128,7 @@ const InjuredForm = () => {
                 DropdownIndicator: () => null,
                 IndicatorSeparator: () => null,
               }}
-              defaultValue={!_.isEmpty(skademelding.skadelidt?.dekningsforhold) ? skademelding.skadelidt?.dekningsforhold.stillingstittelTilDenSkadelidte.map(stilling => {
+              defaultValue={!_.isEmpty(skademelding.skadelidt.dekningsforhold) ? skademelding.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte?.map(stilling => {
                 return {value: stilling, label: (stillingstittelkoder && stillingstittelkoder[stilling]?.verdi || 'UKJENT')};
               }) : []
             }

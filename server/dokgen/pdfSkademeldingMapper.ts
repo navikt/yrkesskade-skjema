@@ -65,14 +65,16 @@ const mapSkadelidt = (skadelidt: Skadelidt, kodeverk: KodeverkLoader): PdfSkadel
     dekningsforhold: {
       organisasjonsnummer: { label: 'Org.nr', verdi: skadelidt.dekningsforhold.organisasjonsnummer},
       rolletype: { label: 'Rolle', verdi: kodeverk.mapKodeTilVerdi(skadelidt.dekningsforhold.rolletype, 'rolletype') },
-      stillingstittelTilDenSkadelidte: { label: 'Stilling', verdi: kodeverk.mapKoderTilVerdier(skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte, 'stillingstittel') }
+      stillingstittelTilDenSkadelidte: { label: 'Stilling', verdi: kodeverk.mapKoderTilVerdier(skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte, 'stillingstittel') },
+      navnPaaVirksomheten: { label: 'Bedrift', verdi: skadelidt.dekningsforhold.navnPaaVirksomheten },
+      virksomhetensAdresse: { label: 'Virksomhetens adresse', verdi: mapAdresse(skadelidt.dekningsforhold.virksomhetensAdresse, kodeverk) }
     }
    }
 }
 
 const mapSkade = (skade: Skade, kodeverk: KodeverkLoader): PdfSkade => {
   return {
-    antattSykefravaerTabellH: { label: 'Antatt sykefravær', verdi: kodeverk.mapKodeTilVerdi(skade.antattSykefravaerTabellH, 'harSkadelidtHattFravaer') },
+    antattSykefravaerTabellH: { label: 'Har den skadelidte hatt fravær', verdi: kodeverk.mapKodeTilVerdi(skade.antattSykefravaerTabellH, 'harSkadelidtHattFravaer') },
     skadedeDeler: skade.skadedeDeler.map((skadetDel: SkadetDel) => ({
       kroppsdelTabellD: { label: 'Hvor på kroppen er skaden', verdi: kodeverk.mapKodeTilVerdi(skadetDel.kroppsdelTabellD, 'skadetKroppsdel')},
       skadeartTabellC: { label: 'Hva slags skade er det', verdi: kodeverk.mapKodeTilVerdi(skadetDel.skadeartTabellC, 'skadetype') }
@@ -95,10 +97,11 @@ const mapHendelsesfakta = (hendelsesfakta: Hendelsesfakta, kodeverk: KodeverkLoa
 }
 
 const mapTid = (tid: Tid, kodeverk: KodeverkLoader): PdfTid => {
+  const label = 'Når skjedde ulykken som skal meldes?'
   if (tid.tidstype === Tid.tidstype.TIDSPUNKT) {
     return {
       tidspunkt: {
-        label: 'Tidspunkt',
+        label: label,
         verdi: {
           dato: formatDate(parseISO(tid.tidspunkt), DATO_FORMAT),
           klokkeslett: formatDate(parseISO(tid.tidspunkt), KLOKKESLETT_FORMAT),
@@ -110,7 +113,7 @@ const mapTid = (tid: Tid, kodeverk: KodeverkLoader): PdfTid => {
     return {
       tidstype: tid.tidstype,
       periode: {
-        label: 'Periode',
+        label: label,
         verdi: {
           fra: formatDate(parseISO(tid.periode.fra), DATO_FORMAT),
           til: formatDate(parseISO(tid.periode.til), DATO_FORMAT),
@@ -127,7 +130,7 @@ const mapTid = (tid: Tid, kodeverk: KodeverkLoader): PdfTid => {
 const mapUlykkessted = (ulykkessted: Ulykkessted, kodeverk: KodeverkLoader): PdfUlykkessted => {
   return {
     sammeSomVirksomhetensAdresse: { label: 'Skjedde ulykken på samme adresse', verdi: ulykkessted.sammeSomVirksomhetensAdresse ? 'Ja' : 'Nei'},
-    adresse: { label: 'Adresse', verdi: mapAdresse(ulykkessted.adresse, kodeverk) }
+    adresse: { label: 'Adresse for ulykken', verdi: mapAdresse(ulykkessted.adresse, kodeverk) }
   }
 }
 
