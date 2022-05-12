@@ -83,22 +83,12 @@ const Info = () => {
 
       const adresse =
         organisasjon.beliggenhetsadresse || organisasjon.forretningsadresse;
-<<<<<<< HEAD
-      setSelectedAddress(adresse);
-
-       // lag en mutert kopi
-       const oppdatertVirksomhet = {...virksomhet};
-       oppdatertVirksomhet.beliggenhetsadresse = organisasjon.beliggenhetsadresse as Adresse;
-       oppdatertVirksomhet.forretningsadresse = organisasjon.forretningsadresse as Adresse;
-       dispatch(addOrganisasjon(oppdatertVirksomhet));
-=======
         setSelectedAddress(adresse);
 
       const oppdatertVirksomhet = {...virksomhet};
       oppdatertVirksomhet.beliggenhetsadresse = organisasjon.beliggenhetsadresse as Adresse;
       oppdatertVirksomhet.forretningsadresse = organisasjon.forretningsadresse as Adresse;
       dispatch(addOrganisasjon(oppdatertVirksomhet));
->>>>>>> feature/YSMOD-275-reload-state
 
       const dekningsforhold: Dekningsforhold = {
         organisasjonsnummer: organisasjon.organisasjonsnummer as string,
