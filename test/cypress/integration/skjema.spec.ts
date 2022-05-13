@@ -251,6 +251,17 @@ describe('Skjema innsending', (): void => {
     // Gå til neste steg
     general.nextStep().click();
 
+    // diverse valideringsjekker
+    general.nextStep().click(); // prøv å gå til neste side
+    injuryForm.injuryAbsentRadio(2).click(); // legg til fravaer og gå til neste side
+    general.nextStep().click();
+
+    // legg til en av to verdier
+    injuryForm.bodylocationOptions().select(test.kroppsdel);
+    injuryForm.addInjuryButton().click();
+    injuryForm.injuredParts().should('have.length', 0);
+    general.nextStep().click();
+
     // info om skaden
     injuryForm.bodylocationOptions().select(test.kroppsdel);
     injuryForm.injuryTypeOptions().select(test.skadetype);

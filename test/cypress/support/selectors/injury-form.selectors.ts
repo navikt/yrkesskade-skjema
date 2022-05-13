@@ -15,5 +15,6 @@ export const injuryForm = {
     unknownOption: () => cy.get('[data-testid=injury-medical-contacted-unknown-option]'),
   },
   additionalInformation: () => cy.get('[data-testid=injury-additional-information]'),
-  injuryAbsentRadio: (index: number) => cy.get(`[data-testid=injury-absence-${index}]`)
+  injuryAbsentRadio: (index: number) => cy.get(`[data-testid=injury-absence-${index}]`),
+  injuredParts: () => cy.get('[data-testid="skadet-del-rad"]')
 }
