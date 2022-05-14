@@ -48,8 +48,8 @@ describe('Skjema innsending', (): void => {
     network.intercept(endpointUrls.toggle, 'toggles/enabled.json').as('toggles');
     network.intercept(endpointUrls.innlogget, 'innlogget.json').as('getInnlogget');
     network.intercept(endpointUrls.brukerinfo, 'brukerinfo/brukerinfo.json').as('brukerinfo');
-    network.intercept(endpointUrls.brukerinfoOrganisasjon, 'brukerinfo/organisasjoner/910437127.json').as('getOrganisasjon');
-    network.intercept(endpointUrls.brukerinfoRoller, 'brukerinfo/roller.json').as('getRoller');
+    network.intercept(endpointUrls.brukerinfoOrganisasjon('910437127'), 'brukerinfo/organisasjoner/910437127.json').as('getOrganisasjon');
+    network.intercept(endpointUrls.brukerinfoRoller('910437127'), 'brukerinfo/roller.json').as('getRoller');
     network.intercept(endpointUrls.skademelding, 'skademelding.json').as('postSkademelding');
     network.intercept(endpointUrls.print, 'skademelding-kopi.pdf').as('postPrintPdf');
     network.intercept(endpointUrls.log, 'logResult.json').as('postLog');
@@ -75,7 +75,7 @@ describe('Skjema innsending', (): void => {
   it('tidstype tidspunkt - ingen avvik', () => {
     const injuryTime = test.tidspunkt;
     // vent til innlogget sjekk er fullført
-    cy.wait('@getInnlogget').wait('@postLog').wait('@landkoderISO2').wait('@rolletype');
+    cy.wait('@getInnlogget').wait('@getOrganisasjon').wait('@getRoller');
 
     // start innmelding
     info.startInnmelding().click();
@@ -152,7 +152,7 @@ describe('Skjema innsending', (): void => {
     }
 
     // vent til innlogget sjekk er fullført
-    cy.wait('@getInnlogget').wait('@postLog').wait('@landkoderISO2').wait('@rolletype');
+    cy.wait('@getInnlogget').wait('@getOrganisasjon').wait('@getRoller');
 
     // start innmelding
     info.startInnmelding().click();
@@ -221,7 +221,7 @@ describe('Skjema innsending', (): void => {
   it('legg til skader, angre og fjern enkelte skader', () => {
     const injuryTime = test.tidspunkt;
     // vent til innlogget sjekk er fullført
-    cy.wait('@getInnlogget');
+    cy.wait('@getInnlogget').wait('@getOrganisasjon').wait('@getRoller');
 
     // start innmelding
     info.startInnmelding().click();
@@ -334,7 +334,7 @@ describe('Skjema innsending', (): void => {
   it.skip('normal flyt - sjekk validering av felter', () => {
     const injuryTime = dayjs();
     // vent til innlogget sjekk er fullført
-    cy.wait('@getInnlogget');
+    cy.wait('@getInnlogget').wait('@getOrganisasjon').wait('@getRoller');
 
     // start innmelding
     info.startInnmelding().click();

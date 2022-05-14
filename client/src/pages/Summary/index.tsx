@@ -31,8 +31,10 @@ import { logErrorMessage, logMessage } from '../../utils/logging';
 import { logAmplitudeEvent } from '../../utils/analytics/amplitude';
 import { useAppDispatch, useAppSelector } from '../../core/hooks/state.hooks';
 import { reset, selectSkademelding } from '../../core/reducers/skademelding.reducer';
+import { useCheckIfReloaded } from '../../core/hooks/reloadCheck.hooks';
 
 const Summary = () => {
+  useCheckIfReloaded();
   const { setError } = useErrorMessageContext();
   const skademelding = useAppSelector((state) => selectSkademelding(state));
   const dispatch = useAppDispatch();
