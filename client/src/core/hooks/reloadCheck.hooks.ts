@@ -18,4 +18,17 @@ export const useCheckIfReloaded = () => {
     navigate('/yrkesskade/skjema')
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
+
+  useEffect(() => {
+    window.addEventListener("beforeunload", handleUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleUnload);
+    };
+  }, []);
+
+  const handleUnload = (e: any) => {
+    const message = "o/";
+    (e || window.event).returnValue = message; //Gecko + IE
+    return message;
+  };
 };
