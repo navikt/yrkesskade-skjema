@@ -32,10 +32,10 @@ const TidsromSummary = ({ data }: IProps) => {
     } else if (fraDato && tilDato) {
       accidentTime = `${format(
         parseISO(fraDato + ''),
-        'dd.MM.yyyy HH:mm'
+        'dd.MM.yyyy'
       )} - ${format(
         parseISO(tilDato + ''),
-        'dd.MM.yyyy HH:mm'
+        'dd.MM.yyyy'
       )}`;
     }
   } else {
@@ -45,7 +45,7 @@ const TidsromSummary = ({ data }: IProps) => {
     <div className="answerOuterContainer">
       <div className="answerContainer">
         <Label>Når skjedde ulykken som skal meldes</Label>
-        {accidentTime}
+        <BodyShort spacing data-testid="summary-time">{accidentTime}</BodyShort>
       </div>
       <div className="answerContainer">
         <Label>Innenfor hvilket tidsrom inntraff skaden</Label>

@@ -97,7 +97,7 @@ const Summary = () => {
                 <SkadelidtSummary data={data} />
               </Accordion.Content>
             </Accordion.Item>
-            <Accordion.Item renderContentWhenClosed={true}>
+            <Accordion.Item renderContentWhenClosed={true} data-testid="oppsummering-accordian-tid-og-sted">
               <Accordion.Header>Tid og sted</Accordion.Header>
               <Accordion.Content>
                 <TidsromSummary data={data} />
