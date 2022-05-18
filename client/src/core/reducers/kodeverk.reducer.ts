@@ -27,14 +27,14 @@ export const kodeverkSlice = createSlice({
           action.payload.kodeverdier.kodeverdierMap;
       })
       .addCase(hentKodeverk.rejected, (state, action) => {
-        logErrorMessage(`Klarte ikke hente kodeverk. Årsak: ${action.error}`);
+        logErrorMessage(`Klarte ikke hente kodeverk. Årsak: ${JSON.stringify(action.error)}`);
       })
       .addCase(hentKodeverkForKategori.fulfilled, (state, action) => {
         state.kodeverk[action.payload.typenavn] =
           action.payload.kodeverdier.kodeverdierMap;
       })
       .addCase(hentKodeverkForKategori.rejected, (state, action) => {
-        logErrorMessage(`Klarte ikke hente kodeverk. Årsak: ${action.error}`);
+        logErrorMessage(`Klarte ikke hente kodeverk. Årsak: ${JSON.stringify(action.error)}`);
       });
   },
 });
