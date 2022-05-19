@@ -156,27 +156,13 @@ const InjuredForm = () => {
                     DropdownIndicator: () => null,
                     IndicatorSeparator: () => null,
                   }}
-                  defaultValue={
-                    !_.isEmpty(skademelding.skadelidt?.dekningsforhold)
-                      ? skademelding.skadelidt?.dekningsforhold.stillingstittelTilDenSkadelidte.map(
-                          (stilling) => {
-                            return {
-                              value: stilling,
-                              label:
-                                (stillingstittelkoder &&
-                                  stillingstittelkoder[stilling]?.verdi) ||
-                                'UKJENT',
-                            };
-                          }
-                        )
-                      : []
-                  }
+                  defaultValue={!_.isEmpty(skademelding.skadelidt.dekningsforhold) ? skademelding.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte?.map(stilling => {
+                    return {value: stilling, label: (stillingstittelkoder && stillingstittelkoder[stilling]?.verdi || 'UKJENT')};
+                  }) : []
+                }
                   onBlur={onBlur}
                   onChange={(val) => onChange([val?.value])}
-                  options={Object.keys(stillingstittelkoder).map((kode) => ({
-                    value: kode,
-                    label: stillingstittelkoder[kode]?.verdi || 'UKJENT',
-                  }))}
+                  options={Object.keys(stillingstittelkoder).map(kode => ({value: kode, label: stillingstittelkoder[kode]?.verdi || 'UKJENT' }))}
                   menuIsOpen={openMenu}
                   onInputChange={handleInputChange}
                   className="injured-position"

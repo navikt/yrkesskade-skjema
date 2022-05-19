@@ -2,6 +2,7 @@
 /* eslint-disable no-mixed-operators */
 import { AddCircle, MinusCircle } from "@navikt/ds-icons";
 import { Button, Select, Table } from "@navikt/ds-react";
+import { isEmpty } from "lodash";
 import { remove } from "ramda";
 import { useEffect, useState } from "react";
 import { KodeverdiDto } from "../../api/kodeverk";
@@ -25,7 +26,22 @@ const SkadedeDeler = (props: IProps) => {
   const [kroppsdel, setKroppsdel] = useState<string>('');
   const [skadeart, setSkadeart] = useState<string>('');
 
+  const [kroppsdelError, setKroppsdelError] = useState<string | undefined>();
+  const [skadeartError, setSkadeartError] = useState<string | undefined>();
+
   const handleMultipleInjuries = () => {
+    setKroppsdelError(undefined);
+    setSkadeartError(undefined);
+    if (isEmpty(skadeart) || isEmpty(kroppsdel)) {
+      if (isEmpty(skadeart)) {
+        setSkadeartError('Dette feltet er påkrevd');
+      }
+
+      if (isEmpty(kroppsdel)) {
+        setKroppsdelError('Dette feltet er påkrevd');
+      }
+      return;
+    }
     setSkade(undefined);
     const skade: SkadetDel = {
       kroppsdelTabellD: kroppsdel,
@@ -80,6 +96,7 @@ const SkadedeDeler = (props: IProps) => {
           value={kroppsdel}
           data-testid="injury-body-location-options"
           onChange={(e) => setKroppsdel(e.currentTarget.value)}
+          error={kroppsdelError}
         >
           <option hidden value=""></option>
           { skadetKroppsdelkoder && Object.keys(skadetKroppsdelkoder).map((kode: string) => {
@@ -97,6 +114,7 @@ const SkadedeDeler = (props: IProps) => {
           className="spacer"
           data-testid="injury-type-options"
           onChange={(e) => setSkadeart(e.currentTarget.value)}
+          error={skadeartError}
         >
           <option hidden value=""></option>
           { skadetypekoder && Object.keys(skadetypekoder).map(
@@ -129,9 +147,9 @@ const SkadedeDeler = (props: IProps) => {
                 // (item: { damage?: string; bodypart?: string }, index: number) => {
                 (item: SkadetDel, index: number) => {
                   return (
-                    <Table.Row key={index}>
-                      <Table.DataCell>{skadetKroppsdelkoder && skadetKroppsdelkoder[item.kroppsdelTabellD]?.verdi || 'UKJENT'}</Table.DataCell>
-                      <Table.DataCell>{skadetypekoder && skadetypekoder[item.skadeartTabellC]?.verdi || 'UKJENT'}</Table.DataCell>
+                    <Table.Row key={index} data-testid="skadet-del-rad">
+                      <Table.DataCell>{skadetKroppsdelkoder && skadetKroppsdelkoder[item.kroppsdelTabellD]?.verdi || `UKJENT ${item.kroppsdelTabellD}`}</Table.DataCell>
+                      <Table.DataCell>{skadetypekoder && skadetypekoder[item.skadeartTabellC]?.verdi || `UKJENT ${item.skadeartTabellC}`}</Table.DataCell>
                       <Table.DataCell>
                         <Button
                           variant="tertiary"

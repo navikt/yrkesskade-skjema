@@ -6,6 +6,6 @@ import type { SkadetDel } from './SkadetDel';
 
 export type Skade = {
     skadedeDeler: Array<SkadetDel>;
-    antattSykefravaerTabellH: string;
     alvorlighetsgrad?: string;
+    antattSykefravaerTabellH?: string;
 };

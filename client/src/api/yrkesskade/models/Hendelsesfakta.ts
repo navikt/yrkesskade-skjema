@@ -12,6 +12,6 @@ export type Hendelsesfakta = {
     ulykkessted: Ulykkessted;
     aarsakUlykkeTabellAogE: Array<string>;
     bakgrunnsaarsakTabellBogG: Array<string>;
-    stedsbeskrivelseTabellF: string;
     utfyllendeBeskrivelse?: string;
+    stedsbeskrivelseTabellF?: string;
 };
