@@ -8,6 +8,7 @@ import { OpenAPI as KodeverkOpenApi } from './api/kodeverk';
 import { Provider } from 'react-redux';
 import store from './core/store';
 import { initAmplitude } from "./utils/analytics/amplitude";
+import { initWindowOnError } from "./utils/global-error";
 // import reportWebVitals from "./reportWebVitals";
 
 const API_BASE = '/api';
@@ -15,6 +16,7 @@ SkjemaOpenApi.BASE = API_BASE;
 KodeverkOpenApi.BASE = '/kodeverk';
 
 initAmplitude();
+initWindowOnError();
 
 render(
   <React.StrictMode>
