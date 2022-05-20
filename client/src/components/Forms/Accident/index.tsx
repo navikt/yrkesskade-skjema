@@ -259,7 +259,7 @@ const AccidentForm = () => {
           )}
         </div>
       {/* )} */}
-      {/* {roller[rolletype] && !roller[rolletype].isElevEllerStudent && ( */}
+      {roller[rolletype] && !roller[rolletype].isElevEllerStudent && (
         <div className="spacer spacer navds-form-field navds-form-field--medium">
           <Label className="navds-select__label navds-label">
             Hva var bakgrunnen til hendelsen?
@@ -320,7 +320,7 @@ const AccidentForm = () => {
             </span>
           )}
         </div>
-      {/* )} */}
+      )}
     </>
   );
 };
