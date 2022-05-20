@@ -177,10 +177,10 @@ const TimeframeForm = () => {
                 control={control}
                 rules={{
                   required:
-                    timeType === 'Tidspunkt' &&
-                    specificDate !== null &&
-                    specificDate?.getHours() === 0 &&
-                    specificDate?.getMinutes() === 0 &&
+                    // timeType === 'Tidspunkt' &&
+                    // specificDate !== null &&
+                    // specificDate?.getHours() === 0 &&
+                    // specificDate?.getMinutes() === 0 &&
                     'Dette feltet er påkrevd',
                 }}
                 render={({ field: { onChange, onBlur, value, name, ref } }) => (
