@@ -1,7 +1,7 @@
 /* eslint-disable no-mixed-operators */
 import { useEffect, useState } from 'react';
 import { TextField, Label, Select as NAVSelect } from '@navikt/ds-react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, FieldError, useFormContext } from 'react-hook-form';
 import Select from 'react-select';
 import validator from '@navikt/fnrvalidator';
 import { useInnloggetContext } from '../../../context/InnloggetContext';
@@ -85,6 +85,8 @@ const InjuredForm = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rolletype]);
 
+  console.log(errors)
+
   return (
     <>
       <TextField
@@ -147,6 +149,7 @@ const InjuredForm = () => {
               control={control}
               rules={{
                 required:
+                roller[rolletype] && !roller[rolletype].isElevEllerStudent &&
                   _.isEmpty(
                     skademelding.skadelidt?.dekningsforhold
                       .stillingstittelTilDenSkadelidte
@@ -176,22 +179,17 @@ const InjuredForm = () => {
                   }
                   onBlur={onBlur}
                   onChange={(val) => onChange([val?.value])}
-                  options={Object.keys(stillingstittelkoder).map((kode) => ({
-                    value: kode,
-                    label: stillingstittelkoder[kode]?.verdi || 'UKJENT',
-                  }))}
+                  options={Object.keys(stillingstittelkoder).map(kode => ({value: kode, label: stillingstittelkoder[kode]?.verdi || '' }))}
                   menuIsOpen={openMenu}
                   onInputChange={handleInputChange}
                   className="injured-position"
                 />
               )}
             />
-            {errors?.skadelidt?.dekningsforhold
-              ?.stillingstittelTilDenSkadelidte && (
+            {(errors?.skadelidt?.dekningsforhold?.stillingstittelTilDenSkadelidte as unknown as FieldError)?.message && (
               <span className="navds-error-message navds-error-message--medium navds-label">
                 {
-                  errors.skadelidt.dekningsforhold
-                    .stillingstittelTilDenSkadelidte
+                  (errors?.skadelidt?.dekningsforhold?.stillingstittelTilDenSkadelidte as unknown as FieldError)?.message
                 }
               </span>
             )}

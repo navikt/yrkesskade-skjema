@@ -261,9 +261,10 @@ const AccidentForm = () => {
           />
           {errors?.hendelsesfakta?.aarsakUlykkeTabellAogE && (
             <span className="navds-error-message navds-error-message--medium navds-label">
-              {errors.hendelsesfakta.aarsakUlykkeTabellAogE.map(
+              {/* {errors.hendelsesfakta.aarsakUlykkeTabellAogE.map(
                 (fieldError) => fieldError.message
-              )}
+              )} */}
+              Dette feltet er påkrevd
             </span>
           )}
         </div>
@@ -323,9 +324,9 @@ const AccidentForm = () => {
           />
           {errors?.hendelsesfakta?.bakgrunnsaarsakTabellBogG && (
             <span className="navds-error-message navds-error-message--medium navds-label">
-              {errors.hendelsesfakta.bakgrunnsaarsakTabellBogG?.map(
-                (fieldError) => fieldError.message
-              )}
+              {/* {errors.hendelsesfakta.bakgrunnsaarsakTabellBogG?.map( */}
+                Dette feltet er påkrevd
+              {/* )} */}
             </span>
           )}
         </div>
