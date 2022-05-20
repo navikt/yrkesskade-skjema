@@ -17,8 +17,10 @@ import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks'
 import { useEffect } from 'react';
 import { Skademelding, Tid } from '../../../api/yrkesskade';
 import { oppdaterSkademelding, selectSkademelding } from '../../../core/reducers/skademelding.reducer';
+import { useCheckIfReloaded } from '../../../core/hooks/reloadCheck.hooks';
 
 const TimeframeFormPage = () => {
+  useCheckIfReloaded();
   const dispatch = useAppDispatch();
   const skademelding = useAppSelector((state) => selectSkademelding(state));
 

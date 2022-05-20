@@ -16,7 +16,7 @@ import StepIndicator from '../../components/StepIndicator';
 import ExitButton from '../../components/ExitButton';
 
 import { useInnloggetContext } from '../../context/InnloggetContext';
-import { Organisasjon } from '../../types/brukerinfo';
+import { Adresse, Organisasjon } from '../../types/brukerinfo';
 import { useEffect } from 'react';
 import { useSelectedCompany } from '../../context/SelectedCompanyContext';
 
@@ -29,6 +29,8 @@ import {
 } from '../../api/yrkesskade';
 import { logMessage } from '../../utils/logging';
 import { logAmplitudeEvent } from '../../utils/analytics/amplitude';
+import { addOrganisasjon } from '../../core/reducers/app.reducer';
+// import Description from '../Form/Description';
 import { useAppDispatch } from '../../core/hooks/state.hooks';
 import { oppdaterAltinnRoller, oppdaterInnmelder, oppdaterPaaVegneAv, oppdaterSkadelidt } from '../../core/reducers/skademelding.reducer';
 
@@ -81,6 +83,11 @@ const Info = () => {
       const adresse =
         organisasjon.beliggenhetsadresse || organisasjon.forretningsadresse;
         setSelectedAddress(adresse);
+
+      const oppdatertVirksomhet = {...virksomhet};
+      oppdatertVirksomhet.beliggenhetsadresse = organisasjon.beliggenhetsadresse as Adresse;
+      oppdatertVirksomhet.forretningsadresse = organisasjon.forretningsadresse as Adresse;
+      dispatch(addOrganisasjon(oppdatertVirksomhet));
 
       const dekningsforhold: Dekningsforhold = {
         organisasjonsnummer: organisasjon.organisasjonsnummer as string,
