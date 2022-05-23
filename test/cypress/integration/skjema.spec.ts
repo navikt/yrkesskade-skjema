@@ -252,10 +252,10 @@ describe('Skjema innsending', (): void => {
 
   });
 
-  it('elev - tidstype tidspunkt - ingen avvik', () => {
+  it.only('elev - tidstype tidspunkt - ingen avvik', () => {
     const injuryTime = elev.tidspunkt;
     // vent til innlogget sjekk er fullført
-    cy.wait('@getInnlogget').wait('@postLog').wait('@landkoderISO2').wait('@rolletype');
+    cy.wait('@getInnlogget').wait('@getOrganisasjon').wait('@getRoller');
 
     // start innmelding
     info.startInnmelding().click();
