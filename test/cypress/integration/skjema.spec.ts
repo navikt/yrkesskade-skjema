@@ -17,7 +17,7 @@ interface TestSkademelding {
   virksomhetsnavn: string;
   tidstype: Tid.tidstype;
   tidspunkt?: dayjs.Dayjs;
-  stilling: string;
+  stilling?: string;
   skadelidtIdentifikator: string,
   fra?: dayjs.Dayjs;
   til?: dayjs.Dayjs;
@@ -30,10 +30,23 @@ interface TestSkademelding {
 
 describe('Skjema innsending', (): void => {
 
-  const test: TestSkademelding = {
+  const arbeidstaker: TestSkademelding = {
     innmeldernavn: 'ROLF BJØRN',
     virksomhetsnavn: 'BIRI OG TORPO REGNSKAP',
     stilling: 'Administrerende direktører',
+    skadelidtIdentifikator: '16120101181',
+    tidstype: Tid.tidstype.TIDSPUNKT,
+    tidspunkt: dayjs(),
+    timeframe: 'I avtalt arbeidstid',
+    aarsak: 'Trafikkulykke',
+    bakgrunn: 'Manglende merking',
+    kroppsdel: 'Øye, venstre',
+    skadetype: 'Tap av legemsdel',
+  }
+
+  const elev: TestSkademelding = {
+    innmeldernavn: 'ROLF BJØRN',
+    virksomhetsnavn: 'BIRI OG TORPO REGNSKAP',
     skadelidtIdentifikator: '16120101181',
     tidstype: Tid.tidstype.TIDSPUNKT,
     tidspunkt: dayjs(),
@@ -72,46 +85,68 @@ describe('Skjema innsending', (): void => {
 
   });
 
-  it('tidstype tidspunkt - ingen avvik', () => {
-    const injuryTime = test.tidspunkt;
+  it('arbeidstaker - tidstype tidspunkt - ingen avvik', () => {
+    const injuryTime = arbeidstaker.tidspunkt;
     // vent til innlogget sjekk er fullført
     cy.wait('@getInnlogget').wait('@getOrganisasjon').wait('@getRoller');
 
     // start innmelding
     info.startInnmelding().click();
 
+    // sjekk validering
+    general.nextStep().click();
+    general.feilmeldinger().should('have.length', 2);
+
     // info om skadelidte
-    injuredForm.idNumber().type(`{selectAll}${test.skadelidtIdentifikator}`);
+    injuredForm.idNumber().type(`{selectAll}${arbeidstaker.skadelidtIdentifikator}`);
     injuredForm.positionSelect().select(1);
-    injuredForm.position().type(`${test.stilling}{enter}`);
+
+    // valider stillingstittel
+    general.nextStep().click();
+    general.feilmeldinger().should('have.length', 1);
+
+    injuredForm.position().type(`${arbeidstaker.stilling}{enter}`);
 
     cy.wait('@stillingstittel').wait('@bakgrunnForHendelsen')
 
     // Gå til neste steg
     general.nextStep().click();
 
-     // velg tidspunkt
+    // velg tidspunkt
+    // sjekk validering
+    general.nextStep().click();
+    general.feilmeldinger().should('have.length', 2);
     timeframeForm.timeframeWhenDate().clear().type(injuryTime.format('DD.MM.YYYY')).type('{enter}');
     timeframeForm.timeframeWhenTime().type(injuryTime.format('HH:mm')).type('{enter}'); // ser ikke ut som den liker at dette felter skrives til
-    timeframeForm.timeframePeriodOptions().select(test.timeframe);
+    timeframeForm.timeframePeriodOptions().select(arbeidstaker.timeframe);
 
     // Gå til neste steg
     general.nextStep().click();
 
     // info om ulykken
+    // sjekk validering
+    general.nextStep().click();
+    general.feilmeldinger().should('have.length', 4);
     accidentForm.place().select(1);
     accidentForm.placeType().select(2);
-    accidentForm.reasonOptions().type(`${test.aarsak}{enter}{esc}`);
-    accidentForm.backgroundOptions().type(`${test.bakgrunn}{enter}{esc}`)
+    accidentForm.reasonOptions().type(`${arbeidstaker.aarsak}{enter}{esc}`);
+    accidentForm.backgroundOptions().type(`${arbeidstaker.bakgrunn}{enter}{esc}`)
 
     // Gå til neste steg
     general.nextStep().click();
 
     // info om skaden
-    injuryForm.bodylocationOptions().select(test.kroppsdel);
-    injuryForm.injuryTypeOptions().select(test.skadetype);
-    injuryForm.addInjuryButton().click();
+    // sjekk validering
+    general.nextStep().click();
+    general.feilmeldinger().should('have.length', 1);
     injuryForm.injuryAbsentRadio(2).click();
+
+    general.nextStep().click();
+    general.feilmeldinger().should('have.length', 1);
+    injuryForm.bodylocationOptions().select(arbeidstaker.kroppsdel);
+    injuryForm.injuryTypeOptions().select(arbeidstaker.skadetype);
+    injuryForm.addInjuryButton().click();
+
 
     // Gå til neste steg
     general.nextStep().click();
@@ -121,9 +156,9 @@ describe('Skjema innsending', (): void => {
 
     // validerer oppsummering
     summary.accordians.innmelder().click();
-    summary.innmelder.navn().should('have.text', test.innmeldernavn); // se i fixtures/brukerinfo.json
+    summary.innmelder.navn().should('have.text', arbeidstaker.innmeldernavn); // se i fixtures/brukerinfo.json
     summary.innmelder
-      .virksomhetsnavn().should('have.text', test.virksomhetsnavn); // se 1 organisasjon i fixtures/brukerinfo.json
+      .virksomhetsnavn().should('have.text', arbeidstaker.virksomhetsnavn); // se 1 organisasjon i fixtures/brukerinfo.json
 
     // send inn skjema
     summary.sendInjury().click().wait('@postSkademelding');
@@ -135,7 +170,7 @@ describe('Skjema innsending', (): void => {
     receipt.print().click().wait('@postPrintPdf');
   });
 
-  it('tidstype periode - ingen avvik', () => {
+  it('arbeidstaker - tidstype periode - ingen avvik', () => {
     const testdata: TestSkademelding = {
       innmeldernavn: 'ROLF BJØRN',
       virksomhetsnavn: 'BIRI OG TORPO REGNSKAP',
@@ -158,9 +193,9 @@ describe('Skjema innsending', (): void => {
     info.startInnmelding().click();
 
     // info om skadelydte
-    injuredForm.idNumber().type(`{selectAll}${test.skadelidtIdentifikator}`);
+    injuredForm.idNumber().type(`{selectAll}${arbeidstaker.skadelidtIdentifikator}`);
     injuredForm.positionSelect().select(1);
-    injuredForm.position().type(`${test.stilling}{enter}`);
+    injuredForm.position().type(`${arbeidstaker.stilling}{enter}`);
 
     // Gå til neste steg
     general.nextStep().click();
@@ -168,12 +203,11 @@ describe('Skjema innsending', (): void => {
     // velg tidspunkt
     cy.location().should('to.be', '/yrkesskade/skjema/tidsrom');
     timeframeForm.timeframeWhenOverPeriod().click();
-    timeframeForm.timeframePeriodOptions().select(test.timeframe);
+    timeframeForm.timeframePeriodOptions().select(arbeidstaker.timeframe);
 
     general.nextStep().click();
     // validering feilet -  skal være på samme side
-    cy.location().should('to.be', '/yrkesskade/skjema/tidsrom');
-
+    general.feilmeldinger().should('have.length', 2);
     timeframeForm.timeframePeriodFromDate().type(testdata.fra.format('DD.MM.YYYY')).type('{enter}');
     timeframeForm.timeframePeriodToDate().type(testdata.til.format('DD.MM.YYYY')).type('{enter}');
 
@@ -183,15 +217,15 @@ describe('Skjema innsending', (): void => {
     // info om ulykken
     accidentForm.place().select(1);
     accidentForm.placeType().select(2);
-    accidentForm.reasonOptions().type(`${test.aarsak}{enter}{esc}`);
-    accidentForm.backgroundOptions().type(`${test.bakgrunn}{enter}{esc}`)
+    accidentForm.reasonOptions().type(`${arbeidstaker.aarsak}{enter}{esc}`);
+    accidentForm.backgroundOptions().type(`${arbeidstaker.bakgrunn}{enter}{esc}`)
 
     // Gå til neste steg
     general.nextStep().click();
 
     // info om skaden
-    injuryForm.bodylocationOptions().select(test.kroppsdel);
-    injuryForm.injuryTypeOptions().select(test.skadetype);
+    injuryForm.bodylocationOptions().select(arbeidstaker.kroppsdel);
+    injuryForm.injuryTypeOptions().select(arbeidstaker.skadetype);
     injuryForm.addInjuryButton().click();
     injuryForm.injuryAbsentRadio(2).click();
 
@@ -203,9 +237,9 @@ describe('Skjema innsending', (): void => {
 
     // validerer oppsummering
     summary.accordians.innmelder().click();
-    summary.innmelder.navn().should('have.text', test.innmeldernavn); // se i fixtures/brukerinfo.json
+    summary.innmelder.navn().should('have.text', arbeidstaker.innmeldernavn); // se i fixtures/brukerinfo.json
     summary.innmelder
-      .virksomhetsnavn().should('have.text', test.virksomhetsnavn); // se 1 organisasjon i fixtures/brukerinfo.json
+      .virksomhetsnavn().should('have.text', arbeidstaker.virksomhetsnavn); // se 1 organisasjon i fixtures/brukerinfo.json
     summary.accordians.tidOgSted().click();
     summary.tidOgSted.tid().should('have.text', `${testdata.fra.format('DD.MM.YYYY')} - ${testdata.til.format('DD.MM.YYYY')}`);
 
@@ -218,8 +252,77 @@ describe('Skjema innsending', (): void => {
 
   });
 
+  it('elev - tidstype tidspunkt - ingen avvik', () => {
+    const injuryTime = elev.tidspunkt;
+    // vent til innlogget sjekk er fullført
+    cy.wait('@getInnlogget').wait('@postLog').wait('@landkoderISO2').wait('@rolletype');
+
+    // start innmelding
+    info.startInnmelding().click();
+
+    // sjekk validering
+    general.nextStep().click();
+    general.feilmeldinger().should('have.length', 2);
+
+    // info om skadelidte
+    injuredForm.idNumber().type(`{selectAll}${elev.skadelidtIdentifikator}`);
+    injuredForm.positionSelect().select(2);
+
+    // Gå til neste steg
+    general.nextStep().click();
+
+    // velg tidspunkt
+    // sjekk validering
+    general.nextStep().click();
+    general.feilmeldinger().should('have.length', 2);
+    timeframeForm.timeframeWhenDate().clear().type(injuryTime.format('DD.MM.YYYY')).type('{enter}');
+    timeframeForm.timeframeWhenTime().type(injuryTime.format('HH:mm')).type('{enter}'); // ser ikke ut som den liker at dette felter skrives til
+    timeframeForm.timeframePeriodOptions().select(elev.timeframe);
+
+    // Gå til neste steg
+    general.nextStep().click();
+
+    // info om ulykken
+    // sjekk validering
+    general.nextStep().click();
+    general.feilmeldinger().should('have.length', 2);
+    accidentForm.place().select(1);
+    accidentForm.reasonOptions().type(`${elev.aarsak}{enter}{esc}`);
+
+    // Gå til neste steg
+    general.nextStep().click();
+
+    // info om skaden
+    // sjekk validering
+    general.nextStep().click();
+    general.feilmeldinger().should('have.length', 1);
+    injuryForm.bodylocationOptions().select(elev.kroppsdel);
+    injuryForm.injuryTypeOptions().select(elev.skadetype);
+    injuryForm.addInjuryButton().click();
+
+
+    // Gå til neste steg
+    general.nextStep().click();
+
+    // Gå til neste steg
+    general.nextStep().click();
+
+    // validerer oppsummering
+    summary.accordians.innmelder().click();
+    summary.innmelder.navn().should('have.text', elev.innmeldernavn); // se i fixtures/brukerinfo.json
+    summary.innmelder
+      .virksomhetsnavn().should('have.text', elev.virksomhetsnavn); // se 1 organisasjon i fixtures/brukerinfo.json
+
+    // send inn skjema
+    summary.sendInjury().click().wait('@postSkademelding');
+
+    cy.location().should((location) => {
+      expect(location.pathname).to.contain('/skjema/kvittering');
+    });
+  });
+
   it('legg til skader, angre og fjern enkelte skader', () => {
-    const injuryTime = test.tidspunkt;
+    const injuryTime = arbeidstaker.tidspunkt;
     // vent til innlogget sjekk er fullført
     cy.wait('@getInnlogget').wait('@getOrganisasjon').wait('@getRoller');
 
@@ -227,9 +330,9 @@ describe('Skjema innsending', (): void => {
     info.startInnmelding().click();
 
     // info om skadelydte
-    injuredForm.idNumber().type(`{selectAll}${test.skadelidtIdentifikator}`);
+    injuredForm.idNumber().type(`{selectAll}${arbeidstaker.skadelidtIdentifikator}`);
     injuredForm.positionSelect().select(1);
-    injuredForm.position().type(`${test.stilling}{enter}`);
+    injuredForm.position().type(`${arbeidstaker.stilling}{enter}`);
 
     // Gå til neste steg
     general.nextStep().click();
@@ -239,7 +342,7 @@ describe('Skjema innsending', (): void => {
     timeframeForm.timeframeWhenTime().type('{selectall}' + injuryTime.format('HH:mm')).type('{enter}'); // ser ikke ut som den liker at dette felter skrives til
    // timeframeForm.timeframeWhenTime().click();
    // timeframeForm.timeframeWhenTimeSelect(13).click();
-    timeframeForm.timeframePeriodOptions().select(test.timeframe);
+    timeframeForm.timeframePeriodOptions().select(arbeidstaker.timeframe);
 
     // Gå til neste steg
     general.nextStep().click();
@@ -247,8 +350,8 @@ describe('Skjema innsending', (): void => {
     // info om ulykken
     accidentForm.place().select(1);
     accidentForm.placeType().select(2);
-    accidentForm.reasonOptions().type(`${test.aarsak}{enter}{esc}`);
-    accidentForm.backgroundOptions().type(`${test.bakgrunn}{enter}{esc}`)
+    accidentForm.reasonOptions().type(`${arbeidstaker.aarsak}{enter}{esc}`);
+    accidentForm.backgroundOptions().type(`${arbeidstaker.bakgrunn}{enter}{esc}`)
 
     // Gå til neste steg
     general.nextStep().click();
@@ -259,14 +362,14 @@ describe('Skjema innsending', (): void => {
     general.nextStep().click();
 
     // legg til en av to verdier
-    injuryForm.bodylocationOptions().select(test.kroppsdel);
+    injuryForm.bodylocationOptions().select(arbeidstaker.kroppsdel);
     injuryForm.addInjuryButton().click();
     injuryForm.injuredParts().should('have.length', 0);
     general.nextStep().click();
 
     // info om skaden
-    injuryForm.bodylocationOptions().select(test.kroppsdel);
-    injuryForm.injuryTypeOptions().select(test.skadetype);
+    injuryForm.bodylocationOptions().select(arbeidstaker.kroppsdel);
+    injuryForm.injuryTypeOptions().select(arbeidstaker.skadetype);
     injuryForm.addInjuryButton().click();
     injuryForm.injuryAbsentRadio(2).click();
 
@@ -330,45 +433,6 @@ describe('Skjema innsending', (): void => {
     });
 
   })
-
-  it.skip('normal flyt - sjekk validering av felter', () => {
-    const injuryTime = dayjs();
-    // vent til innlogget sjekk er fullført
-    cy.wait('@getInnlogget').wait('@getOrganisasjon').wait('@getRoller');
-
-    // start innmelding
-    info.startInnmelding().click();
-
-    general.nextStep().click();
-
-    general.feilmeldinger().should('have.length', 2);
-
-    // valider
-    timeframeForm.timeframeWhenDate().clear().type(injuryTime.format('DD.MM.YYYY')).type('{enter}');
-    timeframeForm.timeframeWhenTime().type('{selectall}' + injuryTime.format('HH:mm')).type('{enter}'); // ser ikke ut som den liker at dette felter skrives til
-
-    general.nextStep().click();
-
-    general.feilmeldinger().should('have.length', 1);
-
-    timeframeForm.timeframePeriodOptions().select('I avtalt arbeidstid');
-
-    general.nextStep().click();
-
-    cy.location().should((location) => {
-      expect(location.pathname).to.contain('/skjema/skadelidt');
-    });
-
-    general.nextStep().click();
-
-    general.feilmeldinger().should('have.length', 2);
-
-    injuredForm.position().type('Programvareutviklere{enter}');
-
-    general.nextStep().click();
-
-    general.feilmeldinger().should('have.length', 1);
-  });
 
 });
 
