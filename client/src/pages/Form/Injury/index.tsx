@@ -18,8 +18,10 @@ import { useNavigate } from 'react-router-dom';
 import { Skademelding } from '../../../api/yrkesskade';
 import { useAppDispatch } from '../../../core/hooks/state.hooks';
 import { oppdaterSkademelding } from '../../../core/reducers/skademelding.reducer';
+import { useCheckIfReloaded } from '../../../core/hooks/reloadCheck.hooks';
 
 const InjuryFormPage = () => {
+  useCheckIfReloaded();
   const dispatch = useAppDispatch();
   const {
     handleSubmit,
