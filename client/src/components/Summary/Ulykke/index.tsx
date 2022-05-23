@@ -4,6 +4,7 @@ import { Adresse } from '../../../api/yrkesskade';
 import { isEmpty, get } from 'lodash';
 import { useAppSelector } from '../../../core/hooks/state.hooks';
 import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
+import roller from '../../../utils/roller';
 interface IProps {
   data: any;
 }
@@ -39,6 +40,8 @@ const UlykkeSummary = ({ data }: IProps) => {
     };
   }
 
+  const rolletype =  data?.skadelidt?.dekningsforhold.rolletype;
+
   return (
     <div className="answerOuterContainer">
       <div className="answerContainer">
@@ -62,7 +65,7 @@ const UlykkeSummary = ({ data }: IProps) => {
         </div>
       )}
       {get(data, ['hendelsesfakta', 'stedsbeskrivelseTabellF']) !==
-        'undefined' && (
+        'undefined' && roller[rolletype] && !roller[rolletype].isElevEllerStudent && (
         <div className="answerContainer">
           <Label>Type arbeidsplass</Label>
           <BodyShort>{typeArbeidsplasskoder && typeArbeidsplasskoder[data.hendelsesfakta.stedsbeskrivelseTabellF]?.verdi}</BodyShort>

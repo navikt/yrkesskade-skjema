@@ -2,6 +2,7 @@
 import { Label, BodyShort, Table } from '@navikt/ds-react';
 import { useAppSelector } from '../../../core/hooks/state.hooks';
 import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
+import roller from '../../../utils/roller';
 interface IProps {
   data: any;
 }
@@ -9,6 +10,8 @@ const SkadeSummary = ({ data }: IProps) => {
   const skadetKroppsdelkoder = useAppSelector((state) => selectKodeverk(state, 'skadetKroppsdel'));
   const skadetypekoder = useAppSelector((state) => selectKodeverk(state, 'skadetype'));
   const fravaerkoder = useAppSelector((state) => selectKodeverk(state, 'harSkadelidtHattFravaer'));
+
+  const rolletype =  data?.skadelidt?.dekningsforhold.rolletype;
 
   return (
     <div className="answerOuterContainer">
@@ -34,10 +37,12 @@ const SkadeSummary = ({ data }: IProps) => {
           </Table.Body>
         </Table>
       </div>
+      { roller[rolletype] && !roller[rolletype].isElevEllerStudent && (
       <div className="answerContainer spacer">
         <Label>Har den skadelidte hatt fravær</Label>
         <BodyShort>{fravaerkoder && fravaerkoder[data.skade.antattSykefravaerTabellH]?.verdi}</BodyShort>
       </div>
+      )}
     </div>
   );
 };
