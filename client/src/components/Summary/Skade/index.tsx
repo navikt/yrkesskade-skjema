@@ -1,6 +1,6 @@
 // import { isNil } from "ramda";
 import { Label, BodyShort, Table } from '@navikt/ds-react';
-import { get } from 'lodash';
+// import { get } from 'lodash';
 import { useAppSelector } from '../../../core/hooks/state.hooks';
 import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
 import roller from '../../../utils/roller';
