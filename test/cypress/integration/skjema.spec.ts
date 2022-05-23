@@ -257,12 +257,12 @@ describe('Skjema innsending', (): void => {
     // vent til innlogget sjekk er fullført
     cy.wait('@getInnlogget').wait('@getOrganisasjon').wait('@getRoller');
 
-    // start innmelding
-    info.startInnmelding().click();
+      // start innmelding
+      info.startInnmelding().click();
 
-    // sjekk validering
-    general.nextStep().click();
-    general.feilmeldinger().should('have.length', 2);
+      // sjekk validering
+      general.nextStep().click();
+      general.feilmeldinger().should('have.length', 2);
 
     // info om skadelidte
     injuredForm.idNumber().type(`{selectAll}${elev.skadelidtIdentifikator}`);
