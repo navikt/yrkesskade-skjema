@@ -2,6 +2,7 @@
 import { Label, BodyShort } from '@navikt/ds-react';
 import { useAppSelector } from '../../../core/hooks/state.hooks';
 import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
+import roller from '../../../utils/roller';
 interface IProps {
   data: any;
 }
@@ -12,10 +13,10 @@ const SkadelidtSummary = ({ data }: IProps) => {
   const stillingstittelkoder = useAppSelector((state) =>
     selectKodeverk(state, 'stillingstittel')
   );
-
+  const rolletype =  data?.skadelidt?.dekningsforhold.rolletype;
   return (
     <div className="answerOuterContainer">
-      {data.skadelidt.dekningsforhold.rolletype.toLowerCase() !== 'elev' && (
+      {roller[rolletype] && !roller[rolletype].isElevEllerStudent && (
         <div className="answerContainer">
           <Label>Hva er skadelidtes stilling</Label>
           <BodyShort>
