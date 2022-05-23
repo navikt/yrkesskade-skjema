@@ -324,6 +324,7 @@ const TimeframeForm = () => {
                         modifiers,
                         disabledDays: {
                           after: new Date(),
+                          before: specificFromDay
                         },
                       }}
                     />
