@@ -23,6 +23,7 @@ spec:
     enabled: true
   idporten:
     enabled: true
+    accessTokenLifetime: 7200
     sidecar:
       enabled: true
       level: Level4
