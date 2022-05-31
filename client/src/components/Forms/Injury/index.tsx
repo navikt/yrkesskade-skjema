@@ -67,7 +67,7 @@ const InjuryForm = () => {
           </span>
       )}
 
-      {roller[rolletype] && !roller[rolletype].isElevEllerStudent && (
+      {roller[rolletype] && roller[rolletype].showAbsence && (
       <RadioGroup
         legend="Har den skadelidte hatt fravær?"
         error={
