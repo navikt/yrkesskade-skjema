@@ -182,7 +182,7 @@ const AccidentForm = () => {
             );
           })}
       </NAVSelect>
-      {roller[rolletype] && !roller[rolletype].isElevEllerStudent && (
+      {roller[rolletype] && roller[rolletype].showWorkplace && (
         <NAVSelect
           className="spacer"
           label="Hvilken type arbeidsplass er det?"
@@ -269,7 +269,7 @@ const AccidentForm = () => {
           )}
         </div>
       {/* )} */}
-      {roller[rolletype] && !roller[rolletype].isElevEllerStudent && (
+      {roller[rolletype] && roller[rolletype].showAccidentBackground && (
         <div className="spacer spacer navds-form-field navds-form-field--medium">
           <Label className="navds-select__label navds-label">
             Hva var bakgrunnen til hendelsen?

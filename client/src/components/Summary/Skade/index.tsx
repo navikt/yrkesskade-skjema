@@ -38,7 +38,7 @@ const SkadeSummary = ({ data }: IProps) => {
           </Table.Body>
         </Table>
       </div>
-      { roller[rolletype] && !roller[rolletype].isElevEllerStudent && (
+      { roller[rolletype] && roller[rolletype].showAbsence && (
       <div className="answerContainer spacer">
         <Label>Har den skadelidte hatt fravær</Label>
         <BodyShort>{fravaerkoder && fravaerkoder[data.skade.antattSykefravaerTabellH]?.verdi}</BodyShort>

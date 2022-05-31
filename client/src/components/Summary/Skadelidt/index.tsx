@@ -16,16 +16,11 @@ const SkadelidtSummary = ({ data }: IProps) => {
   const rolletype =  data?.skadelidt?.dekningsforhold.rolletype;
   return (
     <div className="answerOuterContainer">
-      {roller[rolletype] && !roller[rolletype].isElevEllerStudent && (
-        <div className="answerContainer">
-          <Label>Hva er skadelidtes stilling</Label>
-          <BodyShort>
-            {stillingstittelkoder &&
-              stillingstittelkoder[
-                data.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte
-              ]?.verdi}
-          </BodyShort>
-        </div>
+      {roller[rolletype] && roller[rolletype].showStillinger && (
+      <div className="answerContainer">
+        <Label>Hva er skadelidtes stilling</Label>
+        <BodyShort>{stillingstittelkoder && stillingstittelkoder[data.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte]?.verdi}</BodyShort>
+      </div>
       )}
       <div className="answerContainer">
         <Label>Den skadelidtets tilknyttning til virksomheten</Label>

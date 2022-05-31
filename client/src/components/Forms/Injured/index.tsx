@@ -139,7 +139,7 @@ const InjuredForm = () => {
             );
           })}
       </NAVSelect>
-      {roller[rolletype] && !roller[rolletype].isElevEllerStudent && (
+      {roller[rolletype] &&  roller[rolletype].showStillinger && (
       <div className="spacer">
         <Label>Hva er den skadelidtes stilling</Label>
         {stillingstittelkoder && (
@@ -149,7 +149,7 @@ const InjuredForm = () => {
               control={control}
               rules={{
                 required:
-                roller[rolletype] && !roller[rolletype].isElevEllerStudent &&
+                roller[rolletype] && roller[rolletype].showStillinger &&
                   _.isEmpty(
                     skademelding.skadelidt?.dekningsforhold
                       .stillingstittelTilDenSkadelidte
