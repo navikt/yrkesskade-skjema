@@ -128,7 +128,7 @@ const LoadingContent = () => {
 
 const NoAccessContent = () => {
   const handleClick = () => {
-    logAmplitudeEvent('skademelding.innmelding', { status: 'papir' });
+    logAmplitudeEvent('skademelding.innmelding', { status: 'papir', kilde: 'landingside' });
     window.location.href =
       'https://www.nav.no/no/person/arbeid/yrkesskade-og-yrkessykdom';
   };
