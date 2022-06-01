@@ -119,6 +119,11 @@ const Info = () => {
     });
   };
 
+  const tilbakeTilPapirskjema = () => {
+    logAmplitudeEvent('skademelding.innmelding', { status: 'papir', kilde: 'infoside' });
+    window.location.href=document.referrer
+  }
+
   return (
     <ContentContainer>
       <SystemHeader />
@@ -203,7 +208,7 @@ const Info = () => {
                 du også på denne førstesiden. På sikt ønsker vi at den digitale
                 innsendingen erstatter denne løsningen fullstendig.
               </BodyLong>
-              <Link href={document.referrer} className="spacer">
+              <Link className="spacer" onClick={tilbakeTilPapirskjema}>
                 Gå tilbake til papirskjema hvor du også finner førstesiden
               </Link>
             </div>
