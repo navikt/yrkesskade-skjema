@@ -30,7 +30,7 @@ const rolletyper: any = {
     'showStillinger': false,
     'showWorkplace': true,
     'showAccidentBackground': true,
-    'showAbsence': false,
+    'showAbsence': true,
   }
 }
 
