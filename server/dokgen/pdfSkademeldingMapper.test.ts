@@ -2,7 +2,7 @@ import { Skademelding, SkadetDel, Tid } from '../../client/src/api/yrkesskade';
 import { pdfSkademeldingMapper } from './pdfSkademeldingMapper';
 import { fixtures } from '../../fixtures/skademelding'
 import { KodeverkLoader } from '../kodeverk/kodeverk';
-import { PdfAdresse, PdfSkadetDel, PdfTid, PdfTidspunkt, Soknadsfelt } from './models';
+import { PdfAdresse, PdfRolletype, PdfSkadetDel, PdfTid, PdfTidspunkt, Soknadsfelt } from './models';
 import { format } from 'date-fns';
 import { nb } from 'date-fns/locale';
 
@@ -53,7 +53,7 @@ describe('PdfSkademeldingMapper', () => {
     // skadelidt
     expect(pdfSkadelidt.norskIdentitetsnummer.label).toEqual('Fødselsnummer');
     expectSoknadsfelt(pdfSkadelidt.norskIdentitetsnummer, 'Fødselsnummer', '2345678901');
-    expectSoknadsfelt(pdfSkadelidt.dekningsforhold.rolletype, 'Rolle', 'arbeidstaker');
+    expectSoknadsfeltRolletype(pdfSkadelidt.dekningsforhold.rolletype, 'Rolle', { kode: 'arbeidstaker', navn: 'Arbeidstaker' });
 
     // ulykken
     expect(pdfSkademelding.dokumentInfo.tekster.omUlykkenSeksjonstittel).toEqual('Om ulykken');
@@ -81,6 +81,13 @@ const expectSoknadsfelt = <T>(soknadsfelt: Soknadsfelt<T>, expectedLabel, expect
   expect(soknadsfelt.verdi).toEqual(expectedVerdi);
 }
 
+const expectSoknadsfeltRolletype = (soknadsfelt: Soknadsfelt<PdfRolletype>, expectedLabel, expectedRolletype: ExpectedRolletype) => {
+  expect(soknadsfelt).toBeDefined();
+  expect(soknadsfelt.label).toEqual(expectedLabel);
+  expect(soknadsfelt.verdi.kode).toEqual(expectedRolletype.kode);
+  expect(soknadsfelt.verdi.navn).toEqual(expectedRolletype.navn);
+}
+
 const expectSoknadsfeltAdresse = (soknadsfelt: Soknadsfelt<PdfAdresse>, expectedLabel, expectedAdresse: ExpectedAdresse) => {
   expect(soknadsfelt).toBeDefined();
   expect(soknadsfelt.label).toEqual(expectedLabel);
@@ -97,6 +104,11 @@ const expectSoknadsfeltTid = (pdfTid: PdfTid, expectedLabel, expectedTid: Expect
     expect(pdfTid.tidspunkt.verdi.dato).toEqual(expectedTid.verdi1);
     expect(pdfTid.tidspunkt.verdi.klokkeslett).toEqual(expectedTid.verdi2);
   }
+}
+
+interface ExpectedRolletype {
+  kode: string,
+  navn: string
 }
 
 interface ExpectedAdresse {
