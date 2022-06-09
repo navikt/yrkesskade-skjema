@@ -69,7 +69,7 @@ const Summary = () => {
         <Cell xs={12} lg={5}>
           <BackButton url="/yrkesskade/skjema/beskrivelse" />
           <Heading
-            size="2xlarge"
+            size="xlarge"
             className="pageNumberTitle spacer"
             data-number="7"
           >

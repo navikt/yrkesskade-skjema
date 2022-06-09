@@ -57,7 +57,7 @@ const AccidentFormPage = () => {
           <div className="cellContentContainer">
             <BackButton url="/yrkesskade/skjema/tidsrom" />
             <Heading
-              size="2xlarge"
+              size="xlarge"
               className="pageNumberTitle spacer"
               data-number="4"
             >

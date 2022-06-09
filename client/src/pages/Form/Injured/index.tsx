@@ -60,7 +60,7 @@ const InjuredFormPage = () => {
           <div className="cellContentContainer">
           <BackButton url="/yrkesskade/skjema/" />
             <Heading
-              size="2xlarge"
+              size="xlarge"
               className="pageNumberTitle spacer"
               data-number="2"
             >

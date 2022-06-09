@@ -43,7 +43,7 @@ const DescriptionFormPage = () => {
               url="/yrkesskade/skjema/skaden"
             />
             <Heading
-              size="2xlarge"
+              size="xlarge"
               className="pageNumberTitle spacer"
               data-number="6"
             >
