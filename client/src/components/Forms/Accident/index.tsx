@@ -44,7 +44,15 @@ const AccidentForm = () => {
   const bakgrunnForHendelsenkoder = useAppSelector((state) =>
     selectKodeverk(state, 'bakgrunnForHendelsen')
   );
-  const [sammeSomVirksomhetensAdresse, setSammeSomVirksomhetensAdresse] = useState<string>(skademelding.hendelsesfakta?.ulykkessted.sammeSomVirksomhetensAdresse.toString() || 'true');
+  const paavirkningsformkoder = useAppSelector((state) =>
+    selectKodeverk(state, 'paavirkningsform')
+  );
+
+  const [sammeSomVirksomhetensAdresse, setSammeSomVirksomhetensAdresse] =
+    useState<string>(
+      skademelding.hendelsesfakta?.ulykkessted.sammeSomVirksomhetensAdresse.toString() ||
+        'true'
+    );
 
   const [alvorlighetsgrad, setAlvorlighetsgrad] = useState<string>(
     skademelding.skade?.alvorlighetsgrad || ''
@@ -55,6 +63,7 @@ const AccidentForm = () => {
   };
 
   const rolletype = skademelding.skadelidt?.dekningsforhold.rolletype || '';
+  const isPeriod = skademelding?.hendelsesfakta?.tid?.tidstype === 'Periode';
 
   return (
     <>
@@ -172,7 +181,7 @@ const AccidentForm = () => {
             );
           })}
       </NAVSelect>
-      {roller[rolletype] && roller[rolletype].showWorkplace && (
+      {roller[rolletype] && roller[rolletype].showWorkplace && !isPeriod && (
         <NAVSelect
           className="spacer"
           label="Hvilken type arbeidsplass er det?"
@@ -198,98 +207,160 @@ const AccidentForm = () => {
       )}
 
       {/* {roller[rolletype] && !roller[rolletype].isElevEllerStudent && ( */}
-        <div className="spacer spacer navds-form-field navds-form-field--medium">
-          <Label className="navds-select__label navds-label">
-            Beskriv årsak for hendelsen og bakgrunn for årsaken. Gi en mest
-            mulig komplett utfylling.
-          </Label>
-          <BodyShort className="navds-select__description navds-body-short">
-            Du kan velge flere alternativer
-          </BodyShort>
-          <Controller
-            name="hendelsesfakta.aarsakUlykkeTabellAogE"
-            control={control}
-            rules={{
-              required:
-                _.isEmpty(
-                  skademelding.hendelsesfakta?.aarsakUlykkeTabellAogE
-                ) && 'Dette feltet er påkrevd',
-            }}
-            render={({ field }) => (
-              <Select
-                className="aarsak-ulykke-tabell-a-e"
-                closeMenuOnSelect={false}
-                isMulti
-                options={
-                  aarsakOgBakgrunnkoder &&
-                  Object.keys(aarsakOgBakgrunnkoder).map((kode: string) => ({
-                    value: kode,
-                    label: aarsakOgBakgrunnkoder[kode]?.verdi || 'UKJENT',
-                  }))
-                }
-                defaultValue={
-                  !_.isEmpty(
-                    skademelding.hendelsesfakta?.aarsakUlykkeTabellAogE
-                  )
-                    ? skademelding.hendelsesfakta?.aarsakUlykkeTabellAogE.map(
-                        (i) => {
-                          return {
-                            value: i,
-                            label:
-                              (aarsakOgBakgrunnkoder &&
-                                aarsakOgBakgrunnkoder[i]?.verdi) ||
-                              'UKJENT',
-                          };
-                        }
-                      )
-                    : []
-                }
-                placeholder=""
-                onChange={(val) => field.onChange(val.map((i) => i.value))}
-              />
-            )}
-          />
-          {errors?.hendelsesfakta?.aarsakUlykkeTabellAogE && (
-            <span className="navds-error-message navds-error-message--medium navds-label">
-              {/* {errors.hendelsesfakta.aarsakUlykkeTabellAogE.map(
+      <div className="spacer spacer navds-form-field navds-form-field--medium">
+        <Label className="navds-select__label navds-label">
+          Beskriv årsak for hendelsen og bakgrunn for årsaken. Gi en mest mulig
+          komplett utfylling.
+        </Label>
+        <BodyShort className="navds-select__description navds-body-short">
+          Du kan velge flere alternativer
+        </BodyShort>
+        <Controller
+          name="hendelsesfakta.aarsakUlykkeTabellAogE"
+          control={control}
+          rules={{
+            required:
+              _.isEmpty(skademelding.hendelsesfakta?.aarsakUlykkeTabellAogE) &&
+              'Dette feltet er påkrevd',
+          }}
+          render={({ field }) => (
+            <Select
+              className="aarsak-ulykke-tabell-a-e"
+              closeMenuOnSelect={false}
+              isMulti
+              options={
+                aarsakOgBakgrunnkoder &&
+                Object.keys(aarsakOgBakgrunnkoder).map((kode: string) => ({
+                  value: kode,
+                  label: aarsakOgBakgrunnkoder[kode]?.verdi || 'UKJENT',
+                }))
+              }
+              defaultValue={
+                !_.isEmpty(skademelding.hendelsesfakta?.aarsakUlykkeTabellAogE)
+                  ? skademelding.hendelsesfakta?.aarsakUlykkeTabellAogE.map(
+                      (i) => {
+                        return {
+                          value: i,
+                          label:
+                            (aarsakOgBakgrunnkoder &&
+                              aarsakOgBakgrunnkoder[i]?.verdi) ||
+                            'UKJENT',
+                        };
+                      }
+                    )
+                  : []
+              }
+              placeholder=""
+              onChange={(val) => field.onChange(val.map((i) => i.value))}
+            />
+          )}
+        />
+        {errors?.hendelsesfakta?.aarsakUlykkeTabellAogE && (
+          <span className="navds-error-message navds-error-message--medium navds-label">
+            {/* {errors.hendelsesfakta.aarsakUlykkeTabellAogE.map(
                 (fieldError) => fieldError.message
               )} */}
-              Dette feltet er påkrevd
-            </span>
-          )}
-        </div>
+            Dette feltet er påkrevd
+          </span>
+        )}
+      </div>
       {/* )} */}
-      {roller[rolletype] && roller[rolletype].showAccidentBackground && (
+
+      {roller[rolletype] &&
+        roller[rolletype].showAccidentBackground &&
+        !isPeriod && (
+          <div className="spacer spacer navds-form-field navds-form-field--medium">
+            <Label className="navds-select__label navds-label">
+              Hva var bakgrunnen til hendelsen?
+            </Label>
+            <BodyShort className="navds-select__description navds-body-short">
+              Du kan velge flere alternativer
+            </BodyShort>
+            <Controller
+              name="hendelsesfakta.bakgrunnsaarsakTabellBogG"
+              control={control}
+              rules={{
+                required:
+                  _.isEmpty(
+                    skademelding.hendelsesfakta?.bakgrunnsaarsakTabellBogG
+                  ) && 'Dette feltet er påkrevd',
+              }}
+              render={({ field }) => (
+                <Select
+                  className="bakgrunnsaarsak-b-g"
+                  defaultValue={
+                    !_.isEmpty(
+                      skademelding.hendelsesfakta?.bakgrunnsaarsakTabellBogG
+                    )
+                      ? skademelding.hendelsesfakta?.bakgrunnsaarsakTabellBogG.map(
+                          (i) => {
+                            return {
+                              value: i,
+                              label:
+                                (bakgrunnForHendelsenkoder &&
+                                  bakgrunnForHendelsenkoder[i]?.verdi) ||
+                                'UKJENT',
+                            };
+                          }
+                        )
+                      : []
+                  }
+                  closeMenuOnSelect={false}
+                  isMulti
+                  options={
+                    bakgrunnForHendelsenkoder &&
+                    Object.keys(bakgrunnForHendelsenkoder).map(
+                      (kode: string) => ({
+                        value: kode,
+                        label:
+                          bakgrunnForHendelsenkoder[kode]?.verdi || 'UKJENT',
+                      })
+                    )
+                  }
+                  placeholder=""
+                  onChange={(val) =>
+                    field.onChange(
+                      val.map((i: { value: string; label: string }) => i.value)
+                    )
+                  }
+                />
+              )}
+            />
+            {errors?.hendelsesfakta?.bakgrunnsaarsakTabellBogG && (
+              <span className="navds-error-message navds-error-message--medium navds-label">
+                {/* {errors.hendelsesfakta.bakgrunnsaarsakTabellBogG?.map( */}
+                Dette feltet er påkrevd
+                {/* )} */}
+              </span>
+            )}
+          </div>
+        )}
+
+      {isPeriod && paavirkningsformkoder && (
         <div className="spacer spacer navds-form-field navds-form-field--medium">
           <Label className="navds-select__label navds-label">
-            Hva var bakgrunnen til hendelsen?
+            Hvilken skadelig påvirkning har personen vært utsatt for?
           </Label>
-          <BodyShort className="navds-select__description navds-body-short">
-            Du kan velge flere alternativer
-          </BodyShort>
           <Controller
-            name="hendelsesfakta.bakgrunnsaarsakTabellBogG"
+            name="hendelsesfakta.paavirkningsform"
             control={control}
             rules={{
               required:
-                _.isEmpty(
-                  skademelding.hendelsesfakta?.bakgrunnsaarsakTabellBogG
-                ) && 'Dette feltet er påkrevd',
+                _.isEmpty(skademelding.hendelsesfakta?.paavirkningsform) &&
+                'Dette feltet er påkrevd',
             }}
             render={({ field }) => (
               <Select
-                className="bakgrunnsaarsak-b-g"
+                className="paavirkningsform-b-g"
                 defaultValue={
-                  !_.isEmpty(
-                    skademelding.hendelsesfakta?.bakgrunnsaarsakTabellBogG
-                  )
-                    ? skademelding.hendelsesfakta?.bakgrunnsaarsakTabellBogG.map(
+                  !_.isEmpty(skademelding?.hendelsesfakta?.paavirkningsform)
+                    ? skademelding?.hendelsesfakta?.paavirkningsform?.map(
                         (i) => {
                           return {
                             value: i,
                             label:
-                              (bakgrunnForHendelsenkoder &&
-                                bakgrunnForHendelsenkoder[i]?.verdi) ||
+                              (paavirkningsformkoder &&
+                                paavirkningsformkoder[i]?.verdi) ||
                               'UKJENT',
                           };
                         }
@@ -299,24 +370,27 @@ const AccidentForm = () => {
                 closeMenuOnSelect={false}
                 isMulti
                 options={
-                  bakgrunnForHendelsenkoder &&
-                  Object.keys(bakgrunnForHendelsenkoder).map(
-                    (kode: string) => ({
-                      value: kode,
-                      label: bakgrunnForHendelsenkoder[kode]?.verdi || 'UKJENT',
-                    })
-                  )
+                  paavirkningsformkoder && !_.isEmpty(paavirkningsformkoder)
+                    ? Object.keys(paavirkningsformkoder).map(
+                        (kode: string) => ({
+                          value: kode,
+                          label: paavirkningsformkoder[kode]?.verdi || 'UKJENT',
+                        })
+                      )
+                    : []
                 }
                 placeholder=""
-                onChange={(val) => field.onChange(val.map((i) => i.value))}
+                onChange={(val) =>
+                  field.onChange(
+                    val.map((i: { value: string; label: string }) => i.value)
+                  )
+                }
               />
             )}
           />
-          {errors?.hendelsesfakta?.bakgrunnsaarsakTabellBogG && (
+          {errors?.hendelsesfakta?.paavirkningsform && (
             <span className="navds-error-message navds-error-message--medium navds-label">
-              {/* {errors.hendelsesfakta.bakgrunnsaarsakTabellBogG?.map( */}
-                Dette feltet er påkrevd
-              {/* )} */}
+              Dette feltet er påkrevd
             </span>
           )}
         </div>

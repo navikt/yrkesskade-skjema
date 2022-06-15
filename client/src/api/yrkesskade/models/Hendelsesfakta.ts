@@ -14,4 +14,5 @@ export type Hendelsesfakta = {
     bakgrunnsaarsakTabellBogG: Array<string>;
     utfyllendeBeskrivelse?: string;
     stedsbeskrivelseTabellF?: string;
+    paavirkningsform?: Array<string>;
 };

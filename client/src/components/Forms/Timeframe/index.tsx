@@ -2,8 +2,13 @@ import { useState, useEffect, useRef } from 'react';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import { DateUtils } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
-import { Select, Label, ToggleGroup, BodyLong } from '@navikt/ds-react';
-import { Datepicker, isISODateString } from '@navikt/ds-datepicker';
+import {
+  Select,
+  Label,
+  ToggleGroup,
+  BodyLong,
+  ReadMore,
+} from '@navikt/ds-react';
 import InputMask from 'react-input-mask';
 import dateFnsFormat from 'date-fns/format';
 import dateFnsParse from 'date-fns/parse';
@@ -78,6 +83,10 @@ const TimeframeForm = () => {
     handleDateValue(state.hendelsesfakta?.tid.periode?.til)
   );
 
+  const [sicknessDate, setSicknessDate] = useState<Date | undefined>(
+    handleDateValue(state.hendelsesfakta?.tid.periode?.sykdomPaavist)
+  );
+
   const modifiers = { start: specificFromDay, end: specificToDay };
 
   const handleSpecificDate = (selectedDay: Date) => {
@@ -109,6 +118,7 @@ const TimeframeForm = () => {
     }
   }, [specificTime, specificDate, setValue, TIDSPUNKT_FORMAT]);
 
+
   useEffect(() => {
     if (timeType !== 'Periode') {
       return;
@@ -117,6 +127,14 @@ const TimeframeForm = () => {
     setValue('hendelsesfakta.tid.periode.fra', specificFromDay?.toISOString());
     setValue('hendelsesfakta.tid.periode.til', specificToDay?.toISOString());
   }, [timeType, specificFromDay, specificToDay, setValue]);
+
+  useEffect(() => {
+    if (timeType !== 'Periode') {
+      return;
+    }
+
+    setValue('hendelsesfakta.tid.periode.sykdomPaavist', sicknessDate?.toISOString());
+  }, [timeType, sicknessDate, setValue]);
 
   const parseDate = (str: string, format: string) => {
     // sjekk at vi har skrevet noe og at noe er 10 tegn
@@ -145,7 +163,10 @@ const TimeframeForm = () => {
   return (
     <>
       <ToggleGroup
-        onChange={ (tidstype: any) => {setTimeType(tidstype);}}
+        onChange={(tidstype: any) => {
+          setValue('hendelsesfakta.tid.tidstype', tidstype);
+          setTimeType(tidstype);
+        }}
         size="medium"
         value={timeType}
         label="Når skjedde ulykken som skal meldes?"
@@ -226,86 +247,144 @@ const TimeframeForm = () => {
         )}
 
         {timeType === 'Periode' && (
-          <div className="periode-container spacer">
-            <div>
-              <Label>Fra dag</Label>
-              <Controller
-                name="hendelsesfakta.tid.periode.fra"
-                control={control}
-                rules={{
-                  required:
-                    timeType === 'Periode' &&
-                    specificFromDay !== null &&
-                    'Dette feltet er påkrevd',
-                }}
-                render={({ field: { onChange, onBlur, value, name, ref } }) => (
-                  <DayPickerInput
-                    classNames={fromDayPickerClassNames}
-                    placeholder=""
-                    value={specificFromDay}
-                    onDayChange={handleSpecificFromDay}
-                    formatDate={formatDate}
-                    format={FORMAT}
-                    parseDate={parseDate}
-                    dayPickerProps={{
-                      toMonth: specificToDay,
-                      disabledDays: {
-                        after: new Date(),
-                      },
-                      modifiers,
-                      onDayClick: () => toDayInput?.getInput().focus(),
-                    }}
-                  />
-                )}
-              />
-              {errors?.hendelsesfakta?.tid?.periode?.fra &&
-                errors?.hendelsesfakta?.tid?.periode?.fra?.message && (
-                  <span className="navds-error-message navds-error-message--medium navds-label">
-                    Fra dato er påkrevd
-                  </span>
-                )}
+          <>
+            <div className="periode-container spacer">
+              <div>
+                <Label>Fra dag</Label>
+                <Controller
+                  name="hendelsesfakta.tid.periode.fra"
+                  control={control}
+                  rules={{
+                    required:
+                      timeType === 'Periode' &&
+                      specificFromDay !== null &&
+                      'Dette feltet er påkrevd',
+                  }}
+                  render={({
+                    field: { onChange, onBlur, value, name, ref },
+                  }) => (
+                    <DayPickerInput
+                      classNames={fromDayPickerClassNames}
+                      placeholder=""
+                      value={specificFromDay}
+                      onDayChange={handleSpecificFromDay}
+                      formatDate={formatDate}
+                      format={FORMAT}
+                      parseDate={parseDate}
+                      dayPickerProps={{
+                        toMonth: specificToDay,
+                        disabledDays: {
+                          after: new Date(),
+                        },
+                        modifiers,
+                        onDayClick: () => toDayInput?.getInput().focus(),
+                      }}
+                    />
+                  )}
+                />
+                {errors?.hendelsesfakta?.tid?.periode?.fra &&
+                  errors?.hendelsesfakta?.tid?.periode?.fra?.message && (
+                    <span className="navds-error-message navds-error-message--medium navds-label">
+                      Fra dato er påkrevd
+                    </span>
+                  )}
+              </div>
+              <div>
+                <Label>Til dag</Label>
+                <Controller
+                  name="hendelsesfakta.tid.periode.til"
+                  control={control}
+                  rules={{
+                    required:
+                      timeType === 'Periode' &&
+                      specificToDay !== null &&
+                      'Dette feltet er påkrevd',
+                  }}
+                  render={({
+                    field: { onChange, onBlur, value, name, ref },
+                  }) => (
+                    <DayPickerInput
+                      ref={(el) => setToDayInput(el)}
+                      classNames={toDayPickerClassNames}
+                      placeholder=""
+                      value={specificToDay}
+                      onDayChange={handleSpecificToDay}
+                      formatDate={formatDate}
+                      format={FORMAT}
+                      parseDate={parseDate}
+                      dayPickerProps={{
+                        month: specificFromDay,
+                        fromMonth: specificFromDay,
+                        modifiers,
+                        disabledDays: {
+                          after: new Date(),
+                          before: specificFromDay,
+                        },
+                      }}
+                    />
+                  )}
+                />
+                {errors?.hendelsesfakta?.tid?.periode?.til &&
+                  errors?.hendelsesfakta?.tid?.periode?.til?.message && (
+                    <span className="navds-error-message navds-error-message--medium navds-label">
+                      Til dato er påkrevd
+                    </span>
+                  )}
+              </div>
             </div>
             <div>
-              <Label>Til dag</Label>
-              <Controller
-                name="hendelsesfakta.tid.periode.til"
-                control={control}
-                rules={{
-                  required:
-                    timeType === 'Periode' &&
-                    specificToDay !== null &&
-                    'Dette feltet er påkrevd',
-                }}
-                render={({ field: { onChange, onBlur, value, name, ref } }) => (
-                  <DayPickerInput
-                    ref={(el) => setToDayInput(el)}
-                    classNames={toDayPickerClassNames}
-                    placeholder=""
-                    value={specificToDay}
-                    onDayChange={handleSpecificToDay}
-                    formatDate={formatDate}
-                    format={FORMAT}
-                    parseDate={parseDate}
-                    dayPickerProps={{
-                      month: specificFromDay,
-                      fromMonth: specificFromDay,
-                      modifiers,
-                      disabledDays: {
-                        after: new Date(),
-                        before: specificFromDay,
-                      },
-                    }}
-                  />
-                )}
-              />
-              {errors?.hendelsesfakta?.tid?.periode?.til &&
-                errors?.hendelsesfakta?.tid?.periode?.til?.message && (
-                  <span className="navds-error-message navds-error-message--medium navds-label">
-                    Til dato er påkrevd
-                  </span>
-                )}
+              <Label>Når ble sykdommen påvist?</Label>
+              <ReadMore className="spacer" size="medium" header="Grunnen til at vi spør om dette">
+                Dersom du kjenner til når sykdommen ble påvist hos lege eller
+                behandler oppgir du dato, eventuelt sett det til første i
+                kalendermåneden om du ikke vet helt nøyaktig dato. Denne
+                opplysningen vil kunne ha betydning for den videre behandlingen
+                av saken. Dersom du ikke har kjennskap til når sykdommen ble
+                påvist kan du oppgi dette i fritekstfeltet på slutten av
+                skjemaet.
+              </ReadMore>
+
+              <div className="dateTime-date spacer">
+                <Controller
+                  name="hendelsesfakta.tid.periode.sykdomPaavist"
+                  control={control}
+                  rules={{
+                    required:
+                      // timeType === 'Tidspunkt' &&
+                      // specificDate !== null &&
+                      // specificDate?.getHours() === 0 &&
+                      // specificDate?.getMinutes() === 0 &&
+                      'Dette feltet er påkrevd',
+                  }}
+                  render={({
+                    field: { onChange, onBlur, value, name, ref },
+                  }) => (
+                    <DayPickerInput
+                      classNames={{ ...whenDayPickerClassNames }}
+                      placeholder="DD.MM.ÅÅÅÅ"
+                      value={sicknessDate}
+                      onDayChange={setSicknessDate}
+                      formatDate={formatDate}
+                      format={FORMAT}
+                      parseDate={parseDate}
+                      dayPickerProps={{
+                        firstDayOfWeek: 1,
+                        disabledDays: {
+                          after: new Date(),
+                        },
+                      }}
+                    />
+                  )}
+                />
+                {errors?.hendelsesfakta?.tid?.periode?.sykdomPaavist &&
+                  errors?.hendelsesfakta?.tid?.periode?.sykdomPaavist?.message && (
+                    <span className="navds-error-message navds-error-message--medium navds-label">
+                      Dato sykdommen er påvist er påkrevd
+                    </span>
+                  )}
+              </div>
             </div>
-          </div>
+          </>
         )}
 
         {timeType === 'Ukjent' && (

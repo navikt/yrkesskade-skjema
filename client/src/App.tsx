@@ -46,6 +46,8 @@ const App = () => {
   useEffect(() => {
     dispatch(hentKodeverk('landkoderISO2'));
     dispatch(hentKodeverk('rolletype'));
+    dispatch(hentKodeverk('sykdomstype'));
+    dispatch(hentKodeverk('paavirkningsform'));
 
     // preload av stillingstitler
     dispatch(
