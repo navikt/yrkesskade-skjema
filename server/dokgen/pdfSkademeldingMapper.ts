@@ -3,7 +3,7 @@ import {
   PdfDokumentInfo,
   PdfHendelsesfakta,
   PdfInnmelder,
-  PdfPeriode,
+  PdfPeriode, PdfRolletype,
   PdfSkade,
   PdfSkadelidt,
   PdfSkademelding,
@@ -64,12 +64,19 @@ const mapSkadelidt = (skadelidt: Skadelidt, kodeverk: KodeverkLoader): PdfSkadel
     norskIdentitetsnummer: { label: 'Fødselsnummer', verdi: skadelidt.norskIdentitetsnummer},
     dekningsforhold: {
       organisasjonsnummer: { label: 'Org.nr', verdi: skadelidt.dekningsforhold.organisasjonsnummer},
-      rolletype: { label: 'Rolle', verdi: kodeverk.mapKodeTilVerdi(skadelidt.dekningsforhold.rolletype, 'rolletype') },
+      rolletype: { label: 'Rolle', verdi: mapRolletype(skadelidt.dekningsforhold.rolletype, kodeverk) },
       stillingstittelTilDenSkadelidte: { label: 'Stilling', verdi: kodeverk.mapKoderTilVerdier(skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte, 'stillingstittel') },
       navnPaaVirksomheten: { label: 'Bedrift', verdi: skadelidt.dekningsforhold.navnPaaVirksomheten },
       virksomhetensAdresse: { label: 'Virksomhetens adresse', verdi: mapAdresse(skadelidt.dekningsforhold.virksomhetensAdresse, kodeverk) }
     }
    }
+}
+
+const mapRolletype = (rolletype: string, kodeverk: KodeverkLoader): PdfRolletype => {
+  return {
+    kode: rolletype,
+    navn: kodeverk.mapKodeTilVerdi(rolletype, 'rolletype')
+  }
 }
 
 const mapSkade = (skade: Skade, kodeverk: KodeverkLoader): PdfSkade => {

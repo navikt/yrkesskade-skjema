@@ -22,9 +22,15 @@ export interface PdfDekningsforhold {
   organisasjonsnummer: Soknadsfelt<string>;
   navnPaaVirksomheten?: Soknadsfelt<string>;
   stillingstittelTilDenSkadelidte: Soknadsfelt<string[]>;
-  rolletype: Soknadsfelt<string>;
+  rolletype: Soknadsfelt<PdfRolletype>;
   virksomhetensAdresse?: Soknadsfelt<PdfAdresse>;
 }
+
+export interface PdfRolletype {
+  kode: string,
+  navn: string
+}
+
 export interface PdfSkade {
   alvorlighetsgrad?: Soknadsfelt<string>,
   skadedeDeler: PdfSkadetDel[],
