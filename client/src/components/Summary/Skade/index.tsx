@@ -9,9 +9,14 @@ interface IProps {
 const SkadeSummary = ({ data }: IProps) => {
   const skadetKroppsdelkoder = useAppSelector((state) => selectKodeverk(state, 'skadetKroppsdel'));
   const skadetypekoder = useAppSelector((state) => selectKodeverk(state, 'skadetype'));
+  const sykdomstypekoder = useAppSelector((state) =>
+  selectKodeverk(state, 'sykdomstype')
+);
   const fravaerkoder = useAppSelector((state) => selectKodeverk(state, 'harSkadelidtHattFravaer'));
 
   const rolletype =  data?.skadelidt?.dekningsforhold.rolletype;
+
+  const sickAndInjuryCodes = {...skadetypekoder, ...sykdomstypekoder};
 
   return (
     <div className="answerOuterContainer">
@@ -29,7 +34,7 @@ const SkadeSummary = ({ data }: IProps) => {
                 return (
                   <Table.Row key={index} data-testid="skade-tabell-rad">
                     <Table.DataCell>{skadetKroppsdelkoder && skadetKroppsdelkoder[item.kroppsdelTabellD]?.verdi}</Table.DataCell>
-                    <Table.DataCell>{skadetypekoder && skadetypekoder[item.skadeartTabellC]?.verdi}</Table.DataCell>
+                    <Table.DataCell>{sickAndInjuryCodes && sickAndInjuryCodes[item.skadeartTabellC]?.verdi}</Table.DataCell>
                   </Table.Row>
                 );
               }
