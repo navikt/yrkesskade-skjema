@@ -108,7 +108,7 @@ const mapTid = (tid: Tid, kodeverk: KodeverkLoader): PdfTid => {
   if (tid.tidstype === Tid.tidstype.TIDSPUNKT) {
     return {
       tidspunkt: {
-        label: label,
+        label,
         verdi: {
           dato: formatDate(parseISO(tid.tidspunkt), DATO_FORMAT),
           klokkeslett: formatDate(parseISO(tid.tidspunkt), KLOKKESLETT_FORMAT),
@@ -120,7 +120,7 @@ const mapTid = (tid: Tid, kodeverk: KodeverkLoader): PdfTid => {
     return {
       tidstype: tid.tidstype,
       periode: {
-        label: label,
+        label,
         verdi: {
           fra: formatDate(parseISO(tid.periode.fra), DATO_FORMAT),
           til: formatDate(parseISO(tid.periode.til), DATO_FORMAT),

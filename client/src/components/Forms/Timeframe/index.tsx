@@ -89,9 +89,9 @@ const TimeframeForm = () => {
 
   const modifiers = { start: specificFromDay, end: specificToDay };
 
-  const handleSpecificDate = (selectedDay: Date) => {
-    setSpecificDate(selectedDay);
-  };
+  // const handleSpecificDate = (selectedDay: Date) => {
+  //   setSpecificDate(selectedDay);
+  // };
 
   const handleSpecificFromDay = (selectedDay: Date) => {
     setSpecificFromDay(selectedDay);
