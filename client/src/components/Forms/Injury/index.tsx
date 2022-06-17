@@ -29,10 +29,14 @@ const InjuryForm = () => {
   const skadetypekoder = useAppSelector((state) =>
     selectKodeverk(state, 'skadetype')
   );
+  const sykdomstypekoder = useAppSelector((state) =>
+    selectKodeverk(state, 'sykdomstype')
+  );
 
   const harSkadelidtHattFravaerkoder = useAppSelector((state) =>
     selectKodeverk(state, 'harSkadelidtHattFravaer')
   );
+  const isPeriod = skademelding?.hendelsesfakta?.tid?.tidstype === 'Periode';
 
   useEffect(() => {
     setValue(
@@ -55,6 +59,8 @@ const InjuryForm = () => {
             skadedeDeler={skademelding.skade?.skadedeDeler || []}
             skadeartKoder={skadetypekoder}
             kroppsdelKode={skadetKroppsdelkoder}
+            sykdomstypeKoder={sykdomstypekoder}
+            periode={isPeriod}
           />
         )}
       />

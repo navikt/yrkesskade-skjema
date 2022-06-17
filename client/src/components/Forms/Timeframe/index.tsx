@@ -2,7 +2,13 @@ import { useState, useEffect, useRef } from 'react';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import { DateUtils } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
-import { Select, RadioGroup, Label } from '@navikt/ds-react';
+import {
+  Select,
+  Label,
+  ToggleGroup,
+  BodyLong,
+  ReadMore,
+} from '@navikt/ds-react';
 import InputMask from 'react-input-mask';
 import dateFnsFormat from 'date-fns/format';
 import dateFnsParse from 'date-fns/parse';
@@ -77,6 +83,10 @@ const TimeframeForm = () => {
     handleDateValue(state.hendelsesfakta?.tid.periode?.til)
   );
 
+  const [sicknessDate, setSicknessDate] = useState<Date | undefined>(
+    handleDateValue(state.hendelsesfakta?.tid.periode?.sykdomPaavist)
+  );
+
   const modifiers = { start: specificFromDay, end: specificToDay };
 
   const handleSpecificDate = (selectedDay: Date) => {
@@ -108,6 +118,7 @@ const TimeframeForm = () => {
     }
   }, [specificTime, specificDate, setValue, TIDSPUNKT_FORMAT]);
 
+
   useEffect(() => {
     if (timeType !== 'Periode') {
       return;
@@ -116,6 +127,14 @@ const TimeframeForm = () => {
     setValue('hendelsesfakta.tid.periode.fra', specificFromDay?.toISOString());
     setValue('hendelsesfakta.tid.periode.til', specificToDay?.toISOString());
   }, [timeType, specificFromDay, specificToDay, setValue]);
+
+  useEffect(() => {
+    if (timeType !== 'Periode') {
+      return;
+    }
+
+    setValue('hendelsesfakta.tid.periode.sykdomPaavist', sicknessDate?.toISOString());
+  }, [timeType, sicknessDate, setValue]);
 
   const parseDate = (str: string, format: string) => {
     // sjekk at vi har skrevet noe og at noe er 10 tegn
@@ -143,35 +162,28 @@ const TimeframeForm = () => {
 
   return (
     <>
-      <RadioGroup
-        legend="Når skjedde ulykken som skal meldes?"
-        error={
-          errors?.hendelsesfakta?.tid?.tidstype &&
-          errors?.hendelsesfakta?.tid?.tidstype.message
-        }
+      <ToggleGroup
+        onChange={(tidstype: any) => {
+          setValue('hendelsesfakta.tid.tidstype', tidstype);
+          setTimeType(tidstype);
+        }}
+        size="medium"
+        value={timeType}
+        label="Når skjedde ulykken som skal meldes?"
       >
-        <div className="navds-radio navds-radio--medium">
-          <input
-            type="radio"
-            className="navds-radio__input"
-            {...register('hendelsesfakta.tid.tidstype', {
-              required: 'Dette feltet er påkrevd',
-            })}
-            value="Tidspunkt"
-            data-testid="timeframe-when-date"
-            id="timeframe-when-date"
-            onChange={(e) => {
-              setTimeType(Tid.tidstype.TIDSPUNKT);
-            }}
-          />
-          <label htmlFor="timeframe-when-date" className="navds-radio__label">
-            På en dato
-          </label>
-        </div>
-
-        <div className="dateTime">
-          {timeType === 'Tidspunkt' && (
+        <ToggleGroup.Item value={Tid.tidstype.TIDSPUNKT}>
+          På en dato
+        </ToggleGroup.Item>
+        <ToggleGroup.Item value={Tid.tidstype.PERIODE}>
+          Over en periode
+        </ToggleGroup.Item>
+        <ToggleGroup.Item value={Tid.tidstype.UKJENT}>Ukjent</ToggleGroup.Item>
+      </ToggleGroup>
+      <div className="toggleGroup-content">
+        {timeType === 'Tidspunkt' && (
+          <div className="periode-container">
             <div className="dateTime-date spacer">
+              <Label>Velg dato</Label>
               <Controller
                 name="hendelsesfakta.tid.tidspunkt"
                 control={control}
@@ -188,7 +200,7 @@ const TimeframeForm = () => {
                     classNames={{ ...whenDayPickerClassNames }}
                     placeholder="DD.MM.ÅÅÅÅ"
                     value={specificDate}
-                    onDayChange={handleSpecificDate}
+                    onDayChange={setSpecificDate}
                     formatDate={formatDate}
                     format={FORMAT}
                     parseDate={parseDate}
@@ -208,52 +220,34 @@ const TimeframeForm = () => {
                 </span>
               )}
             </div>
-          )}
 
-          {timeType === 'Tidspunkt' && specificDate !== null && (
-            <div className="dateTime-time spacer">
-              {/* <label htmlFor="timeframe-when-time" className="navds-label">
+            {timeType === 'Tidspunkt' && specificDate !== null && (
+              <div className="dateTime-time spacer">
+                <Label>klokkeslett</Label>
+                {/* <label htmlFor="timeframe-when-time" className="navds-label">
                 Tid for ulykken
               </label> */}
-              <InputMask
-                mask="99:99"
-                placeholder="00:00"
-                onChange={handleKlokkeChange}
-                value={specificTime || ''}
-                data-testid="timeframe-when-time"
-                id="timeframe-when-time"
-                className="navds-text-field__input navds-body-short navds-body-medium"
-              />
-              {errors?.hendelsesfakta?.tid?.tidspunkt && (
-                <span className="navds-error-message navds-error-message--medium navds-label">
-                  {errors?.hendelsesfakta?.tid?.tidspunkt?.message}
-                </span>
-              )}
-            </div>
-          )}
-        </div>
+                <InputMask
+                  mask="99:99"
+                  placeholder="00:00"
+                  onChange={handleKlokkeChange}
+                  value={specificTime || ''}
+                  data-testid="timeframe-when-time"
+                  id="timeframe-when-time"
+                  className="navds-text-field__input navds-body-short navds-body-medium"
+                />
+                {errors?.hendelsesfakta?.tid?.tidspunkt && (
+                  <span className="navds-error-message navds-error-message--medium navds-label">
+                    {errors?.hendelsesfakta?.tid?.tidspunkt?.message}
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+        )}
 
-        <div className="navds-radio navds-radio--medium">
-          <input
-            type="radio"
-            className="navds-radio__input"
-            {...register('hendelsesfakta.tid.tidstype', {
-              required: 'Dette feltet er påkrevd',
-            })}
-            value="Periode"
-            data-testid="timeframe-when-over-period"
-            id="timeframe-when-over-period"
-            onChange={(e) => {
-              setTimeType(Tid.tidstype.PERIODE);
-            }}
-          />
-          <label
-            htmlFor="timeframe-when-over-period"
-            className="navds-radio__label"
-          >
-            Over en periode
-          </label>
-          {timeType === 'Periode' && (
+        {timeType === 'Periode' && (
+          <>
             <div className="periode-container spacer">
               <div>
                 <Label>Fra dag</Label>
@@ -324,7 +318,7 @@ const TimeframeForm = () => {
                         modifiers,
                         disabledDays: {
                           after: new Date(),
-                          before: specificFromDay
+                          before: specificFromDay,
                         },
                       }}
                     />
@@ -338,31 +332,69 @@ const TimeframeForm = () => {
                   )}
               </div>
             </div>
-          )}
-        </div>
+            <div>
+              <Label>Når ble sykdommen påvist?</Label>
+              <ReadMore className="spacer" size="medium" header="Grunnen til at vi spør om dette">
+                Dersom du kjenner til når sykdommen ble påvist hos lege eller
+                behandler oppgir du dato, eventuelt sett det til første i
+                kalendermåneden om du ikke vet helt nøyaktig dato. Denne
+                opplysningen vil kunne ha betydning for den videre behandlingen
+                av saken. Dersom du ikke har kjennskap til når sykdommen ble
+                påvist kan du oppgi dette i fritekstfeltet på slutten av
+                skjemaet.
+              </ReadMore>
 
-        <div className="navds-radio navds-radio--medium">
-          <input
-            type="radio"
-            className="navds-radio__input"
-            {...register('hendelsesfakta.tid.tidstype', {
-              required: 'Dette feltet er påkrevd',
-            })}
-            value="Ukjent"
-            data-testid="timeframe-when-unknown"
-            id="timeframe-when-unknown"
-            onChange={(e) => {
-              setTimeType(Tid.tidstype.UKJENT);
-            }}
-          />
-          <label
-            htmlFor="timeframe-when-unknown"
-            className="navds-radio__label"
-          >
-            Ukjent
-          </label>
-        </div>
-      </RadioGroup>
+              <div className="dateTime-date spacer">
+                <Controller
+                  name="hendelsesfakta.tid.periode.sykdomPaavist"
+                  control={control}
+                  rules={{
+                    required:
+                      // timeType === 'Tidspunkt' &&
+                      // specificDate !== null &&
+                      // specificDate?.getHours() === 0 &&
+                      // specificDate?.getMinutes() === 0 &&
+                      'Dette feltet er påkrevd',
+                  }}
+                  render={({
+                    field: { onChange, onBlur, value, name, ref },
+                  }) => (
+                    <DayPickerInput
+                      classNames={{ ...whenDayPickerClassNames }}
+                      placeholder="DD.MM.ÅÅÅÅ"
+                      value={sicknessDate}
+                      onDayChange={setSicknessDate}
+                      formatDate={formatDate}
+                      format={FORMAT}
+                      parseDate={parseDate}
+                      dayPickerProps={{
+                        firstDayOfWeek: 1,
+                        disabledDays: {
+                          after: new Date(),
+                        },
+                      }}
+                    />
+                  )}
+                />
+                {errors?.hendelsesfakta?.tid?.periode?.sykdomPaavist &&
+                  errors?.hendelsesfakta?.tid?.periode?.sykdomPaavist?.message && (
+                    <span className="navds-error-message navds-error-message--medium navds-label">
+                      Dato sykdommen er påvist er påkrevd
+                    </span>
+                  )}
+              </div>
+            </div>
+          </>
+        )}
+
+        {timeType === 'Ukjent' && (
+          <BodyLong className="spacer">
+            Husk å skrive utfyllende om dette i beskrivende felt på slutten av
+            innmeldingen. For å melde yrkessykdom må vi ha en periode.
+          </BodyLong>
+        )}
+      </div>
+
       <Select
         className="spacer"
         {...register('hendelsesfakta.naarSkjeddeUlykken', {

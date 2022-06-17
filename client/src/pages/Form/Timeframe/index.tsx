@@ -51,7 +51,7 @@ const TimeframeFormPage = () => {
           <div className="cellContentContainer">
             <BackButton url="/yrkesskade/skjema/skadelidt" />
             <Heading
-              size="2xlarge"
+              size="xlarge"
               className="pageNumberTitle spacer"
               data-number="3"
             >

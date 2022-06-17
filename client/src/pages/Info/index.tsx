@@ -128,7 +128,7 @@ const Info = () => {
           <div className="cellContentContainer">
             <div>
               <Heading
-                size="2xlarge"
+                size="xlarge"
                 className="pageNumberTitle spacer"
                 data-number="1"
               >

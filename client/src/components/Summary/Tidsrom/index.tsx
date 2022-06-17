@@ -47,6 +47,15 @@ const TidsromSummary = ({ data }: IProps) => {
         <Label>Når skjedde ulykken som skal meldes</Label>
         <BodyShort spacing data-testid="summary-time">{accidentTime}</BodyShort>
       </div>
+      { timetype === 'periode' &&(
+        <div className="answerContainer">
+        <Label>Når ble sykdommen påvist?</Label>
+        <BodyShort>{`${format(
+        parseISO(data.hendelsesfakta.tid.periode.sykdomPaavist + ''),
+        'dd.MM.yyyy'
+      )}`}</BodyShort>
+      </div>
+      )}
       <div className="answerContainer">
         <Label>Innenfor hvilket tidsrom inntraff skaden</Label>
         <BodyShort>{tidsromkoder && tidsromkoder[data.hendelsesfakta.naarSkjeddeUlykken]?.verdi}</BodyShort>

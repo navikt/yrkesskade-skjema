@@ -10,7 +10,6 @@ const DescriptionForm = () => {
   const [freetext, setFreetext] = useState(
     skademelding.hendelsesfakta?.utfyllendeBeskrivelse || ''
   );
-  const [rolletype] = useState<string>(skademelding.skadelidt?.dekningsforhold.rolletype || '');
   const { register } = useFormContext<Skademelding>();
 
   return (
@@ -18,7 +17,7 @@ const DescriptionForm = () => {
       <Textarea
         className="spacer"
         label="Under kan du tilføre ytterligere opplysninger."
-        description={<TextareaDescription rolletype={rolletype}/>}
+        description={<TextareaDescription />}
         {...register('hendelsesfakta.utfyllendeBeskrivelse')}
         value={freetext}
         maxLength={2000}
@@ -31,7 +30,10 @@ const DescriptionForm = () => {
 
 export default DescriptionForm;
 
-const TextareaDescription = (props: {rolletype: string}) => {
+const TextareaDescription = () => {
+  const skademelding = useAppSelector((state) => selectSkademelding(state));
+  const isPeriod = skademelding?.hendelsesfakta?.tid?.tidstype === 'Periode';
+  const [rolletype] = useState<string>(skademelding.skadelidt?.dekningsforhold.rolletype || '');
   return (
     <>
       Oppgi informasjon som du mener kan ha betydning for saken. Det kan være
@@ -39,12 +41,15 @@ const TextareaDescription = (props: {rolletype: string}) => {
       <ul>
         <li>Hendelsesforløpet</li>
         <li>Spesielle omstendigheter</li>
-        {props.rolletype.toLowerCase() !== 'elev' &&  <li>Avvik fra normale arbeidsoppgaver</li> }
+        {rolletype.toLowerCase() !== 'elev' &&  <li>Avvik fra normale arbeidsoppgaver</li> }
         <li>Skadelig påvirkning av stoffer</li>
         <li>
           Umiddelbar behandling av skaden/sykdommen hvis det er kjent,
           førstehjelp, debrifing eller legevakt/sykehus.
         </li>
+        {isPeriod && (
+          <li>Hva bestod arbeidet/aktiviteten i da påvirkningen fant sted</li>
+        )}
       </ul>
     </>
   );
