@@ -10,7 +10,7 @@ import {
 import Select from 'react-select';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useSelectedCompany } from '../../../context/SelectedCompanyContext';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Address from '../Address';
 import _ from 'lodash';
 import { useAppSelector } from '../../../core/hooks/state.hooks';
@@ -26,7 +26,6 @@ const AccidentForm = () => {
     register,
     formState: { errors },
     control,
-    setValue
   } = useFormContext<Skademelding>();
 
   const alvorlighetsgradkoder = useAppSelector((state) =>
