@@ -34,7 +34,7 @@ const attachTokenX = (
   next: NextFunction
 ) => {
   const klient = clientRegistry.getClient('tokenX');
-  const audience = utledAudience(serviceConfig.find(config => config.id === 'yrkesskade-melding-api'));
+  const audience = utledAudience(serviceConfig.find(service => service.id === 'yrkesskade-melding-api'));
   exchangeToken(klient, audience, req)
     .then((tokenSet: TokenSet) => {
       req.headers['Nav-Call-Id'] = uuidv4();
