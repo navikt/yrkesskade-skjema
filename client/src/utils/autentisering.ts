@@ -21,8 +21,6 @@ export interface InnloggetBruker {
 export const autentiseringsInterceptor = () => {
     axios.interceptors.response.use(
         (response) => {
-          console.log('response: ', response);
-
             return response;
         },
         (error: AxiosError) => {

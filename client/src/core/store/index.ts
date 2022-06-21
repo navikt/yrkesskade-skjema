@@ -1,4 +1,4 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import appReducer from '../reducers/app.reducer';
 import kodeverkReducer from '../reducers/kodeverk.reducer';
 import skademeldingReducer from '../reducers/skademelding.reducer';
@@ -19,7 +19,10 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, rootReducers);
 
 const store = configureStore({
-  reducer: persistedReducer
+  reducer: persistedReducer,
+  middleware: getDefaultMiddleware({
+    serializableCheck: false,
+  }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
