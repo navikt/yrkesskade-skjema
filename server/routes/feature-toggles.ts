@@ -10,7 +10,7 @@ import clientRegistry from '@navikt/yrkesskade-backend/dist/auth/clientRegistry'
 import { TokenSet } from 'openid-client';
 import { utledAudience, ensureAuthenticated } from '@navikt/yrkesskade-backend/dist/auth/tokenUtils';
 import { exchangeToken } from '@navikt/yrkesskade-backend/dist/auth/tokenX';
-import { serviceConfig } from '../serviceConfig'
+import { serviceConfigs } from '../serviceConfig'
 import { v4 as uuidv4 } from 'uuid';
 
 const toggleFetchHandler = (req, res) => {
@@ -34,7 +34,7 @@ const attachTokenX = (
   next: NextFunction
 ) => {
   const klient = clientRegistry.getClient('tokenX');
-  const audience = utledAudience(serviceConfig.find(service => service.id === 'yrkesskade-melding-api'));
+  const audience = utledAudience(serviceConfigs.find(service => service.id === 'yrkesskade-melding-api'));
   exchangeToken(klient, audience, req)
     .then((tokenSet: TokenSet) => {
       req.headers['Nav-Call-Id'] = uuidv4();
@@ -52,7 +52,7 @@ const attachTokenX = (
 
 
 const hentBrukerinfo = async (req, res: Response, next: NextFunction) => {
-  const service = serviceConfig.find(config => config.id === 'yrkesskade-melding-api');
+  const service = serviceConfigs.find(serviceConfig => serviceConfig.id === 'yrkesskade-melding-api');
 
   try {
     const response = await axios.get<Brukerinfo>(`${service.proxyUrl}/api/v1/brukerinfo`, {
