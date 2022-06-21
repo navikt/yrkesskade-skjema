@@ -109,7 +109,7 @@ export const skademeldingSlice = createSlice({
       }
     },
     reset: (state) => {
-      state = initialState;
+      return { ...initialState };
     }
   }
 })
