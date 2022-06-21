@@ -21,11 +21,12 @@ export interface InnloggetBruker {
 export const autentiseringsInterceptor = () => {
     axios.interceptors.response.use(
         (response) => {
+          console.log('response: ', response);
+
             return response;
         },
         (error: AxiosError) => {
           console.error(error);
-
             if (er401Feil(error)) {
                 window.location.href = getLoginUrl();
             } else {
