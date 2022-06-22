@@ -69,7 +69,7 @@ export const skademeldingSlice = createSlice({
     ) => {
       if (state.skademelding.skade?.skadedeDeler) {
         // vi skal ikke merge denne listen
-        state.skademelding.skade.skadedeDeler = [];
+        //state.skademelding.skade.skadedeDeler = [];
       }
       state.skademelding = merge(state.skademelding, action.payload);
     },
@@ -103,12 +103,15 @@ export const skademeldingSlice = createSlice({
     oppdaterSkade: (state, action: PayloadAction<Skade>) => {
       state.skademelding.skade = action.payload;
     },
+    fjernSkadetDel: (state, action: PayloadAction<SkadetDel>) => {
+      state.skademelding.skade.skadedeDeler = state.skademelding.skade.skadedeDeler.filter(skadetDel => skadetDel.kroppsdelTabellD !== action.payload.kroppsdelTabellD && skadetDel.skadeartTabellC !== action.payload.skadeartTabellC)
+    },
     oppdaterSkadedeDeler: (state, action: PayloadAction<SkadetDel[]>) => {
       if (state.skademelding && state.skademelding.skade) {
         state.skademelding.skade.skadedeDeler = merge(state.skademelding?.skade.skadedeDeler, action.payload);
       }
     },
-    reset: (state) => {
+    reset: () => {
       return { ...initialState };
     }
   }
@@ -126,6 +129,7 @@ export const {
   oppdaterSkade,
   oppdaterDekningsforhold,
   oppdaterSkadedeDeler,
-  reset
+  reset,
+  fjernSkadetDel
 } = skademeldingSlice.actions;
 export default skademeldingSlice.reducer;
