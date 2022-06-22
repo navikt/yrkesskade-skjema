@@ -29,10 +29,15 @@ import {
 } from '../../api/yrkesskade';
 import { logMessage } from '../../utils/logging';
 import { logAmplitudeEvent } from '../../utils/analytics/amplitude';
-import { addOrganisasjon } from '../../core/reducers/app.reducer';
+import { addOrganisasjon, selectOrganisasjon } from '../../core/reducers/app.reducer';
 // import Description from '../Form/Description';
-import { useAppDispatch } from '../../core/hooks/state.hooks';
-import { oppdaterAltinnRoller, oppdaterInnmelder, oppdaterPaaVegneAv, oppdaterSkadelidt } from '../../core/reducers/skademelding.reducer';
+import { useAppDispatch, useAppSelector } from '../../core/hooks/state.hooks';
+import {
+  oppdaterAltinnRoller,
+  oppdaterInnmelder,
+  oppdaterPaaVegneAv,
+  oppdaterSkadelidt,
+} from '../../core/reducers/skademelding.reducer';
 
 const Info = () => {
   const dispatch = useAppDispatch();
@@ -45,8 +50,10 @@ const Info = () => {
   };
 
   const { innloggetBruker } = useInnloggetContext();
-  const { selectedCompany, setSelectedCompany, setSelectedAddress } =
+  const { setSelectedCompany, setSelectedAddress } =
     useSelectedCompany();
+
+  const organisasjon = useAppSelector((state) => selectOrganisasjon(state));
 
   useEffect(() => {
     if (innloggetBruker?.fnr) {
@@ -68,6 +75,12 @@ const Info = () => {
   ]);
 
   const settValgtVirksomhet = (virksomhet: Organisasjon) => {
+    if (organisasjon && organisasjon.organisasjonsnummer === virksomhet.organisasjonsnummer) {
+      dispatch(oppdaterPaaVegneAv(organisasjon.organisasjonsnummer));
+      return;
+    }
+
+    // ny organisasjon valgt
     setSelectedCompany(virksomhet);
 
     BrukerinfoControllerService.hentOrganisasjon(
@@ -142,14 +155,14 @@ const Info = () => {
                 hvilken bedrift du er i ferd med å sende inn på vegne av. Din
                 digitale signatur erstatter virksomhetens signatur og stempel.
               </BodyLong>
-              {innloggetBruker && innloggetBruker.organisasjoner.length && (
+              {innloggetBruker && innloggetBruker.organisasjoner.length && organisasjon && (
                 <>
                   <Label>Navn</Label>
                   <BodyShort spacing>{innloggetBruker.navn}</BodyShort>
                   <Label>Virksomhet</Label>
-                  <BodyShort>{selectedCompany.navn}</BodyShort>
+                  <BodyShort>{organisasjon.navn}</BodyShort>
                   <Detail spacing>
-                    virksomhetsnummer: {selectedCompany.organisasjonsnummer}
+                    virksomhetsnummer: {organisasjon.organisasjonsnummer}
                   </Detail>
                 </>
               )}

@@ -85,8 +85,6 @@ const InjuredForm = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rolletype]);
 
-  console.log(errors)
-
   return (
     <>
       <TextField
