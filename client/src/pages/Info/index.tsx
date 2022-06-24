@@ -21,16 +21,12 @@ import { useEffect } from 'react';
 
 import {
   BrukerinfoControllerService,
-  Dekningsforhold,
-  Innmelder,
   OrganisasjonDto,
-  Skadelidt,
   Skademelding,
 } from '../../api/yrkesskade';
 import { logMessage } from '../../utils/logging';
 import { logAmplitudeEvent } from '../../utils/analytics/amplitude';
 import { addOrganisasjon, selectOrganisasjon } from '../../core/reducers/app.reducer';
-// import Description from '../Form/Description';
 import { useAppDispatch, useAppSelector } from '../../core/hooks/state.hooks';
 import {
   oppdaterSkademelding,
