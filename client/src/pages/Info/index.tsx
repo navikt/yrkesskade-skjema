@@ -90,8 +90,7 @@ const Info = () => {
             ? altinnRolle.RoleDefinitionId.toString()
             : ''
         );
-      //dispatch(oppdaterAltinnRoller(altinnRollerIder));
-      //   dispatch(oppdaterPaaVegneAv(organisasjon.organisasjonsnummer));
+
       setValue('skadelidt.dekningsforhold.organisasjonsnummer', oppdatertVirksomhet.organisasjonsnummer);
       setValue('skadelidt.dekningsforhold.navnPaaVirksomheten', oppdatertVirksomhet.navn);
       if (adresse) {
