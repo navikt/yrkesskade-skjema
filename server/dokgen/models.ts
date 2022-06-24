@@ -47,6 +47,7 @@ export interface PdfHendelsesfakta {
   naarSkjeddeUlykken: Soknadsfelt<string>,
   hvorSkjeddeUlykken: Soknadsfelt<string>,
   ulykkessted: PdfUlykkessted,
+  paavirkningsform: Soknadsfelt<string[]>
   aarsakUlykke: Soknadsfelt<string[]>,
   bakgrunnsaarsak: Soknadsfelt<string[]>,
   stedsbeskrivelse: Soknadsfelt<string>,
@@ -63,7 +64,8 @@ export interface PdfAdresse {
 export interface PdfTid {
   tidstype: string;
   tidspunkt?: Soknadsfelt<PdfTidspunkt>;
-  periode?: Soknadsfelt<PdfPeriode[]>;
+  perioder?: Soknadsfelt<PdfPeriode[]>;
+  sykdomPaavist?: Soknadsfelt<string>;
   ukjent?: boolean;
 }
 
@@ -95,7 +97,8 @@ export interface PdfDokumentInfo {
   dokumentnummer: string,
   dokumentDatoPrefix: string,
   dokumentDato: string,
-  tekster: PdfTekster
+  tekster: PdfTekster,
+  annet: PdfAnnet
 }
 
 export interface PdfTekster {
@@ -105,4 +108,8 @@ export interface PdfTekster {
   omUlykkenSeksjonstittel: string,
   omSkadenSeksjonstittel: string,
   omSkadenFlereSkader: string
+}
+
+export interface PdfAnnet {
+  erSykdom: boolean
 }
