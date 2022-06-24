@@ -18,71 +18,52 @@ import ExitButton from '../../components/ExitButton';
 import { useInnloggetContext } from '../../context/InnloggetContext';
 import { Adresse, Organisasjon } from '../../types/brukerinfo';
 import { useEffect } from 'react';
-import { useSelectedCompany } from '../../context/SelectedCompanyContext';
 
 import {
   BrukerinfoControllerService,
-  Dekningsforhold,
-  Innmelder,
   OrganisasjonDto,
-  Skadelidt,
+  Skademelding,
 } from '../../api/yrkesskade';
 import { logMessage } from '../../utils/logging';
 import { logAmplitudeEvent } from '../../utils/analytics/amplitude';
 import { addOrganisasjon, selectOrganisasjon } from '../../core/reducers/app.reducer';
-// import Description from '../Form/Description';
 import { useAppDispatch, useAppSelector } from '../../core/hooks/state.hooks';
 import {
-  oppdaterAltinnRoller,
-  oppdaterInnmelder,
-  oppdaterPaaVegneAv,
-  oppdaterSkadelidt,
+  oppdaterSkademelding,
 } from '../../core/reducers/skademelding.reducer';
+import { useFormContext } from 'react-hook-form';
 
 const Info = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const handleForward = () => {
-    logMessage('Bruker har startet innmelding');
-    logAmplitudeEvent('skademelding.innmelding', { status: 'startet' });
-    navigate('/yrkesskade/skjema/skadelidt');
+  const {
+    handleSubmit,
+    setValue
+  } = useFormContext<Skademelding>();
+
+  const handleForward = (data: Skademelding) => {
+      dispatch(oppdaterSkademelding(data));
+      logMessage('Bruker har startet innmelding');
+      logAmplitudeEvent('skademelding.innmelding', { status: 'startet' });
+      navigate('/yrkesskade/skjema/skadelidt');
   };
 
   const { innloggetBruker } = useInnloggetContext();
-  const { setSelectedCompany, setSelectedAddress } =
-    useSelectedCompany();
 
   const organisasjon = useAppSelector((state) => selectOrganisasjon(state));
 
   useEffect(() => {
     if (innloggetBruker?.fnr) {
-      const innmelder: Innmelder = {
-        norskIdentitetsnummer: innloggetBruker.fnr as unknown as string,
-        innmelderrolle: 'virksomhetsrepresentant',
-        paaVegneAv: '',
-        altinnrolleIDer: []
-      };
-      dispatch(oppdaterInnmelder(innmelder));
-
       settValgtVirksomhet(innloggetBruker.organisasjoner[0]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     innloggetBruker?.fnr,
-    innloggetBruker?.organisasjoner,
-    setSelectedCompany,
+    innloggetBruker?.organisasjoner
   ]);
 
   const settValgtVirksomhet = (virksomhet: Organisasjon) => {
-    if (organisasjon && organisasjon.organisasjonsnummer === virksomhet.organisasjonsnummer) {
-      dispatch(oppdaterPaaVegneAv(organisasjon.organisasjonsnummer));
-      return;
-    }
-
-    // ny organisasjon valgt
-    setSelectedCompany(virksomhet);
-
     BrukerinfoControllerService.hentOrganisasjon(
       virksomhet.organisasjonsnummer
     ).then(async (organisasjon: OrganisasjonDto) => {
@@ -96,24 +77,11 @@ const Info = () => {
 
       const adresse =
         organisasjon.beliggenhetsadresse || organisasjon.forretningsadresse;
-        setSelectedAddress(adresse);
 
       const oppdatertVirksomhet = {...virksomhet};
       oppdatertVirksomhet.beliggenhetsadresse = organisasjon.beliggenhetsadresse as Adresse;
       oppdatertVirksomhet.forretningsadresse = organisasjon.forretningsadresse as Adresse;
       dispatch(addOrganisasjon(oppdatertVirksomhet));
-
-      const dekningsforhold: Dekningsforhold = {
-        organisasjonsnummer: organisasjon.organisasjonsnummer as string,
-        stillingstittelTilDenSkadelidte: [],
-        rolletype: '',
-      };
-      const skadelidt: Skadelidt = {
-        dekningsforhold: dekningsforhold,
-        norskIdentitetsnummer: '',
-      };
-
-      dispatch(oppdaterSkadelidt(skadelidt));
 
       const altinnRollerIder = roller
         .filter((altinnRolle) => altinnRolle.RoleDefinitionId)
@@ -122,10 +90,21 @@ const Info = () => {
             ? altinnRolle.RoleDefinitionId.toString()
             : ''
         );
-      dispatch(oppdaterAltinnRoller(altinnRollerIder));
-      dispatch(oppdaterPaaVegneAv(organisasjon.organisasjonsnummer));
+      //dispatch(oppdaterAltinnRoller(altinnRollerIder));
+      //   dispatch(oppdaterPaaVegneAv(organisasjon.organisasjonsnummer));
+      setValue('skadelidt.dekningsforhold.organisasjonsnummer', oppdatertVirksomhet.organisasjonsnummer);
+      setValue('skadelidt.dekningsforhold.navnPaaVirksomheten', oppdatertVirksomhet.navn);
+      if (adresse) {
+        setValue('skadelidt.dekningsforhold.virksomhetensAdresse', { adresselinje1: adresse?.adresser[0], adresselinje2: adresse?.postnummer, adresselinje3: adresse?.poststed, land: adresse?.landkode});
+      }
+      setValue('innmelder.norskIdentitetsnummer', innloggetBruker?.fnr.toString() || '');
+      setValue('innmelder.innmelderrolle', 'virksomhetsrepresentant');
+      setValue('innmelder.paaVegneAv', oppdatertVirksomhet.organisasjonsnummer);
+      setValue('innmelder.altinnrolleIDer', altinnRollerIder);
     });
   };
+
+  useEffect(() => {}, [])
 
   const tilbakeTilPapirskjema = () => {
     logAmplitudeEvent('skademelding.innmelding', { status: 'papir', kilde: 'infoside' });
@@ -233,7 +212,7 @@ const Info = () => {
               <ExitButton />
               <Button
                 variant="primary"
-                onClick={handleForward}
+                onClick={handleSubmit(handleForward)}
                 data-testid="start-innmelding"
               >
                 Start innmelding
