@@ -60,16 +60,16 @@ describe('PdfSkademeldingMapper', () => {
     expectSoknadsfeltAdresse(pdfUlykkested.adresse, 'Adresse for ulykken', { adresselinje1: 'Testveien 2', adresselinje2: '1112', adresselinje3: 'TOAST', land: 'NO'});
     expectSoknadsfelt(pdfSkade.alvorlighetsgrad, 'Hvor alvorlig var hendelsen', 'antattOppsoektLege');
     expectSoknadsfelt(pdfHendelsesfakta.hvorSkjeddeUlykken, 'Hvor skjedde ulykken', 'arbeidsstedInne');
-    expectSoknadsfelt(pdfHendelsesfakta.stedsbeskrivelseTabellF, 'Hvilken type arbeidsplass er det', 'anleggsomraadeEllerByggeplassEllerStenbruddEllerGruve');
-    expectSoknadsfelt(pdfHendelsesfakta.aarsakUlykkeTabellAogE, 'Hva var årsaken til hendelsen og bakgrunn for årsaken', ['stukketEllerKuttet', 'stoetEllerTreffAvGjenstand']);
-    expectSoknadsfelt(pdfHendelsesfakta.bakgrunnsaarsakTabellBogG, 'Hva var bakgrunnen til hendelsen', ['manglendeMerkingEllerVarsling', 'verneutstyrUtAvFunksjon']);
+    expectSoknadsfelt(pdfHendelsesfakta.stedsbeskrivelse, 'Hvilken type arbeidsplass er det', 'anleggsomraadeEllerByggeplassEllerStenbruddEllerGruve');
+    expectSoknadsfelt(pdfHendelsesfakta.aarsakUlykke, 'Hva var årsaken til hendelsen og bakgrunn for årsaken', ['stukketEllerKuttet', 'stoetEllerTreffAvGjenstand']);
+    expectSoknadsfelt(pdfHendelsesfakta.bakgrunnsaarsak, 'Hva var bakgrunnen til hendelsen', ['manglendeMerkingEllerVarsling', 'verneutstyrUtAvFunksjon']);
 
     // skaden
     pdfSkade.skadedeDeler.forEach((skadetDel, index) => {
-      expectSoknadsfelt(skadetDel.kroppsdelTabellD, 'Hvor på kroppen er skaden', skademelding.skade.skadedeDeler[index].kroppsdel);
-      expectSoknadsfelt(skadetDel.skadeartTabellC, 'Hva slags skade er det', skademelding.skade.skadedeDeler[index].skadeart);
+      expectSoknadsfelt(skadetDel.kroppsdel, 'Hvor på kroppen er skaden', skademelding.skade.skadedeDeler[index].kroppsdel);
+      expectSoknadsfelt(skadetDel.skadeart, 'Hva slags skade er det', skademelding.skade.skadedeDeler[index].skadeart);
     });
-    expectSoknadsfelt(pdfSkade.antattSykefravaerTabellH, 'Har den skadelidte hatt fravær', 'treDagerEllerMindre');
+    expectSoknadsfelt(pdfSkade.antattSykefravaer, 'Har den skadelidte hatt fravær', 'treDagerEllerMindre');
     expectSoknadsfelt(pdfHendelsesfakta.utfyllendeBeskrivelse, 'Utfyllende beskrivelse', 'Dette er en utfyllende beskrivelse');
 
   })
