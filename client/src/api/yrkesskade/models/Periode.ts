@@ -2,8 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type TidPeriode = {
+export type Periode = {
     fra?: string;
     til?: string;
-    sykdomPaavist?: string;
 };

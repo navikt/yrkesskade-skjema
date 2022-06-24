@@ -66,18 +66,18 @@ const UlykkeSummary = ({ data }: IProps) => {
           <BodyShort>{hvorSkjeddeUlykkenkoder && hvorSkjeddeUlykkenkoder[data.hendelsesfakta.hvorSkjeddeUlykken]?.verdi}</BodyShort>
         </div>
       )}
-      {get(data, ['hendelsesfakta', 'stedsbeskrivelseTabellF']) !==
+      {get(data, ['hendelsesfakta', 'stedsbeskrivelse']) !==
         'undefined' && roller[rolletype] && !roller[rolletype].isElevEllerStudent && !isPeriod && (
         <div className="answerContainer">
           <Label>Type arbeidsplass</Label>
-          <BodyShort>{typeArbeidsplasskoder && typeArbeidsplasskoder[data.hendelsesfakta.stedsbeskrivelseTabellF]?.verdi}</BodyShort>
+          <BodyShort>{typeArbeidsplasskoder && typeArbeidsplasskoder[data.hendelsesfakta.stedsbeskrivelse]?.verdi}</BodyShort>
         </div>
       )}
-      {!isEmpty(data.hendelsesfakta.aarsakUlykkeTabellAogE) && (
+      {!isEmpty(data.hendelsesfakta.aarsakUlykke) && (
         <div className="answerContainer">
           <Label>Årsak og bakgrunn for hendelsen</Label>
           <BodyShort>
-            {data.hendelsesfakta.aarsakUlykkeTabellAogE.map(
+            {data.hendelsesfakta.aarsakUlykke.map(
               (background: string) => {
                 return `${aarsakOgBakgrunnkoder && aarsakOgBakgrunnkoder[background]?.verdi}`;
               }
@@ -85,11 +85,11 @@ const UlykkeSummary = ({ data }: IProps) => {
           </BodyShort>
         </div>
       )}
-      {!isEmpty(data.hendelsesfakta.bakgrunnsaarsakTabellBogG) && !isPeriod && (
+      {!isEmpty(data.hendelsesfakta.bakgrunnsaarsak) && !isPeriod && (
         <div className="answerContainer">
           <Label>Bakgrunn for hendelsen</Label>
           <BodyShort>
-            {data.hendelsesfakta.bakgrunnsaarsakTabellBogG.map(
+            {data.hendelsesfakta.bakgrunnsaarsak.map(
               (background: string) => {
                 return `${bakgrunnForHendelsenkoder && bakgrunnForHendelsenkoder[background]?.verdi}`;
               }

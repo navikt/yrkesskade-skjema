@@ -12,7 +12,7 @@ import {
   PdfTidspunkt,
   PdfUlykkessted,
 } from './models';
-import { Adresse, Hendelsesfakta, Innmelder, Skade, Skadelidt, Skademelding, SkadetDel, Tid, Ulykkessted } from '../../client/src/api/yrkesskade';
+import { Adresse, Hendelsesfakta, Innmelder, Skade, Skadelidt, Skademelding, SkadetDel, Tid, Ulykkessted, Periode } from '../../client/src/api/yrkesskade';
 import { format, parseISO } from 'date-fns';
 import { nb } from 'date-fns/locale';
 import { KodeverkLoader } from '../kodeverk/kodeverk';
@@ -81,10 +81,10 @@ const mapRolletype = (rolletype: string, kodeverk: KodeverkLoader): PdfRolletype
 
 const mapSkade = (skade: Skade, kodeverk: KodeverkLoader): PdfSkade => {
   return {
-    antattSykefravaerTabellH: { label: 'Har den skadelidte hatt fravær', verdi: kodeverk.mapKodeTilVerdi(skade.antattSykefravaerTabellH, 'harSkadelidtHattFravaer') },
+    antattSykefravaerTabellH: { label: 'Har den skadelidte hatt fravær', verdi: kodeverk.mapKodeTilVerdi(skade.antattSykefravaer, 'harSkadelidtHattFravaer') },
     skadedeDeler: skade.skadedeDeler.map((skadetDel: SkadetDel) => ({
-      kroppsdelTabellD: { label: 'Hvor på kroppen er skaden', verdi: kodeverk.mapKodeTilVerdi(skadetDel.kroppsdelTabellD, 'skadetKroppsdel')},
-      skadeartTabellC: { label: 'Hva slags skade er det', verdi: kodeverk.mapKodeTilVerdi(skadetDel.skadeartTabellC, 'skadetype') }
+      kroppsdelTabellD: { label: 'Hvor på kroppen er skaden', verdi: kodeverk.mapKodeTilVerdi(skadetDel.kroppsdel, 'skadetKroppsdel')},
+      skadeartTabellC: { label: 'Hva slags skade er det', verdi: kodeverk.mapKodeTilVerdi(skadetDel.skadeart, 'skadetype') }
     })),
     alvorlighetsgrad: { label: 'Hvor alvorlig var hendelsen', verdi: skade.alvorlighetsgrad ? kodeverk.mapKodeTilVerdi(skade.alvorlighetsgrad, 'alvorlighetsgrad') : ''},
   }
@@ -96,9 +96,9 @@ const mapHendelsesfakta = (hendelsesfakta: Hendelsesfakta, kodeverk: KodeverkLoa
     naarSkjeddeUlykken: { label: 'Innenfor hvilket tidsrom inntraff ulykken', verdi: kodeverk.mapKodeTilVerdi(hendelsesfakta.naarSkjeddeUlykken, 'tidsrom') },
     hvorSkjeddeUlykken: { label: 'Hvor skjedde ulykken', verdi: kodeverk.mapKodeTilVerdi(hendelsesfakta.hvorSkjeddeUlykken, 'hvorSkjeddeUlykken') },
     ulykkessted: mapUlykkessted(hendelsesfakta.ulykkessted, kodeverk),
-    aarsakUlykkeTabellAogE: { label: 'Hva var årsaken til hendelsen og bakgrunn for årsaken', verdi: kodeverk.mapKoderTilVerdier(hendelsesfakta.aarsakUlykkeTabellAogE, 'aarsakOgBakgrunn') },
-    bakgrunnsaarsakTabellBogG: { label: 'Hva var bakgrunnen til hendelsen', verdi: kodeverk.mapKoderTilVerdier(hendelsesfakta.bakgrunnsaarsakTabellBogG, 'bakgrunnForHendelsen') },
-    stedsbeskrivelseTabellF: { label: 'Hvilken type arbeidsplass er det', verdi: kodeverk.mapKodeTilVerdi(hendelsesfakta.stedsbeskrivelseTabellF, 'typeArbeidsplass') },
+    aarsakUlykkeTabellAogE: { label: 'Hva var årsaken til hendelsen og bakgrunn for årsaken', verdi: kodeverk.mapKoderTilVerdier(hendelsesfakta.aarsakUlykke, 'aarsakOgBakgrunn') },
+    bakgrunnsaarsakTabellBogG: { label: 'Hva var bakgrunnen til hendelsen', verdi: kodeverk.mapKoderTilVerdier(hendelsesfakta.bakgrunnsaarsak, 'bakgrunnForHendelsen') },
+    stedsbeskrivelseTabellF: { label: 'Hvilken type arbeidsplass er det', verdi: kodeverk.mapKodeTilVerdi(hendelsesfakta.stedsbeskrivelse, 'typeArbeidsplass') },
     utfyllendeBeskrivelse: { label: 'Utfyllende beskrivelse', verdi: hendelsesfakta.utfyllendeBeskrivelse || '' }
   }
 }
@@ -121,10 +121,7 @@ const mapTid = (tid: Tid, kodeverk: KodeverkLoader): PdfTid => {
       tidstype: tid.tidstype,
       periode: {
         label,
-        verdi: {
-          fra: formatDate(parseISO(tid.periode.fra), DATO_FORMAT),
-          til: formatDate(parseISO(tid.periode.til), DATO_FORMAT),
-        } as PdfPeriode,
+        verdi: mapPerioder(tid.perioder)
       },
     };
   }
@@ -132,6 +129,15 @@ const mapTid = (tid: Tid, kodeverk: KodeverkLoader): PdfTid => {
   return {
     tidstype: Tid.tidstype.UKJENT
   }
+}
+
+const mapPerioder = (perioder: Periode[]): PdfPeriode[] => {
+  return perioder.map(periode => (
+    {
+      fra: formatDate(parseISO(periode.fra), DATO_FORMAT),
+      til: formatDate(parseISO(periode.til), DATO_FORMAT),
+    }
+  ))
 }
 
 const mapUlykkessted = (ulykkessted: Ulykkessted, kodeverk: KodeverkLoader): PdfUlykkessted => {

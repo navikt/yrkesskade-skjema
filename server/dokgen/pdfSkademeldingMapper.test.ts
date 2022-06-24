@@ -66,8 +66,8 @@ describe('PdfSkademeldingMapper', () => {
 
     // skaden
     pdfSkade.skadedeDeler.forEach((skadetDel, index) => {
-      expectSoknadsfelt(skadetDel.kroppsdelTabellD, 'Hvor på kroppen er skaden', skademelding.skade.skadedeDeler[index].kroppsdelTabellD);
-      expectSoknadsfelt(skadetDel.skadeartTabellC, 'Hva slags skade er det', skademelding.skade.skadedeDeler[index].skadeartTabellC);
+      expectSoknadsfelt(skadetDel.kroppsdelTabellD, 'Hvor på kroppen er skaden', skademelding.skade.skadedeDeler[index].kroppsdel);
+      expectSoknadsfelt(skadetDel.skadeartTabellC, 'Hva slags skade er det', skademelding.skade.skadedeDeler[index].skadeart);
     });
     expectSoknadsfelt(pdfSkade.antattSykefravaerTabellH, 'Har den skadelidte hatt fravær', 'treDagerEllerMindre');
     expectSoknadsfelt(pdfHendelsesfakta.utfyllendeBeskrivelse, 'Utfyllende beskrivelse', 'Dette er en utfyllende beskrivelse');
