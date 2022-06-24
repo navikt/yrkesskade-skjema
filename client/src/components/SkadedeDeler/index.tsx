@@ -47,8 +47,8 @@ const SkadedeDeler = (props: IProps) => {
     }
     setSkade(undefined);
     const skade: SkadetDel = {
-      kroppsdelTabellD: kroppsdel,
-      skadeartTabellC: skadeart,
+      kroppsdel: kroppsdel,
+      skadeart: skadeart,
     };
     setKroppsdel('');
     setSkadeart('');
@@ -71,8 +71,8 @@ const SkadedeDeler = (props: IProps) => {
   useEffect(() => {
     if (skadeart && skadeart.length > 0 && kroppsdel && kroppsdel.length > 0) {
       const skade: SkadetDel = {
-        kroppsdelTabellD: kroppsdel,
-        skadeartTabellC: skadeart,
+        kroppsdel: kroppsdel,
+        skadeart: skadeart,
       };
       setSkade(skade);
       onSkadededelerChange([...injuriesForTable, skade]);
@@ -86,8 +86,8 @@ const SkadedeDeler = (props: IProps) => {
       const skader = skadedeDeler;
       const skade = skader[skader.length - 1];
       const resten = remove(skader.length - 1, 1, skader);
-      setKroppsdel(skade.kroppsdelTabellD);
-      setSkadeart(skade.skadeartTabellC);
+      setKroppsdel(skade.kroppsdel);
+      setSkadeart(skade.skadeart);
       setInjuriesForTable(resten);
     }
   }, []);
@@ -96,25 +96,6 @@ const SkadedeDeler = (props: IProps) => {
 
   return (
     <>
-      <Select
-        className="spacer"
-        label="Hvor på kroppen er skaden"
-        value={kroppsdel}
-        data-testid="injury-body-location-options"
-        onChange={(e) => setKroppsdel(e.currentTarget.value)}
-        error={kroppsdelError}
-      >
-        <option hidden value=""></option>
-        {skadetKroppsdelkoder &&
-          Object.keys(skadetKroppsdelkoder).map((kode: string) => {
-            return (
-              <option key={kode} value={kode}>
-                {skadetKroppsdelkoder[kode]?.verdi}
-              </option>
-            );
-          })}
-      </Select>
-
       <Select
         label="Hva slags skade er det"
         value={skadeart}
@@ -148,6 +129,25 @@ const SkadedeDeler = (props: IProps) => {
         )}
       </Select>
 
+      <Select
+        className="spacer"
+        label="Hvor på kroppen er skaden"
+        value={kroppsdel}
+        data-testid="injury-body-location-options"
+        onChange={(e) => setKroppsdel(e.currentTarget.value)}
+        error={kroppsdelError}
+      >
+        <option hidden value=""></option>
+        {skadetKroppsdelkoder &&
+          Object.keys(skadetKroppsdelkoder).map((kode: string) => {
+            return (
+              <option key={kode} value={kode}>
+                {skadetKroppsdelkoder[kode]?.verdi}
+              </option>
+            );
+          })}
+      </Select>
+
       <Button
         variant="tertiary"
         onClick={handleMultipleInjuries}
@@ -174,13 +174,13 @@ const SkadedeDeler = (props: IProps) => {
                   <Table.Row key={index} data-testid="skadet-del-rad">
                     <Table.DataCell>
                       {(skadetKroppsdelkoder &&
-                        skadetKroppsdelkoder[item.kroppsdelTabellD]?.verdi) ||
-                        `UKJENT ${item.kroppsdelTabellD}`}
+                        skadetKroppsdelkoder[item.kroppsdel]?.verdi) ||
+                        `UKJENT ${item.kroppsdel}`}
                     </Table.DataCell>
                     <Table.DataCell>
                       {(sykdomSkadeKoder &&
-                        sykdomSkadeKoder[item.skadeartTabellC]?.verdi) ||
-                        `UKJENT ${item.skadeartTabellC}`}
+                        sykdomSkadeKoder[item.skadeart]?.verdi) ||
+                        `UKJENT ${item.skadeart}`}
                     </Table.DataCell>
                     <Table.DataCell>
                       <Button

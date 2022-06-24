@@ -14,12 +14,12 @@ export type { Dekningsforhold } from './models/Dekningsforhold';
 export type { Hendelsesfakta } from './models/Hendelsesfakta';
 export type { Innmelder } from './models/Innmelder';
 export type { OrganisasjonDto } from './models/OrganisasjonDto';
+export type { Periode } from './models/Periode';
 export type { Skade } from './models/Skade';
 export type { Skadelidt } from './models/Skadelidt';
 export type { Skademelding } from './models/Skademelding';
 export type { SkadetDel } from './models/SkadetDel';
 export { Tid } from './models/Tid';
-export type { TidPeriode } from './models/TidPeriode';
 export type { Ulykkessted } from './models/Ulykkessted';
 export type { Unit } from './models/Unit';
 

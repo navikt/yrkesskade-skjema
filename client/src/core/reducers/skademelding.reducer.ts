@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { merge } from "lodash";
-import { Dekningsforhold, Innmelder, Skade, Skadelidt, Skademelding, SkadetDel, Tid } from "../../api/yrkesskade";
+import { Dekningsforhold, Innmelder, Periode, Skade, Skadelidt, Skademelding, SkadetDel, Tid } from "../../api/yrkesskade";
 import { RootState } from "../store";
 
 interface SkademeldingState {
@@ -28,15 +28,12 @@ const initialState: SkademeldingState = {
     skade: {
       alvorlighetsgrad: '',
       skadedeDeler: [],
-      antattSykefravaerTabellH: '',
+      antattSykefravaer: '',
     },
     hendelsesfakta: {
       tid: {
         tidspunkt: undefined,
-        periode: {
-          fra: undefined,
-          til: undefined,
-        },
+        perioder: undefined,
         ukjent: false,
         tidstype: Tid.tidstype.TIDSPUNKT,
       },
@@ -51,10 +48,11 @@ const initialState: SkademeldingState = {
           land: undefined,
         },
       },
-      aarsakUlykkeTabellAogE: [],
-      bakgrunnsaarsakTabellBogG: [],
+      aarsakUlykke: [],
+      bakgrunnsaarsak: [],
       utfyllendeBeskrivelse: '',
-      stedsbeskrivelseTabellF: '',
+      stedsbeskrivelse: '',
+      paavirkningsform: undefined,
     }
   }
 }
@@ -108,8 +106,11 @@ export const skademeldingSlice = createSlice({
         state.skademelding.skade.skadedeDeler = merge(state.skademelding?.skade.skadedeDeler, action.payload);
       }
     },
-    reset: (state) => {
-      state = initialState;
+    fjernPeriode: (state, action: PayloadAction<Periode>) => {
+      state.skademelding.hendelsesfakta.tid.perioder = state.skademelding.hendelsesfakta.tid.perioder?.filter(periode => periode.fra !== action.payload.fra && periode.til !== action.payload.til)
+    },
+    reset: () => {
+      return { ...initialState };
     }
   }
 })
@@ -126,6 +127,7 @@ export const {
   oppdaterSkade,
   oppdaterDekningsforhold,
   oppdaterSkadedeDeler,
+  fjernPeriode,
   reset
 } = skademeldingSlice.actions;
 export default skademeldingSlice.reducer;
