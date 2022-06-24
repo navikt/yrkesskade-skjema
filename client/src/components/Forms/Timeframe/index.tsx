@@ -26,7 +26,6 @@ import { selectSkademelding } from '../../../core/reducers/skademelding.reducer'
 import { Skademelding, Tid } from '../../../api/yrkesskade';
 import { nb } from 'date-fns/locale';
 import Tidsperioder from '../../Tidsperioder';
-import { isEmpty } from 'lodash';
 
 function formatDate(date: number | Date, format: string) {
   return dateFnsFormat(date, format);
@@ -111,10 +110,6 @@ const TimeframeForm = () => {
     // ikke dato
     return undefined;
   };
-
-  const specificDateError = useRef('');
-
-
 
   return (
     <>
