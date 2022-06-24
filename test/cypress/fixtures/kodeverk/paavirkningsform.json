@@ -1,0 +1,24 @@
+{
+  "kodeverdierMap": {
+    "kjemikalierEllerLoesemidler": {
+      "kode": "kjemikalierEllerLoesemidler",
+      "verdi": "Kjemikalier, løsemidler, gift, gass, væske o.l."
+    },
+    "stoevpaavirkning": {
+      "kode": "stoevpaavirkning",
+      "verdi": "Støvpåvirkning, stenstøv, asbest o.l."
+    },
+    "stoey": {
+      "kode": "stoey",
+      "verdi": "Støy"
+    },
+    "vibrasjon": {
+      "kode": "vibrasjon",
+      "verdi": "Vibrasjon"
+    },
+    "straalingEllerRadioaktivStraaling": {
+      "kode": "straalingEllerRadioaktivStraaling",
+      "verdi": "Stråling, radioaktiv stråling"
+    }
+  }
+}
