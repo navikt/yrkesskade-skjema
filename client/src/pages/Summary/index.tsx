@@ -51,8 +51,8 @@ const Summary = () => {
 
       logMessage('Skademelding innsendt');
       logAmplitudeEvent('skademelding.innmelding', { status: 'fullfort' });
-      dispatch(reset());
       navigate('/yrkesskade/skjema/kvittering',  { state: data });
+      dispatch(reset());
     } catch (error: any) {
       setError('Det skjedde en feil med innsendingen. Vi jobber med å løse problemet. Prøv igjen senere.');
       logErrorMessage(`Innsending av skademelding feilet: ${error.message}`);

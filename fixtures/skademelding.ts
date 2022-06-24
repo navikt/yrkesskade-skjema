@@ -27,21 +27,18 @@ export const fixtures: { [key: string]: (Date) => Skademelding } = {
       skade: {
         skadedeDeler: [
           {
-            kroppsdelTabellD: 'hode',
-            skadeartTabellC: 'saarskade',
+            kroppsdel: 'hode',
+            skadeart: 'saarskade',
           } as SkadetDel,
         ],
         alvorlighetsgrad: 'antattOppsoektLege',
-        antattSykefravaerTabellH: 'treDagerEllerMindre',
+        antattSykefravaer: 'treDagerEllerMindre',
       },
       hendelsesfakta: {
         tid: {
           tidstype: Tid.tidstype.TIDSPUNKT,
           tidspunkt: tidspunkt.toISOString(),
-          periode: {
-            fra: '',
-            til: '',
-          },
+          perioder: undefined,
           ukjent: false,
         },
         naarSkjeddeUlykken: 'iAvtaltArbeidstid',
@@ -55,10 +52,10 @@ export const fixtures: { [key: string]: (Date) => Skademelding } = {
             land: 'NO',
           },
         },
-        aarsakUlykkeTabellAogE: ['stukketEllerKuttet', 'stoetEllerTreffAvGjenstand'],
-        bakgrunnsaarsakTabellBogG: ['manglendeMerkingEllerVarsling', 'verneutstyrUtAvFunksjon'],
+        aarsakUlykke: ['stukketEllerKuttet', 'stoetEllerTreffAvGjenstand'],
+        bakgrunnsaarsak: ['manglendeMerkingEllerVarsling', 'verneutstyrUtAvFunksjon'],
         utfyllendeBeskrivelse: 'Dette er en utfyllende beskrivelse',
-        stedsbeskrivelseTabellF: 'anleggsomraadeEllerByggeplassEllerStenbruddEllerGruve',
+        stedsbeskrivelse: 'anleggsomraadeEllerByggeplassEllerStenbruddEllerGruve',
       },
     };
   },

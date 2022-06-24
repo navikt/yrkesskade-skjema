@@ -63,7 +63,7 @@ export interface PdfAdresse {
 export interface PdfTid {
   tidstype: string;
   tidspunkt?: Soknadsfelt<PdfTidspunkt>;
-  periode?: Soknadsfelt<PdfPeriode>;
+  periode?: Soknadsfelt<PdfPeriode[]>;
   ukjent?: boolean;
 }
 

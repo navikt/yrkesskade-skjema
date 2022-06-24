@@ -40,8 +40,8 @@ const InjuryForm = () => {
 
   useEffect(() => {
     setValue(
-      'skade.antattSykefravaerTabellH',
-      skademelding.skade?.antattSykefravaerTabellH || ''
+      'skade.antattSykefravaer',
+      skademelding.skade?.antattSykefravaer || ''
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
@@ -74,8 +74,8 @@ const InjuryForm = () => {
       <RadioGroup
         legend="Har den skadelidte hatt fravær?"
         error={
-          errors?.skade?.antattSykefravaerTabellH &&
-          errors?.skade?.antattSykefravaerTabellH.message
+          errors?.skade?.antattSykefravaer &&
+          errors?.skade?.antattSykefravaer.message
         }
         className="spacer"
       >
@@ -86,7 +86,7 @@ const InjuryForm = () => {
                 <input
                   type="radio"
                   className="navds-radio__input"
-                  {...register('skade.antattSykefravaerTabellH', {
+                  {...register('skade.antattSykefravaer', {
                     required: 'Dette feltet er påkrevd',
                   })}
                   value={kode}

@@ -13,7 +13,8 @@ export const summary = {
     rader: () => cy.get('[data-testid="skade-tabell-rad"]')
   },
   tidOgSted: {
-    tid: () => cy.get('[data-testid="summary-time"]')
+    tid: () => cy.get('[data-testid="summary-time"]'),
+    perioder: () => cy.get('[data-testid="sammendrag-periode-rad"]')
   }
 
 }

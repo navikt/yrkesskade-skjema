@@ -34,8 +34,8 @@ const SkadeSummary = ({ data }: IProps) => {
               (item: any, index: number) => {
                 return (
                   <Table.Row key={index} data-testid="skade-tabell-rad">
-                    <Table.DataCell>{skadetKroppsdelkoder && skadetKroppsdelkoder[item.kroppsdelTabellD]?.verdi}</Table.DataCell>
-                    <Table.DataCell>{sickAndInjuryCodes && sickAndInjuryCodes[item.skadeartTabellC]?.verdi}</Table.DataCell>
+                    <Table.DataCell>{skadetKroppsdelkoder && skadetKroppsdelkoder[item.kroppsdel]?.verdi}</Table.DataCell>
+                    <Table.DataCell>{sickAndInjuryCodes && sickAndInjuryCodes[item.skadeart]?.verdi}</Table.DataCell>
                   </Table.Row>
                 );
               }
@@ -46,7 +46,7 @@ const SkadeSummary = ({ data }: IProps) => {
       { roller[rolletype] && roller[rolletype].showAbsence && (
       <div className="answerContainer spacer">
         <Label>Har den skadelidte hatt fravær</Label>
-        <BodyShort>{fravaerkoder && fravaerkoder[data.skade.antattSykefravaerTabellH]?.verdi}</BodyShort>
+        <BodyShort>{fravaerkoder && fravaerkoder[data.skade.antattSykefravaer]?.verdi}</BodyShort>
       </div>
       )}
     </div>

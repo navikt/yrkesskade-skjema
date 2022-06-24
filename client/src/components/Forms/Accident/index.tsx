@@ -185,13 +185,13 @@ const AccidentForm = () => {
         <NAVSelect
           className="spacer"
           label="Hvilken type arbeidsplass er det?"
-          {...register('hendelsesfakta.stedsbeskrivelseTabellF', {
+          {...register('hendelsesfakta.stedsbeskrivelse', {
             required: 'Dette feltet er påkrevd',
           })}
           data-testid="accident-place-type"
           error={
-            errors?.hendelsesfakta?.stedsbeskrivelseTabellF &&
-            errors?.hendelsesfakta?.stedsbeskrivelseTabellF.message
+            errors?.hendelsesfakta?.stedsbeskrivelse &&
+            errors?.hendelsesfakta?.stedsbeskrivelse.message
           }
         >
           <option hidden value=""></option>
@@ -216,11 +216,11 @@ const AccidentForm = () => {
           Du kan velge flere alternativer
         </BodyShort>
         <Controller
-          name="hendelsesfakta.aarsakUlykkeTabellAogE"
+          name="hendelsesfakta.aarsakUlykke"
           control={control}
           rules={{
             required:
-              _.isEmpty(skademelding.hendelsesfakta?.aarsakUlykkeTabellAogE) &&
+              _.isEmpty(skademelding.hendelsesfakta?.aarsakUlykke) &&
               'Dette feltet er påkrevd',
           }}
           render={({ field }) => (
@@ -236,8 +236,8 @@ const AccidentForm = () => {
                 }))
               }
               defaultValue={
-                !_.isEmpty(skademelding.hendelsesfakta?.aarsakUlykkeTabellAogE)
-                  ? skademelding.hendelsesfakta?.aarsakUlykkeTabellAogE.map(
+                !_.isEmpty(skademelding.hendelsesfakta?.aarsakUlykke)
+                  ? skademelding.hendelsesfakta?.aarsakUlykke.map(
                       (i) => {
                         return {
                           value: i,
@@ -255,11 +255,8 @@ const AccidentForm = () => {
             />
           )}
         />
-        {errors?.hendelsesfakta?.aarsakUlykkeTabellAogE && (
+        {errors?.hendelsesfakta?.aarsakUlykke && (
           <span className="navds-error-message navds-error-message--medium navds-label">
-            {/* {errors.hendelsesfakta.aarsakUlykkeTabellAogE.map(
-                (fieldError) => fieldError.message
-              )} */}
             Dette feltet er påkrevd
           </span>
         )}
@@ -277,12 +274,12 @@ const AccidentForm = () => {
               Du kan velge flere alternativer
             </BodyShort>
             <Controller
-              name="hendelsesfakta.bakgrunnsaarsakTabellBogG"
+              name="hendelsesfakta.bakgrunnsaarsak"
               control={control}
               rules={{
                 required:
                   _.isEmpty(
-                    skademelding.hendelsesfakta?.bakgrunnsaarsakTabellBogG
+                    skademelding.hendelsesfakta?.bakgrunnsaarsak
                   ) && 'Dette feltet er påkrevd',
               }}
               render={({ field }) => (
@@ -290,9 +287,9 @@ const AccidentForm = () => {
                   className="bakgrunnsaarsak-b-g"
                   defaultValue={
                     !_.isEmpty(
-                      skademelding.hendelsesfakta?.bakgrunnsaarsakTabellBogG
+                      skademelding.hendelsesfakta?.bakgrunnsaarsak
                     )
-                      ? skademelding.hendelsesfakta?.bakgrunnsaarsakTabellBogG.map(
+                      ? skademelding.hendelsesfakta?.bakgrunnsaarsak.map(
                           (i) => {
                             return {
                               value: i,
@@ -326,11 +323,9 @@ const AccidentForm = () => {
                 />
               )}
             />
-            {errors?.hendelsesfakta?.bakgrunnsaarsakTabellBogG && (
+            {errors?.hendelsesfakta?.bakgrunnsaarsak && (
               <span className="navds-error-message navds-error-message--medium navds-label">
-                {/* {errors.hendelsesfakta.bakgrunnsaarsakTabellBogG?.map( */}
                 Dette feltet er påkrevd
-                {/* )} */}
               </span>
             )}
           </div>
@@ -385,6 +380,7 @@ const AccidentForm = () => {
                     val.map((i: { value: string; label: string }) => i.value)
                   )
                 }
+                data-testid="accident-paavirkningsform"
               />
             )}
           />

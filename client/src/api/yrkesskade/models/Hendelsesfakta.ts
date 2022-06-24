@@ -10,9 +10,9 @@ export type Hendelsesfakta = {
     naarSkjeddeUlykken: string;
     hvorSkjeddeUlykken: string;
     ulykkessted: Ulykkessted;
-    aarsakUlykkeTabellAogE: Array<string>;
-    bakgrunnsaarsakTabellBogG: Array<string>;
+    aarsakUlykke: Array<string>;
+    bakgrunnsaarsak: Array<string>;
     utfyllendeBeskrivelse?: string;
-    stedsbeskrivelseTabellF?: string;
+    stedsbeskrivelse?: string;
     paavirkningsform?: Array<string>;
 };

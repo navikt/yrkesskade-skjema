@@ -18,6 +18,9 @@ import { useEffect } from 'react';
 import { Skademelding, Tid } from '../../../api/yrkesskade';
 import { oppdaterSkademelding, selectSkademelding } from '../../../core/reducers/skademelding.reducer';
 import { useCheckIfReloaded } from '../../../core/hooks/reloadCheck.hooks';
+import { isEmpty } from 'lodash';
+import { DateUtils } from 'react-day-picker';
+import { parseISO } from 'date-fns';
 
 const TimeframeFormPage = () => {
   useCheckIfReloaded();
@@ -27,6 +30,7 @@ const TimeframeFormPage = () => {
   const {
     handleSubmit,
     setValue,
+    setError
   } = useFormContext<Skademelding>();
 
   const location = useLocation();
@@ -38,7 +42,41 @@ const TimeframeFormPage = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: Skademelding) => {
+    let harFeil = false; // for at vi skal få med alle valideringer på samme submit.
+    if (isEmpty(data.hendelsesfakta.naarSkjeddeUlykken)) {
+      setError('hendelsesfakta.naarSkjeddeUlykken', {
+        type: 'manual',
+        message: 'Dette feltet er påkrevd'
+      })
+      harFeil = true;
+    }
+
+    if (data.hendelsesfakta.tid.tidstype === Tid.tidstype.PERIODE) {
+      // valider at vi har minst en periode satt
+      if (!data.hendelsesfakta.tid.perioder || data.hendelsesfakta.tid.perioder.length === 0) {
+        setError('hendelsesfakta.tid.perioder', {
+          type: 'manual',
+          message: 'Minst en periode er påkrevd'
+        });
+        harFeil = true;
+      }
+    }
+
+    if (data.hendelsesfakta.tid.tidstype === Tid.tidstype.TIDSPUNKT) {
+      if (isEmpty(data.hendelsesfakta.tid.tidspunkt) || !DateUtils.isDate(parseISO(data.hendelsesfakta.tid.tidspunkt!))) {
+        setError('hendelsesfakta.tid.tidspunkt', {
+          type: 'manual',
+          message: 'Dette feltet er påkrevd'
+        });
+        harFeil = true;
+      }
+    }
+
+    if (harFeil) {
+      return;
+    }
+
     dispatch(oppdaterSkademelding(data));
     navigate('/yrkesskade/skjema/ulykken');
   };
