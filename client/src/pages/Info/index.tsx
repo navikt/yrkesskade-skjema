@@ -18,7 +18,6 @@ import ExitButton from '../../components/ExitButton';
 import { useInnloggetContext } from '../../context/InnloggetContext';
 import { Adresse, Organisasjon } from '../../types/brukerinfo';
 import { useEffect } from 'react';
-import { useSelectedCompany } from '../../context/SelectedCompanyContext';
 
 import {
   BrukerinfoControllerService,
@@ -60,13 +59,6 @@ const Info = () => {
 
   useEffect(() => {
     if (innloggetBruker?.fnr) {
-      const innmelder: Innmelder = {
-        norskIdentitetsnummer: innloggetBruker.fnr as unknown as string,
-        innmelderrolle: 'virksomhetsrepresentant',
-        paaVegneAv: '',
-        altinnrolleIDer: []
-      };
-
       settValgtVirksomhet(innloggetBruker.organisasjoner[0]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -99,16 +91,6 @@ const Info = () => {
       oppdatertVirksomhet.beliggenhetsadresse = organisasjon.beliggenhetsadresse as Adresse;
       oppdatertVirksomhet.forretningsadresse = organisasjon.forretningsadresse as Adresse;
       dispatch(addOrganisasjon(oppdatertVirksomhet));
-
-      const dekningsforhold: Dekningsforhold = {
-        organisasjonsnummer: organisasjon.organisasjonsnummer as string,
-        stillingstittelTilDenSkadelidte: [],
-        rolletype: '',
-      };
-      const skadelidt: Skadelidt = {
-        dekningsforhold: dekningsforhold,
-        norskIdentitetsnummer: '',
-      };
 
       const altinnRollerIder = roller
         .filter((altinnRolle) => altinnRolle.RoleDefinitionId)
