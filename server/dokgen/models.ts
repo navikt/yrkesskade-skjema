@@ -34,12 +34,12 @@ export interface PdfRolletype {
 export interface PdfSkade {
   alvorlighetsgrad?: Soknadsfelt<string>,
   skadedeDeler: PdfSkadetDel[],
-  antattSykefravaerTabellH: Soknadsfelt<string>
+  antattSykefravaer: Soknadsfelt<string>
 }
 
 export interface PdfSkadetDel {
-  kroppsdelTabellD: Soknadsfelt<string>,
-  skadeartTabellC: Soknadsfelt<string>
+  kroppsdel: Soknadsfelt<string>,
+  skadeart: Soknadsfelt<string>
 }
 
 export interface PdfHendelsesfakta {
@@ -47,9 +47,10 @@ export interface PdfHendelsesfakta {
   naarSkjeddeUlykken: Soknadsfelt<string>,
   hvorSkjeddeUlykken: Soknadsfelt<string>,
   ulykkessted: PdfUlykkessted,
-  aarsakUlykkeTabellAogE: Soknadsfelt<string[]>,
-  bakgrunnsaarsakTabellBogG: Soknadsfelt<string[]>,
-  stedsbeskrivelseTabellF: Soknadsfelt<string>,
+  paavirkningsform: Soknadsfelt<string[]>
+  aarsakUlykke: Soknadsfelt<string[]>,
+  bakgrunnsaarsak: Soknadsfelt<string[]>,
+  stedsbeskrivelse: Soknadsfelt<string>,
   utfyllendeBeskrivelse?: Soknadsfelt<string>
 }
 
@@ -63,7 +64,8 @@ export interface PdfAdresse {
 export interface PdfTid {
   tidstype: string;
   tidspunkt?: Soknadsfelt<PdfTidspunkt>;
-  periode?: Soknadsfelt<PdfPeriode[]>;
+  perioder?: Soknadsfelt<PdfPeriode[]>;
+  sykdomPaavist?: Soknadsfelt<string>;
   ukjent?: boolean;
 }
 
@@ -95,7 +97,8 @@ export interface PdfDokumentInfo {
   dokumentnummer: string,
   dokumentDatoPrefix: string,
   dokumentDato: string,
-  tekster: PdfTekster
+  tekster: PdfTekster,
+  annet: PdfAnnet
 }
 
 export interface PdfTekster {
@@ -105,4 +108,8 @@ export interface PdfTekster {
   omUlykkenSeksjonstittel: string,
   omSkadenSeksjonstittel: string,
   omSkadenFlereSkader: string
+}
+
+export interface PdfAnnet {
+  erSykdom: boolean
 }
