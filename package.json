@@ -4,6 +4,8 @@
   "description": "",
   "main": "server.ts",
   "scripts": {
+    "install:all": "yarn install && yarn --cwd client && yarn --cwd test",
+    "install:all:frozen": "yarn install --frozen-lockfile && yarn --frozen-lockfile --cwd client && yarn --frozen-lockfile --cwd test",
     "start": "node dist/server.js",
     "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
     "build": "rimraf dist && ncc build server/server.ts -o dist",

@@ -206,7 +206,7 @@ const AccidentForm = () => {
         </NAVSelect>
       )}
 
-      {/* {roller[rolletype] && !roller[rolletype].isElevEllerStudent && ( */}
+      { !isPeriod && (
       <div className="spacer spacer navds-form-field navds-form-field--medium">
         <Label className="navds-select__label navds-label">
           Beskriv årsak for hendelsen og bakgrunn for årsaken. Gi en mest mulig
@@ -261,7 +261,7 @@ const AccidentForm = () => {
           </span>
         )}
       </div>
-      {/* )} */}
+      )}
 
       {roller[rolletype] &&
         roller[rolletype].showAccidentBackground &&
