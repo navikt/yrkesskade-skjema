@@ -21,7 +21,7 @@ export class KodeverkLoader {
       kodelister: {},
     };
 
-    for (const kodeverk of ['rolletype', 'landkoderISO2']) {
+    for (const kodeverk of ['rolletype', 'landkoderISO2', 'paavirkningsform']) {
       const resultat = await KodeverkApiService.hentKodeverdierForType(
         kodeverk
       );
