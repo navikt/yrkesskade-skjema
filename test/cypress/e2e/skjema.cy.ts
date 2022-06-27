@@ -23,8 +23,8 @@ interface TestSkademelding {
   til?: dayjs.Dayjs;
   sykdomPaavist?: dayjs.Dayjs;
   timeframe: string;
-  aarsak: string;
-  bakgrunn: string;
+  aarsak?: string;
+  bakgrunn?: string;
   kroppsdel: string;
   skadetype: string;
   paavirkningsform?: string;
@@ -210,7 +210,6 @@ describe('Skjema innsending', (): void => {
       til: dayjs(),
       timeframe: 'I avtalt arbeidstid',
       aarsak: 'Trafikkulykke',
-      bakgrunn: 'Manglende merking',
       kroppsdel: 'Øye, venstre',
       skadetype: 'Tap av legemsdel',
       paavirkningsform: 'Kjemikalier, løsemidler, gift, gass, væske o.l.'
@@ -255,7 +254,6 @@ describe('Skjema innsending', (): void => {
 
     // info om ulykken
     accidentForm.place().select(1);
-    accidentForm.reasonOptions().type(`${arbeidstaker.aarsak}{enter}{esc}`);
     accidentForm.paavirkningsform().type(`${testdata.paavirkningsform}{enter}{esc}`);
 
     // Gå til neste steg
@@ -552,8 +550,6 @@ describe('Skjema innsending', (): void => {
       til: dayjs(),
       sykdomPaavist: dayjs(),
       timeframe: 'I avtalt arbeidstid',
-      aarsak: 'Trafikkulykke',
-      bakgrunn: 'Manglende merking',
       kroppsdel: 'Øye, venstre',
       skadetype: 'Tap av legemsdel',
       paavirkningsform: 'Kjemikalier, løsemidler, gift, gass, væske o.l.'
@@ -659,7 +655,6 @@ describe('Skjema innsending', (): void => {
 
     // info om ulykken
     accidentForm.place().select(1);
-    accidentForm.reasonOptions().type(`${testdata.aarsak}{enter}{esc}`);
     accidentForm.paavirkningsform().type(`${testdata.paavirkningsform}{enter}{esc}`);
 
     // Gå til neste steg
