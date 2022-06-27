@@ -235,8 +235,8 @@ const Tidsperioder = (props: IProps) => {
           <Table.Body>
             {perioderForTable.map((periode: Periode, index: number) => (
               <Table.Row key={index} data-testid="periode-rad">
-                <Table.DataCell>{formatDate(parseISO(periode.fra!), FORMAT)}</Table.DataCell>
-                <Table.DataCell>{formatDate(parseISO(periode.til!), FORMAT)}</Table.DataCell>
+                <Table.DataCell>{periode.fra ? formatDate(parseISO(periode.fra), FORMAT) : 'Ugyldig fra dato'}</Table.DataCell>
+                <Table.DataCell>{periode.til ? formatDate(parseISO(periode.til), FORMAT) : 'Ugyldig til dato'}</Table.DataCell>
                 <Table.DataCell>
                   <Button
                     variant="tertiary"
