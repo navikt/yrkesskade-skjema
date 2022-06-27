@@ -13,6 +13,7 @@ import { remove } from 'ramda';
 import { isEmpty } from 'lodash';
 import { fjernPeriode } from '../../core/reducers/skademelding.reducer';
 import { useAppDispatch } from '../../core/hooks/state.hooks';
+import { parseISO } from 'date-fns';
 
 interface IProps {
   onTidsperioderChange: (perioder: Periode[]) => void;
@@ -234,8 +235,8 @@ const Tidsperioder = (props: IProps) => {
           <Table.Body>
             {perioderForTable.map((periode: Periode, index: number) => (
               <Table.Row key={index} data-testid="periode-rad">
-                <Table.DataCell>{periode.fra}</Table.DataCell>
-                <Table.DataCell>{periode.til}</Table.DataCell>
+                <Table.DataCell>{periode.fra ? formatDate(parseISO(periode.fra), FORMAT) : 'Ugyldig fra dato'}</Table.DataCell>
+                <Table.DataCell>{periode.til ? formatDate(parseISO(periode.til), FORMAT) : 'Ugyldig til dato'}</Table.DataCell>
                 <Table.DataCell>
                   <Button
                     variant="tertiary"
