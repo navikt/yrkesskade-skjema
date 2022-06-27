@@ -27,7 +27,7 @@ interface TestSkademelding {
   bakgrunn?: string;
   kroppsdel: string;
   skadetype: string;
-  paavirkningsform?: string;
+  paavirkningsform?: string[];
 }
 
 describe('Skjema innsending', (): void => {
@@ -212,7 +212,7 @@ describe('Skjema innsending', (): void => {
       aarsak: 'Trafikkulykke',
       kroppsdel: 'Øye, venstre',
       skadetype: 'Tap av legemsdel',
-      paavirkningsform: 'Kjemikalier, løsemidler, gift, gass, væske o.l.'
+      paavirkningsform: ['Kjemikalier, løsemidler, gift, gass, væske o.l.', 'Vibrasjon']
     };
 
     // vent til innlogget sjekk er fullført
@@ -254,7 +254,7 @@ describe('Skjema innsending', (): void => {
 
     // info om ulykken
     accidentForm.place().select(1);
-    accidentForm.paavirkningsform().type(`${testdata.paavirkningsform}{enter}{esc}`);
+    testdata.paavirkningsform.forEach((form) => accidentForm.paavirkningsform().type(`${form}{enter}{esc}`));
 
     // Gå til neste steg
     general.nextStep().click();
@@ -286,6 +286,24 @@ describe('Skjema innsending', (): void => {
           'DD.MM.YYYY'
         )}`
       );
+
+    summary.accordians.hendelsen().click();
+    testdata.paavirkningsform.forEach((form) => {
+      summary.hendelsen.paavirkningsformer().should('contain', form)
+    })
+
+    // gå tilbake og fjern en påvirkningsform
+    general.backStep().click();
+    general.backStep().click();
+    general.backStep().click();
+    accidentForm.fjernPaavirkingsformKnapp(testdata.paavirkningsform[1]).click()
+
+    general.nextStep().click();
+    general.nextStep().click();
+    general.nextStep().click();
+
+    summary.accordians.hendelsen().click();
+    summary.hendelsen.paavirkningsformer().should('contain', testdata.paavirkningsform[0]);
 
     // send inn skjema
     summary.sendInjury().click().wait('@postSkademelding');
@@ -493,52 +511,6 @@ describe('Skjema innsending', (): void => {
     });
   });
 
-  it.skip('normal flyt - sjekk validering av felter', () => {
-    const injuryTime = dayjs();
-    // vent til innlogget sjekk er fullført
-    cy.wait('@getInnlogget').wait('@getOrganisasjon').wait('@getRoller');
-
-    // start innmelding
-    info.startInnmelding().click();
-
-    general.nextStep().click();
-
-    general.feilmeldinger().should('have.length', 2);
-
-    // valider
-    timeframeForm
-      .timeframeWhenDate()
-      .clear()
-      .type(injuryTime.format('DD.MM.YYYY'))
-      .type('{enter}');
-    timeframeForm
-      .timeframeWhenTime()
-      .type('{selectall}' + injuryTime.format('HH:mm'))
-      .type('{enter}'); // ser ikke ut som den liker at dette felter skrives til
-
-    general.nextStep().click();
-
-    general.feilmeldinger().should('have.length', 1);
-
-    timeframeForm.timeframePeriodOptions().select('I avtalt arbeidstid');
-
-    general.nextStep().click();
-
-    cy.location().should((location) => {
-      expect(location.pathname).to.contain('/skjema/skadelidt');
-    });
-
-    general.nextStep().click();
-
-    general.feilmeldinger().should('have.length', 2);
-
-    injuredForm.position().type('Programvareutviklere{enter}');
-
-    general.nextStep().click();
-
-    general.feilmeldinger().should('have.length', 1);
-  });
-
   it('arbeidstaker - yrkessykdom - flere perioder', () => {
     const testdata: TestSkademelding = {
       innmeldernavn: 'ROLF BJØRN',
@@ -552,7 +524,7 @@ describe('Skjema innsending', (): void => {
       timeframe: 'I avtalt arbeidstid',
       kroppsdel: 'Øye, venstre',
       skadetype: 'Tap av legemsdel',
-      paavirkningsform: 'Kjemikalier, løsemidler, gift, gass, væske o.l.'
+      paavirkningsform: ['Kjemikalier, løsemidler, gift, gass, væske o.l.', 'Vibrasjon']
     };
 
     const injuryTime = arbeidstaker.tidspunkt;
@@ -655,7 +627,7 @@ describe('Skjema innsending', (): void => {
 
     // info om ulykken
     accidentForm.place().select(1);
-    accidentForm.paavirkningsform().type(`${testdata.paavirkningsform}{enter}{esc}`);
+    testdata.paavirkningsform.forEach((form) => accidentForm.paavirkningsform().type(`${form}{enter}{esc}`));
 
     // Gå til neste steg
     general.nextStep().click();
@@ -688,6 +660,10 @@ describe('Skjema innsending', (): void => {
         'DD.MM.YYYY'
       )}`
     );
+    summary.accordians.hendelsen().click();
+    testdata.paavirkningsform.forEach((form) => {
+      summary.hendelsen.paavirkningsformer().should('contain', form)
+    })
 
     // send inn skjema
     summary.sendInjury().click().wait('@postSkademelding');

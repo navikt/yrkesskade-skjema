@@ -65,6 +65,22 @@ export const skademeldingSlice = createSlice({
       state,
       action: PayloadAction<Skademelding>
     ) => {
+      if (state.skademelding.skade?.skadedeDeler) {
+        // vi skal ikke merge denne listen
+        state.skademelding.skade.skadedeDeler = [];
+      }
+      if (state.skademelding.hendelsesfakta.paavirkningsform) {
+         // vi skal ikke merge denne listen
+        state.skademelding.hendelsesfakta.paavirkningsform = [];
+      }
+      if (state.skademelding.hendelsesfakta.bakgrunnsaarsak) {
+         // vi skal ikke merge denne listen
+        state.skademelding.hendelsesfakta.bakgrunnsaarsak = []
+      }
+      if (state.skademelding.hendelsesfakta.aarsakUlykke) {
+        // vi skal ikke merge denne listen
+        state.skademelding.hendelsesfakta.aarsakUlykke = [];
+      }
       state.skademelding = merge(state.skademelding, action.payload);
     },
     fjernSkadetDel: (state, action: PayloadAction<SkadetDel>) => {

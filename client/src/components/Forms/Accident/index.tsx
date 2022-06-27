@@ -375,10 +375,13 @@ const AccidentForm = () => {
                     : []
                 }
                 placeholder=""
-                onChange={(val) =>
+                onChange={(val) => {
+                  console.log('change', val);
+
                   field.onChange(
                     val.map((i: { value: string; label: string }) => i.value)
                   )
+                }
                 }
                 data-testid="accident-paavirkningsform"
               />

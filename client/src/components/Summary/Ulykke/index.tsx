@@ -113,7 +113,7 @@ const UlykkeSummary = ({ data }: IProps) => {
       {!isEmpty(data.hendelsesfakta.paavirkningsform) && (
         <div className="answerContainer">
           <Label>Hvilken skadelig påvirkning har personen vært utsatt for?</Label>
-          <BodyShort>
+          <BodyShort data-testid="oppsummering-paavirkningsformer">
             {data.hendelsesfakta.paavirkningsform.map(
               (paavirkning: string) => {
                 return `${paavirkningsformKoder && paavirkningsformKoder[paavirkning]?.verdi}`;

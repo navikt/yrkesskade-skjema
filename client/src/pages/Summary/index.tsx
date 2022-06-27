@@ -105,7 +105,7 @@ const Summary = () => {
                 <TidsromSummary data={data} />
               </Accordion.Content>
             </Accordion.Item>
-            <Accordion.Item renderContentWhenClosed={true}>
+            <Accordion.Item renderContentWhenClosed={true} data-testid="oppsummering-hendelsen">
               <Accordion.Header>Om ulykken</Accordion.Header>
               <Accordion.Content>
                 <UlykkeSummary data={data} />
