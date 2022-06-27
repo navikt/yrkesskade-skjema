@@ -88,7 +88,7 @@ export const fixtures: { [key: string]: (Date) => Skademelding } = {
         skadedeDeler: [
           {
             kroppsdel: 'hode',
-            skadeart: 'saarskade',
+            skadeart: 'ondartetSvulst',
           } as SkadetDel,
         ],
         alvorlighetsgrad: 'antattOppsoektLege',
