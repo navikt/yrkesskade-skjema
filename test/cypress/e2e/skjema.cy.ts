@@ -263,7 +263,6 @@ describe('Skjema innsending', (): void => {
     injuryForm.bodylocationOptions().select(arbeidstaker.kroppsdel);
     injuryForm.injuryTypeOptions().select(arbeidstaker.skadetype);
     injuryForm.addInjuryButton().click();
-    injuryForm.injuryAbsentRadio(2).click();
 
     // Gå til neste steg
     general.nextStep().click();
@@ -636,7 +635,6 @@ describe('Skjema innsending', (): void => {
     injuryForm.bodylocationOptions().select(testdata.kroppsdel);
     injuryForm.injuryTypeOptions().select(testdata.skadetype);
     injuryForm.addInjuryButton().click();
-    injuryForm.injuryAbsentRadio(2).click();
 
     // Gå til neste steg
     general.nextStep().click();
