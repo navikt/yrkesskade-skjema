@@ -71,11 +71,6 @@ const Info = () => {
         return;
       }
 
-      console.log('virksomhet: ', virksomhet);
-      console.log('organisasjon', organisasjon);
-
-
-
       const roller = await BrukerinfoControllerService.hentRoller(
         organisasjon.organisasjonsnummer
       );

@@ -17,10 +17,6 @@ const TidsromSummary = ({ data }: IProps) => {
   let accidentTime: React.ReactElement | undefined;
   const timetype = data.hendelsesfakta.tid.tidstype.toLowerCase();
 
-  console.log('tidstype: ', timetype, data.hendelsesfakta.tid.tidspunkt);
-  console.log('perioder: ', data.hendelsesfakta.tid.perioder);
-
-
   if (timetype === 'tidspunkt') {
     // force the date to a string with +''. Dum hack
     accidentTime = <span>{format(
