@@ -96,12 +96,8 @@ const mapRolletype = (rolletype: string, kodeverk: KodeverkLoader): PdfRolletype
 
 const mapSkadetypeEllerSykdomstype = (skadeart: string, kodeverk: KodeverkLoader): string => {
   const skadetype = kodeverk.mapKodeTilVerdi(skadeart, 'skadetype')
-  logInfo(`skadetype: ${skadetype}`);
-  if (skadetype === 'Ukjent ' + skadeart) {
-    logInfo(`${skadetype} er ikke en mappet kode. Sjekker med sykdomstype`);
-    const sykdomstype = kodeverk.mapKodeTilVerdi(skadeart, 'sykdomstype');
-    logInfo(sykdomstype);
-    return sykdomstype;
+  if (skadetype === `Ukjent: ${skadeart}`) {
+    return kodeverk.mapKodeTilVerdi(skadeart, 'sykdomstype');
   }
   return skadetype;
 }
