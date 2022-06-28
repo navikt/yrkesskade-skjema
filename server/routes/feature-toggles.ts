@@ -26,32 +26,9 @@ const toggleFetchHandler = (req, res) => {
 export const configureFeatureTogglesEndpoint = (app: Express): Express => {
   // Matcher bare toggles som tilhører oss, bruker {0,} pga en express-quirk
   // ref http://expressjs.com/en/guide/routing.html#route-parameters
-  app.get(`${config.BASE_PATH}/toggles/:id(yrkesskade.[a-zA-Z-]{0,})`,ensureAuthenticated, attachTokenX, hentBrukerinfo, toggleFetchHandler);
+  app.get(`${config.BASE_PATH}/toggles/:id(yrkesskade.[a-zA-Z-]{0,})`,ensureAuthenticated, hentBrukerinfo, toggleFetchHandler);
   return app;
 };
-
-const attachTokenX = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const klient = clientRegistry.getClient('tokenX');
-  const audience = utledAudience(serviceConfig.find(service => service.id === 'yrkesskade-melding-api'));
-  exchangeToken(klient, audience, req)
-    .then((tokenSet: TokenSet) => {
-      req.headers['Nav-Call-Id'] = uuidv4();
-      req.headers.Authorization = `Bearer ${tokenSet.access_token}`;
-      return next();
-    })
-    .catch((e) => {
-      logError(`Uventet feil - exchangeToken`, e);
-      res.status(500).json({
-        status: 'FEILET',
-        melding: 'Uventet feil. Vennligst prøv på nytt.',
-      });
-    });
-};
-
 
 const hentBrukerinfo = async (req, res: Response, next: NextFunction) => {
     const token = getTokenFromRequest(req);
@@ -122,6 +99,6 @@ const byggContextFraRequest = (req) => {
 }
 
 export const konfigurerAllFeatureTogglesEndpoint = (app: Express): Express => {
-  app.get(`${config.BASE_PATH}/toggles/`, ensureAuthenticated, attachTokenX, hentBrukerinfo, fetchAllFeatureTogglesHandler);
+  app.get(`${config.BASE_PATH}/toggles/`, ensureAuthenticated, hentBrukerinfo, fetchAllFeatureTogglesHandler);
   return app;
 };
