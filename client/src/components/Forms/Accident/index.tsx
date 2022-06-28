@@ -12,15 +12,16 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { useState } from 'react';
 import Address from '../Address';
 import _ from 'lodash';
-import { useAppSelector } from '../../../core/hooks/state.hooks';
+import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks';
 import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
-import { selectSkademelding } from '../../../core/reducers/skademelding.reducer';
+import { oppdaaterBakgrunnsaarsak, oppdaterAarsakUlykke, oppdaterPaavirkningsform, selectSkademelding } from '../../../core/reducers/skademelding.reducer';
 import { Skademelding } from '../../../api/yrkesskade';
 
 import roller from '../../../utils/roller';
 import { selectOrganisasjonsAdresse } from '../../../core/reducers/app.reducer';
 
 const AccidentForm = () => {
+  const dispatch = useAppDispatch();
   const selectedAddress = useAppSelector((state) => selectOrganisasjonsAdresse(state));
   const {
     register,
@@ -251,7 +252,11 @@ const AccidentForm = () => {
                   : []
               }
               placeholder=""
-              onChange={(val) => field.onChange(val.map((i) => i.value))}
+              onChange={(val) => {
+                const values = val.map((i) => i.value);
+                field.onChange(values);
+                dispatch(oppdaterAarsakUlykke(values));
+              }}
             />
           )}
         />
@@ -315,10 +320,11 @@ const AccidentForm = () => {
                     )
                   }
                   placeholder=""
-                  onChange={(val) =>
-                    field.onChange(
-                      val.map((i: { value: string; label: string }) => i.value)
-                    )
+                  onChange={(val) => {
+                      const values = val.map((i: { value: string; label: string }) => i.value);
+                      field.onChange(values);
+                      dispatch(oppdaaterBakgrunnsaarsak(values));
+                    }
                   }
                 />
               )}
@@ -375,9 +381,11 @@ const AccidentForm = () => {
                     : []
                 }
                 placeholder=""
-                onChange={(val) => field.onChange(
-                    val.map((i: { value: string; label: string }) => i.value)
-                  )
+                onChange={(val) => {
+                  const values = val.map((i: { value: string; label: string }) => i.value);
+                  field.onChange(values);
+                  dispatch(oppdaterPaavirkningsform(values))
+                }
 
                 }
                 data-testid="accident-paavirkningsform"

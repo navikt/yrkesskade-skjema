@@ -16,7 +16,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks';
 import { useEffect } from 'react';
 import { Skademelding, Tid } from '../../../api/yrkesskade';
-import { oppdaterSkademelding, selectSkademelding } from '../../../core/reducers/skademelding.reducer';
+import { oppdaterPaavirkningsform, oppdaterSkademelding, resetAarsakUlykkeOgBakgrunnAaarsak, resetPaavirkningsform, selectSkademelding } from '../../../core/reducers/skademelding.reducer';
 import { useCheckIfReloaded } from '../../../core/hooks/reloadCheck.hooks';
 import { isEmpty } from 'lodash';
 import { DateUtils } from 'react-day-picker';
@@ -53,6 +53,7 @@ const TimeframeFormPage = () => {
     }
 
     if (data.hendelsesfakta.tid.tidstype === Tid.tidstype.PERIODE) {
+      dispatch(resetAarsakUlykkeOgBakgrunnAaarsak());
       // valider at vi har minst en periode satt
       if (!data.hendelsesfakta.tid.perioder || data.hendelsesfakta.tid.perioder.length === 0) {
         setError('hendelsesfakta.tid.perioder', {
@@ -64,6 +65,7 @@ const TimeframeFormPage = () => {
     }
 
     if (data.hendelsesfakta.tid.tidstype === Tid.tidstype.TIDSPUNKT) {
+      dispatch(resetPaavirkningsform());
       if (isEmpty(data.hendelsesfakta.tid.tidspunkt) || !DateUtils.isDate(parseISO(data.hendelsesfakta.tid.tidspunkt!))) {
         setError('hendelsesfakta.tid.tidspunkt', {
           type: 'manual',
