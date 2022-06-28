@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { RadioGroup } from '@navikt/ds-react';
 import { Skademelding } from '../../../api/yrkesskade';
 import { useAppSelector } from '../../../core/hooks/state.hooks';
