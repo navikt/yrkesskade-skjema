@@ -31,6 +31,7 @@ export const configureFeatureTogglesEndpoint = (app: Express): Express => {
 };
 
 const attachTokenX = (
+  service: IService,
   req: Request,
   res: Response,
   next: NextFunction
@@ -40,7 +41,9 @@ const attachTokenX = (
   exchangeToken(klient, audience, req)
     .then((tokenSet: TokenSet) => {
       req.headers['Nav-Call-Id'] = uuidv4();
-      req.headers.Authorization = `Bearer ${tokenSet.access_token}`;
+      const bearer = `Bearer ${tokenSet.access_token}`;
+      req.headers.authorization = bearer;
+      req.headers.Authorization = bearer;
       return next();
     })
     .catch((e) => {

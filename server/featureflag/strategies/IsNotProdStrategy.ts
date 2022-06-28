@@ -6,6 +6,6 @@ export class IsNotProdStrategy extends Strategy {
   }
 
   isEnabled(parameters, context) {
-    return process.env.ENV !== 'production';
+    return process.env.ENV !== 'prod';
   }
 }
