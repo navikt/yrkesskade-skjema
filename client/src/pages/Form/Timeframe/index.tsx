@@ -16,7 +16,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks';
 import { useEffect } from 'react';
 import { Skademelding, Tid } from '../../../api/yrkesskade';
-import { oppdaterPaavirkningsform, oppdaterSkademelding, resetAarsakUlykkeOgBakgrunnAaarsak, resetPaavirkningsform, selectSkademelding } from '../../../core/reducers/skademelding.reducer';
+import { oppdaterSkademelding, resetAarsakUlykkeOgBakgrunnAaarsak, resetPaavirkningsform, selectSkademelding } from '../../../core/reducers/skademelding.reducer';
 import { useCheckIfReloaded } from '../../../core/hooks/reloadCheck.hooks';
 import { isEmpty } from 'lodash';
 import { DateUtils } from 'react-day-picker';
