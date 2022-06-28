@@ -48,11 +48,11 @@ const initialState: SkademeldingState = {
           land: undefined,
         },
       },
-      aarsakUlykke: [],
-      bakgrunnsaarsak: [],
+      aarsakUlykke: undefined,
+      bakgrunnsaarsak: undefined,
       utfyllendeBeskrivelse: '',
       stedsbeskrivelse: '',
-      paavirkningsform: [],
+      paavirkningsform: undefined,
     }
   }
 }
@@ -65,22 +65,6 @@ export const skademeldingSlice = createSlice({
       state,
       action: PayloadAction<Skademelding>
     ) => {
-      if (state.skademelding.skade?.skadedeDeler) {
-        // vi skal ikke merge denne listen
-        state.skademelding.skade.skadedeDeler = [];
-      }
-      if (state.skademelding.hendelsesfakta.paavirkningsform) {
-         // vi skal ikke merge denne listen
-        state.skademelding.hendelsesfakta.paavirkningsform = [];
-      }
-      if (state.skademelding.hendelsesfakta.bakgrunnsaarsak) {
-         // vi skal ikke merge denne listen
-        state.skademelding.hendelsesfakta.bakgrunnsaarsak = []
-      }
-      if (state.skademelding.hendelsesfakta.aarsakUlykke) {
-        // vi skal ikke merge denne listen
-        state.skademelding.hendelsesfakta.aarsakUlykke = [];
-      }
       state.skademelding = merge(state.skademelding, action.payload);
     },
     fjernSkadetDel: (state, action: PayloadAction<SkadetDel>) => {
@@ -88,6 +72,22 @@ export const skademeldingSlice = createSlice({
     },
     fjernPeriode: (state, action: PayloadAction<Periode>) => {
       state.skademelding.hendelsesfakta.tid.perioder = state.skademelding.hendelsesfakta.tid.perioder?.filter(periode => periode.fra !== action.payload.fra && periode.til !== action.payload.til)
+    },
+    oppdaterPaavirkningsform: (state, action: PayloadAction<string[]>) => {
+      state.skademelding.hendelsesfakta.paavirkningsform = action.payload
+    },
+    oppdaterAarsakUlykke: (state, action: PayloadAction<string[]>) => {
+      state.skademelding.hendelsesfakta.aarsakUlykke = action.payload
+    },
+    oppdaaterBakgrunnsaarsak: (state, action: PayloadAction<string[]>) => {
+      state.skademelding.hendelsesfakta.bakgrunnsaarsak = action.payload
+    },
+    resetPaavirkningsform: (state) => {
+      state.skademelding.hendelsesfakta.paavirkningsform = undefined;
+    },
+    resetAarsakUlykkeOgBakgrunnAaarsak: (state) => {
+      state.skademelding.hendelsesfakta.aarsakUlykke = undefined;
+      state.skademelding.hendelsesfakta.bakgrunnsaarsak = undefined;
     },
     reset: () => {
       return { ...initialState };
@@ -101,6 +101,11 @@ export const {
   oppdaterSkademelding,
   reset,
   fjernSkadetDel,
-  fjernPeriode
+  fjernPeriode,
+  oppdaterPaavirkningsform,
+  oppdaterAarsakUlykke,
+  oppdaaterBakgrunnsaarsak,
+  resetPaavirkningsform,
+  resetAarsakUlykkeOgBakgrunnAaarsak
 } = skademeldingSlice.actions;
 export default skademeldingSlice.reducer;
