@@ -31,6 +31,7 @@ export const configureFeatureTogglesEndpoint = (app: Express): Express => {
 };
 
 const attachTokenX = (
+  service: IService,
   req: Request,
   res: Response,
   next: NextFunction
