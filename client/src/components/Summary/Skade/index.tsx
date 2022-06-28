@@ -1,11 +1,11 @@
 // import { isNil } from "ramda";
 import { Label, BodyShort, Table } from '@navikt/ds-react';
-// import { get } from 'lodash';
+import { Skademelding } from '../../../api/yrkesskade';
 import { useAppSelector } from '../../../core/hooks/state.hooks';
 import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
 import roller from '../../../utils/roller';
 interface IProps {
-  data: any;
+  data: Skademelding;
 }
 const SkadeSummary = ({ data }: IProps) => {
   const skadetKroppsdelkoder = useAppSelector((state) => selectKodeverk(state, 'skadetKroppsdel'));
@@ -15,10 +15,9 @@ const SkadeSummary = ({ data }: IProps) => {
 );
   const fravaerkoder = useAppSelector((state) => selectKodeverk(state, 'harSkadelidtHattFravaer'));
 
-  const rolletype =  data?.skadelidt?.dekningsforhold.rolletype;
-
+  const rolletype =  data.skadelidt.dekningsforhold.rolletype;
   const sickAndInjuryCodes = {...skadetypekoder, ...sykdomstypekoder};
-  const erPeriode = data?.hendelsesfakta?.tid?.tidstype === 'Periode';
+  const erPeriode = data.hendelsesfakta.tid.tidstype === 'Periode';
 
   return (
     <div className="answerOuterContainer">
@@ -44,10 +43,10 @@ const SkadeSummary = ({ data }: IProps) => {
           </Table.Body>
         </Table>
       </div>
-      { roller[rolletype] && roller[rolletype].showAbsence && !erPeriode && (
+      { roller[rolletype] && roller[rolletype].showAbsence && !erPeriode &&(
       <div className="answerContainer spacer">
         <Label>Har den skadelidte hatt fravær</Label>
-        <BodyShort>{fravaerkoder && fravaerkoder[data.skade.antattSykefravaer]?.verdi}</BodyShort>
+        <BodyShort>{fravaerkoder && fravaerkoder[data.skade.antattSykefravaer!]?.verdi}</BodyShort>
       </div>
       )}
     </div>
