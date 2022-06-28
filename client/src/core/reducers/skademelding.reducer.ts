@@ -52,7 +52,7 @@ const initialState: SkademeldingState = {
       bakgrunnsaarsak: [],
       utfyllendeBeskrivelse: '',
       stedsbeskrivelse: '',
-      paavirkningsform: undefined,
+      paavirkningsform: [],
     }
   }
 }
