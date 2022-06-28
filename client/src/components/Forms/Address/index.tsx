@@ -10,9 +10,10 @@ import './Address.less';
 interface IProps {
   sammeSomVirksomhetensAdresse: string;
   adresse: AdresseDto | null | undefined;
+  erPeriode: boolean;
 }
 
-const Address = ({ sammeSomVirksomhetensAdresse, adresse }: IProps) => {
+const Address = ({ sammeSomVirksomhetensAdresse, adresse, erPeriode }: IProps) => {
   const {
     register,
     formState: { errors },
@@ -54,7 +55,7 @@ const Address = ({ sammeSomVirksomhetensAdresse, adresse }: IProps) => {
 
 
   return skalBrukeValgtAdresse ? (<></>) : (
-    <Fieldset legend="Fyll ut adressen hvor ulykken skjedde">
+    <Fieldset legend={ erPeriode ? `Fyll ut adressen hvor den skadelige påvirkningen har skjedd` : `Fyll ut adressen hvor ulykken skjedde` }>
       <TextField
         className=""
         {...register('hendelsesfakta.ulykkessted.adresse.adresselinje1', {

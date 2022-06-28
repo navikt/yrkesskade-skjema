@@ -128,7 +128,7 @@ const AccidentForm = () => {
 
       <Address
         sammeSomVirksomhetensAdresse={sammeSomVirksomhetensAdresse}
-        adresse={selectedAddress}
+        adresse={selectedAddress} erPeriode={erPeriode}
       />
 
       {alvorlighetsgradkoder && (
