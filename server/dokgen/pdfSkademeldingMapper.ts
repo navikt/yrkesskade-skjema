@@ -151,7 +151,7 @@ const mapTid = (tid: Tid, kodeverk: KodeverkLoader): PdfTid => {
       },
       sykdomPaavist: {
         label: 'Når ble sykdommen påvist?',
-        verdi: formatDate(parseISO(tid.sykdomPaavist), DATO_FORMAT)
+        verdi: tid.sykdomPaavist ? formatDate(parseISO(tid.sykdomPaavist), DATO_FORMAT) : null
       }
     };
   }
