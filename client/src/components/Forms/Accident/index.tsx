@@ -63,7 +63,7 @@ const AccidentForm = () => {
   };
 
   const rolletype = skademelding.skadelidt?.dekningsforhold.rolletype || '';
-  const isPeriod = skademelding?.hendelsesfakta?.tid?.tidstype === 'Periode';
+  const erPeriode = skademelding?.hendelsesfakta?.tid?.tidstype === 'Periode';
 
   return (
     <>
@@ -90,7 +90,7 @@ const AccidentForm = () => {
             }) => (
               <RadioGroup
                 className="spacer"
-                legend="Skjedde ulykken på samme adresse?"
+                legend={ erPeriode ? `Ble personen utsatt for den skadelige påvirkningen på samme adresse?` : `Skjedde ulykken på samme adresse?` }
                 value={sammeSomVirksomhetensAdresse}
                 onChange={(val) => {
                   setSammeSomVirksomhetensAdresse(val);
@@ -161,7 +161,7 @@ const AccidentForm = () => {
 
       <NAVSelect
         className="spacer"
-        label="Hvor skjedde ulykken"
+        label={ erPeriode ? `Hvor skjedde hendelsen` : `Hvor skjedde ulykken` }
         {...register('hendelsesfakta.hvorSkjeddeUlykken', {
           required: 'Dette feltet er påkrevd',
         })}
@@ -181,7 +181,7 @@ const AccidentForm = () => {
             );
           })}
       </NAVSelect>
-      {roller[rolletype] && roller[rolletype].showWorkplace && !isPeriod && (
+      {roller[rolletype] && roller[rolletype].showWorkplace && !erPeriode && (
         <NAVSelect
           className="spacer"
           label="Hvilken type arbeidsplass er det?"
@@ -206,7 +206,7 @@ const AccidentForm = () => {
         </NAVSelect>
       )}
 
-      { !isPeriod && (
+      { !erPeriode && (
       <div className="spacer spacer navds-form-field navds-form-field--medium">
         <Label className="navds-select__label navds-label">
           Beskriv årsak for hendelsen og bakgrunn for årsaken. Gi en mest mulig
@@ -265,7 +265,7 @@ const AccidentForm = () => {
 
       {roller[rolletype] &&
         roller[rolletype].showAccidentBackground &&
-        !isPeriod && (
+        !erPeriode && (
           <div className="spacer spacer navds-form-field navds-form-field--medium">
             <Label className="navds-select__label navds-label">
               Hva var bakgrunnen til hendelsen?
@@ -331,7 +331,7 @@ const AccidentForm = () => {
           </div>
         )}
 
-      {isPeriod && paavirkningsformkoder && (
+      {erPeriode && paavirkningsformkoder && (
         <div className="spacer spacer navds-form-field navds-form-field--medium">
           <Label className="navds-select__label navds-label">
             Hvilken skadelig påvirkning har personen vært utsatt for?

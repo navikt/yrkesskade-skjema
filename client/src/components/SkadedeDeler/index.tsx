@@ -103,7 +103,7 @@ const SkadedeDeler = (props: IProps) => {
   return (
     <>
       <Select
-        label="Hva slags skade er det"
+        label={`Hva slags skade ${props.periode ? 'eller sykdom ' : ''}er det`}
         value={skadeart}
         className="spacer"
         data-testid="injury-type-options"
