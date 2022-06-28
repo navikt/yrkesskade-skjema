@@ -18,7 +18,6 @@ import {
   FeatureTogglesProvider,
   useFeatureToggles,
 } from './context/FeatureTogglesContext';
-import { autentiseringsInterceptor } from './utils/autentisering';
 import { SelectedCompanyProvider } from './context/SelectedCompanyContext';
 import { ErrorMessageProvider } from './context/ErrorMessageContext';
 import { StateManagementProvider } from './context/StateManagementContext';
@@ -58,8 +57,6 @@ const App = () => {
     );
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  autentiseringsInterceptor();
 
   return (
     <ErrorMessageProvider>

@@ -59,37 +59,17 @@ describe('Skjema innsending', (): void => {
   };
 
   beforeEach(() => {
-    network
-      .intercept(endpointUrls.toggle, 'toggles/enabled.json')
-      .as('toggles');
-    network
-      .intercept(endpointUrls.innlogget, 'innlogget.json')
-      .as('getInnlogget');
-    network
-      .intercept(endpointUrls.brukerinfo, 'brukerinfo/brukerinfo.json')
-      .as('brukerinfo');
-    network
-      .intercept(
-        endpointUrls.brukerinfoOrganisasjon('910437127'),
-        'brukerinfo/organisasjoner/910437127.json'
-      )
-      .as('getOrganisasjon');
-    network
-      .intercept(
-        endpointUrls.brukerinfoRoller('910437127'),
-        'brukerinfo/roller.json'
-      )
-      .as('getRoller');
-    network
-      .intercept(endpointUrls.skademelding, 'skademelding.json')
-      .as('postSkademelding');
-    network
-      .intercept(endpointUrls.print, 'skademelding-kopi.pdf')
-      .as('postPrintPdf');
+    network.intercept(endpointUrls.toggle, 'toggles/enabled.json').as('toggles');
+    network.intercept(endpointUrls.innlogget, 'brukerinfo/brukerinfo.json').as('getInnlogget');
+    network.intercept(endpointUrls.brukerinfo, 'brukerinfo/brukerinfo.json').as('brukerinfo');
+    network.intercept(endpointUrls.brukerinfoOrganisasjon('910437127'), 'brukerinfo/organisasjoner/910437127.json').as('getOrganisasjon');
+    network.intercept(endpointUrls.brukerinfoRoller('910437127'), 'brukerinfo/roller.json').as('getRoller');
+    network.intercept(endpointUrls.skademelding, 'skademelding.json').as('postSkademelding');
+    network.intercept(endpointUrls.print, 'skademelding-kopi.pdf').as('postPrintPdf');
     network.intercept(endpointUrls.log, 'logResult.json').as('postLog');
-    network.intercept(endpointUrls.amplitude, '').as('amplitude');
+    network.intercept(endpointUrls.amplitude, 'amplitude.json').as('amplitude');
 
-    ['landkoderISO2', 'rolletype', 'paavirkningsform'].forEach((kodeverk) => {
+    ['landkoderISO2', 'rolletype', 'paavirkningsform', 'sykdomstype'].forEach((kodeverk) => {
       network
         .intercept(
           endpointUrls.kodeverkUtenKategori(kodeverk),
@@ -116,9 +96,8 @@ describe('Skjema innsending', (): void => {
         .as(kodeverk);
     });
 
-    cy.window().then((win) => {
-      win.sessionStorage.removeItem('__LSM__');
-
+    cy.window().then(win=> {
+      win.sessionStorage.removeItem('persist:root');
       cy.visit('');
       cy.location().should('to.be', 'http://localhost:3001/yrkesskade/');
     });
@@ -147,6 +126,8 @@ describe('Skjema innsending', (): void => {
     general.feilmeldinger().should('have.length', 1);
 
     injuredForm.position().type(`${arbeidstaker.stilling}{enter}`);
+
+    cy.wait('@stillingstittel').wait('@bakgrunnForHendelsen')
 
     // Gå til neste steg
     general.nextStep().click();

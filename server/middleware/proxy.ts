@@ -1,42 +1,25 @@
 import { createProxyMiddleware, fixRequestBody } from 'http-proxy-middleware';
-import { exchangeToken } from '../tokenx';
-import {
-  logError,
-  logSecure,
-  stdoutLogger,
-} from '@navikt/yrkesskade-logging';
-import { v4 as uuidv4} from 'uuid';
+import { IService } from '@navikt/yrkesskade-backend/dist/typer';
+import { NextFunction, Request, Response } from 'express';
+import { attachTokenX } from '@navikt/yrkesskade-backend/dist/auth/tokenX';
+import { stdoutLogger } from '@navikt/yrkesskade-logging';
 
-const errorHandler = (err, req, res) => {
-  if (process.env.ENV !== 'production') {
-    logError('Feil', err);
-  } else {
-    logSecure(err);
-  }
+export const doProxy = (service: IService) => {
+  return createProxyMiddleware(service.proxyPath, {
+    changeOrigin: true,
+    logLevel: process.env.ENV === 'prod' ? 'info' : 'debug',
+    onProxyReq: fixRequestBody,
+    logProvider: () => stdoutLogger,
+    pathRewrite: (path: string, _req: Request) => {
+      return path.replace(service.proxyPath, '');
+    },
+    secure: true,
+    target: `${service.proxyUrl}`,
+  });
 };
 
-export const doProxy = (path: string, target: string) => {
-  return createProxyMiddleware(path, {
-    pathRewrite: {
-      '^/kodeverk/': '/',
-      '^/api/': '/'
-    },
-    changeOrigin: true,
-    secure: false,
-    logLevel: process.env.ENV === 'prod' ? 'info' : 'info',
-    logProvider: () => stdoutLogger,
-    onProxyReq: fixRequestBody,
-    onError: errorHandler,
-    router: async (req) => {
-      const tokenSet = await exchangeToken(req);
-      if (!tokenSet?.expired() && tokenSet?.access_token) {
-        req.headers.authorization = `Bearer ${tokenSet.access_token}`;
-      }
-
-      req.headers['Nav-CallId'] = uuidv4();
-
-      return undefined;
-    },
-    target: `${target}`,
-  });
+export const attachToken = (service: IService) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    attachTokenX(service, req, res, next);
+  };
 };

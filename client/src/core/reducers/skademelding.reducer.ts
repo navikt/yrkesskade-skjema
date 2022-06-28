@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { merge } from "lodash";
-import { Dekningsforhold, Innmelder, Periode, Skade, Skadelidt, Skademelding, SkadetDel, Tid } from "../../api/yrkesskade";
+import { Periode, Skademelding, SkadetDel, Tid } from "../../api/yrkesskade";
 import { RootState } from "../store";
 
 interface SkademeldingState {
@@ -83,40 +83,8 @@ export const skademeldingSlice = createSlice({
       }
       state.skademelding = merge(state.skademelding, action.payload);
     },
-    oppdaterInnmelder: (
-      state,
-      action: PayloadAction<Innmelder>
-    ) => {
-      state.skademelding.innmelder = merge(state.skademelding.innmelder, action.payload);
-    },
-    oppdaterAltinnRoller: (state, action: PayloadAction<string[]>) => {
-      if (state.skademelding.innmelder) {
-        state.skademelding.innmelder.altinnrolleIDer = action.payload;
-      }
-    },
-    oppdaterPaaVegneAv: (
-      state,
-      action: PayloadAction<string>
-    ) => {
-      if (state.skademelding.innmelder) {
-        state.skademelding.innmelder.paaVegneAv = action.payload;
-      }
-    },
-    oppdaterSkadelidt: (state, action: PayloadAction<Skadelidt>) => {
-      state.skademelding.skadelidt = merge(state.skademelding.skadelidt, action.payload);
-    },
-    oppdaterDekningsforhold: (state, action: PayloadAction<Dekningsforhold>) => {
-      if (state.skademelding.skadelidt) {
-        state.skademelding.skadelidt.dekningsforhold = action.payload;
-      }
-    },
-    oppdaterSkade: (state, action: PayloadAction<Skade>) => {
-      state.skademelding.skade = action.payload;
-    },
-    oppdaterSkadedeDeler: (state, action: PayloadAction<SkadetDel[]>) => {
-      if (state.skademelding && state.skademelding.skade) {
-        state.skademelding.skade.skadedeDeler = merge(state.skademelding?.skade.skadedeDeler, action.payload);
-      }
+    fjernSkadetDel: (state, action: PayloadAction<SkadetDel>) => {
+      state.skademelding.skade.skadedeDeler = state.skademelding.skade.skadedeDeler.filter(skadetDel => skadetDel.kroppsdel !== action.payload.kroppsdel && skadetDel.skadeart !== action.payload.skadeart)
     },
     fjernPeriode: (state, action: PayloadAction<Periode>) => {
       state.skademelding.hendelsesfakta.tid.perioder = state.skademelding.hendelsesfakta.tid.perioder?.filter(periode => periode.fra !== action.payload.fra && periode.til !== action.payload.til)
@@ -129,17 +97,10 @@ export const skademeldingSlice = createSlice({
 
 export const selectSkademelding = (state: RootState) => state.skademelding.skademelding
 
-
 export const {
   oppdaterSkademelding,
-  oppdaterInnmelder,
-  oppdaterPaaVegneAv,
-  oppdaterSkadelidt ,
-  oppdaterAltinnRoller,
-  oppdaterSkade,
-  oppdaterDekningsforhold,
-  oppdaterSkadedeDeler,
-  fjernPeriode,
-  reset
+  reset,
+  fjernSkadetDel,
+  fjernPeriode
 } = skademeldingSlice.actions;
 export default skademeldingSlice.reducer;
