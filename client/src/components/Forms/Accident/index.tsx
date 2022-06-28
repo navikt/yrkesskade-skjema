@@ -237,7 +237,7 @@ const AccidentForm = () => {
               }
               defaultValue={
                 !_.isEmpty(skademelding.hendelsesfakta?.aarsakUlykke)
-                  ? skademelding.hendelsesfakta?.aarsakUlykke.map(
+                  ? skademelding.hendelsesfakta?.aarsakUlykke?.map(
                       (i) => {
                         return {
                           value: i,
@@ -289,7 +289,7 @@ const AccidentForm = () => {
                     !_.isEmpty(
                       skademelding.hendelsesfakta?.bakgrunnsaarsak
                     )
-                      ? skademelding.hendelsesfakta?.bakgrunnsaarsak.map(
+                      ? skademelding.hendelsesfakta?.bakgrunnsaarsak?.map(
                           (i) => {
                             return {
                               value: i,
@@ -375,13 +375,10 @@ const AccidentForm = () => {
                     : []
                 }
                 placeholder=""
-                onChange={(val) => {
-                  console.log('change', val);
-
-                  field.onChange(
+                onChange={(val) => field.onChange(
                     val.map((i: { value: string; label: string }) => i.value)
                   )
-                }
+
                 }
                 data-testid="accident-paavirkningsform"
               />

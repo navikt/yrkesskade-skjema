@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-mixed-operators */
-import { AddCircle, MinusCircle } from '@navikt/ds-icons';
-import { Button, Select, Table } from '@navikt/ds-react';
-import { isEmpty } from 'lodash';
-import { remove } from 'ramda';
-import { useEffect, useState } from 'react';
-import { KodeverdiDto } from '../../api/kodeverk';
-import { SkadetDel } from '../../api/yrkesskade';
+import { AddCircle, MinusCircle } from "@navikt/ds-icons";
+import { Button, Select, Table } from "@navikt/ds-react";
+import { isEmpty } from "lodash";
+import { remove } from "ramda";
+import { useEffect, useState } from "react";
+import { KodeverdiDto } from "../../api/kodeverk";
+import { SkadetDel } from "../../api/yrkesskade";
 import { useAppDispatch } from "../../core/hooks/state.hooks";
 import { fjernSkadetDel } from "../../core/reducers/skademelding.reducer";
 
