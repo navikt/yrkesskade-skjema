@@ -30,6 +30,7 @@ import {format, parseISO} from 'date-fns';
 import {nb} from 'date-fns/locale';
 import {KodeverkLoader} from '../kodeverk/kodeverk';
 import tidstype = Tid.tidstype;
+import { logInfo } from '@navikt/yrkesskade-logging';
 
 export const formatDate = (date: any, formatStr: string) =>
   format(date, formatStr, { locale: nb });
@@ -95,8 +96,12 @@ const mapRolletype = (rolletype: string, kodeverk: KodeverkLoader): PdfRolletype
 
 const mapSkadetypeEllerSykdomstype = (skadeart: string, kodeverk: KodeverkLoader): string => {
   const skadetype = kodeverk.mapKodeTilVerdi(skadeart, 'skadetype')
+  logInfo(`skadetype: ${skadetype}`);
   if (skadetype === 'Ukjent ' + skadeart) {
-    return kodeverk.mapKodeTilVerdi(skadeart, 'sykdomstype')
+    logInfo(`${skadetype} er ikke en mappet kode. Sjekker med sykdomstype`);
+    const sykdomstype = kodeverk.mapKodeTilVerdi(skadeart, 'sykdomstype');
+    logInfo(sykdomstype);
+    return sykdomstype;
   }
   return skadetype;
 }
