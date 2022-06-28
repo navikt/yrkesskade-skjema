@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import InjuredForm from '../../../components/Forms/Injured';
 import {
   ContentContainer,
@@ -19,7 +19,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Skademelding } from '../../../api/yrkesskade';
 import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks';
 import { oppdaterSkademelding, selectSkademelding } from '../../../core/reducers/skademelding.reducer';
-import { useSelectedCompany } from '../../../context/SelectedCompanyContext';
 import { useCheckIfReloaded } from '../../../core/hooks/reloadCheck.hooks';
 
 const InjuredFormPage = () => {
@@ -30,7 +29,6 @@ const InjuredFormPage = () => {
     handleSubmit,
     setValue
   } = useFormContext<Skademelding>();
-  const valgtVirksomhet = useSelectedCompany();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -43,11 +41,6 @@ const InjuredFormPage = () => {
   useEffect(() => {
     setValue('skadelidt.norskIdentitetsnummer', skademelding.skadelidt?.norskIdentitetsnummer || '');
     setValue('skadelidt.dekningsforhold.rolletype', skademelding.skadelidt?.dekningsforhold.rolletype || '')
-    setValue('skadelidt.dekningsforhold.navnPaaVirksomheten', valgtVirksomhet.selectedCompany.navn)
-    setValue('skadelidt.dekningsforhold.virksomhetensAdresse.adresselinje1', valgtVirksomhet.selectedAddress?.adresser[0] || '');
-    setValue('skadelidt.dekningsforhold.virksomhetensAdresse.adresselinje2', valgtVirksomhet.selectedAddress?.postnummer);
-    setValue('skadelidt.dekningsforhold.virksomhetensAdresse.adresselinje3', valgtVirksomhet.selectedAddress?.poststed);
-    setValue('skadelidt.dekningsforhold.virksomhetensAdresse.land', valgtVirksomhet.selectedAddress?.landkode);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location, setValue])
 

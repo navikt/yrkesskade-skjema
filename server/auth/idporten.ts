@@ -1,6 +1,5 @@
 import { BaseClient, Issuer } from 'openid-client';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
-import axios from 'axios';
 import { logInfo } from '@navikt/yrkesskade-logging';
 
 const acceptedAcrLevel = 'Level4'; // definert i nais.yaml idporten.sidecar.level attributen
@@ -23,21 +22,24 @@ export const initIdPorten = async () => {
 }
 
 export const verifiserAccessToken = async (token: string | Uint8Array) => {
-    const { payload } = await jwtVerify(token, _remoteJWKSet, {
-        algorithms: [acceptedSigningAlgorithm],
-        issuer: idPortenIssuer.metadata.issuer
-    });
+  const env = process.env.ENV;
+  if (env === 'local') {
+    return;
+  }
 
-    if (payload.acr !== acceptedAcrLevel) {
-        throw new Error('Invalid ACR-level');
-    }
+  const { payload } = await jwtVerify(token, _remoteJWKSet, {
+    algorithms: [acceptedSigningAlgorithm],
+    issuer: idPortenIssuer.metadata.issuer,
+  });
 
-    if (payload.client_id !== process.env.IDPORTEN_CLIENT_ID && process.env.NODE_ENV === 'node-local') {
-        throw new Error('Invalid client id');
-    }
-}
+  if (payload.acr !== acceptedAcrLevel) {
+    throw new Error('Invalid ACR-level');
+  }
 
-// Mock IDPorten
-export const getMockTokenFromIdPorten = async () => {
-    return await (await axios.get(`${process.env.FAKEDINGS_URL_IDPORTEN}?acr=Level=4`)).data;
-}
+  if (
+    payload.client_id !== process.env.IDPORTEN_CLIENT_ID &&
+    process.env.NODE_ENV === 'node-local'
+  ) {
+    throw new Error('Invalid client id');
+  }
+};
