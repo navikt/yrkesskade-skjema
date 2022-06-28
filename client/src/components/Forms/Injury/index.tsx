@@ -45,14 +45,14 @@ const InjuryForm = () => {
   }, [location]);
 
   const rolletype = skademelding.skadelidt?.dekningsforhold.rolletype || '';
-  const isPeriod = skademelding?.hendelsesfakta?.tid?.tidstype === 'Periode';
+  const erPeriode = skademelding?.hendelsesfakta?.tid?.tidstype === 'Periode';
 
   return (
     <>
       <Controller
         name="skade.skadedeDeler"
         control={control}
-        render={({ field: { onChange, onBlur, value, name, ref } }) => (
+        render={({ field: { onChange } }) => (
           <SkadedeDeler
             onSkadededelerChange={(skadedeDeler) => {
               onChange(skadedeDeler)
@@ -61,7 +61,7 @@ const InjuryForm = () => {
             skadeartKoder={skadetypekoder}
             kroppsdelKode={skadetKroppsdelkoder}
             sykdomstypeKoder={sykdomstypekoder}
-            periode={isPeriod}
+            periode={erPeriode}
           />
         )}
       />
@@ -71,7 +71,7 @@ const InjuryForm = () => {
           </span>
       )}
 
-      {roller[rolletype] && roller[rolletype].showAbsence && !isPeriod && (
+      {roller[rolletype] && roller[rolletype].showAbsence && !erPeriode && (
       <RadioGroup
         legend="Har den skadelidte hatt fravær?"
         error={

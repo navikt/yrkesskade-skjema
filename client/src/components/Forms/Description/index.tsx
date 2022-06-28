@@ -32,7 +32,7 @@ export default DescriptionForm;
 
 const TextareaDescription = () => {
   const skademelding = useAppSelector((state) => selectSkademelding(state));
-  const isPeriod = skademelding?.hendelsesfakta?.tid?.tidstype === 'Periode';
+  const erPeriode = skademelding?.hendelsesfakta?.tid?.tidstype === 'Periode';
   return (
     <>
       Oppgi informasjon som du mener kan ha betydning for saken. Det kan være
@@ -46,8 +46,12 @@ const TextareaDescription = () => {
           Umiddelbar behandling av skaden/sykdommen hvis det er kjent,
           førstehjelp, debrifing eller legevakt/sykehus.
         </li>
-        {isPeriod && (
+        {erPeriode && (
+          <>
           <li>Hva bestod arbeidet/aktiviteten i da påvirkningen fant sted</li>
+          <li>De skadelige stoffene eller påvirkningen</li>
+          <li>Første kjente behandling av skaden/sykdommen</li>
+          </>
         )}
       </ul>
     </>
