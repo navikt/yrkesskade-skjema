@@ -18,6 +18,7 @@ const SkadeSummary = ({ data }: IProps) => {
   const rolletype =  data?.skadelidt?.dekningsforhold.rolletype;
 
   const sickAndInjuryCodes = {...skadetypekoder, ...sykdomstypekoder};
+  const erPeriode = data?.hendelsesfakta?.tid?.tidstype === 'Periode';
 
   return (
     <div className="answerOuterContainer">
@@ -43,7 +44,7 @@ const SkadeSummary = ({ data }: IProps) => {
           </Table.Body>
         </Table>
       </div>
-      { roller[rolletype] && roller[rolletype].showAbsence && (
+      { roller[rolletype] && roller[rolletype].showAbsence && !erPeriode && (
       <div className="answerContainer spacer">
         <Label>Har den skadelidte hatt fravær</Label>
         <BodyShort>{fravaerkoder && fravaerkoder[data.skade.antattSykefravaer]?.verdi}</BodyShort>
