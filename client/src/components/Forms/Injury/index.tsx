@@ -35,7 +35,6 @@ const InjuryForm = () => {
   const harSkadelidtHattFravaerkoder = useAppSelector((state) =>
     selectKodeverk(state, 'harSkadelidtHattFravaer')
   );
-  const isPeriod = skademelding?.hendelsesfakta?.tid?.tidstype === 'Periode';
 
   useEffect(() => {
     setValue(
@@ -45,9 +44,8 @@ const InjuryForm = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
-
   const rolletype = skademelding.skadelidt?.dekningsforhold.rolletype || '';
-
+  const isPeriod = skademelding?.hendelsesfakta?.tid?.tidstype === 'Periode';
 
   return (
     <>
@@ -73,7 +71,7 @@ const InjuryForm = () => {
           </span>
       )}
 
-      {roller[rolletype] && roller[rolletype].showAbsence && (
+      {roller[rolletype] && roller[rolletype].showAbsence && !isPeriod && (
       <RadioGroup
         legend="Har den skadelidte hatt fravær?"
         error={
