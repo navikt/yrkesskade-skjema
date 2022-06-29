@@ -34,12 +34,12 @@ export interface PdfRolletype {
 export interface PdfSkade {
   alvorlighetsgrad?: Soknadsfelt<string>,
   skadedeDeler: PdfSkadetDel[],
-  antattSykefravaerTabellH: Soknadsfelt<string>
+  antattSykefravaer: Soknadsfelt<string>
 }
 
 export interface PdfSkadetDel {
-  kroppsdelTabellD: Soknadsfelt<string>,
-  skadeartTabellC: Soknadsfelt<string>
+  kroppsdel: Soknadsfelt<string>,
+  skadeart: Soknadsfelt<string>
 }
 
 export interface PdfHendelsesfakta {
@@ -47,9 +47,9 @@ export interface PdfHendelsesfakta {
   naarSkjeddeUlykken: Soknadsfelt<string>,
   hvorSkjeddeUlykken: Soknadsfelt<string>,
   ulykkessted: PdfUlykkessted,
-  aarsakUlykkeTabellAogE: Soknadsfelt<string[]>,
-  bakgrunnsaarsakTabellBogG: Soknadsfelt<string[]>,
-  stedsbeskrivelseTabellF: Soknadsfelt<string>,
+  aarsakUlykke: Soknadsfelt<string[]>,
+  bakgrunnsaarsak: Soknadsfelt<string[]>,
+  stedsbeskrivelse: Soknadsfelt<string>,
   utfyllendeBeskrivelse?: Soknadsfelt<string>
 }
 
