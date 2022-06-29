@@ -1,13 +1,14 @@
 import { path } from 'ramda';
 import { Label, BodyShort } from '@navikt/ds-react';
 import { useInnloggetContext } from '../../../context/InnloggetContext';
-import { useSelectedCompany } from '../../../context/SelectedCompanyContext';
+import { useAppSelector } from '../../../core/hooks/state.hooks';
+import { selectOrganisasjon } from '../../../core/reducers/app.reducer';
 interface IProps {
   data: any;
 }
 const InnmelderSummary = ({ data }: IProps) => {
   const {innloggetBruker}  = useInnloggetContext();
-  const {selectedCompany} = useSelectedCompany();
+  const organisasjon = useAppSelector((state) => selectOrganisasjon(state));
 
   return (
     <div className="answerOuterContainer">
@@ -22,7 +23,7 @@ const InnmelderSummary = ({ data }: IProps) => {
         'undefined' && (
         <div className="answerContainer">
           <Label>Virksomhet</Label>
-          <BodyShort data-testid="summary-company-name">{selectedCompany.navn}</BodyShort>
+          <BodyShort data-testid="summary-company-name">{organisasjon?.navn || 'UKJENT'}</BodyShort>
         </div>
       )}
     </div>

@@ -9,7 +9,6 @@ import {
 } from '@navikt/ds-react';
 import Select from 'react-select';
 import { Controller, useFormContext } from 'react-hook-form';
-import { useSelectedCompany } from '../../../context/SelectedCompanyContext';
 import { useState } from 'react';
 import Address from '../Address';
 import _ from 'lodash';
@@ -19,9 +18,10 @@ import { selectSkademelding } from '../../../core/reducers/skademelding.reducer'
 import { Skademelding } from '../../../api/yrkesskade';
 
 import roller from '../../../utils/roller';
+import { selectOrganisasjonsAdresse } from '../../../core/reducers/app.reducer';
 
 const AccidentForm = () => {
-  const { selectedAddress } = useSelectedCompany();
+  const selectedAddress = useAppSelector((state) => selectOrganisasjonsAdresse(state));
   const {
     register,
     formState: { errors },

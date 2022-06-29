@@ -22,6 +22,11 @@ export const appSlice = createSlice({
 
 // selectors
 export const selectOrganisasjon = (state: RootState) => state.app.enhet;
+export const selectOrganisasjonsAdresse = (state: RootState) => {
+  if (state.app.enhet) {
+      return state.app.enhet.beliggenhetsadresse ? state.app.enhet.beliggenhetsadresse : state.app.enhet.forretningsadresse
+  }
+}
 
 // exports
 export const { addOrganisasjon} = appSlice.actions;

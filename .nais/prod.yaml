@@ -8,11 +8,7 @@ env:
 - name: NODE_ENV
   value: prod
 - name: ENV
-  value: production
-- name: TOKENX_AUDIENCE
-  value: "prod-gcp:yrkesskade:yrkesskade-melding-api"
-- name: API_URL
-  value: https://yrkesskade-melding-api.intern.nav.no/api
+  value: prod
 - name: DOKGEN_URL
   value: https://yrkesskade-dokgen.intern.nav.no
 externals:

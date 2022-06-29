@@ -1,5 +1,5 @@
 export const endpointUrls = {
-  innlogget: '**/yrkesskade/innlogget',
+  innlogget: '**/user/profile',
   skademelding: '**/api/*/skademeldinger',
   brukerinfo: '**/api/*/brukerinfo',
   brukerinfoOrganisasjon: (organisasjonsnummer: string) => `**/api/*/brukerinfo/organisasjoner/${organisasjonsnummer}`,
