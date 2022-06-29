@@ -95,8 +95,8 @@ const mapRolletype = (rolletype: string, kodeverk: KodeverkLoader): PdfRolletype
 
 const mapSkadetypeEllerSykdomstype = (skadeart: string, kodeverk: KodeverkLoader): string => {
   const skadetype = kodeverk.mapKodeTilVerdi(skadeart, 'skadetype')
-  if (skadetype === 'Ukjent ' + skadeart) {
-    return kodeverk.mapKodeTilVerdi(skadeart, 'sykdomstype')
+  if (skadetype === `Ukjent: ${skadeart}`) {
+    return kodeverk.mapKodeTilVerdi(skadeart, 'sykdomstype');
   }
   return skadetype;
 }
@@ -150,7 +150,7 @@ const mapTid = (tid: Tid, kodeverk: KodeverkLoader): PdfTid => {
       },
       sykdomPaavist: {
         label: 'Når ble sykdommen påvist?',
-        verdi: formatDate(parseISO(tid.sykdomPaavist), DATO_FORMAT)
+        verdi: tid.sykdomPaavist ? formatDate(parseISO(tid.sykdomPaavist), DATO_FORMAT) : null
       }
     };
   }
