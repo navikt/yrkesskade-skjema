@@ -93,16 +93,26 @@ const mapRolletype = (rolletype: string, kodeverk: KodeverkLoader): PdfRolletype
   }
 }
 
+const mapSkadetypeEllerSykdomstype = (skadeart: string, kodeverk: KodeverkLoader): string => {
+  const skadetype = kodeverk.mapKodeTilVerdi(skadeart, 'skadetype')
+  if (skadetype === 'Ukjent ' + skadeart) {
+    return kodeverk.mapKodeTilVerdi(skadeart, 'sykdomstype')
+  }
+  return skadetype;
+}
+
 const mapSkade = (skade: Skade, kodeverk: KodeverkLoader): PdfSkade => {
   return {
     antattSykefravaer: { label: 'Har den skadelidte hatt fravær', verdi: kodeverk.mapKodeTilVerdi(skade.antattSykefravaer, 'harSkadelidtHattFravaer') },
     skadedeDeler: skade.skadedeDeler.map((skadetDel: SkadetDel) => ({
       kroppsdel: { label: 'Hvor på kroppen er skaden', verdi: kodeverk.mapKodeTilVerdi(skadetDel.kroppsdel, 'skadetKroppsdel')},
-      skadeart: { label: 'Hva slags skade eller sykdom er det', verdi: kodeverk.mapKodeTilVerdi(skadetDel.skadeart, 'skadetype') }
+      skadeart: { label: 'Hva slags skade eller sykdom er det', verdi: mapSkadetypeEllerSykdomstype(skadetDel.skadeart, kodeverk) }
     })),
     alvorlighetsgrad: { label: 'Hvor alvorlig var hendelsen', verdi: skade.alvorlighetsgrad ? kodeverk.mapKodeTilVerdi(skade.alvorlighetsgrad, 'alvorlighetsgrad') : ''},
   }
 }
+
+
 
 const mapHendelsesfakta = (hendelsesfakta: Hendelsesfakta, kodeverk: KodeverkLoader): PdfHendelsesfakta => {
   return {
