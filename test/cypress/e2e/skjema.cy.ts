@@ -89,7 +89,7 @@ describe('Skjema innsending', (): void => {
     network.intercept(endpointUrls.log, 'logResult.json').as('postLog');
     network.intercept(endpointUrls.amplitude, '').as('amplitude');
 
-    ['landkoderISO2', 'rolletype', 'paavirkningsform'].forEach((kodeverk) => {
+    ['landkoderISO2', 'rolletype', 'paavirkningsform', 'sykdomstype'].forEach((kodeverk) => {
       network
         .intercept(
           endpointUrls.kodeverkUtenKategori(kodeverk),

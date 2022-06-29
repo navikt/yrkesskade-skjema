@@ -1,0 +1,88 @@
+{
+  "kodeverdierMap": {
+    "sykdomIHjernenEllerNervesystemet": {
+      "kode": "sykdomIHjernenEllerNervesystemet",
+      "verdi": "Sykdom i hjernen eller i nervesystemet"
+    },
+    "oeyesykdom": {
+      "kode": "oeyesykdom",
+      "verdi": "Øyesykdom"
+    },
+    "oeresykdom": {
+      "kode": "oeresykdom",
+      "verdi": "Øresykdom"
+    },
+    "psykiskSykdom": {
+      "kode": "psykiskSykdom",
+      "verdi": "Psykisk sykdom"
+    },
+    "hormonOgMetabolskSykdom": {
+      "kode": "hormonOgMetabolskSykdom",
+      "verdi": "Hormon og metabolsk sykdom"
+    },
+    "hjerteOgKarsykdom": {
+      "kode": "hjerteOgKarsykdom",
+      "verdi": "Hjerte og karsykdom"
+    },
+    "sykdomILuftveier": {
+      "kode": "sykdomILuftveier",
+      "verdi": "Sykdom i luftveier"
+    },
+    "sykdomIFordoeyelsessystemet": {
+      "kode": "sykdomIFordoeyelsessystemet",
+      "verdi": "Sykdom i fordøyelsessystemet"
+    },
+    "hudsykdom": {
+      "kode": "hudsykdom",
+      "verdi": "Hudsykdom"
+    },
+    "sykdomIMuskelOgSkjelett": {
+      "kode": "sykdomIMuskelOgSkjelett",
+      "verdi": "Sykdom i muskel og skjelett"
+    },
+    "sykdomIUrinveierOgGenitalia": {
+      "kode": "sykdomIUrinveierOgGenitalia",
+      "verdi": "Sykdom i urinveier og genitalia"
+    },
+    "fosterskadeEllerAbort": {
+      "kode": "fosterskadeEllerAbort",
+      "verdi": "Fosterskade eller abort"
+    },
+    "godartetSvulst": {
+      "kode": "godartetSvulst",
+      "verdi": "Godartet svulst"
+    },
+    "ondartetSvulst": {
+      "kode": "ondartetSvulst",
+      "verdi": "Ondartet svulst"
+    },
+    "smitteutloesteSykdommer": {
+      "kode": "smitteutloesteSykdommer",
+      "verdi": "Smitteutløste sykdommer"
+    },
+    "karanteneSykdommer": {
+      "kode": "karanteneSykdommer",
+      "verdi": "Karantene sykdommer"
+    },
+    "covid19": {
+      "kode": "covid19",
+      "verdi": "Covid 19"
+    },
+    "covid19MedAlvorligeKomplikasjoner": {
+      "kode": "covid19MedAlvorligeKomplikasjoner",
+      "verdi": "Covid 19 med alvorlige komplikasjoner"
+    },
+    "mrsa": {
+      "kode": "mrsa",
+      "verdi": "MRSA"
+    },
+    "gulsott": {
+      "kode": "gulsott",
+      "verdi": "Gulsott"
+    },
+    "alternativenePasserIkke": {
+      "kode": "alternativenePasserIkke",
+      "verdi": "Alternativene passer ikke"
+    }
+  }
+}
