@@ -48,10 +48,10 @@ export class KodeverkLoader {
   };
 
   mapKoderTilVerdier = (koder: string[], kodelistenavn: string): string[] => {
-    return koder.map(
+    return koder?.map(
       (kode) =>
         this.kodeverkholder.kodelister[kodelistenavn]?.kodeverdierMap[kode]?.verdi || `Ukjent: ${kode}`
-    );
+    ) || [`Kode(r) mangler for kodelistenavn ${kodelistenavn}`];
   };
 }
 export interface Kodeverk {
