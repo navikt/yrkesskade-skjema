@@ -60,6 +60,10 @@ const Address = ({ sammeSomVirksomhetensAdresse, adresse, erPeriode }: IProps) =
         className=""
         {...register('hendelsesfakta.ulykkessted.adresse.adresselinje1', {
           required: 'Dette feltet er påkrevd',
+          pattern: {
+            value: /.*\S.*/,
+            message: 'Dette feltet er påkrevd',
+          },
         })}
         label="Adresse"
         type="text"
