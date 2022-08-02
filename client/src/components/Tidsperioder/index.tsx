@@ -10,7 +10,7 @@ import { DateUtils } from 'react-day-picker';
 import dateFnsParse from 'date-fns/parse';
 import { AddCircle, MinusCircle } from '@navikt/ds-icons';
 import { remove } from 'ramda';
-import { isEmpty } from 'lodash';
+// import { isEmpty } from 'lodash';
 import { fjernPeriode } from '../../core/reducers/skademelding.reducer';
 import { useAppDispatch } from '../../core/hooks/state.hooks';
 import { parseISO } from 'date-fns';
