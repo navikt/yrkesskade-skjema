@@ -37,16 +37,16 @@ const Tidsperioder = (props: IProps) => {
     // gjør validering
     setFraDatoError(undefined);
     setTilDatoError(undefined);
-    if (isEmpty(specificFromDay) || !specificFromDay) {
-      setFraDatoError('Dette feltet er påkrevd');
-    }
+    // if (isEmpty(specificFromDay) || !specificFromDay) {
+    //   setFraDatoError('Dette feltet er påkrevd');
+    // }
     if (!DateUtils.isDate(specificFromDay!)) {
       setFraDatoError('Fra dato er ikke gyldig dato');
     }
 
-    if (isEmpty(specificToDay) || !specificToDay) {
-      setFraDatoError('Dette feltet er påkrevd');
-    }
+    // if (isEmpty(specificToDay) || !specificToDay) {
+    //   setTilDatoError('Dette feltet er påkrevd');
+    // }
     if (!DateUtils.isDate(specificToDay!)) {
       setFraDatoError('Til dato er ikke gyldig dato');
     }
