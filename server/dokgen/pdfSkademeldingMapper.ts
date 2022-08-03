@@ -13,6 +13,7 @@ import {
   PdfTid,
   PdfTidspunkt,
   PdfUlykkessted,
+  Soknadsfelt,
 } from './models';
 import {
   Adresse,
@@ -45,12 +46,13 @@ export const pdfSkademeldingMapper = async (
   // hent kodeverk
   const kodeverkLoader = new KodeverkLoader();
   await kodeverkLoader.init(skademelding.skadelidt.dekningsforhold.rolletype);
+  const erSykdom = skademelding.hendelsesfakta.tid.tidstype === tidstype.PERIODE
 
   return {
     innmelder: mapInnmelder(skademelding.innmelder),
     skadelidt: mapSkadelidt(skademelding.skadelidt, kodeverkLoader),
     skade: mapSkade(skademelding.skade, kodeverkLoader),
-    hendelsesfakta: mapHendelsesfakta(skademelding.hendelsesfakta, kodeverkLoader),
+    hendelsesfakta: mapHendelsesfakta(skademelding.hendelsesfakta, erSykdom, kodeverkLoader),
     dokumentInfo: hentDokumentinfo(skademelding),
   };
 };
@@ -114,13 +116,12 @@ const mapSkade = (skade: Skade, kodeverk: KodeverkLoader): PdfSkade => {
 }
 
 
-
-const mapHendelsesfakta = (hendelsesfakta: Hendelsesfakta, kodeverk: KodeverkLoader): PdfHendelsesfakta => {
+const mapHendelsesfakta = (hendelsesfakta: Hendelsesfakta, erSykdom: boolean, kodeverk: KodeverkLoader): PdfHendelsesfakta => {
   return {
     tid: mapTid(hendelsesfakta.tid, kodeverk),
     naarSkjeddeUlykken: { label: 'Innenfor hvilket tidsrom inntraff ulykken', verdi: kodeverk.mapKodeTilVerdi(hendelsesfakta.naarSkjeddeUlykken, 'tidsrom') },
-    hvorSkjeddeUlykken: { label: 'Hvor skjedde ulykken', verdi: kodeverk.mapKodeTilVerdi(hendelsesfakta.hvorSkjeddeUlykken, 'hvorSkjeddeUlykken') },
-    ulykkessted: mapUlykkessted(hendelsesfakta.ulykkessted, kodeverk),
+    hvorSkjeddeUlykken: mapHvorSkjeddeUlykken(hendelsesfakta, erSykdom, kodeverk),
+    ulykkessted: mapUlykkessted(hendelsesfakta.ulykkessted, erSykdom, kodeverk),
     paavirkningsform: { label: 'Hvilken skadelig påvirkning har personen vært utsatt for', verdi: kodeverk.mapKoderTilVerdier(hendelsesfakta.paavirkningsform, 'paavirkningsform') },
     aarsakUlykke: { label: 'Hva var årsaken til hendelsen og bakgrunn for årsaken', verdi: kodeverk.mapKoderTilVerdier(hendelsesfakta.aarsakUlykke, 'aarsakOgBakgrunn') },
     bakgrunnsaarsak: { label: 'Hva var bakgrunnen til hendelsen', verdi: kodeverk.mapKoderTilVerdier(hendelsesfakta.bakgrunnsaarsak, 'bakgrunnForHendelsen') },
@@ -161,6 +162,20 @@ const mapTid = (tid: Tid, kodeverk: KodeverkLoader): PdfTid => {
   }
 }
 
+const mapHvorSkjeddeUlykken = (hendelsesfakta: Hendelsesfakta, erSykdom: boolean, kodeverk: KodeverkLoader): Soknadsfelt<string> => {
+  if (erSykdom) {
+    return {
+      label: 'Hvor skjedde hendelsen',
+      verdi: kodeverk.mapKodeTilVerdi(hendelsesfakta.hvorSkjeddeUlykken, 'hvorSkjeddeUlykken')
+    };
+  } else {
+    return {
+      label: 'Hvor skjedde ulykken',
+      verdi: kodeverk.mapKodeTilVerdi(hendelsesfakta.hvorSkjeddeUlykken, 'hvorSkjeddeUlykken')
+    };
+  }
+}
+
 const mapPerioder = (perioder: Periode[]): PdfPeriode[] => {
   return perioder.map(periode => (
     {
@@ -170,10 +185,18 @@ const mapPerioder = (perioder: Periode[]): PdfPeriode[] => {
   ))
 }
 
-const mapUlykkessted = (ulykkessted: Ulykkessted, kodeverk: KodeverkLoader): PdfUlykkessted => {
-  return {
-    sammeSomVirksomhetensAdresse: { label: 'Skjedde ulykken på samme adresse', verdi: ulykkessted.sammeSomVirksomhetensAdresse ? 'Ja' : 'Nei'},
-    adresse: { label: 'Adresse for ulykken', verdi: mapAdresse(ulykkessted.adresse, kodeverk) }
+const mapUlykkessted = (ulykkessted: Ulykkessted, erSykdom: boolean, kodeverk: KodeverkLoader): PdfUlykkessted => {
+  const feltSammeSomVirksomhetensAdresse = { label: 'Skjedde ulykken på samme adresse', verdi: ulykkessted.sammeSomVirksomhetensAdresse ? 'Ja' : 'Nei'}
+  if (erSykdom) {
+    return {
+      sammeSomVirksomhetensAdresse: feltSammeSomVirksomhetensAdresse,
+      adresse: { label: 'Adresse hvor den skadelige påvirkningen har skjedd', verdi: mapAdresse(ulykkessted.adresse, kodeverk) }
+    }
+  } else {
+    return {
+      sammeSomVirksomhetensAdresse: feltSammeSomVirksomhetensAdresse,
+      adresse: { label: 'Adresse for ulykken', verdi: mapAdresse(ulykkessted.adresse, kodeverk) }
+    }
   }
 }
 
