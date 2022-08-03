@@ -4,6 +4,7 @@ import { useAppSelector } from '../../../core/hooks/state.hooks';
 import { selectSkademelding } from '../../../core/reducers/skademelding.reducer';
 import { Skademelding } from '../../../api/yrkesskade';
 import { useFormContext } from 'react-hook-form';
+import './Description.less';
 
 const DescriptionForm = () => {
   const skademelding = useAppSelector((state) => selectSkademelding(state));
@@ -15,7 +16,7 @@ const DescriptionForm = () => {
   return (
     <>
       <Textarea
-        className="spacer"
+        className="spacer utfyllendeBeskrivelse"
         label="Under kan du tilføre ytterligere opplysninger."
         description={<TextareaDescription />}
         {...register('hendelsesfakta.utfyllendeBeskrivelse')}
