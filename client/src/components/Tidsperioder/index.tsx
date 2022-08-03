@@ -10,7 +10,7 @@ import { DateUtils } from 'react-day-picker';
 import dateFnsParse from 'date-fns/parse';
 import { AddCircle, MinusCircle } from '@navikt/ds-icons';
 import { remove } from 'ramda';
-import { isEmpty } from 'lodash';
+// import { isEmpty } from 'lodash';
 import { fjernPeriode } from '../../core/reducers/skademelding.reducer';
 import { useAppDispatch } from '../../core/hooks/state.hooks';
 import { parseISO } from 'date-fns';
@@ -37,16 +37,16 @@ const Tidsperioder = (props: IProps) => {
     // gjør validering
     setFraDatoError(undefined);
     setTilDatoError(undefined);
-    if (isEmpty(specificFromDay) || !specificFromDay) {
-      setFraDatoError('Dette feltet er påkrevd');
-    }
+    // if (isEmpty(specificFromDay) || !specificFromDay) {
+    //   setFraDatoError('Dette feltet er påkrevd');
+    // }
     if (!DateUtils.isDate(specificFromDay!)) {
       setFraDatoError('Fra dato er ikke gyldig dato');
     }
 
-    if (isEmpty(specificToDay) || !specificToDay) {
-      setFraDatoError('Dette feltet er påkrevd');
-    }
+    // if (isEmpty(specificToDay) || !specificToDay) {
+    //   setTilDatoError('Dette feltet er påkrevd');
+    // }
     if (!DateUtils.isDate(specificToDay!)) {
       setFraDatoError('Til dato er ikke gyldig dato');
     }
