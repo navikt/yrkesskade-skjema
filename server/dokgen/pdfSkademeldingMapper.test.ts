@@ -78,7 +78,7 @@ describe('PdfSkademeldingMapper', () => {
 
   });
 
-  test('test yrkesskade arbeidstaker', async () => {
+  test('test yrkessykdom arbeidstaker', async () => {
     const tidspunkt = new Date();
     const skademelding = fixtures.sykdom(tidspunkt);
 
@@ -112,10 +112,10 @@ describe('PdfSkademeldingMapper', () => {
 
     // ulykken
     expect(pdfSkademelding.dokumentInfo.tekster.omUlykkenSeksjonstittel).toEqual('Om ulykken');
-    expectSoknadsfeltAdresse(pdfUlykkested.adresse, 'Adresse for ulykken', { adresselinje1: 'Testveien 2', adresselinje2: '1112', adresselinje3: 'TOAST', land: 'NO'});
+    expectSoknadsfeltAdresse(pdfUlykkested.adresse, 'Adresse hvor den skadelige påvirkningen har skjedd', { adresselinje1: 'Testveien 2', adresselinje2: '1112', adresselinje3: 'TOAST', land: 'NO'});
     expectSoknadsfelt(pdfHendelsesfakta.paavirkningsform, 'Hvilken skadelig påvirkning har personen vært utsatt for', ['stoevpaavirkning', 'kjemikalierEllerLoesemidler']);
     expectSoknadsfelt(pdfSkade.alvorlighetsgrad, 'Hvor alvorlig var hendelsen', 'antattOppsoektLege');
-    expectSoknadsfelt(pdfHendelsesfakta.hvorSkjeddeUlykken, 'Hvor skjedde ulykken', 'arbeidsstedInne');
+    expectSoknadsfelt(pdfHendelsesfakta.hvorSkjeddeUlykken, 'Hvor skjedde hendelsen', 'arbeidsstedInne');
     expectSoknadsfelt(pdfHendelsesfakta.stedsbeskrivelse, 'Hvilken type arbeidsplass er det', 'anleggsomraadeEllerByggeplassEllerStenbruddEllerGruve');
     expectSoknadsfelt(pdfHendelsesfakta.aarsakUlykke, 'Hva var årsaken til hendelsen og bakgrunn for årsaken', ['stukketEllerKuttet', 'stoetEllerTreffAvGjenstand']);
     expectSoknadsfelt(pdfHendelsesfakta.bakgrunnsaarsak, 'Hva var bakgrunnen til hendelsen', ['manglendeMerkingEllerVarsling', 'verneutstyrUtAvFunksjon']);
