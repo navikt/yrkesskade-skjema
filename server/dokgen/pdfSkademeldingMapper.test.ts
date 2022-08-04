@@ -47,7 +47,7 @@ describe('PdfSkademeldingMapper', () => {
 
     // tid og sted
     expect(pdfSkademelding.dokumentInfo.tekster.tidOgStedSeksjonstittel).toEqual('Tid og sted');
-    expectSoknadsfeltTid(pdfTid, 'Når skjedde ulykken som skal meldes?', {verdi1: format(tidspunkt, DATO_FORMAT), verdi2: format(tidspunkt, KLOKKESLETT_FORMAT)}, skademelding.hendelsesfakta.tid.tidstype);
+    expectSoknadsfeltTid(pdfTid, 'Når skjedde ulykken som skal meldes?', {verdi1: format(tidspunkt, DATO_FORMAT), verdi2: format(tidspunkt, KLOKKESLETT_FORMAT)}, 0, skademelding.hendelsesfakta.tid.tidstype);
     expectSoknadsfelt(pdfSkademelding.hendelsesfakta.naarSkjeddeUlykken, 'Innenfor hvilket tidsrom inntraff ulykken', 'iAvtaltArbeidstid');
 
     // skadelidt
@@ -58,21 +58,80 @@ describe('PdfSkademeldingMapper', () => {
     // ulykken
     expect(pdfSkademelding.dokumentInfo.tekster.omUlykkenSeksjonstittel).toEqual('Om ulykken');
     expectSoknadsfeltAdresse(pdfUlykkested.adresse, 'Adresse for ulykken', { adresselinje1: 'Testveien 2', adresselinje2: '1112', adresselinje3: 'TOAST', land: 'NO'});
+    expectSoknadsfelt(pdfHendelsesfakta.paavirkningsform, 'Hvilken skadelig påvirkning har personen vært utsatt for', undefined);
     expectSoknadsfelt(pdfSkade.alvorlighetsgrad, 'Hvor alvorlig var hendelsen', 'antattOppsoektLege');
     expectSoknadsfelt(pdfHendelsesfakta.hvorSkjeddeUlykken, 'Hvor skjedde ulykken', 'arbeidsstedInne');
-    expectSoknadsfelt(pdfHendelsesfakta.stedsbeskrivelseTabellF, 'Hvilken type arbeidsplass er det', 'anleggsomraadeEllerByggeplassEllerStenbruddEllerGruve');
-    expectSoknadsfelt(pdfHendelsesfakta.aarsakUlykkeTabellAogE, 'Hva var årsaken til hendelsen og bakgrunn for årsaken', ['stukketEllerKuttet', 'stoetEllerTreffAvGjenstand']);
-    expectSoknadsfelt(pdfHendelsesfakta.bakgrunnsaarsakTabellBogG, 'Hva var bakgrunnen til hendelsen', ['manglendeMerkingEllerVarsling', 'verneutstyrUtAvFunksjon']);
+    expectSoknadsfelt(pdfHendelsesfakta.stedsbeskrivelse, 'Hvilken type arbeidsplass er det', 'anleggsomraadeEllerByggeplassEllerStenbruddEllerGruve');
+    expectSoknadsfelt(pdfHendelsesfakta.aarsakUlykke, 'Hva var årsaken til hendelsen og bakgrunn for årsaken', ['stukketEllerKuttet', 'stoetEllerTreffAvGjenstand']);
+    expectSoknadsfelt(pdfHendelsesfakta.bakgrunnsaarsak, 'Hva var bakgrunnen til hendelsen', ['manglendeMerkingEllerVarsling', 'verneutstyrUtAvFunksjon']);
 
     // skaden
     pdfSkade.skadedeDeler.forEach((skadetDel, index) => {
-      expectSoknadsfelt(skadetDel.kroppsdelTabellD, 'Hvor på kroppen er skaden', skademelding.skade.skadedeDeler[index].kroppsdel);
-      expectSoknadsfelt(skadetDel.skadeartTabellC, 'Hva slags skade er det', skademelding.skade.skadedeDeler[index].skadeart);
+      expectSoknadsfelt(skadetDel.kroppsdel, 'Hvor på kroppen er skaden', skademelding.skade.skadedeDeler[index].kroppsdel);
+      expectSoknadsfelt(skadetDel.skadeart, 'Hva slags skade eller sykdom er det', skademelding.skade.skadedeDeler[index].skadeart);
     });
-    expectSoknadsfelt(pdfSkade.antattSykefravaerTabellH, 'Har den skadelidte hatt fravær', 'treDagerEllerMindre');
+    expectSoknadsfelt(pdfSkade.antattSykefravaer, 'Har den skadelidte hatt fravær', 'treDagerEllerMindre');
     expectSoknadsfelt(pdfHendelsesfakta.utfyllendeBeskrivelse, 'Utfyllende beskrivelse', 'Dette er en utfyllende beskrivelse');
 
-  })
+    // er skade
+    expect(pdfSkademelding.dokumentInfo.annet.erSykdom).toBe(false);
+
+  });
+
+  test('test yrkessykdom arbeidstaker', async () => {
+    const tidspunkt = new Date();
+    const skademelding = fixtures.sykdom(tidspunkt);
+
+    const pdfSkademelding = await pdfSkademeldingMapper(skademelding)
+
+    const pdfSkadelidt = pdfSkademelding.skadelidt;
+    const pdfInnmelder = pdfSkademelding.innmelder;
+    const pdfTid= pdfSkademelding.hendelsesfakta.tid;
+    const pdfHendelsesfakta = pdfSkademelding.hendelsesfakta;
+    const pdfUlykkested = pdfHendelsesfakta.ulykkessted;
+    const pdfSkade = pdfSkademelding.skade;
+
+    // innmelder
+    expect(pdfSkademelding.dokumentInfo.tekster.innmelderSeksjonstittel).toEqual('Om innmelder');
+    expectSoknadsfelt(pdfInnmelder.norskIdentitetsnummer, 'Fødselsnummer', '12345678910');
+    expectSoknadsfelt(pdfInnmelder.altinnrolleIDer, 'Roller hentet fra Altinn', ['1','2']);
+    expectSoknadsfelt(pdfInnmelder.paaVegneAv, 'Org.nr', '123456789');
+    expectSoknadsfelt(pdfSkadelidt.dekningsforhold.navnPaaVirksomheten, 'Bedrift', 'Ork og Lidelse AS');
+    expectSoknadsfeltAdresse(pdfSkadelidt.dekningsforhold.virksomhetensAdresse, 'Virksomhetens adresse', { adresselinje1: 'Testveien 1', adresselinje2: '1111', adresselinje3: 'TEST', land: 'NO'});
+
+    // tid og sted
+    expect(pdfSkademelding.dokumentInfo.tekster.tidOgStedSeksjonstittel).toEqual('Tid og sted');
+    expectSoknadsfeltTid(pdfTid, 'Når skjedde ulykken som skal meldes?', {verdi1: format(tidspunkt, DATO_FORMAT), verdi2: format(tidspunkt, KLOKKESLETT_FORMAT)}, 2, skademelding.hendelsesfakta.tid.tidstype);
+    expectSoknadsfelt(pdfTid.sykdomPaavist, 'Når ble sykdommen påvist?', format(new Date(2022, 1, 15), DATO_FORMAT))
+    expectSoknadsfelt(pdfSkademelding.hendelsesfakta.naarSkjeddeUlykken, 'Innenfor hvilket tidsrom inntraff ulykken', 'iAvtaltArbeidstid');
+
+    // skadelidt
+    expect(pdfSkadelidt.norskIdentitetsnummer.label).toEqual('Fødselsnummer');
+    expectSoknadsfelt(pdfSkadelidt.norskIdentitetsnummer, 'Fødselsnummer', '2345678901');
+    expectSoknadsfeltRolletype(pdfSkadelidt.dekningsforhold.rolletype, 'Rolle', { kode: 'arbeidstaker', navn: 'Arbeidstaker' });
+
+    // ulykken
+    expect(pdfSkademelding.dokumentInfo.tekster.omUlykkenSeksjonstittel).toEqual('Om ulykken');
+    expectSoknadsfeltAdresse(pdfUlykkested.adresse, 'Adresse hvor den skadelige påvirkningen har skjedd', { adresselinje1: 'Testveien 2', adresselinje2: '1112', adresselinje3: 'TOAST', land: 'NO'});
+    expectSoknadsfelt(pdfHendelsesfakta.paavirkningsform, 'Hvilken skadelig påvirkning har personen vært utsatt for', ['stoevpaavirkning', 'kjemikalierEllerLoesemidler']);
+    expectSoknadsfelt(pdfSkade.alvorlighetsgrad, 'Hvor alvorlig var hendelsen', 'antattOppsoektLege');
+    expectSoknadsfelt(pdfHendelsesfakta.hvorSkjeddeUlykken, 'Hvor skjedde hendelsen', 'arbeidsstedInne');
+    expectSoknadsfelt(pdfHendelsesfakta.stedsbeskrivelse, 'Hvilken type arbeidsplass er det', 'anleggsomraadeEllerByggeplassEllerStenbruddEllerGruve');
+    expectSoknadsfelt(pdfHendelsesfakta.aarsakUlykke, 'Hva var årsaken til hendelsen og bakgrunn for årsaken', ['stukketEllerKuttet', 'stoetEllerTreffAvGjenstand']);
+    expectSoknadsfelt(pdfHendelsesfakta.bakgrunnsaarsak, 'Hva var bakgrunnen til hendelsen', ['manglendeMerkingEllerVarsling', 'verneutstyrUtAvFunksjon']);
+
+    // skaden
+    pdfSkade.skadedeDeler.forEach((skadetDel, index) => {
+      expectSoknadsfelt(skadetDel.kroppsdel, 'Hvor på kroppen er skaden', skademelding.skade.skadedeDeler[index].kroppsdel);
+      expectSoknadsfelt(skadetDel.skadeart, 'Hva slags skade eller sykdom er det', skademelding.skade.skadedeDeler[index].skadeart);
+    });
+    expectSoknadsfelt(pdfSkade.antattSykefravaer, 'Har den skadelidte hatt fravær', 'treDagerEllerMindre');
+    expectSoknadsfelt(pdfHendelsesfakta.utfyllendeBeskrivelse, 'Utfyllende beskrivelse', 'Dette er en utfyllende beskrivelse');
+
+    // er sykdom
+    expect(pdfSkademelding.dokumentInfo.annet.erSykdom).toBe(true);
+
+  });
 })
 
 const expectSoknadsfelt = <T>(soknadsfelt: Soknadsfelt<T>, expectedLabel, expectedVerdi) => {
@@ -97,12 +156,16 @@ const expectSoknadsfeltAdresse = (soknadsfelt: Soknadsfelt<PdfAdresse>, expected
   expect(soknadsfelt.verdi.land).toEqual(expectedAdresse.land);
 }
 
-const expectSoknadsfeltTid = (pdfTid: PdfTid, expectedLabel, expectedTid: ExpectedTid, tidstype: Tid.tidstype) => {
+const expectSoknadsfeltTid = (pdfTid: PdfTid, expectedLabel, expectedTid: ExpectedTid, expectedAntallPerioder: number, tidstype: Tid.tidstype) => {
   expect(pdfTid).toBeDefined()
   if (tidstype === Tid.tidstype.TIDSPUNKT) {
     expect(pdfTid.tidspunkt.label).toEqual(expectedLabel);
     expect(pdfTid.tidspunkt.verdi.dato).toEqual(expectedTid.verdi1);
     expect(pdfTid.tidspunkt.verdi.klokkeslett).toEqual(expectedTid.verdi2);
+  }
+  else if (tidstype === Tid.tidstype.PERIODE) {
+    expect(pdfTid.perioder.label).toEqual(expectedLabel);
+    expect(pdfTid.perioder.verdi.length).toEqual(expectedAntallPerioder);
   }
 }
 

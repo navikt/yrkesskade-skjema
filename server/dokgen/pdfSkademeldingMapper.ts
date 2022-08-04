@@ -1,9 +1,11 @@
 import {
   PdfAdresse,
+  PdfAnnet,
   PdfDokumentInfo,
   PdfHendelsesfakta,
   PdfInnmelder,
-  PdfPeriode, PdfRolletype,
+  PdfPeriode,
+  PdfRolletype,
   PdfSkade,
   PdfSkadelidt,
   PdfSkademelding,
@@ -11,11 +13,24 @@ import {
   PdfTid,
   PdfTidspunkt,
   PdfUlykkessted,
+  Soknadsfelt,
 } from './models';
-import { Adresse, Hendelsesfakta, Innmelder, Skade, Skadelidt, Skademelding, SkadetDel, Tid, Ulykkessted, Periode } from '../../client/src/api/yrkesskade';
-import { format, parseISO } from 'date-fns';
-import { nb } from 'date-fns/locale';
-import { KodeverkLoader } from '../kodeverk/kodeverk';
+import {
+  Adresse,
+  Hendelsesfakta,
+  Innmelder,
+  Periode,
+  Skade,
+  Skadelidt,
+  Skademelding,
+  SkadetDel,
+  Tid,
+  Ulykkessted
+} from '../../client/src/api/yrkesskade';
+import {format, parseISO} from 'date-fns';
+import {nb} from 'date-fns/locale';
+import {KodeverkLoader} from '../kodeverk/kodeverk';
+import tidstype = Tid.tidstype;
 
 export const formatDate = (date: any, formatStr: string) =>
   format(date, formatStr, { locale: nb });
@@ -30,13 +45,14 @@ export const pdfSkademeldingMapper = async (
   // hent kodeverk
   const kodeverkLoader = new KodeverkLoader();
   await kodeverkLoader.init(skademelding.skadelidt.dekningsforhold.rolletype);
+  const erSykdom = skademelding.hendelsesfakta.tid.tidstype === tidstype.PERIODE
 
   return {
     innmelder: mapInnmelder(skademelding.innmelder),
     skadelidt: mapSkadelidt(skademelding.skadelidt, kodeverkLoader),
     skade: mapSkade(skademelding.skade, kodeverkLoader),
-    hendelsesfakta: mapHendelsesfakta(skademelding.hendelsesfakta, kodeverkLoader),
-    dokumentInfo: hentDokumentinfo(),
+    hendelsesfakta: mapHendelsesfakta(skademelding.hendelsesfakta, erSykdom, kodeverkLoader),
+    dokumentInfo: hentDokumentinfo(skademelding),
   };
 };
 
@@ -79,26 +95,36 @@ const mapRolletype = (rolletype: string, kodeverk: KodeverkLoader): PdfRolletype
   }
 }
 
+const mapSkadetypeEllerSykdomstype = (skadeart: string, kodeverk: KodeverkLoader): string => {
+  const skadetype = kodeverk.mapKodeTilVerdi(skadeart, 'skadetype')
+  if (skadetype === `Ukjent: ${skadeart}`) {
+    return kodeverk.mapKodeTilVerdi(skadeart, 'sykdomstype');
+  }
+  return skadetype;
+}
+
 const mapSkade = (skade: Skade, kodeverk: KodeverkLoader): PdfSkade => {
   return {
-    antattSykefravaerTabellH: { label: 'Har den skadelidte hatt fravær', verdi: kodeverk.mapKodeTilVerdi(skade.antattSykefravaer, 'harSkadelidtHattFravaer') },
+    antattSykefravaer: { label: 'Har den skadelidte hatt fravær', verdi: kodeverk.mapKodeTilVerdi(skade.antattSykefravaer, 'harSkadelidtHattFravaer') },
     skadedeDeler: skade.skadedeDeler.map((skadetDel: SkadetDel) => ({
-      kroppsdelTabellD: { label: 'Hvor på kroppen er skaden', verdi: kodeverk.mapKodeTilVerdi(skadetDel.kroppsdel, 'skadetKroppsdel')},
-      skadeartTabellC: { label: 'Hva slags skade er det', verdi: kodeverk.mapKodeTilVerdi(skadetDel.skadeart, 'skadetype') }
+      kroppsdel: { label: 'Hvor på kroppen er skaden', verdi: kodeverk.mapKodeTilVerdi(skadetDel.kroppsdel, 'skadetKroppsdel')},
+      skadeart: { label: 'Hva slags skade eller sykdom er det', verdi: mapSkadetypeEllerSykdomstype(skadetDel.skadeart, kodeverk) }
     })),
     alvorlighetsgrad: { label: 'Hvor alvorlig var hendelsen', verdi: skade.alvorlighetsgrad ? kodeverk.mapKodeTilVerdi(skade.alvorlighetsgrad, 'alvorlighetsgrad') : ''},
   }
 }
 
-const mapHendelsesfakta = (hendelsesfakta: Hendelsesfakta, kodeverk: KodeverkLoader): PdfHendelsesfakta => {
+
+const mapHendelsesfakta = (hendelsesfakta: Hendelsesfakta, erSykdom: boolean, kodeverk: KodeverkLoader): PdfHendelsesfakta => {
   return {
     tid: mapTid(hendelsesfakta.tid, kodeverk),
     naarSkjeddeUlykken: { label: 'Innenfor hvilket tidsrom inntraff ulykken', verdi: kodeverk.mapKodeTilVerdi(hendelsesfakta.naarSkjeddeUlykken, 'tidsrom') },
-    hvorSkjeddeUlykken: { label: 'Hvor skjedde ulykken', verdi: kodeverk.mapKodeTilVerdi(hendelsesfakta.hvorSkjeddeUlykken, 'hvorSkjeddeUlykken') },
-    ulykkessted: mapUlykkessted(hendelsesfakta.ulykkessted, kodeverk),
-    aarsakUlykkeTabellAogE: { label: 'Hva var årsaken til hendelsen og bakgrunn for årsaken', verdi: kodeverk.mapKoderTilVerdier(hendelsesfakta.aarsakUlykke, 'aarsakOgBakgrunn') },
-    bakgrunnsaarsakTabellBogG: { label: 'Hva var bakgrunnen til hendelsen', verdi: kodeverk.mapKoderTilVerdier(hendelsesfakta.bakgrunnsaarsak, 'bakgrunnForHendelsen') },
-    stedsbeskrivelseTabellF: { label: 'Hvilken type arbeidsplass er det', verdi: kodeverk.mapKodeTilVerdi(hendelsesfakta.stedsbeskrivelse, 'typeArbeidsplass') },
+    hvorSkjeddeUlykken: mapHvorSkjeddeUlykken(hendelsesfakta, erSykdom, kodeverk),
+    ulykkessted: mapUlykkessted(hendelsesfakta.ulykkessted, erSykdom, kodeverk),
+    paavirkningsform: { label: 'Hvilken skadelig påvirkning har personen vært utsatt for', verdi: kodeverk.mapKoderTilVerdier(hendelsesfakta.paavirkningsform, 'paavirkningsform') },
+    aarsakUlykke: { label: 'Hva var årsaken til hendelsen og bakgrunn for årsaken', verdi: kodeverk.mapKoderTilVerdier(hendelsesfakta.aarsakUlykke, 'aarsakOgBakgrunn') },
+    bakgrunnsaarsak: { label: 'Hva var bakgrunnen til hendelsen', verdi: kodeverk.mapKoderTilVerdier(hendelsesfakta.bakgrunnsaarsak, 'bakgrunnForHendelsen') },
+    stedsbeskrivelse: { label: 'Hvilken type arbeidsplass er det', verdi: kodeverk.mapKodeTilVerdi(hendelsesfakta.stedsbeskrivelse, 'typeArbeidsplass') },
     utfyllendeBeskrivelse: { label: 'Utfyllende beskrivelse', verdi: hendelsesfakta.utfyllendeBeskrivelse || '' }
   }
 }
@@ -119,15 +145,33 @@ const mapTid = (tid: Tid, kodeverk: KodeverkLoader): PdfTid => {
   } else if (tid.tidstype === Tid.tidstype.PERIODE) {
     return {
       tidstype: tid.tidstype,
-      periode: {
+      perioder: {
         label,
         verdi: mapPerioder(tid.perioder)
       },
+      sykdomPaavist: {
+        label: 'Når ble sykdommen påvist?',
+        verdi: tid.sykdomPaavist ? formatDate(parseISO(tid.sykdomPaavist), DATO_FORMAT) : null
+      }
     };
   }
 
   return {
     tidstype: Tid.tidstype.UKJENT
+  }
+}
+
+const mapHvorSkjeddeUlykken = (hendelsesfakta: Hendelsesfakta, erSykdom: boolean, kodeverk: KodeverkLoader): Soknadsfelt<string> => {
+  if (erSykdom) {
+    return {
+      label: 'Hvor skjedde hendelsen',
+      verdi: kodeverk.mapKodeTilVerdi(hendelsesfakta.hvorSkjeddeUlykken, 'hvorSkjeddeUlykken')
+    };
+  } else {
+    return {
+      label: 'Hvor skjedde ulykken',
+      verdi: kodeverk.mapKodeTilVerdi(hendelsesfakta.hvorSkjeddeUlykken, 'hvorSkjeddeUlykken')
+    };
   }
 }
 
@@ -140,10 +184,18 @@ const mapPerioder = (perioder: Periode[]): PdfPeriode[] => {
   ))
 }
 
-const mapUlykkessted = (ulykkessted: Ulykkessted, kodeverk: KodeverkLoader): PdfUlykkessted => {
-  return {
-    sammeSomVirksomhetensAdresse: { label: 'Skjedde ulykken på samme adresse', verdi: ulykkessted.sammeSomVirksomhetensAdresse ? 'Ja' : 'Nei'},
-    adresse: { label: 'Adresse for ulykken', verdi: mapAdresse(ulykkessted.adresse, kodeverk) }
+const mapUlykkessted = (ulykkessted: Ulykkessted, erSykdom: boolean, kodeverk: KodeverkLoader): PdfUlykkessted => {
+  const feltSammeSomVirksomhetensAdresse = { label: 'Skjedde ulykken på samme adresse', verdi: ulykkessted.sammeSomVirksomhetensAdresse ? 'Ja' : 'Nei'}
+  if (erSykdom) {
+    return {
+      sammeSomVirksomhetensAdresse: feltSammeSomVirksomhetensAdresse,
+      adresse: { label: 'Adresse hvor den skadelige påvirkningen har skjedd', verdi: mapAdresse(ulykkessted.adresse, kodeverk) }
+    }
+  } else {
+    return {
+      sammeSomVirksomhetensAdresse: feltSammeSomVirksomhetensAdresse,
+      adresse: { label: 'Adresse for ulykken', verdi: mapAdresse(ulykkessted.adresse, kodeverk) }
+    }
   }
 }
 
@@ -156,13 +208,14 @@ const mapAdresse = (adresse: Adresse, kodeverk: KodeverkLoader): PdfAdresse => {
   }
 }
 
-const hentDokumentinfo = (): PdfDokumentInfo => {
+const hentDokumentinfo = (skademelding: Skademelding): PdfDokumentInfo => {
   return {
     dokumentnavn: 'Kopi av skademelding',
     dokumentDatoPrefix: 'Kopi generert',
     dokumentDato: formatDate(new Date(), DATO_FORMAT),
     dokumentnummer: 'Dette dokumenter er en oppsummering av det som er sendt til NAV',
     tekster: hentDokumenttekster(),
+    annet: hentAnnet(skademelding)
   };
 };
 
@@ -174,5 +227,11 @@ const hentDokumenttekster = (): PdfTekster => {
     omUlykkenSeksjonstittel: 'Om ulykken',
     skadelidtSeksjonstittel: 'Den skadelidte',
     tidOgStedSeksjonstittel: 'Tid og sted',
+  };
+};
+
+const hentAnnet = (skademelding: Skademelding): PdfAnnet => {
+  return {
+    erSykdom: skademelding.hendelsesfakta.tid.tidstype === tidstype.PERIODE
   };
 };
