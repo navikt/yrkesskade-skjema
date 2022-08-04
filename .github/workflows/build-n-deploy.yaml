@@ -30,22 +30,12 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - name: "install server dependencies Yarn"
-        run: "yarn install --frozen-lockfile"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
-      - name: "install dependencies Yarn"
-        run: "yarn install --frozen-lockfile"
-        working-directory: "client"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
-      - name: "install test dependencies Yarn"
-        run: "yarn install --frozen-lockfile"
-        working-directory: "test"
+      - name: "install dependencies"
+        run: "yarn install:all:frozen"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       - name: Cypress run
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v4
         with:
           project: ./test
           build: yarn build-prod
@@ -90,13 +80,8 @@ jobs:
           cache: "yarn"
           registry-url: 'https://npm.pkg.github.com'
           scope: '@navikt'
-      - name: "install server dependencies Yarn"
-        run: "yarn install --frozen-lockfile"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
-      - name: "install dependencies Yarn"
-        run: "yarn install --frozen-lockfile"
-        working-directory: "client"
+      - name: "install dependencies"
+        run: "yarn install:all:frozen"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       - name: "Bygg alt"

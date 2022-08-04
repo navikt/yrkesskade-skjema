@@ -20,7 +20,7 @@ const Receipt = () => {
     <ContentContainer>
       <Grid>
         <Cell xs={12}>
-          <Heading size="2xlarge" className="pageTitle">
+          <Heading size="xlarge" className="pageTitle">
             Dette gikk ikke så bra
           </Heading>
           </Cell>

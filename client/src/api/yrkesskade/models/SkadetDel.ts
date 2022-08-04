@@ -3,6 +3,6 @@
 /* eslint-disable */
 
 export type SkadetDel = {
-    skadeartTabellC: string;
-    kroppsdelTabellD: string;
+    skadeart: string;
+    kroppsdel: string;
 };

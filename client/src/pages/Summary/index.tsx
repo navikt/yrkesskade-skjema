@@ -51,8 +51,8 @@ const Summary = () => {
 
       logMessage('Skademelding innsendt');
       logAmplitudeEvent('skademelding.innmelding', { status: 'fullfort' });
-      dispatch(reset());
       navigate('/yrkesskade/skjema/kvittering',  { state: data });
+      dispatch(reset());;
     } catch (error: any) {
       setError('Det skjedde en feil med innsendingen. Vi jobber med å løse problemet. Prøv igjen senere.');
       logErrorMessage(`Innsending av skademelding feilet: ${error.message}`);
@@ -69,7 +69,7 @@ const Summary = () => {
         <Cell xs={12} lg={5}>
           <BackButton url="/yrkesskade/skjema/beskrivelse" />
           <Heading
-            size="2xlarge"
+            size="xlarge"
             className="pageNumberTitle spacer"
             data-number="7"
           >
@@ -105,7 +105,7 @@ const Summary = () => {
                 <TidsromSummary data={data} />
               </Accordion.Content>
             </Accordion.Item>
-            <Accordion.Item renderContentWhenClosed={true}>
+            <Accordion.Item renderContentWhenClosed={true} data-testid="oppsummering-hendelsen">
               <Accordion.Header>Om ulykken</Accordion.Header>
               <Accordion.Content>
                 <UlykkeSummary data={data} />

@@ -4,6 +4,8 @@
   "description": "",
   "main": "server.ts",
   "scripts": {
+    "install:all": "yarn install && yarn --cwd client && yarn --cwd test",
+    "install:all:frozen": "yarn install --frozen-lockfile && yarn --frozen-lockfile --cwd client && yarn --frozen-lockfile --cwd test",
     "start": "node dist/server.js",
     "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
     "build": "rimraf dist && ncc build server/server.ts -o dist",
@@ -58,7 +60,7 @@
     "@types/node": "^16.11.12",
     "@vercel/ncc": "^0.31.1",
     "concurrently": "^6.4.0",
-    "cypress": "^9.2.1",
+    "cypress": "^10.2.0",
     "dayjs": "^1.10.7",
     "nodemon": "^2.0.15",
     "openapi-typescript-codegen": "^0.20.1",

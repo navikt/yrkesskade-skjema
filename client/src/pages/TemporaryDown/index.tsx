@@ -19,7 +19,7 @@ const TemporaryDown = () => {
     <ContentContainer>
       <Grid>
         <Cell xs={12}>
-          <Heading size="2xlarge" className="pageTitle">
+          <Heading size="xlarge" className="pageTitle">
             Siden er midlertidig nede grunnet feil.
           </Heading>
           </Cell>

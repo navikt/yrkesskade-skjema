@@ -28,6 +28,9 @@ const InjuryForm = () => {
   const skadetypekoder = useAppSelector((state) =>
     selectKodeverk(state, 'skadetype')
   );
+  const sykdomstypekoder = useAppSelector((state) =>
+    selectKodeverk(state, 'sykdomstype')
+  );
 
   const harSkadelidtHattFravaerkoder = useAppSelector((state) =>
     selectKodeverk(state, 'harSkadelidtHattFravaer')
@@ -35,15 +38,14 @@ const InjuryForm = () => {
 
   useEffect(() => {
     setValue(
-      'skade.antattSykefravaerTabellH',
-      skademelding.skade?.antattSykefravaerTabellH || ''
+      'skade.antattSykefravaer',
+      skademelding.skade?.antattSykefravaer || ''
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
-
   const rolletype = skademelding.skadelidt?.dekningsforhold.rolletype || '';
-
+  const isPeriod = skademelding?.hendelsesfakta?.tid?.tidstype === 'Periode';
 
   return (
     <>
@@ -58,6 +60,8 @@ const InjuryForm = () => {
             skadedeDeler={skademelding.skade?.skadedeDeler || []}
             skadeartKoder={skadetypekoder}
             kroppsdelKode={skadetKroppsdelkoder}
+            sykdomstypeKoder={sykdomstypekoder}
+            periode={isPeriod}
           />
         )}
       />
@@ -67,12 +71,12 @@ const InjuryForm = () => {
           </span>
       )}
 
-      {roller[rolletype] && roller[rolletype].showAbsence && (
+      {roller[rolletype] && roller[rolletype].showAbsence && !isPeriod && (
       <RadioGroup
         legend="Har den skadelidte hatt fravær?"
         error={
-          errors?.skade?.antattSykefravaerTabellH &&
-          errors?.skade?.antattSykefravaerTabellH.message
+          errors?.skade?.antattSykefravaer &&
+          errors?.skade?.antattSykefravaer.message
         }
         className="spacer"
       >
@@ -83,7 +87,7 @@ const InjuryForm = () => {
                 <input
                   type="radio"
                   className="navds-radio__input"
-                  {...register('skade.antattSykefravaerTabellH', {
+                  {...register('skade.antattSykefravaer', {
                     required: 'Dette feltet er påkrevd',
                   })}
                   value={kode}
