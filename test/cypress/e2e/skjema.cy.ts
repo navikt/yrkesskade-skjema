@@ -1,4 +1,3 @@
-import { companyForm } from '../support/selectors/company-form.selectors';
 import { info } from '../support/selectors/info.selectors';
 import { general } from '../support/selectors/general-form.selector';
 import { timeframeForm } from '../support/selectors/timeframe-form.selector';
@@ -66,7 +65,7 @@ describe('Skjema innsending', (): void => {
     network.intercept(endpointUrls.brukerinfoRoller('910437127'), 'brukerinfo/roller.json').as('getRoller');
     network.intercept(endpointUrls.skademelding, 'skademelding.json').as('postSkademelding');
     network.intercept(endpointUrls.print, 'skademelding-kopi.pdf').as('postPrintPdf');
-    network.intercept(endpointUrls.log).as('postLog');
+    network.intercept(endpointUrls.log, 'logResult.json').as('postLog');
     network.intercept(endpointUrls.amplitude, 'amplitude.json').as('amplitude');
 
     ['landkoderISO2', 'rolletype', 'paavirkningsform', 'sykdomstype'].forEach((kodeverk) => {
