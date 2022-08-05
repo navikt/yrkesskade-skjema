@@ -19,7 +19,6 @@ import {
   useFeatureToggles,
 } from './context/FeatureTogglesContext';
 import { SelectedCompanyProvider } from './context/SelectedCompanyContext';
-import { ErrorMessageProvider } from './context/ErrorMessageContext';
 import { StateManagementProvider } from './context/StateManagementContext';
 import { useEffect } from 'react';
 import { logAmplitudeEvent } from './utils/analytics/amplitude';
@@ -42,19 +41,17 @@ const App = () => {
   }, [location]);
 
   return (
-    <ErrorMessageProvider>
-      <InnloggetProvider>
-        <FeatureTogglesProvider>
-          <FormProvider {...methods}>
-            <SelectedCompanyProvider>
-              <StateManagementProvider>
-                <AppContent />
-              </StateManagementProvider>
-            </SelectedCompanyProvider>
-          </FormProvider>
-        </FeatureTogglesProvider>
-      </InnloggetProvider>
-    </ErrorMessageProvider>
+    <InnloggetProvider>
+      <FeatureTogglesProvider>
+        <FormProvider {...methods}>
+          <SelectedCompanyProvider>
+            <StateManagementProvider>
+              <AppContent />
+            </StateManagementProvider>
+          </SelectedCompanyProvider>
+        </FormProvider>
+      </FeatureTogglesProvider>
+    </InnloggetProvider>
   );
 };
 
@@ -75,7 +72,7 @@ const AppContent = () => {
         kategorinavn: 'arbeidstaker',
       })
     );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -83,8 +80,8 @@ const AppContent = () => {
       <Route path="yrkesskade/">
         {toggles && !toggles.SKADEMELDING_TILGJENGELIG ? (
           <>
-          <Route index element={<TemporaryDown />} />
-          <Route path="*" element={<TemporaryDown />} />
+            <Route index element={<TemporaryDown />} />
+            <Route path="*" element={<TemporaryDown />} />
           </>
         ) : (
           <>
@@ -100,7 +97,6 @@ const AppContent = () => {
               <Route path="kvittering" element={<Receipt />} />
               <Route path="feilmelding" element={<Error />} />
             </Route>
-
           </>
         )}
       </Route>
