@@ -33,7 +33,6 @@ import { Skademelding } from './api/yrkesskade';
 
 const App = () => {
   const location = useLocation();
-  const dispatch = useAppDispatch();
   const methods = useForm<Skademelding>();
 
   useEffect(() => {
@@ -42,22 +41,6 @@ const App = () => {
       pathname: location.pathname,
     });
   }, [location]);
-
-  useEffect(() => {
-    dispatch(hentKodeverk('landkoderISO2'));
-    dispatch(hentKodeverk('rolletype'));
-    dispatch(hentKodeverk('sykdomstype'));
-    dispatch(hentKodeverk('paavirkningsform'));
-
-    // preload av stillingstitler
-    dispatch(
-      hentKodeverkForKategori({
-        typenavn: 'stillingstittel',
-        kategorinavn: 'arbeidstaker',
-      })
-    );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <ErrorMessageProvider>
@@ -78,6 +61,23 @@ const App = () => {
 
 const AppContent = () => {
   const { toggles } = useFeatureToggles();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(hentKodeverk('landkoderISO2'));
+    dispatch(hentKodeverk('rolletype'));
+    dispatch(hentKodeverk('sykdomstype'));
+    dispatch(hentKodeverk('paavirkningsform'));
+
+    // preload av stillingstitler
+    dispatch(
+      hentKodeverkForKategori({
+        typenavn: 'stillingstittel',
+        kategorinavn: 'arbeidstaker',
+      })
+    );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Routes>
