@@ -101,7 +101,7 @@ const Landing = () => {
     if (innloggetBruker) {
       sjekkTilgang(innloggetBruker);
     }
-  }, [innloggetBruker, toggles, navigate]);
+  }, [toggles]);
 
   return <ContentContainer>{content}</ContentContainer>;
 };
