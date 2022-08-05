@@ -19,7 +19,9 @@ const [FeatureTogglesProvider, useFeatureToggles] = createUseContext(() => {
   const [toggles, setToggles] = useState<EAllFeatureToggles>(defaultToggles);
 
   useEffect(() => {
+    if (innloggetStatus === InnloggetStatus.INNLOGGET) {
       hentFeatureToggles();
+    }
   }, [innloggetStatus]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const hentFeatureToggles = () => {
