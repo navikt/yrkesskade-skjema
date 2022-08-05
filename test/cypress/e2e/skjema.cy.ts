@@ -510,7 +510,7 @@ describe('Skjema innsending', (): void => {
     });
   });
 
-  it('arbeidstaker - yrkessykdom - flere perioder', () => {
+  it.only('arbeidstaker - yrkessykdom - flere perioder', () => {
     const testdata: TestSkademelding = {
       innmeldernavn: 'ROLF BJØRN',
       virksomhetsnavn: 'BIRI OG TORPO REGNSKAP',
