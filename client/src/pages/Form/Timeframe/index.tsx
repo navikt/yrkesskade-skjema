@@ -4,7 +4,7 @@ import {
   Grid,
   Cell,
   Button,
-  Heading
+  Heading,
 } from '@navikt/ds-react';
 import SystemHeader from '../../../components/SystemHeader';
 import BackButton from '../../../components/BackButton';
@@ -13,33 +13,46 @@ import ExitButton from '../../../components/ExitButton';
 
 import { useFormContext } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../core/hooks/state.hooks';
 import { useEffect } from 'react';
 import { Skademelding, Tid } from '../../../api/yrkesskade';
-import { oppdaterSkademelding, resetAarsakUlykkeOgBakgrunnAaarsak, resetPaavirkningsform, selectSkademelding } from '../../../core/reducers/skademelding.reducer';
+import {
+  oppdaterSkademelding,
+  resetAarsakUlykkeOgBakgrunnAaarsak,
+  resetPaavirkningsform,
+  selectSkademelding,
+} from '../../../core/reducers/skademelding.reducer';
 import { useCheckIfReloaded } from '../../../core/hooks/reloadCheck.hooks';
 import { isEmpty } from 'lodash';
 import { DateUtils } from 'react-day-picker';
 import { parseISO } from 'date-fns';
 
+import roller from '../../../utils/roller';
+
 const TimeframeFormPage = () => {
   useCheckIfReloaded();
   const dispatch = useAppDispatch();
   const skademelding = useAppSelector((state) => selectSkademelding(state));
+  const rolletype = skademelding.skadelidt?.dekningsforhold.rolletype || '';
 
-  const {
-    handleSubmit,
-    setValue,
-    setError
-  } = useFormContext<Skademelding>();
+  const { handleSubmit, setValue, setError } = useFormContext<Skademelding>();
 
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    setValue('hendelsesfakta.tid.tidstype', skademelding.hendelsesfakta?.tid.tidstype || Tid.tidstype.TIDSPUNKT);
-    setValue('hendelsesfakta.naarSkjeddeUlykken', skademelding.hendelsesfakta?.naarSkjeddeUlykken || '');
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    setValue(
+      'hendelsesfakta.tid.tidstype',
+      skademelding.hendelsesfakta?.tid.tidstype || Tid.tidstype.TIDSPUNKT
+    );
+    setValue(
+      'hendelsesfakta.naarSkjeddeUlykken',
+      skademelding.hendelsesfakta?.naarSkjeddeUlykken || ''
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   const onSubmit = (data: Skademelding) => {
@@ -47,18 +60,21 @@ const TimeframeFormPage = () => {
     if (isEmpty(data.hendelsesfakta.naarSkjeddeUlykken)) {
       setError('hendelsesfakta.naarSkjeddeUlykken', {
         type: 'manual',
-        message: 'Dette feltet er påkrevd'
-      })
+        message: 'Dette feltet er påkrevd',
+      });
       harFeil = true;
     }
 
     if (data.hendelsesfakta.tid.tidstype === Tid.tidstype.PERIODE) {
       dispatch(resetAarsakUlykkeOgBakgrunnAaarsak());
       // valider at vi har minst en periode satt
-      if (!data.hendelsesfakta.tid.perioder || data.hendelsesfakta.tid.perioder.length === 0) {
+      if (
+        !data.hendelsesfakta.tid.perioder ||
+        data.hendelsesfakta.tid.perioder.length === 0
+      ) {
         setError('hendelsesfakta.tid.perioder', {
           type: 'manual',
-          message: 'Minst en periode er påkrevd'
+          message: 'Minst en periode er påkrevd',
         });
         harFeil = true;
       }
@@ -66,10 +82,13 @@ const TimeframeFormPage = () => {
 
     if (data.hendelsesfakta.tid.tidstype === Tid.tidstype.TIDSPUNKT) {
       dispatch(resetPaavirkningsform());
-      if (isEmpty(data.hendelsesfakta.tid.tidspunkt) || !DateUtils.isDate(parseISO(data.hendelsesfakta.tid.tidspunkt!))) {
+      if (
+        isEmpty(data.hendelsesfakta.tid.tidspunkt) ||
+        !DateUtils.isDate(parseISO(data.hendelsesfakta.tid.tidspunkt!))
+      ) {
         setError('hendelsesfakta.tid.tidspunkt', {
           type: 'manual',
-          message: 'Dette feltet er påkrevd'
+          message: 'Dette feltet er påkrevd',
         });
         harFeil = true;
       }
@@ -80,7 +99,11 @@ const TimeframeFormPage = () => {
     }
 
     dispatch(oppdaterSkademelding(data));
-    navigate('/yrkesskade/skjema/ulykken');
+    if (roller[rolletype] && roller[rolletype].showAccidentPlacePage) {
+      navigate('/yrkesskade/skjema/ulykkessted');
+    } else {
+      navigate('/yrkesskade/skjema/ulykken');
+    }
   };
   return (
     <ContentContainer>
@@ -99,8 +122,10 @@ const TimeframeFormPage = () => {
             </Heading>
             <TimeframeForm />
             <div className="buttonGroup">
-             <ExitButton />
-              <Button onClick={handleSubmit(onSubmit)} data-testid="neste-steg">Neste steg</Button>
+              <ExitButton />
+              <Button onClick={handleSubmit(onSubmit)} data-testid="neste-steg">
+                Neste steg
+              </Button>
             </div>
           </div>
         </Cell>

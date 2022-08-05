@@ -31,6 +31,11 @@ const StepIndicator = () => {
         active: false,
       },
       {
+        text: 'Ulykkesstedet',
+        done: false,
+        active: false,
+      },
+      {
         text: 'Om ulykken',
         done: false,
         active: false,
@@ -88,20 +93,23 @@ const StepIndicator = () => {
     if (pathname.toLowerCase() === '/yrkesskade/skjema/tidsrom') {
       updateSteps(3, steps);
     }
-    if (pathname.toLowerCase() === '/yrkesskade/skjema/ulykken') {
+    if (pathname.toLowerCase() === '/yrkesskade/skjema/ulykkessted') {
       updateSteps(4, steps);
     }
-    if (pathname.toLowerCase() === '/yrkesskade/skjema/skaden') {
+    if (pathname.toLowerCase() === '/yrkesskade/skjema/ulykken') {
       updateSteps(5, steps);
     }
-    if (pathname.toLowerCase() === '/yrkesskade/skjema/beskrivelse') {
+    if (pathname.toLowerCase() === '/yrkesskade/skjema/skaden') {
       updateSteps(6, steps);
     }
-    if (pathname.toLowerCase() === '/yrkesskade/skjema/oppsummering') {
+    if (pathname.toLowerCase() === '/yrkesskade/skjema/beskrivelse') {
       updateSteps(7, steps);
     }
-    if (pathname.toLowerCase() === '/yrkesskade/skjema/kvittering') {
+    if (pathname.toLowerCase() === '/yrkesskade/skjema/oppsummering') {
       updateSteps(8, steps);
+    }
+    if (pathname.toLowerCase() === '/yrkesskade/skjema/kvittering') {
+      updateSteps(9, steps);
     }
   }, [pathname, steps]);
   return (
