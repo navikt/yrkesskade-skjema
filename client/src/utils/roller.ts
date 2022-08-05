@@ -7,6 +7,7 @@ const rolletyper: any = {
     'showWorkplace': false,
     'showAccidentBackground': false,
     'showAbsence': false,
+    'showAccidentPlacePage': true,
   },
   'arbeidstaker': {
     'isArbeidstaker': true,
@@ -16,6 +17,7 @@ const rolletyper: any = {
     'showWorkplace': true,
     'showAccidentBackground': true,
     'showAbsence': true,
+    'showAccidentPlacePage': true,
   },
   'laerling': {
     'isArbeidstaker': true,
@@ -25,12 +27,14 @@ const rolletyper: any = {
     'showWorkplace': true,
     'showAccidentBackground': true,
     'showAbsence': true,
+    'showAccidentPlacePage': true,
   },
   'tiltaksdeltaker': {
     'showStillinger': false,
     'showWorkplace': true,
     'showAccidentBackground': true,
-    'showAbsence': true,
+    'showAbsence': false,
+    'showAccidentPlacePage': true,
   }
 }
 

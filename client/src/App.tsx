@@ -5,6 +5,7 @@ import Receipt from './pages/Receipt';
 import Error from './pages/Error';
 import TimeframeFormPage from './pages/Form/Timeframe';
 import InjuryFormPage from './pages/Form/Injury';
+import AccidentPlaceFormPage from './pages/Form/AccidentPlace';
 import AccidentFormPage from './pages/Form/Accident';
 import DescriptionFormPage from './pages/Form/Description';
 import InjuredFormPage from './pages/Form/Injured';
@@ -97,6 +98,7 @@ const AppContent = () => {
               <Route index element={<Info />} />
               <Route path="skadelidt" element={<InjuredFormPage />} />
               <Route path="tidsrom" element={<TimeframeFormPage />} />
+              <Route path="ulykkessted" element={<AccidentPlaceFormPage />} />
               <Route path="ulykken" element={<AccidentFormPage />} />
               <Route path="skaden" element={<InjuryFormPage />} />
               <Route path="beskrivelse" element={<DescriptionFormPage />} />

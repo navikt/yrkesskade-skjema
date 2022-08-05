@@ -1,4 +1,4 @@
-import AccidentForm from '../../../components/Forms/Accident';
+import AccidentPlaceForm from '../../../components/Forms/AccidentPlace';
 import {
   ContentContainer,
   Grid,
@@ -20,13 +20,10 @@ import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks'
 import { oppdaterSkademelding, selectSkademelding } from '../../../core/reducers/skademelding.reducer';
 import { useCheckIfReloaded } from '../../../core/hooks/reloadCheck.hooks';
 
-import roller from '../../../utils/roller';
-
-const AccidentFormPage = () => {
+const AccidentPlaceFormPage = () => {
   useCheckIfReloaded();
   const dispatch = useAppDispatch();
   const skademelding =  useAppSelector((state) => selectSkademelding(state));
-  const rolletype = skademelding.skadelidt?.dekningsforhold.rolletype || '';
 
   const location = useLocation();
   const {
@@ -38,7 +35,7 @@ const AccidentFormPage = () => {
 
   const onSubmit = (data: Skademelding) => {
     dispatch(oppdaterSkademelding(data));
-    navigate('/yrkesskade/skjema/skaden');
+    navigate('/yrkesskade/skjema/ulykken');
   };
 
   useEffect(() => {
@@ -51,12 +48,6 @@ const AccidentFormPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
-  const erPeriode = skademelding?.hendelsesfakta?.tid?.tidstype === 'Periode';
-  let backUrl = '/yrkesskade/skjema/tidsrom';
-  if (roller[rolletype] && roller[rolletype].showAccidentPlacePage) {
-   backUrl = '/yrkesskade/skjema/ulykkessted';
-  }
-
   return (
     <ContentContainer>
       <SystemHeader />
@@ -64,15 +55,15 @@ const AccidentFormPage = () => {
         <Cell xs={12} lg={2}></Cell>
         <Cell xs={12} lg={5}>
           <div className="cellContentContainer">
-            <BackButton url={backUrl} />
+            <BackButton url="/yrkesskade/skjema/tidsrom" />
             <Heading
               size="xlarge"
               className="pageNumberTitle spacer"
               data-number="4"
             >
-              { erPeriode ? 'Om den skadelige påvirkningen' : 'Om ulykken' }
+              Ulykkesstedet
             </Heading>
-            <AccidentForm />
+            <AccidentPlaceForm />
             <div className="buttonGroup">
               <ExitButton />
               <Button onClick={handleSubmit(onSubmit)} data-testid="neste-steg">Neste steg</Button>
@@ -87,4 +78,4 @@ const AccidentFormPage = () => {
     </ContentContainer>
   );
 };
-export default AccidentFormPage;
+export default AccidentPlaceFormPage;
