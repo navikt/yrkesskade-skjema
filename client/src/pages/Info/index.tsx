@@ -16,59 +16,54 @@ import StepIndicator from '../../components/StepIndicator';
 import ExitButton from '../../components/ExitButton';
 
 import { useInnloggetContext } from '../../context/InnloggetContext';
-import { Organisasjon } from '../../types/brukerinfo';
+import { Adresse, Organisasjon } from '../../types/brukerinfo';
 import { useEffect } from 'react';
-import { useSelectedCompany } from '../../context/SelectedCompanyContext';
 
 import {
   BrukerinfoControllerService,
-  Dekningsforhold,
-  Innmelder,
   OrganisasjonDto,
-  Skadelidt,
+  Skademelding,
 } from '../../api/yrkesskade';
 import { logMessage } from '../../utils/logging';
 import { logAmplitudeEvent } from '../../utils/analytics/amplitude';
-import { useAppDispatch } from '../../core/hooks/state.hooks';
-import { oppdaterAltinnRoller, oppdaterInnmelder, oppdaterPaaVegneAv, oppdaterSkadelidt } from '../../core/reducers/skademelding.reducer';
+import { addOrganisasjon, selectOrganisasjon } from '../../core/reducers/app.reducer';
+import { useAppDispatch, useAppSelector } from '../../core/hooks/state.hooks';
+import {
+  oppdaterSkademelding,
+} from '../../core/reducers/skademelding.reducer';
+import { useFormContext } from 'react-hook-form';
 
 const Info = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const handleForward = () => {
-    logMessage('Bruker har startet innmelding');
-    logAmplitudeEvent('skademelding.innmelding', { status: 'startet'})
-    navigate('/yrkesskade/skjema/skadelidt');
+  const {
+    handleSubmit,
+    setValue
+  } = useFormContext<Skademelding>();
+
+  const handleForward = (data: Skademelding) => {
+      dispatch(oppdaterSkademelding(data));
+      logMessage('Bruker har startet innmelding');
+      logAmplitudeEvent('skademelding.innmelding', { status: 'startet' });
+      navigate('/yrkesskade/skjema/skadelidt');
   };
 
   const { innloggetBruker } = useInnloggetContext();
-  const { selectedCompany, setSelectedCompany, setSelectedAddress } =
-    useSelectedCompany();
+
+  const organisasjon = useAppSelector((state) => selectOrganisasjon(state));
 
   useEffect(() => {
     if (innloggetBruker?.fnr) {
-      const innmelder: Innmelder = {
-        norskIdentitetsnummer: innloggetBruker.fnr as unknown as string,
-        innmelderrolle: 'virksomhetsrepresentant',
-        paaVegneAv: '',
-        altinnrolleIDer: []
-      };
-      dispatch(oppdaterInnmelder(innmelder));
-
       settValgtVirksomhet(innloggetBruker.organisasjoner[0]);
-
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     innloggetBruker?.fnr,
-    innloggetBruker?.organisasjoner,
-    setSelectedCompany,
+    innloggetBruker?.organisasjoner
   ]);
 
   const settValgtVirksomhet = (virksomhet: Organisasjon) => {
-    setSelectedCompany(virksomhet);
-
     BrukerinfoControllerService.hentOrganisasjon(
       virksomhet.organisasjonsnummer
     ).then(async (organisasjon: OrganisasjonDto) => {
@@ -76,32 +71,45 @@ const Info = () => {
         return;
       }
 
-      const roller = await BrukerinfoControllerService.hentRoller(organisasjon.organisasjonsnummer);
+      const roller = await BrukerinfoControllerService.hentRoller(
+        organisasjon.organisasjonsnummer
+      );
 
       const adresse =
         organisasjon.beliggenhetsadresse || organisasjon.forretningsadresse;
-        setSelectedAddress(adresse);
 
-      const dekningsforhold: Dekningsforhold = {
-        organisasjonsnummer: organisasjon.organisasjonsnummer as string,
-        stillingstittelTilDenSkadelidte: [],
-        rolletype: ''
-      };
-      const skadelidt: Skadelidt = {
-        dekningsforhold: dekningsforhold,
-        norskIdentitetsnummer: ''
-      };
-
-      dispatch(oppdaterSkadelidt(skadelidt));
+      const oppdatertVirksomhet = {...virksomhet};
+      oppdatertVirksomhet.beliggenhetsadresse = organisasjon.beliggenhetsadresse as Adresse;
+      oppdatertVirksomhet.forretningsadresse = organisasjon.forretningsadresse as Adresse;
+      dispatch(addOrganisasjon(oppdatertVirksomhet));
 
       const altinnRollerIder = roller
-      .filter(altinnRolle => altinnRolle.RoleDefinitionId)
-      .map(altinnRolle => altinnRolle.RoleDefinitionId ? altinnRolle.RoleDefinitionId.toString() : '');
-      dispatch(oppdaterAltinnRoller(altinnRollerIder));
-      dispatch(oppdaterPaaVegneAv(organisasjon.organisasjonsnummer));
-
+        .filter((altinnRolle) => altinnRolle.RoleDefinitionId)
+        .map((altinnRolle) =>
+          altinnRolle.RoleDefinitionId
+            ? altinnRolle.RoleDefinitionId.toString()
+            : ''
+        );
+      //dispatch(oppdaterAltinnRoller(altinnRollerIder));
+      //   dispatch(oppdaterPaaVegneAv(organisasjon.organisasjonsnummer));
+      setValue('skadelidt.dekningsforhold.organisasjonsnummer', oppdatertVirksomhet.organisasjonsnummer);
+      setValue('skadelidt.dekningsforhold.navnPaaVirksomheten', oppdatertVirksomhet.navn);
+      if (adresse) {
+        setValue('skadelidt.dekningsforhold.virksomhetensAdresse', { adresselinje1: adresse?.adresser[0], adresselinje2: adresse?.postnummer, adresselinje3: adresse?.poststed, land: adresse?.landkode});
+      }
+      setValue('innmelder.norskIdentitetsnummer', innloggetBruker?.fnr.toString() || '');
+      setValue('innmelder.innmelderrolle', 'virksomhetsrepresentant');
+      setValue('innmelder.paaVegneAv', oppdatertVirksomhet.organisasjonsnummer);
+      setValue('innmelder.altinnrolleIDer', altinnRollerIder);
     });
   };
+
+  useEffect(() => {}, [])
+
+  const tilbakeTilPapirskjema = () => {
+    logAmplitudeEvent('skademelding.innmelding', { status: 'papir', kilde: 'infoside' });
+    window.location.href=document.referrer
+  }
 
   return (
     <ContentContainer>
@@ -112,7 +120,7 @@ const Info = () => {
           <div className="cellContentContainer">
             <div>
               <Heading
-                size="2xlarge"
+                size="xlarge"
                 className="pageNumberTitle spacer"
                 data-number="1"
               >
@@ -126,21 +134,21 @@ const Info = () => {
                 hvilken bedrift du er i ferd med å sende inn på vegne av. Din
                 digitale signatur erstatter virksomhetens signatur og stempel.
               </BodyLong>
-              {innloggetBruker && innloggetBruker.organisasjoner.length && (
+              {innloggetBruker && innloggetBruker.organisasjoner.length && organisasjon && (
                 <>
                   <Label>Navn</Label>
                   <BodyShort spacing>{innloggetBruker.navn}</BodyShort>
                   <Label>Virksomhet</Label>
-                  <BodyShort>{selectedCompany.navn}</BodyShort>
+                  <BodyShort>{organisasjon.navn}</BodyShort>
                   <Detail spacing>
-                    virksomhetsnummer: {selectedCompany.organisasjonsnummer}
+                    virksomhetsnummer: {organisasjon.organisasjonsnummer}
                   </Detail>
                 </>
               )}
             </div>
             <div>
               <Heading size="large" className="spacer">
-                Arbeidsgivers meldeplikt
+                Virksomhetens meldeplikt
               </Heading>
               <BodyLong className="spacer">
                 Arbeidsgiver og andre i tilsvarende stilling er pålagt
@@ -160,12 +168,12 @@ const Info = () => {
               </Heading>
               <BodyLong className="spacer">
                 Opplysningene som oppgis skal være riktige og relevante, slik at
-                NAV effektivt kan behandle saken. Anonymiserte data vil også bli
-                brukt av Statistisk sentralbyrå og tilsynsmyndighet for analyse
-                og statistikkformål. Personopplysninger om andre personer enn
-                den skadelidte selv ansees ikke å være relevante for saken.
-                Personopplysninger om den skadelidte skal avgrenses til
-                behandlingens formål for å beskrive fakta om hendelsen og
+                NAV effektivt kan behandle saken. Statistisk sentralbyrå og
+                tilsynsmyndigheter bruker data om arbeidstakeres yrkesskader til
+                analyse og statistikkformål. Personopplysninger om andre
+                personer enn den skadelidte selv ansees ikke å være relevante
+                for saken. Personopplysninger om den skadelidte skal avgrenses
+                til behandlingens formål for å beskrive fakta om hendelsen og
                 hvilken skade arbeidsulykken påførte den skadelidte.
               </BodyLong>
               <BodyShort>
@@ -187,7 +195,7 @@ const Info = () => {
                 du også på denne førstesiden. På sikt ønsker vi at den digitale
                 innsendingen erstatter denne løsningen fullstendig.
               </BodyLong>
-              <Link href={document.referrer} className="spacer">
+              <Link className="spacer" onClick={tilbakeTilPapirskjema}>
                 Gå tilbake til papirskjema hvor du også finner førstesiden
               </Link>
             </div>
@@ -204,7 +212,7 @@ const Info = () => {
               <ExitButton />
               <Button
                 variant="primary"
-                onClick={handleForward}
+                onClick={handleSubmit(handleForward)}
                 data-testid="start-innmelding"
               >
                 Start innmelding

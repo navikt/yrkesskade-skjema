@@ -4,6 +4,7 @@ import { Adresse } from '../../../api/yrkesskade';
 import { isEmpty, get } from 'lodash';
 import { useAppSelector } from '../../../core/hooks/state.hooks';
 import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
+import roller from '../../../utils/roller';
 interface IProps {
   data: any;
 }
@@ -19,6 +20,7 @@ const UlykkeSummary = ({ data }: IProps) => {
   const typeArbeidsplasskoder = useAppSelector((state) => selectKodeverk(state, 'typeArbeidsplass'));
   const aarsakOgBakgrunnkoder = useAppSelector((state) => selectKodeverk(state, 'aarsakOgBakgrunn'));
   const bakgrunnForHendelsenkoder = useAppSelector((state) => selectKodeverk(state, 'bakgrunnForHendelsen'));
+  const paavirkningsformKoder = useAppSelector((state) => selectKodeverk(state, 'paavirkningsform'));
   const alvorlighetsgradkoder = useAppSelector((state) =>
     selectKodeverk(state, 'alvorlighetsgrad')
   );
@@ -38,6 +40,9 @@ const UlykkeSummary = ({ data }: IProps) => {
       land: selectedAddress.landkode,
     };
   }
+
+  const rolletype =  data?.skadelidt?.dekningsforhold.rolletype;
+  const isPeriod = data?.hendelsesfakta?.tid.tidstype === 'Periode';
 
   return (
     <div className="answerOuterContainer">
@@ -61,18 +66,18 @@ const UlykkeSummary = ({ data }: IProps) => {
           <BodyShort>{hvorSkjeddeUlykkenkoder && hvorSkjeddeUlykkenkoder[data.hendelsesfakta.hvorSkjeddeUlykken]?.verdi}</BodyShort>
         </div>
       )}
-      {get(data, ['hendelsesfakta', 'stedsbeskrivelseTabellF']) !==
-        'undefined' && (
+      {get(data, ['hendelsesfakta', 'stedsbeskrivelse']) !==
+        'undefined' && roller[rolletype] && !roller[rolletype].isElevEllerStudent && !isPeriod && (
         <div className="answerContainer">
           <Label>Type arbeidsplass</Label>
-          <BodyShort>{typeArbeidsplasskoder && typeArbeidsplasskoder[data.hendelsesfakta.stedsbeskrivelseTabellF]?.verdi}</BodyShort>
+          <BodyShort>{typeArbeidsplasskoder && typeArbeidsplasskoder[data.hendelsesfakta.stedsbeskrivelse]?.verdi}</BodyShort>
         </div>
       )}
-      {!isEmpty(data.hendelsesfakta.aarsakUlykkeTabellAogE) && (
+      {!isEmpty(data.hendelsesfakta.aarsakUlykke) && (
         <div className="answerContainer">
           <Label>Årsak og bakgrunn for hendelsen</Label>
           <BodyShort>
-            {data.hendelsesfakta.aarsakUlykkeTabellAogE.map(
+            {data.hendelsesfakta.aarsakUlykke.map(
               (background: string) => {
                 return `${aarsakOgBakgrunnkoder && aarsakOgBakgrunnkoder[background]?.verdi}`;
               }
@@ -80,13 +85,25 @@ const UlykkeSummary = ({ data }: IProps) => {
           </BodyShort>
         </div>
       )}
-      {!isEmpty(data.hendelsesfakta.bakgrunnsaarsakTabellBogG) && (
+      {!isEmpty(data.hendelsesfakta.bakgrunnsaarsak) && !isPeriod && (
         <div className="answerContainer">
           <Label>Bakgrunn for hendelsen</Label>
           <BodyShort>
-            {data.hendelsesfakta.bakgrunnsaarsakTabellBogG.map(
+            {data.hendelsesfakta.bakgrunnsaarsak.map(
               (background: string) => {
                 return `${bakgrunnForHendelsenkoder && bakgrunnForHendelsenkoder[background]?.verdi}`;
+              }
+            ).join(', ')}
+          </BodyShort>
+        </div>
+      )}
+      {!isEmpty(data.hendelsesfakta.paavirkningsform) && (
+        <div className="answerContainer">
+          <Label>Hvilken skadelig påvirkning har personen vært utsatt for?</Label>
+          <BodyShort data-testid="oppsummering-paavirkningsformer">
+            {data.hendelsesfakta.paavirkningsform.map(
+              (paavirkning: string) => {
+                return `${paavirkningsformKoder && paavirkningsformKoder[paavirkning]?.verdi}`;
               }
             ).join(', ')}
           </BodyShort>

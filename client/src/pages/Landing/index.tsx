@@ -84,7 +84,6 @@ const Landing = () => {
       innloggetBruker,
       toggles
     );
-    setContent(<NoAccessContent />);
     if (tilgangTilDigitaltskjema) {
       logMessage('Innlogget bruker har tilgang til skjema');
       navigate('/yrkesskade/skjema');
@@ -102,7 +101,7 @@ const Landing = () => {
     if (innloggetBruker) {
       sjekkTilgang(innloggetBruker);
     }
-  }, [innloggetBruker, toggles, navigate]);
+  }, [toggles]);
 
   return <ContentContainer>{content}</ContentContainer>;
 };
@@ -128,7 +127,7 @@ const LoadingContent = () => {
 
 const NoAccessContent = () => {
   const handleClick = () => {
-    logAmplitudeEvent('skademelding.innmelding', { status: 'papir' });
+    logAmplitudeEvent('skademelding.innmelding', { status: 'papir', kilde: 'landingside' });
     window.location.href =
       'https://www.nav.no/no/person/arbeid/yrkesskade-og-yrkessykdom';
   };

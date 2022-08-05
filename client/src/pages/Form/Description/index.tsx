@@ -16,8 +16,10 @@ import { useFormContext } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../../core/hooks/state.hooks';
 import { oppdaterSkademelding } from '../../../core/reducers/skademelding.reducer';
+import { useCheckIfReloaded } from '../../../core/hooks/reloadCheck.hooks';
 
 const DescriptionFormPage = () => {
+  useCheckIfReloaded();
   const dispatch = useAppDispatch();
   const {
     handleSubmit,
@@ -41,7 +43,7 @@ const DescriptionFormPage = () => {
               url="/yrkesskade/skjema/skaden"
             />
             <Heading
-              size="2xlarge"
+              size="xlarge"
               className="pageNumberTitle spacer"
               data-number="6"
             >

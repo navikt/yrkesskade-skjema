@@ -2,13 +2,14 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { TidPeriode } from './TidPeriode';
+import type { Periode } from './Periode';
 
 export type Tid = {
     tidstype: Tid.tidstype;
     tidspunkt?: string;
-    periode?: TidPeriode;
+    perioder?: Array<Periode>;
     ukjent?: boolean;
+    sykdomPaavist?: string;
 };
 
 export namespace Tid {

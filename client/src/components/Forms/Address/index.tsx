@@ -2,8 +2,8 @@ import { TextField, Fieldset, Select } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { AdresseDto, Skademelding } from '../../../api/yrkesskade';
-import { useSelectedCompany } from '../../../context/SelectedCompanyContext';
 import { useAppSelector } from '../../../core/hooks/state.hooks';
+import { selectOrganisasjonsAdresse } from '../../../core/reducers/app.reducer';
 import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
 import './Address.less';
 
@@ -18,7 +18,7 @@ const Address = ({ sammeSomVirksomhetensAdresse, adresse }: IProps) => {
     formState: { errors },
     setValue
   } = useFormContext<Skademelding>();
-  const { selectedAddress } = useSelectedCompany();
+  const selectedAddress = useAppSelector((state) => selectOrganisasjonsAdresse(state));
 
   const landkoder = useAppSelector((state) =>
     selectKodeverk(state, 'landkoderISO2')
@@ -59,6 +59,10 @@ const Address = ({ sammeSomVirksomhetensAdresse, adresse }: IProps) => {
         className=""
         {...register('hendelsesfakta.ulykkessted.adresse.adresselinje1', {
           required: 'Dette feltet er påkrevd',
+          pattern: {
+            value: /.*\S.*/,
+            message: 'Dette feltet er påkrevd',
+          },
         })}
         label="Adresse"
         type="text"

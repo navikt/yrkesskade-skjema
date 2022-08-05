@@ -23,7 +23,6 @@ import ExitButton from '../../components/ExitButton';
 
 import { useState } from 'react';
 
-import { useErrorMessageContext } from '../../context/ErrorMessageContext';
 import {
   SkademeldingApiControllerService,
 } from '../../api/yrkesskade';
@@ -31,9 +30,10 @@ import { logErrorMessage, logMessage } from '../../utils/logging';
 import { logAmplitudeEvent } from '../../utils/analytics/amplitude';
 import { useAppDispatch, useAppSelector } from '../../core/hooks/state.hooks';
 import { reset, selectSkademelding } from '../../core/reducers/skademelding.reducer';
+import { useCheckIfReloaded } from '../../core/hooks/reloadCheck.hooks';
 
 const Summary = () => {
-  const { setError } = useErrorMessageContext();
+  useCheckIfReloaded();
   const skademelding = useAppSelector((state) => selectSkademelding(state));
   const dispatch = useAppDispatch();
 
@@ -50,12 +50,11 @@ const Summary = () => {
       logMessage('Skademelding innsendt');
       logAmplitudeEvent('skademelding.innmelding', { status: 'fullfort' });
       navigate('/yrkesskade/skjema/kvittering',  { state: data });
-      dispatch(reset());
+      dispatch(reset());;
     } catch (error: any) {
-      setError('Det skjedde en feil med innsendingen. Vi jobber med å løse problemet. Prøv igjen senere.');
       logErrorMessage(`Innsending av skademelding feilet: ${error.message}`);
       logAmplitudeEvent('skademelding.innmelding', { status: 'feilet', feilmelding: error.message});
-      navigate('/yrkesskade/skjema/feilmelding');
+      navigate('/yrkesskade/skjema/feilmelding', { state: 'Det skjedde en feil med innsendingen. Vi jobber med å løse problemet. Prøv igjen senere.'});
     }
   };
 
@@ -67,7 +66,7 @@ const Summary = () => {
         <Cell xs={12} lg={5}>
           <BackButton url="/yrkesskade/skjema/beskrivelse" />
           <Heading
-            size="2xlarge"
+            size="xlarge"
             className="pageNumberTitle spacer"
             data-number="7"
           >
@@ -103,7 +102,7 @@ const Summary = () => {
                 <TidsromSummary data={data} />
               </Accordion.Content>
             </Accordion.Item>
-            <Accordion.Item renderContentWhenClosed={true}>
+            <Accordion.Item renderContentWhenClosed={true} data-testid="oppsummering-hendelsen">
               <Accordion.Header>Om ulykken</Accordion.Header>
               <Accordion.Content>
                 <UlykkeSummary data={data} />

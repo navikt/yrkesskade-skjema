@@ -21,7 +21,7 @@ export class KodeverkLoader {
       kodelister: {},
     };
 
-    for (const kodeverk of ['rolletype', 'landkoderISO2']) {
+    for (const kodeverk of ['rolletype', 'landkoderISO2', 'paavirkningsform', 'sykdomstype']) {
       const resultat = await KodeverkApiService.hentKodeverdierForType(
         kodeverk
       );
@@ -48,10 +48,10 @@ export class KodeverkLoader {
   };
 
   mapKoderTilVerdier = (koder: string[], kodelistenavn: string): string[] => {
-    return koder.map(
+    return koder?.map(
       (kode) =>
         this.kodeverkholder.kodelister[kodelistenavn]?.kodeverdierMap[kode]?.verdi || `Ukjent: ${kode}`
-    );
+    ) || [`Kode(r) mangler for kodelistenavn ${kodelistenavn}`];
   };
 }
 export interface Kodeverk {

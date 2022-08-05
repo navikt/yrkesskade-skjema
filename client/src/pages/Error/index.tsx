@@ -7,7 +7,7 @@ import {
   Cell,
   BodyLong,
 } from "@navikt/ds-react";
-import { useErrorMessageContext } from '../../context/ErrorMessageContext';
+import { useLocation } from "react-router";
 // import { SkjemaGruppe, Input } from "nav-frontend-skjema";
 // import { Hovedknapp } from "nav-frontend-knapper";
 // import { useHistory } from "react-router-dom";
@@ -15,12 +15,14 @@ import { useErrorMessageContext } from '../../context/ErrorMessageContext';
 // import axios from "axios";
 
 const Receipt = () => {
-  const { error } = useErrorMessageContext();
+  const { state } = useLocation();
+  const error = state as String;
+
   return (
     <ContentContainer>
       <Grid>
         <Cell xs={12}>
-          <Heading size="2xlarge" className="pageTitle">
+          <Heading size="xlarge" className="pageTitle">
             Dette gikk ikke så bra
           </Heading>
           </Cell>

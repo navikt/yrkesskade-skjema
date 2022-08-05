@@ -18,8 +18,10 @@ import { useEffect } from 'react';
 import { Skademelding } from '../../../api/yrkesskade';
 import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks';
 import { oppdaterSkademelding, selectSkademelding } from '../../../core/reducers/skademelding.reducer';
+import { useCheckIfReloaded } from '../../../core/hooks/reloadCheck.hooks';
 
 const AccidentFormPage = () => {
+  useCheckIfReloaded();
   const dispatch = useAppDispatch();
   const skademelding =  useAppSelector((state) => selectSkademelding(state));
 
@@ -42,7 +44,7 @@ const AccidentFormPage = () => {
       setValue('hendelsesfakta.ulykkessted.adresse.adresselinje3', skademelding.hendelsesfakta?.ulykkessted.adresse?.adresselinje3);
       setValue('hendelsesfakta.ulykkessted.adresse.land', skademelding.hendelsesfakta?.ulykkessted.adresse?.land || '');
       setValue('hendelsesfakta.hvorSkjeddeUlykken', skademelding.hendelsesfakta?.hvorSkjeddeUlykken || '');
-      setValue('hendelsesfakta.stedsbeskrivelseTabellF', skademelding.hendelsesfakta?.stedsbeskrivelseTabellF || '');
+      setValue('hendelsesfakta.stedsbeskrivelse', skademelding.hendelsesfakta?.stedsbeskrivelse || '');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
@@ -55,7 +57,7 @@ const AccidentFormPage = () => {
           <div className="cellContentContainer">
             <BackButton url="/yrkesskade/skjema/tidsrom" />
             <Heading
-              size="2xlarge"
+              size="xlarge"
               className="pageNumberTitle spacer"
               data-number="4"
             >

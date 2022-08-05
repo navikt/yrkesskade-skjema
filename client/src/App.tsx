@@ -13,14 +13,12 @@ import TemporaryDown from './pages/TemporaryDown';
 
 import { Route, Routes, useLocation } from 'react-router-dom';
 
-import { InnloggetProvider } from './context/InnloggetContext';
+import { InnloggetProvider, useInnloggetContext } from './context/InnloggetContext';
 import {
   FeatureTogglesProvider,
   useFeatureToggles,
 } from './context/FeatureTogglesContext';
-import { autentiseringsInterceptor } from './utils/autentisering';
 import { SelectedCompanyProvider } from './context/SelectedCompanyContext';
-import { ErrorMessageProvider } from './context/ErrorMessageContext';
 import { StateManagementProvider } from './context/StateManagementContext';
 import { useEffect } from 'react';
 import { logAmplitudeEvent } from './utils/analytics/amplitude';
@@ -31,10 +29,10 @@ import {
 } from './core/reducers/kodeverk.reducer';
 import { useForm, FormProvider } from 'react-hook-form';
 import { Skademelding } from './api/yrkesskade';
+import { InnloggetStatus } from './utils/autentisering';
 
 const App = () => {
   const location = useLocation();
-  const dispatch = useAppDispatch();
   const methods = useForm<Skademelding>();
 
   useEffect(() => {
@@ -43,9 +41,35 @@ const App = () => {
     });
   }, [location]);
 
+  return (
+    <InnloggetProvider>
+      <FeatureTogglesProvider>
+        <FormProvider {...methods}>
+          <SelectedCompanyProvider>
+            <StateManagementProvider>
+              <AppContent />
+            </StateManagementProvider>
+          </SelectedCompanyProvider>
+        </FormProvider>
+      </FeatureTogglesProvider>
+    </InnloggetProvider>
+  );
+};
+
+const AppContent = () => {
+  const { toggles } = useFeatureToggles();
+  const dispatch = useAppDispatch();
+  const { innloggetStatus } = useInnloggetContext();
+
   useEffect(() => {
+    if (innloggetStatus !== InnloggetStatus.INNLOGGET) {
+      return;
+    }
+
     dispatch(hentKodeverk('landkoderISO2'));
     dispatch(hentKodeverk('rolletype'));
+    dispatch(hentKodeverk('sykdomstype'));
+    dispatch(hentKodeverk('paavirkningsform'));
 
     // preload av stillingstitler
     dispatch(
@@ -54,38 +78,16 @@ const App = () => {
         kategorinavn: 'arbeidstaker',
       })
     );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  autentiseringsInterceptor();
-
-  return (
-    <ErrorMessageProvider>
-      <InnloggetProvider>
-        <FeatureTogglesProvider>
-          <FormProvider {...methods}>
-            <SelectedCompanyProvider>
-              <StateManagementProvider>
-                <AppContent />
-              </StateManagementProvider>
-            </SelectedCompanyProvider>
-          </FormProvider>
-        </FeatureTogglesProvider>
-      </InnloggetProvider>
-    </ErrorMessageProvider>
-  );
-};
-
-const AppContent = () => {
-  const { toggles } = useFeatureToggles();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [innloggetStatus]);
 
   return (
     <Routes>
       <Route path="yrkesskade/">
         {toggles && !toggles.SKADEMELDING_TILGJENGELIG ? (
           <>
-          <Route index element={<TemporaryDown />} />
-          <Route path="*" element={<TemporaryDown />} />
+            <Route index element={<TemporaryDown />} />
+            <Route path="*" element={<TemporaryDown />} />
           </>
         ) : (
           <>
@@ -101,7 +103,6 @@ const AppContent = () => {
               <Route path="kvittering" element={<Receipt />} />
               <Route path="feilmelding" element={<Error />} />
             </Route>
-
           </>
         )}
       </Route>

@@ -24,8 +24,6 @@ export const autentiseringsInterceptor = () => {
             return response;
         },
         (error: AxiosError) => {
-          console.error(error);
-
             if (er401Feil(error)) {
                 window.location.href = getLoginUrl();
             } else {

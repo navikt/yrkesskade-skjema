@@ -4,6 +4,10 @@
       "kode": "arbeidstaker",
       "verdi": "Arbeidstaker"
     },
+    "elevEllerStudent": {
+      "kode": "elevEllerStudent",
+      "verdi": "Elev eller student"
+    },
     "laerling": {
       "kode": "laerling",
       "verdi": "Lærling"

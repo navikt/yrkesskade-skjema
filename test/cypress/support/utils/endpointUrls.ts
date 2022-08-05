@@ -1,9 +1,9 @@
 export const endpointUrls = {
-  innlogget: '**/yrkesskade/innlogget',
+  innlogget: '**/user/profile',
   skademelding: '**/api/*/skademeldinger',
   brukerinfo: '**/api/*/brukerinfo',
-  brukerinfoOrganisasjon: '**/api/*/brukerinfo/organisasjoner/*',
-  brukerinfoRoller: '**/api/*/brukerinfo/organisasjoner/*/roller',
+  brukerinfoOrganisasjon: (organisasjonsnummer: string) => `**/api/*/brukerinfo/organisasjoner/${organisasjonsnummer}`,
+  brukerinfoRoller: (organisasjonsnummer: string) => `**/api/*/brukerinfo/organisasjoner/${organisasjonsnummer}/roller`,
   toggle: '**/yrkesskade/toggles',
   log: '**/log',
   print: '**/print*',

@@ -7,10 +7,8 @@ import {
 } from '../utils/autentisering';
 import axios from 'axios';
 import { Brukerinfo } from '../types/brukerinfo';
-import { useErrorMessageContext } from './ErrorMessageContext';
 
 const [InnloggetProvider, useInnloggetContext] = createUseContext(() => {
-  const { setError } = useErrorMessageContext();
   const [innloggetStatus, setInnloggetStatus] = useState<InnloggetStatus>(
     InnloggetStatus.IKKE_VERIFISERT
   );
@@ -29,9 +27,7 @@ const [InnloggetProvider, useInnloggetContext] = createUseContext(() => {
     setInnloggetStatus: (innloggetStatus: InnloggetStatus) => void,
     setInnloggetBruker: (innloggetBruker: Brukerinfo | null) => void
   ) => {
-    return axios.get('/yrkesskade/innlogget').then(ressurs => {
-      if (ressurs.status === 200) {
-      return axios.get<Brukerinfo>(`/api/v1/brukerinfo`)
+    return axios.get<Brukerinfo>(`/user/profile`)
       .then((ressurs) => {
         if (ressurs.status === 200) {
             setInnloggetBruker(ressurs.data);
@@ -39,19 +35,12 @@ const [InnloggetProvider, useInnloggetContext] = createUseContext(() => {
         } else {
           setInnloggetStatus(InnloggetStatus.FEILET);
           setInnloggetBruker(null);
-          setError('Klarte ikke hente nødvendige data');
         }
       })
       .catch((error) => {
         setInnloggetStatus(InnloggetStatus.FEILET);
         setInnloggetBruker(null);
-        setError(`Klarte ikke hente nødvendige data:  ${error.message}`);
       });
-      } else {
-        setInnloggetStatus(InnloggetStatus.FEILET);
-        setInnloggetBruker(null);
-      }
-    })
   };
 
   return {

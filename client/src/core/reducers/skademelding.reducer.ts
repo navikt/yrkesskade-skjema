@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { merge } from "lodash";
-import { Dekningsforhold, Innmelder, Skade, Skadelidt, Skademelding, SkadetDel, Tid } from "../../api/yrkesskade";
+import { Periode, Skademelding, SkadetDel, Tid } from "../../api/yrkesskade";
 import { RootState } from "../store";
 
 interface SkademeldingState {
@@ -28,15 +28,12 @@ const initialState: SkademeldingState = {
     skade: {
       alvorlighetsgrad: '',
       skadedeDeler: [],
-      antattSykefravaerTabellH: '',
+      antattSykefravaer: '',
     },
     hendelsesfakta: {
       tid: {
         tidspunkt: undefined,
-        periode: {
-          fra: undefined,
-          til: undefined,
-        },
+        perioder: undefined,
         ukjent: false,
         tidstype: Tid.tidstype.TIDSPUNKT,
       },
@@ -51,10 +48,11 @@ const initialState: SkademeldingState = {
           land: undefined,
         },
       },
-      aarsakUlykkeTabellAogE: [],
-      bakgrunnsaarsakTabellBogG: [],
+      aarsakUlykke: undefined,
+      bakgrunnsaarsak: undefined,
       utfyllendeBeskrivelse: '',
-      stedsbeskrivelseTabellF: '',
+      stedsbeskrivelse: '',
+      paavirkningsform: undefined,
     }
   }
 }
@@ -67,65 +65,47 @@ export const skademeldingSlice = createSlice({
       state,
       action: PayloadAction<Skademelding>
     ) => {
-      if (state.skademelding.skade?.skadedeDeler) {
-        // vi skal ikke merge denne listen
-        state.skademelding.skade.skadedeDeler = [];
-      }
       state.skademelding = merge(state.skademelding, action.payload);
     },
-    oppdaterInnmelder: (
-      state,
-      action: PayloadAction<Innmelder>
-    ) => {
-      state.skademelding.innmelder = merge(state.skademelding.innmelder, action.payload);
+    fjernSkadetDel: (state, action: PayloadAction<SkadetDel>) => {
+      state.skademelding.skade.skadedeDeler = state.skademelding.skade.skadedeDeler.filter(skadetDel => skadetDel.kroppsdel !== action.payload.kroppsdel && skadetDel.skadeart !== action.payload.skadeart)
     },
-    oppdaterAltinnRoller: (state, action: PayloadAction<string[]>) => {
-      if (state.skademelding.innmelder) {
-        state.skademelding.innmelder.altinnrolleIDer = action.payload;
-      }
+    fjernPeriode: (state, action: PayloadAction<Periode>) => {
+      state.skademelding.hendelsesfakta.tid.perioder = state.skademelding.hendelsesfakta.tid.perioder?.filter(periode => periode.fra !== action.payload.fra && periode.til !== action.payload.til)
     },
-    oppdaterPaaVegneAv: (
-      state,
-      action: PayloadAction<string>
-    ) => {
-      if (state.skademelding.innmelder) {
-        state.skademelding.innmelder.paaVegneAv = action.payload;
-      }
+    oppdaterPaavirkningsform: (state, action: PayloadAction<string[]>) => {
+      state.skademelding.hendelsesfakta.paavirkningsform = action.payload
     },
-    oppdaterSkadelidt: (state, action: PayloadAction<Skadelidt>) => {
-      state.skademelding.skadelidt = merge(state.skademelding.skadelidt, action.payload);
+    oppdaterAarsakUlykke: (state, action: PayloadAction<string[]>) => {
+      state.skademelding.hendelsesfakta.aarsakUlykke = action.payload
     },
-    oppdaterDekningsforhold: (state, action: PayloadAction<Dekningsforhold>) => {
-      if (state.skademelding.skadelidt) {
-        state.skademelding.skadelidt.dekningsforhold = action.payload;
-      }
+    oppdaaterBakgrunnsaarsak: (state, action: PayloadAction<string[]>) => {
+      state.skademelding.hendelsesfakta.bakgrunnsaarsak = action.payload
     },
-    oppdaterSkade: (state, action: PayloadAction<Skade>) => {
-      state.skademelding.skade = action.payload;
+    resetPaavirkningsform: (state) => {
+      state.skademelding.hendelsesfakta.paavirkningsform = undefined;
     },
-    oppdaterSkadedeDeler: (state, action: PayloadAction<SkadetDel[]>) => {
-      if (state.skademelding && state.skademelding.skade) {
-        state.skademelding.skade.skadedeDeler = merge(state.skademelding?.skade.skadedeDeler, action.payload);
-      }
+    resetAarsakUlykkeOgBakgrunnAaarsak: (state) => {
+      state.skademelding.hendelsesfakta.aarsakUlykke = undefined;
+      state.skademelding.hendelsesfakta.bakgrunnsaarsak = undefined;
     },
-    reset: (state) => {
-      state = initialState;
+    reset: () => {
+      return { ...initialState };
     }
   }
 })
 
 export const selectSkademelding = (state: RootState) => state.skademelding.skademelding
 
-
 export const {
   oppdaterSkademelding,
-  oppdaterInnmelder,
-  oppdaterPaaVegneAv,
-  oppdaterSkadelidt ,
-  oppdaterAltinnRoller,
-  oppdaterSkade,
-  oppdaterDekningsforhold,
-  oppdaterSkadedeDeler,
-  reset
+  reset,
+  fjernSkadetDel,
+  fjernPeriode,
+  oppdaterPaavirkningsform,
+  oppdaterAarsakUlykke,
+  oppdaaterBakgrunnsaarsak,
+  resetPaavirkningsform,
+  resetAarsakUlykkeOgBakgrunnAaarsak
 } = skademeldingSlice.actions;
 export default skademeldingSlice.reducer;

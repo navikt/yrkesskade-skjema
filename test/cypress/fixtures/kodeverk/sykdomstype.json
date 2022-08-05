@@ -1,0 +1,24 @@
+{
+  "kodeverdierMap": {
+    "sykdomIHjernenEllerNervesystemet": {
+      "kode": "sykdomIHjernenEllerNervesystemet",
+      "verdi": "Sykdom i hjernen eller i nervesystemet"
+    },
+    "oeyesykdom": {
+      "kode": "oeyesykdom",
+      "verdi": "Øyesykdom"
+    },
+    "oeresykdom": {
+      "kode": "oeresykdom",
+      "verdi": "Øresykdom"
+    },
+    "psykiskSykdom": {
+      "kode": "psykiskSykdom",
+      "verdi": "Psykisk sykdom"
+    },
+    "hormonOgMetabolskSykdom": {
+      "kode": "hormonOgMetabolskSykdom",
+      "verdi": "Hormon og metabolsk sykdom"
+    }
+  }
+}
