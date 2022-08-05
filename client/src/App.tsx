@@ -13,7 +13,7 @@ import TemporaryDown from './pages/TemporaryDown';
 
 import { Route, Routes, useLocation } from 'react-router-dom';
 
-import { InnloggetProvider } from './context/InnloggetContext';
+import { InnloggetProvider, useInnloggetContext } from './context/InnloggetContext';
 import {
   FeatureTogglesProvider,
   useFeatureToggles,
@@ -29,6 +29,7 @@ import {
 } from './core/reducers/kodeverk.reducer';
 import { useForm, FormProvider } from 'react-hook-form';
 import { Skademelding } from './api/yrkesskade';
+import { InnloggetStatus } from './utils/autentisering';
 
 const App = () => {
   const location = useLocation();
@@ -59,8 +60,13 @@ const App = () => {
 const AppContent = () => {
   const { toggles } = useFeatureToggles();
   const dispatch = useAppDispatch();
+  const { innloggetStatus } = useInnloggetContext();
 
   useEffect(() => {
+    if (innloggetStatus !== InnloggetStatus.INNLOGGET) {
+      return;
+    }
+
     dispatch(hentKodeverk('landkoderISO2'));
     dispatch(hentKodeverk('rolletype'));
     dispatch(hentKodeverk('sykdomstype'));
@@ -74,7 +80,7 @@ const AppContent = () => {
       })
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [innloggetStatus]);
 
   return (
     <Routes>
