@@ -510,7 +510,7 @@ describe('Skjema innsending', (): void => {
     });
   });
 
-  it.only('arbeidstaker - yrkessykdom - flere perioder', () => {
+  it('arbeidstaker - yrkessykdom - flere perioder', () => {
     const testdata: TestSkademelding = {
       innmeldernavn: 'ROLF BJØRN',
       virksomhetsnavn: 'BIRI OG TORPO REGNSKAP',
@@ -526,7 +526,6 @@ describe('Skjema innsending', (): void => {
       paavirkningsform: ['Kjemikalier, løsemidler, gift, gass, væske o.l.', 'Vibrasjon']
     };
 
-    const injuryTime = arbeidstaker.tidspunkt;
     // vent til innlogget sjekk er fullført
     cy.wait('@getInnlogget').wait('@getOrganisasjon').wait('@getRoller');
 
