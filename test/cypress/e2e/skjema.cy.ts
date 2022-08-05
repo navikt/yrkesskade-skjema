@@ -1,3 +1,4 @@
+import { companyForm } from '../support/selectors/company-form.selectors';
 import { info } from '../support/selectors/info.selectors';
 import { general } from '../support/selectors/general-form.selector';
 import { timeframeForm } from '../support/selectors/timeframe-form.selector';
