@@ -8,6 +8,8 @@ import { OpenAPI as KodeverkOpenApi } from './api/kodeverk';
 import { Provider } from 'react-redux';
 import store from './core/store';
 import { initAmplitude } from "./utils/analytics/amplitude";
+import { initWindowOnError } from "./utils/global-error";
+// import reportWebVitals from "./reportWebVitals";
 import { autentiseringsInterceptor } from "./utils/autentisering";
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistStore } from 'redux-persist';
@@ -18,6 +20,7 @@ KodeverkOpenApi.BASE = '/kodeverk';
 autentiseringsInterceptor();
 
 initAmplitude();
+initWindowOnError();
 
 const persistor = persistStore(store);
 
