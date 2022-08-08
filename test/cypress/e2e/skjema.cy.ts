@@ -7,6 +7,7 @@ import { network } from '../support/utils/network';
 import * as dayjs from 'dayjs';
 import { injuredForm } from '../support/selectors/injured-form.selectors';
 import { accidentForm } from '../support/selectors/accident-form.selectors';
+import { accidentPlaceForm } from '../support/selectors/accident-place-form.selectors';
 import { injuryForm } from '../support/selectors/injury-form.selectors';
 import { summary } from '../support/selectors/summary.selectors';
 import { receipt } from '../support/selectors/receipt.selectors';
@@ -149,12 +150,19 @@ describe('Skjema innsending', (): void => {
     // Gå til neste steg
     general.nextStep().click();
 
-    // info om ulykken
+    // info om ulykkessted
     // sjekk validering
     general.nextStep().click();
-    general.feilmeldinger().should('have.length', 4);
-    accidentForm.place().select(1);
-    accidentForm.placeType().select(2);
+    general.feilmeldinger().should('have.length', 2);
+    accidentPlaceForm.place().select(1);
+    accidentPlaceForm.placeType().select(2);
+
+    // Gå til neste steg
+    general.nextStep().click();
+
+    // info om ulykken
+    general.nextStep().click();
+    general.feilmeldinger().should('have.length', 2);
     accidentForm.reasonOptions().type(`${arbeidstaker.aarsak}{enter}{esc}`);
     accidentForm
       .backgroundOptions()
@@ -251,8 +259,13 @@ describe('Skjema innsending', (): void => {
     // Gå til neste steg
     general.nextStep().click();
 
+    // info om ulykkessted
+    accidentPlaceForm.place().select(1);
+
+    // Gå til neste steg
+    general.nextStep().click();
+
     // info om ulykken
-    accidentForm.place().select(1);
     testdata.paavirkningsform.forEach((form) => accidentForm.paavirkningsform().type(`${form}{enter}{esc}`));
 
     // Gå til neste steg
@@ -348,11 +361,19 @@ describe('Skjema innsending', (): void => {
     // Gå til neste steg
     general.nextStep().click();
 
-    // info om ulykken
+    // info om ulykkessted
     // sjekk validering
     general.nextStep().click();
-    general.feilmeldinger().should('have.length', 2);
-    accidentForm.place().select(1);
+    general.feilmeldinger().should('have.length', 1);
+    accidentPlaceForm.place().select(1);
+
+    // Gå til neste steg
+    general.nextStep().click();
+
+      // info om ulykken
+    // sjekk validering
+    general.nextStep().click();
+    general.feilmeldinger().should('have.length', 1);
     accidentForm.reasonOptions().type(`${elev.aarsak}{enter}{esc}`);
 
     // Gå til neste steg
@@ -422,16 +443,21 @@ describe('Skjema innsending', (): void => {
     // Gå til neste steg
     general.nextStep().click();
 
-    // info om ulykken
-    accidentForm.place().select(1);
-    accidentForm.placeType().select(2);
-    accidentForm.reasonOptions().type(`${arbeidstaker.aarsak}{enter}{esc}`);
-    accidentForm
-      .backgroundOptions()
-      .type(`${arbeidstaker.bakgrunn}{enter}{esc}`);
+    // info om ulykkessted
+    accidentPlaceForm.place().select(1);
+    accidentPlaceForm.placeType().select(2);
 
     // Gå til neste steg
     general.nextStep().click();
+
+     // info om ulykken
+     accidentForm.reasonOptions().type(`${arbeidstaker.aarsak}{enter}{esc}`);
+     accidentForm
+       .backgroundOptions()
+       .type(`${arbeidstaker.bakgrunn}{enter}{esc}`);
+
+     // Gå til neste steg
+     general.nextStep().click();
 
     // diverse valideringsjekker
     general.nextStep().click(); // prøv å gå til neste side
@@ -623,8 +649,13 @@ describe('Skjema innsending', (): void => {
     // Gå til neste steg
     general.nextStep().click();
 
+    // info om ulykkessted
+    accidentPlaceForm.place().select(1);
+
+    // Gå til neste steg
+    general.nextStep().click();
+
     // info om ulykken
-    accidentForm.place().select(1);
     testdata.paavirkningsform.forEach((form) => accidentForm.paavirkningsform().type(`${form}{enter}{esc}`));
 
     // Gå til neste steg

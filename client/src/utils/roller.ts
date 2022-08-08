@@ -7,7 +7,7 @@ const rolletyper: any = {
     'showWorkplace': false,
     'showAccidentBackground': false,
     'showAbsence': false,
-    'showAccidentPlacePage': false,
+    'showAccidentPlacePage': true,
   },
   'arbeidstaker': {
     'isArbeidstaker': true,
