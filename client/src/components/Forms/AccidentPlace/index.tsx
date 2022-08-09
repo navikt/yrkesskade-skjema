@@ -115,6 +115,7 @@ const AccidentPlaceForm = () => {
       <Address
         sammeSomVirksomhetensAdresse={sammeSomVirksomhetensAdresse}
         adresse={selectedAddress}
+        erPeriode={isPeriod}
       />
 
       <NAVSelect
