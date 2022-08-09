@@ -12,7 +12,10 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { useState } from 'react';
 import Address from '../Address';
 // import _ from 'lodash';
-import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks';
+import {
+  //useAppDispatch,
+  useAppSelector,
+} from '../../../core/hooks/state.hooks';
 import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
 import { selectSkademelding } from '../../../core/reducers/skademelding.reducer';
 import { Skademelding } from '../../../api/yrkesskade';
@@ -21,8 +24,10 @@ import roller from '../../../utils/roller';
 import { selectOrganisasjonsAdresse } from '../../../core/reducers/app.reducer';
 
 const AccidentPlaceForm = () => {
-  const dispatch = useAppDispatch();
-  const selectedAddress = useAppSelector((state) => selectOrganisasjonsAdresse(state));
+  // const dispatch = useAppDispatch();
+  const selectedAddress = useAppSelector((state) =>
+    selectOrganisasjonsAdresse(state)
+  );
   const {
     register,
     formState: { errors },
