@@ -76,7 +76,7 @@ const AccidentPlaceForm = () => {
             }) => (
               <RadioGroup
                 className="spacer"
-                legend="Skjedde ulykken på samme adresse?"
+                legend="Ble personen utsatt for den skadelige påvirkningen på samme adresse?"
                 value={sammeSomVirksomhetensAdresse}
                 onChange={(val) => {
                   setSammeSomVirksomhetensAdresse(val);
@@ -119,7 +119,7 @@ const AccidentPlaceForm = () => {
 
       <NAVSelect
         className="spacer"
-        label="Hvor skjedde ulykken"
+        label="Hvor skjedde hendelsen?"
         {...register('hendelsesfakta.hvorSkjeddeUlykken', {
           required: 'Dette feltet er påkrevd',
         })}
