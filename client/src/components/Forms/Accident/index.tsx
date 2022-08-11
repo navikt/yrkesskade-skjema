@@ -1,7 +1,7 @@
 /* eslint-disable no-mixed-operators */
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
-  Select as NAVSelect,
+  // Select as NAVSelect,
   RadioGroup,
   Label,
   BodyShort,
@@ -10,7 +10,7 @@ import {
 import Select from 'react-select';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useState } from 'react';
-import Address from '../Address';
+// import Address from '../Address';
 import _ from 'lodash';
 import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks';
 import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
@@ -18,11 +18,11 @@ import { oppdaaterBakgrunnsaarsak, oppdaterAarsakUlykke, oppdaterPaavirkningsfor
 import { Skademelding } from '../../../api/yrkesskade';
 
 import roller from '../../../utils/roller';
-import { selectOrganisasjonsAdresse } from '../../../core/reducers/app.reducer';
+// import { selectOrganisasjonsAdresse } from '../../../core/reducers/app.reducer';
 
 const AccidentForm = () => {
   const dispatch = useAppDispatch();
-  const selectedAddress = useAppSelector((state) => selectOrganisasjonsAdresse(state));
+  // const selectedAddress = useAppSelector((state) => selectOrganisasjonsAdresse(state));
   const {
     register,
     formState: { errors },
@@ -33,12 +33,12 @@ const AccidentForm = () => {
     selectKodeverk(state, 'alvorlighetsgrad')
   );
   const skademelding = useAppSelector((state) => selectSkademelding(state));
-  const hvorSkjeddeUlykkenkoder = useAppSelector((state) =>
-    selectKodeverk(state, 'hvorSkjeddeUlykken')
-  );
-  const typeArbeidsplasskoder = useAppSelector((state) =>
-    selectKodeverk(state, 'typeArbeidsplass')
-  );
+  // const hvorSkjeddeUlykkenkoder = useAppSelector((state) =>
+  //   selectKodeverk(state, 'hvorSkjeddeUlykken')
+  // );
+  // const typeArbeidsplasskoder = useAppSelector((state) =>
+  //   selectKodeverk(state, 'typeArbeidsplass')
+  // );
   const aarsakOgBakgrunnkoder = useAppSelector((state) =>
     selectKodeverk(state, 'aarsakOgBakgrunn')
   );
@@ -49,11 +49,11 @@ const AccidentForm = () => {
     selectKodeverk(state, 'paavirkningsform')
   );
 
-  const [sammeSomVirksomhetensAdresse, setSammeSomVirksomhetensAdresse] =
-    useState<string>(
-      skademelding.hendelsesfakta?.ulykkessted.sammeSomVirksomhetensAdresse.toString() ||
-        'true'
-    );
+  // const [sammeSomVirksomhetensAdresse, setSammeSomVirksomhetensAdresse] =
+  //   useState<string>(
+  //     skademelding.hendelsesfakta?.ulykkessted.sammeSomVirksomhetensAdresse.toString() ||
+  //       'true'
+  //   );
 
   const [alvorlighetsgrad, setAlvorlighetsgrad] = useState<string>(
     skademelding.skade?.alvorlighetsgrad || ''
@@ -64,74 +64,10 @@ const AccidentForm = () => {
   };
 
   const rolletype = skademelding.skadelidt?.dekningsforhold.rolletype || '';
-  const erPeriode = skademelding?.hendelsesfakta?.tid?.tidstype === 'Periode';
+  const isPeriod = skademelding?.hendelsesfakta?.tid?.tidstype === 'Periode';
 
   return (
     <>
-      {selectedAddress && (
-        <>
-          <div>
-            <Label spacing>Adresse</Label>
-
-            <BodyShort data-testid="injury-street-address">
-              {selectedAddress.adresser && selectedAddress.adresser[0]}
-            </BodyShort>
-            <BodyShort data-testid="injury-postal-code-place">
-              {selectedAddress.postnummer} {selectedAddress.poststed}
-            </BodyShort>
-          </div>
-
-          <Controller
-            name="hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse"
-            control={control}
-            render={({
-              field: { onChange, onBlur, value, name, ref },
-              fieldState: { invalid, isTouched, isDirty, error },
-              formState,
-            }) => (
-              <RadioGroup
-                className="spacer"
-                legend={ erPeriode ? `Ble personen utsatt for den skadelige påvirkningen på samme adresse?` : `Skjedde ulykken på samme adresse?` }
-                value={sammeSomVirksomhetensAdresse}
-                onChange={(val) => {
-                  setSammeSomVirksomhetensAdresse(val);
-                  onChange(val === 'true');
-                }}
-                onBlur={onBlur}
-                error={
-                  errors?.hendelsesfakta?.ulykkessted
-                    ?.sammeSomVirksomhetensAdresse &&
-                  errors?.hendelsesfakta?.ulykkessted
-                    ?.sammeSomVirksomhetensAdresse.message
-                }
-              >
-                <Radio
-                  value="true"
-                  {...register(
-                    'hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse'
-                  )}
-                >
-                  Ja
-                </Radio>
-                <Radio
-                  value="false"
-                  {...register(
-                    'hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse'
-                  )}
-                >
-                  Nei
-                </Radio>
-              </RadioGroup>
-            )}
-          />
-        </>
-      )}
-
-      <Address
-        sammeSomVirksomhetensAdresse={sammeSomVirksomhetensAdresse}
-        adresse={selectedAddress} erPeriode={erPeriode}
-      />
-
       {alvorlighetsgradkoder && (
         <RadioGroup
           className="spacer"
@@ -160,54 +96,7 @@ const AccidentForm = () => {
         </RadioGroup>
       )}
 
-      <NAVSelect
-        className="spacer"
-        label={ erPeriode ? `Hvor skjedde hendelsen` : `Hvor skjedde ulykken` }
-        {...register('hendelsesfakta.hvorSkjeddeUlykken', {
-          required: 'Dette feltet er påkrevd',
-        })}
-        data-testid="accident-place"
-        error={
-          errors?.hendelsesfakta?.hvorSkjeddeUlykken &&
-          errors?.hendelsesfakta?.hvorSkjeddeUlykken.message
-        }
-      >
-        <option hidden value=""></option>
-        {hvorSkjeddeUlykkenkoder &&
-          Object.keys(hvorSkjeddeUlykkenkoder).map((kode: string) => {
-            return (
-              <option key={encodeURI(kode)} value={kode}>
-                {hvorSkjeddeUlykkenkoder[kode]?.verdi}
-              </option>
-            );
-          })}
-      </NAVSelect>
-      {roller[rolletype] && roller[rolletype].showWorkplace && !erPeriode && (
-        <NAVSelect
-          className="spacer"
-          label="Hvilken type arbeidsplass er det?"
-          {...register('hendelsesfakta.stedsbeskrivelse', {
-            required: 'Dette feltet er påkrevd',
-          })}
-          data-testid="accident-place-type"
-          error={
-            errors?.hendelsesfakta?.stedsbeskrivelse &&
-            errors?.hendelsesfakta?.stedsbeskrivelse.message
-          }
-        >
-          <option hidden value=""></option>
-          {typeArbeidsplasskoder &&
-            Object.keys(typeArbeidsplasskoder).map((kode: string) => {
-              return (
-                <option key={encodeURI(kode)} value={kode}>
-                  {typeArbeidsplasskoder[kode]?.verdi}
-                </option>
-              );
-            })}
-        </NAVSelect>
-      )}
-
-      { !erPeriode && (
+      { !isPeriod && (
       <div className="spacer spacer navds-form-field navds-form-field--medium">
         <Label className="navds-select__label navds-label">
           Beskriv årsak for hendelsen og bakgrunn for årsaken. Gi en mest mulig
@@ -270,7 +159,7 @@ const AccidentForm = () => {
 
       {roller[rolletype] &&
         roller[rolletype].showAccidentBackground &&
-        !erPeriode && (
+        !isPeriod && (
           <div className="spacer spacer navds-form-field navds-form-field--medium">
             <Label className="navds-select__label navds-label">
               Hva var bakgrunnen til hendelsen?
@@ -337,7 +226,7 @@ const AccidentForm = () => {
           </div>
         )}
 
-      {erPeriode && paavirkningsformkoder && (
+      {isPeriod && paavirkningsformkoder && (
         <div className="spacer spacer navds-form-field navds-form-field--medium">
           <Label className="navds-select__label navds-label">
             Hvilken skadelig påvirkning har personen vært utsatt for?

@@ -1,7 +1,9 @@
 import { useEffect } from 'react';
 import { RadioGroup } from '@navikt/ds-react';
 import { Skademelding } from '../../../api/yrkesskade';
-import { useAppSelector } from '../../../core/hooks/state.hooks';
+import {
+  useAppSelector,
+} from '../../../core/hooks/state.hooks';
 import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
 import { selectSkademelding } from '../../../core/reducers/skademelding.reducer';
 import { useLocation } from 'react-router';
@@ -43,33 +45,33 @@ const InjuryForm = () => {
   }, [location]);
 
   const rolletype = skademelding.skadelidt?.dekningsforhold.rolletype || '';
-  const erPeriode = skademelding?.hendelsesfakta?.tid?.tidstype === 'Periode';
+  const isPeriod = skademelding?.hendelsesfakta?.tid?.tidstype === 'Periode';
 
   return (
     <>
       <Controller
         name="skade.skadedeDeler"
         control={control}
-        render={({ field: { onChange } }) => (
+        render={({ field: { onChange, onBlur, value, name, ref } }) => (
           <SkadedeDeler
             onSkadededelerChange={(skadedeDeler) => {
-              onChange(skadedeDeler);
+              onChange(skadedeDeler)
             }}
             skadedeDeler={skademelding.skade?.skadedeDeler || []}
             skadeartKoder={skadetypekoder}
             kroppsdelKode={skadetKroppsdelkoder}
             sykdomstypeKoder={sykdomstypekoder}
-            periode={erPeriode}
+            periode={isPeriod}
           />
         )}
       />
       {errors?.skade?.skadedeDeler && (
-        <span className="navds-error-message navds-error-message--medium navds-label">
-          Skadeart og kroppsdel er påkrevd
-        </span>
+          <span className="navds-error-message navds-error-message--medium navds-label block">
+            Skadeart og kroppsdel er påkrevd
+          </span>
       )}
 
-      {roller[rolletype] && roller[rolletype].showAbsence && !erPeriode && (
+      {roller[rolletype] && roller[rolletype].showAbsence && !isPeriod && (
       <RadioGroup
         legend="Har den skadelidte hatt fravær?"
         error={

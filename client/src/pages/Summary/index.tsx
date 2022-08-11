@@ -23,7 +23,6 @@ import ExitButton from '../../components/ExitButton';
 
 import { useState } from 'react';
 
-import { useErrorMessageContext } from '../../context/ErrorMessageContext';
 import {
   SkademeldingApiControllerService,
 } from '../../api/yrkesskade';
@@ -35,7 +34,6 @@ import { useCheckIfReloaded } from '../../core/hooks/reloadCheck.hooks';
 
 const Summary = () => {
   useCheckIfReloaded();
-  const { setError } = useErrorMessageContext();
   const skademelding = useAppSelector((state) => selectSkademelding(state));
   const dispatch = useAppDispatch();
 
@@ -54,12 +52,13 @@ const Summary = () => {
       navigate('/yrkesskade/skjema/kvittering',  { state: data });
       dispatch(reset());;
     } catch (error: any) {
-      setError('Det skjedde en feil med innsendingen. Vi jobber med å løse problemet. Prøv igjen senere.');
       logErrorMessage(`Innsending av skademelding feilet: ${error.message}`);
       logAmplitudeEvent('skademelding.innmelding', { status: 'feilet', feilmelding: error.message});
-      navigate('/yrkesskade/skjema/feilmelding');
+      navigate('/yrkesskade/skjema/feilmelding', { state: 'Det skjedde en feil med innsendingen. Vi jobber med å løse problemet. Prøv igjen senere.'});
     }
   };
+
+  const isPeriod = skademelding?.hendelsesfakta?.tid?.tidstype === 'Periode';
 
   return (
     <ContentContainer>
@@ -106,7 +105,7 @@ const Summary = () => {
               </Accordion.Content>
             </Accordion.Item>
             <Accordion.Item renderContentWhenClosed={true} data-testid="oppsummering-hendelsen">
-              <Accordion.Header>Om ulykken</Accordion.Header>
+              <Accordion.Header>{isPeriod ? 'Om den skadelige påvirkningen' : 'Ulykkessted og om ulykken'}</Accordion.Header>
               <Accordion.Content>
                 <UlykkeSummary data={data} />
               </Accordion.Content>

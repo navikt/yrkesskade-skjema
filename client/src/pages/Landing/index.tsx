@@ -84,7 +84,6 @@ const Landing = () => {
       innloggetBruker,
       toggles
     );
-    setContent(<NoAccessContent />);
     if (tilgangTilDigitaltskjema) {
       logMessage('Innlogget bruker har tilgang til skjema');
       navigate('/yrkesskade/skjema');
@@ -102,7 +101,7 @@ const Landing = () => {
     if (innloggetBruker) {
       sjekkTilgang(innloggetBruker);
     }
-  }, [innloggetBruker, toggles, navigate]);
+  }, [toggles]);
 
   return <ContentContainer>{content}</ContentContainer>;
 };
