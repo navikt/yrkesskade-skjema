@@ -99,6 +99,7 @@ const SkadedeDeler = (props: IProps) => {
 
   const sykdomSkadeKoder = { ...skadetypekoder, ...sykdomstypekoder };
 
+
   return (
     <>
       <Select
@@ -135,7 +136,8 @@ const SkadedeDeler = (props: IProps) => {
       </Select>
 
       <Label>Hvor på kroppen er skaden?</Label>
-      <ReadMore
+      {props.periode && (
+        <ReadMore
           className=""
           size="medium"
           header="Grunnen til at vi spør om dette"
@@ -145,6 +147,7 @@ const SkadedeDeler = (props: IProps) => {
           hvor på kroppen sykdommen er, kan du velge alternativene «hele
           kroppen» eller «alternativene passer ikke».
         </ReadMore>
+      )}
       <Select
         className="spacer-bottom"
         label=""
