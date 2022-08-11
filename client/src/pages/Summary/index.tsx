@@ -105,7 +105,7 @@ const Summary = () => {
               </Accordion.Content>
             </Accordion.Item>
             <Accordion.Item renderContentWhenClosed={true} data-testid="oppsummering-hendelsen">
-              <Accordion.Header>{isPeriod ? 'Ulykkesstedet og om den skadelige påvirkningen' : 'Ulykkessted og om ulykken'}</Accordion.Header>
+              <Accordion.Header>{isPeriod ? 'Om den skadelige påvirkningen' : 'Ulykkessted og om ulykken'}</Accordion.Header>
               <Accordion.Content>
                 <UlykkeSummary data={data} />
               </Accordion.Content>

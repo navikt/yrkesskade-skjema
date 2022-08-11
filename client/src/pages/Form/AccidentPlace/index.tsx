@@ -48,6 +48,8 @@ const AccidentPlaceFormPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
+  const isPeriod = skademelding?.hendelsesfakta?.tid?.tidstype === 'Periode';
+
   return (
     <ContentContainer>
       <SystemHeader />
@@ -61,7 +63,7 @@ const AccidentPlaceFormPage = () => {
               className="pageNumberTitle spacer"
               data-number="4"
             >
-              Ulykkesstedet
+              {isPeriod ? 'Sted for skadelig påvirkning' : 'Ulykkesstedet'}
             </Heading>
             <AccidentPlaceForm />
             <div className="buttonGroup">
