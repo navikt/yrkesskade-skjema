@@ -111,7 +111,7 @@ describe('PdfSkademeldingMapper', () => {
     expectSoknadsfeltRolletype(pdfSkadelidt.dekningsforhold.rolletype, 'Rolle', { kode: 'arbeidstaker', navn: 'Arbeidstaker' });
 
     // ulykken
-    expect(pdfSkademelding.dokumentInfo.tekster.omUlykkenSeksjonstittel).toEqual('Om ulykken');
+    expect(pdfSkademelding.dokumentInfo.tekster.omUlykkenSeksjonstittel).toEqual('Ulykkessted og om ulykken');
     expectSoknadsfeltAdresse(pdfUlykkested.adresse, 'Adresse hvor den skadelige påvirkningen har skjedd', { adresselinje1: 'Testveien 2', adresselinje2: '1112', adresselinje3: 'TOAST', land: 'NO'});
     expectSoknadsfelt(pdfHendelsesfakta.paavirkningsform, 'Hvilken skadelig påvirkning har personen vært utsatt for', ['stoevpaavirkning', 'kjemikalierEllerLoesemidler']);
     expectSoknadsfelt(pdfSkade.alvorlighetsgrad, 'Hvor alvorlig var hendelsen', 'antattOppsoektLege');
