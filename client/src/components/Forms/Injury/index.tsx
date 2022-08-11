@@ -64,9 +64,9 @@ const InjuryForm = () => {
         )}
       />
       {errors?.skade?.skadedeDeler && (
-        <span className="navds-error-message navds-error-message--medium navds-label">
-          Skadeart og kroppsdel er påkrevd
-        </span>
+          <span className="navds-error-message navds-error-message--medium navds-label block">
+            Skadeart og kroppsdel er påkrevd
+          </span>
       )}
 
       {roller[rolletype] && roller[rolletype].showAbsence && !erPeriode && (
