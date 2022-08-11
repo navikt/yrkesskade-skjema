@@ -59,7 +59,7 @@ const InjuryFormPage = () => {
               Om skaden
             </Heading>
             <InjuryForm />
-            <div className="buttonGroup">
+            <div className="buttonGroup spacer-top">
               <ExitButton />
               <Button onClick={handleSubmit(onSubmit)} data-testid="neste-steg">Neste steg</Button>
             </div>

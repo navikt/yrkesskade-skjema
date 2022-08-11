@@ -1,14 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-mixed-operators */
-import { AddCircle, MinusCircle } from "@navikt/ds-icons";
-import { Button, Select, Table } from "@navikt/ds-react";
-import { isEmpty } from "lodash";
-import { remove } from "ramda";
-import { useEffect, useState } from "react";
-import { KodeverdiDto } from "../../api/kodeverk";
-import { SkadetDel } from "../../api/yrkesskade";
-import { useAppDispatch } from "../../core/hooks/state.hooks";
-import { fjernSkadetDel } from "../../core/reducers/skademelding.reducer";
+import { AddCircle, MinusCircle } from '@navikt/ds-icons';
+import { Button, Select, Table, ReadMore, Label } from '@navikt/ds-react';
+import { isEmpty } from 'lodash';
+import { remove } from 'ramda';
+import { useEffect, useState } from 'react';
+import { KodeverdiDto } from '../../api/kodeverk';
+import { SkadetDel } from '../../api/yrkesskade';
+import { useAppDispatch } from '../../core/hooks/state.hooks';
+import { fjernSkadetDel } from '../../core/reducers/skademelding.reducer';
 
 interface IProps {
   onSkadededelerChange: (skadedeDeler: SkadetDel[]) => void;
@@ -61,9 +61,8 @@ const SkadedeDeler = (props: IProps) => {
   const removeInjury = (index: number) => {
     const injury = injuriesForTable[index];
     const newInjuries = remove(index, 1, injuriesForTable);
-    dispatch(fjernSkadetDel(injury))
+    dispatch(fjernSkadetDel(injury));
     setInjuriesForTable(newInjuries);
-
   };
 
   useEffect(() => {
@@ -135,9 +134,20 @@ const SkadedeDeler = (props: IProps) => {
         )}
       </Select>
 
+      <Label>Hvor på kroppen er skaden?</Label>
+      <ReadMore
+          className=""
+          size="medium"
+          header="Grunnen til at vi spør om dette"
+        >
+          Ved enkelte sykdomstyper vil det være en hjelp å vite hvilken
+          kroppsdel som er berørt. Dersom det ikke er naturlig å spesifisere
+          hvor på kroppen sykdommen er, kan du velge alternativene «hele
+          kroppen» eller «alternativene passer ikke».
+        </ReadMore>
       <Select
-        className="spacer"
-        label="Hvor på kroppen er skaden"
+        className="spacer-bottom"
+        label=""
         value={kroppsdel}
         data-testid="injury-body-location-options"
         onChange={(e) => setKroppsdel(e.currentTarget.value)}
@@ -209,4 +219,3 @@ const SkadedeDeler = (props: IProps) => {
 };
 
 export default SkadedeDeler;
-

@@ -66,7 +66,7 @@ const InjuryForm = () => {
         )}
       />
       {errors?.skade?.skadedeDeler && (
-          <span className="navds-error-message navds-error-message--medium navds-label">
+          <span className="navds-error-message navds-error-message--medium navds-label block">
             Skadeart og kroppsdel er påkrevd
           </span>
       )}
