@@ -51,7 +51,6 @@ const AccidentFormPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
-  const erPeriode = skademelding?.hendelsesfakta?.tid?.tidstype === 'Periode';
   let backUrl = '/yrkesskade/skjema/tidsrom';
   if (roller[rolletype] && roller[rolletype].showAccidentPlacePage) {
    backUrl = '/yrkesskade/skjema/ulykkessted';
