@@ -225,7 +225,7 @@ const hentDokumenttekster = (erSykdom: boolean): PdfTekster => {
     innmelderSeksjonstittel: 'Om innmelder',
     omSkadenFlereSkader: 'Flere skader',
     omSkadenSeksjonstittel: 'Om skaden',
-    omUlykkenSeksjonstittel: erSykdom ? 'Ulykkessted og om ulykken' : 'Om ulykken',
+    omUlykkenSeksjonstittel: erSykdom ? 'Om den skadelige påvirkningen' : 'Ulykkessted og om ulykken',
     skadelidtSeksjonstittel: 'Den skadelidte',
     tidOgStedSeksjonstittel: 'Tid og sted',
   };
