@@ -55,6 +55,7 @@ const AccidentFormPage = () => {
   if (roller[rolletype] && roller[rolletype].showAccidentPlacePage) {
    backUrl = '/yrkesskade/skjema/ulykkessted';
   }
+  const isPeriod = skademelding?.hendelsesfakta?.tid?.tidstype === 'Periode';
 
   return (
     <ContentContainer>
@@ -69,7 +70,7 @@ const AccidentFormPage = () => {
               className="pageNumberTitle spacer"
               data-number="4"
             >
-              Om ulykken
+              {isPeriod ? 'Om den skadelige påvirkningen' : 'Om ulykken'}
             </Heading>
             <AccidentForm />
             <div className="buttonGroup">
