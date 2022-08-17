@@ -223,27 +223,6 @@ const InjuredForm = () => {
                   onTidsperioderChange={(periode) => {
                     onChange(periode);
                   }}
-                  defaultValue={
-                    !_.isEmpty(skademelding.skadelidt?.dekningsforhold)
-                      ? skademelding.skadelidt?.dekningsforhold.stillingstittelTilDenSkadelidte?.map(
-                          (stilling) => {
-                            return {
-                              value: stilling,
-                              label:
-                                (stillingstittelkoder &&
-                                  stillingstittelkoder[stilling]?.verdi) ||
-                                'UKJENT',
-                            };
-                          }
-                        )
-                      : []
-                  }
-                  onBlur={onBlur}
-                  onChange={(val) => onChange([val?.value])}
-                  options={Object.keys(stillingstittelkoder).map(kode => ({value: kode, label: stillingstittelkoder[kode]?.verdi || '' }))}
-                  menuIsOpen={openMenu}
-                  onInputChange={handleInputChange}
-                  className="injured-position"
                 />
               )}
             />
