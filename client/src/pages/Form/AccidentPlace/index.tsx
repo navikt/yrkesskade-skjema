@@ -39,10 +39,10 @@ const AccidentPlaceFormPage = () => {
   };
 
   useEffect(() => {
-      setValue('hendelsesfakta.ulykkessted.adresse.adresselinje1', skademelding.hendelsesfakta?.ulykkessted.adresse?.adresselinje1 || '');
-      setValue('hendelsesfakta.ulykkessted.adresse.adresselinje2', skademelding.hendelsesfakta?.ulykkessted.adresse?.adresselinje2 || '');
-      setValue('hendelsesfakta.ulykkessted.adresse.adresselinje3', skademelding.hendelsesfakta?.ulykkessted.adresse?.adresselinje3);
-      setValue('hendelsesfakta.ulykkessted.adresse.land', skademelding.hendelsesfakta?.ulykkessted.adresse?.land || '');
+      setValue('hendelsesfakta.ulykkessted.adresse.adresselinje1', skademelding.hendelsesfakta?.ulykkessted?.adresse?.adresselinje1 || '');
+      setValue('hendelsesfakta.ulykkessted.adresse.adresselinje2', skademelding.hendelsesfakta?.ulykkessted?.adresse?.adresselinje2 || '');
+      setValue('hendelsesfakta.ulykkessted.adresse.adresselinje3', skademelding.hendelsesfakta?.ulykkessted?.adresse?.adresselinje3);
+      setValue('hendelsesfakta.ulykkessted.adresse.land', skademelding.hendelsesfakta?.ulykkessted?.adresse?.land || '');
       setValue('hendelsesfakta.hvorSkjeddeUlykken', skademelding.hendelsesfakta?.hvorSkjeddeUlykken || '');
       setValue('hendelsesfakta.stedsbeskrivelse', skademelding.hendelsesfakta?.stedsbeskrivelse || '');
     // eslint-disable-next-line react-hooks/exhaustive-deps

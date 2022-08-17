@@ -13,11 +13,20 @@ import StepIndicator from '../../../components/StepIndicator';
 import ExitButton from '../../../components/ExitButton';
 
 import { useFormContext } from 'react-hook-form';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import {
+  //useLocation,
+  useNavigate,
+} from 'react-router-dom';
+// import { useEffect } from 'react';
 import { Skademelding } from '../../../api/yrkesskade';
-import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks';
-import { oppdaterSkademelding, selectSkademelding } from '../../../core/reducers/skademelding.reducer';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../core/hooks/state.hooks';
+import {
+  oppdaterSkademelding,
+  selectSkademelding,
+} from '../../../core/reducers/skademelding.reducer';
 import { useCheckIfReloaded } from '../../../core/hooks/reloadCheck.hooks';
 
 import roller from '../../../utils/roller';
@@ -25,13 +34,13 @@ import roller from '../../../utils/roller';
 const AccidentFormPage = () => {
   useCheckIfReloaded();
   const dispatch = useAppDispatch();
-  const skademelding =  useAppSelector((state) => selectSkademelding(state));
+  const skademelding = useAppSelector((state) => selectSkademelding(state));
   const rolletype = skademelding.skadelidt?.dekningsforhold.rolletype || '';
 
-  const location = useLocation();
+  // const location = useLocation();
   const {
     handleSubmit,
-    setValue
+    // setValue
   } = useFormContext<Skademelding>();
 
   const navigate = useNavigate();
@@ -41,19 +50,15 @@ const AccidentFormPage = () => {
     navigate('/yrkesskade/skjema/skaden');
   };
 
-  useEffect(() => {
-      setValue('hendelsesfakta.ulykkessted.adresse.adresselinje1', skademelding.hendelsesfakta?.ulykkessted.adresse?.adresselinje1 || '');
-      setValue('hendelsesfakta.ulykkessted.adresse.adresselinje2', skademelding.hendelsesfakta?.ulykkessted.adresse?.adresselinje2 || '');
-      setValue('hendelsesfakta.ulykkessted.adresse.adresselinje3', skademelding.hendelsesfakta?.ulykkessted.adresse?.adresselinje3);
-      setValue('hendelsesfakta.ulykkessted.adresse.land', skademelding.hendelsesfakta?.ulykkessted.adresse?.land || '');
-      setValue('hendelsesfakta.hvorSkjeddeUlykken', skademelding.hendelsesfakta?.hvorSkjeddeUlykken || '');
-      setValue('hendelsesfakta.stedsbeskrivelse', skademelding.hendelsesfakta?.stedsbeskrivelse || '');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location]);
+  // useEffect(() => {
+  //     setValue('hendelsesfakta.hvorSkjeddeUlykken', skademelding.hendelsesfakta?.hvorSkjeddeUlykken || '');
+  //     setValue('hendelsesfakta.stedsbeskrivelse', skademelding.hendelsesfakta?.stedsbeskrivelse || '');
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [location]);
 
   let backUrl = '/yrkesskade/skjema/tidsrom';
   if (roller[rolletype] && roller[rolletype].showAccidentPlacePage) {
-   backUrl = '/yrkesskade/skjema/ulykkessted';
+    backUrl = '/yrkesskade/skjema/ulykkessted';
   }
   const isPeriod = skademelding?.hendelsesfakta?.tid?.tidstype === 'Periode';
 
@@ -75,7 +80,9 @@ const AccidentFormPage = () => {
             <AccidentForm />
             <div className="buttonGroup">
               <ExitButton />
-              <Button onClick={handleSubmit(onSubmit)} data-testid="neste-steg">Neste steg</Button>
+              <Button onClick={handleSubmit(onSubmit)} data-testid="neste-steg">
+                Neste steg
+              </Button>
             </div>
           </div>
         </Cell>

@@ -2,6 +2,7 @@
 import { Label, BodyShort } from '@navikt/ds-react';
 import { useAppSelector } from '../../../core/hooks/state.hooks';
 import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
+import PeriodeSammendrag from '../Tidsrom/PeriodeSammendrag';
 import roller from '../../../utils/roller';
 interface IProps {
   data: any;
@@ -33,6 +34,18 @@ const SkadelidtSummary = ({ data }: IProps) => {
         <Label>Hva er skadelidtes fødselsnummer</Label>
         <BodyShort>{data.skadelidt.norskIdentitetsnummer}</BodyShort>
       </div>
+      {roller[rolletype] && roller[rolletype].showServicePeriode && (
+      <div className="answerContainer">
+        <Label>Periode for tjenesten</Label>
+        <PeriodeSammendrag perioder={data.skadelidt.dekningsforhold.tjenesteperiode!} />
+      </div>
+      )}
+       {roller[rolletype] && roller[rolletype].showServiceDepartment && (
+      <div className="answerContainer">
+        <Label>Tjenestegjørende avdeling</Label>
+        <BodyShort>{data.hendelsesfakta.tjenestegjorendeavdeling}</BodyShort>
+      </div>
+      )}
     </div>
   );
 };

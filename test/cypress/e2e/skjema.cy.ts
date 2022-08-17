@@ -28,6 +28,9 @@ interface TestSkademelding {
   kroppsdel: string;
   skadetype: string;
   paavirkningsform?: string[];
+  tjenestefra?: dayjs.Dayjs;
+  tjenestetil?: dayjs.Dayjs;
+  tjenesteavdeling?: string;
 }
 
 describe('Skjema innsending', (): void => {
@@ -56,6 +59,23 @@ describe('Skjema innsending', (): void => {
     bakgrunn: 'Manglende merking',
     kroppsdel: 'Øye, venstre',
     skadetype: 'Tap av legemsdel',
+  };
+
+  const førstegangstjeneste: TestSkademelding = {
+    innmeldernavn: 'ROLF BJØRN',
+    virksomhetsnavn: 'BIRI OG TORPO REGNSKAP',
+    skadelidtIdentifikator: '16120101181',
+    tidstype: Tid.tidstype.TIDSPUNKT,
+    tidspunkt: dayjs(),
+    timeframe: 'I avtalt arbeidstid',
+    aarsak: 'Trafikkulykke',
+    bakgrunn: 'Manglende merking',
+    kroppsdel: 'Øye, venstre',
+    skadetype: 'Tap av legemsdel',
+    tjenestefra: dayjs().add(-4, 'day'),
+    tjenestetil: dayjs(),
+    tjenesteavdeling: "Førstegangstjeneste"
+
   };
 
   beforeEach(() => {
@@ -691,6 +711,94 @@ describe('Skjema innsending', (): void => {
     testdata.paavirkningsform.forEach((form) => {
       summary.hendelsen.paavirkningsformer().should('contain', form)
     })
+
+    // send inn skjema
+    summary.sendInjury().click().wait('@postSkademelding');
+
+    cy.location().should((location) => {
+      expect(location.pathname).to.contain('/skjema/kvittering');
+    });
+  });
+
+  it('Førstegangstjeneste - tidstype tidspunkt - ingen avvik', () => {
+    const injuryTime = førstegangstjeneste.tidspunkt;
+    // vent til innlogget sjekk er fullført
+    cy.wait('@getInnlogget').wait('@getOrganisasjon').wait('@getRoller');
+
+    // start innmelding
+    info.startInnmelding().click();
+
+    // sjekk validering
+    general.nextStep().click();
+    general.feilmeldinger().should('have.length', 2);
+
+    // info om skadelidte
+    injuredForm.idNumber().type(`{selectAll}${førstegangstjeneste.skadelidtIdentifikator}`);
+    injuredForm.positionSelect().select(5);
+
+    // legg til tjenesteperiode
+    injuredForm
+      .servicePeriodFromDate()
+      .type(førstegangstjeneste.tjenestefra.format('DD.MM.YYYY'))
+      .type('{enter}');
+      injuredForm
+      .servicePeriodToDate()
+      .type(førstegangstjeneste.tjenestetil.format('DD.MM.YYYY'))
+      .type('{enter}');
+
+    // legg til tjenesteavdeling
+    injuredForm.serviceDepartment().type(`{selectAll}${førstegangstjeneste.tjenesteavdeling}`);
+
+    // Gå til neste steg
+    general.nextStep().click();
+
+    // velg tidspunkt
+    // sjekk validering
+    general.nextStep().click();
+    general.feilmeldinger().should('have.length', 2);
+    timeframeForm
+      .timeframeWhenDate()
+      .clear()
+      .type(injuryTime.format('DD.MM.YYYY'))
+      .type('{enter}');
+    timeframeForm
+      .timeframeWhenTime()
+      .type(injuryTime.format('HH:mm'))
+      .type('{enter}'); // ser ikke ut som den liker at dette felter skrives til
+    timeframeForm.timeframePeriodOptions().select(førstegangstjeneste.timeframe);
+
+    // Gå til neste steg
+    general.nextStep().click();
+
+      // info om ulykken
+    // sjekk validering
+    general.nextStep().click();
+    general.feilmeldinger().should('have.length', 1);
+    accidentForm.reasonOptions().type(`${førstegangstjeneste.aarsak}{enter}{esc}`);
+
+    // Gå til neste steg
+    general.nextStep().click();
+
+    // info om skaden
+    // sjekk validering
+    general.nextStep().click();
+    general.feilmeldinger().should('have.length', 1);
+    injuryForm.bodylocationOptions().select(førstegangstjeneste.kroppsdel);
+    injuryForm.injuryTypeOptions().select(førstegangstjeneste.skadetype);
+    injuryForm.addInjuryButton().click();
+
+    // Gå til neste steg
+    general.nextStep().click();
+
+    // Gå til neste steg
+    general.nextStep().click();
+
+    // validerer oppsummering
+    summary.accordians.innmelder().click();
+    summary.innmelder.navn().should('have.text', elev.innmeldernavn); // se i fixtures/brukerinfo.json
+    summary.innmelder
+      .virksomhetsnavn()
+      .should('have.text', elev.virksomhetsnavn); // se 1 organisasjon i fixtures/brukerinfo.json
 
     // send inn skjema
     summary.sendInjury().click().wait('@postSkademelding');
