@@ -3,6 +3,7 @@
 /* eslint-disable */
 
 import type { Adresse } from './Adresse';
+import type { Periode } from './Periode';
 
 export type Dekningsforhold = {
     organisasjonsnummer: string;
@@ -10,4 +11,5 @@ export type Dekningsforhold = {
     navnPaaVirksomheten?: string;
     virksomhetensAdresse?: Adresse;
     stillingstittelTilDenSkadelidte?: Array<string>;
+    tjenesteperiode?: Periode;
 };

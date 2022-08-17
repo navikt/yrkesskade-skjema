@@ -18,6 +18,7 @@ import {
 } from '../../../core/reducers/kodeverk.reducer';
 import { selectSkademelding } from '../../../core/reducers/skademelding.reducer';
 import { Skademelding } from '../../../api/yrkesskade';
+import Tidsperiode from '../../Tidsperiode';
 
 import roller from '../../../utils/roller';
 
@@ -134,52 +135,116 @@ const InjuredForm = () => {
             );
           })}
       </NAVSelect>
-      {roller[rolletype] &&  roller[rolletype].showStillinger && (
-      <div className="spacer">
-        <Label>Hva er den skadelidtes stilling</Label>
-        {stillingstittelkoder && (
-          <>
+      {roller[rolletype] && roller[rolletype].showStillinger && (
+        <div className="spacer">
+          <Label>Hva er den skadelidtes stilling</Label>
+          {stillingstittelkoder && (
+            <>
+              <Controller
+                name="skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte"
+                control={control}
+                rules={{
+                  required:
+                    roller[rolletype] &&
+                    roller[rolletype].showStillinger &&
+                    _.isEmpty(
+                      skademelding.skadelidt?.dekningsforhold
+                        .stillingstittelTilDenSkadelidte
+                    ) &&
+                    'Dette feltet er påkrevd',
+                }}
+                render={({ field: { onChange, onBlur, value, name, ref } }) => (
+                  <Select
+                    placeholder=""
+                    components={{
+                      DropdownIndicator: () => null,
+                      IndicatorSeparator: () => null,
+                    }}
+                    defaultValue={
+                      !_.isEmpty(skademelding.skadelidt.dekningsforhold)
+                        ? skademelding.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte?.map(
+                            (stilling) => {
+                              return {
+                                value: stilling,
+                                label:
+                                  (stillingstittelkoder &&
+                                    stillingstittelkoder[stilling]?.verdi) ||
+                                  '',
+                              };
+                            }
+                          )
+                        : []
+                    }
+                    onBlur={onBlur}
+                    onChange={(val) => onChange([val?.value])}
+                    options={Object.keys(stillingstittelkoder).map((kode) => ({
+                      value: kode,
+                      label: stillingstittelkoder[kode]?.verdi || '',
+                    }))}
+                    menuIsOpen={openMenu}
+                    onInputChange={handleInputChange}
+                    className="injured-position"
+                  />
+                )}
+              />
+              {(
+                errors?.skadelidt?.dekningsforhold
+                  ?.stillingstittelTilDenSkadelidte as unknown as FieldError
+              )?.message && (
+                <span className="navds-error-message navds-error-message--medium navds-label">
+                  {
+                    (
+                      errors?.skadelidt?.dekningsforhold
+                        ?.stillingstittelTilDenSkadelidte as unknown as FieldError
+                    )?.message
+                  }
+                </span>
+              )}
+            </>
+          )}
+        </div>
+      )}
+      {roller[rolletype] && roller[rolletype].showServicePeriode && (
+        <>
+          <Label>Legg til periode for tjenesten</Label>
+          <div className="spacer">
             <Controller
-              name="skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte"
+              name="skadelidt.dekningsforhold.tjenesteperiode"
               control={control}
               rules={{
-                required:
-                roller[rolletype] && roller[rolletype].showStillinger &&
-                  _.isEmpty(
-                    skademelding.skadelidt?.dekningsforhold
-                      .stillingstittelTilDenSkadelidte
-                  ) && 'Dette feltet er påkrevd',
+                required: 'Dette feltet er påkrevd',
               }}
-              render={({ field: { onChange, onBlur, value, name, ref } }) => (
-                <Select
-                  placeholder=""
-                  components={{
-                    DropdownIndicator: () => null,
-                    IndicatorSeparator: () => null,
+              render={({ field: { onChange } }) => (
+                <Tidsperiode
+                  periode={skademelding.skadelidt.dekningsforhold.tjenesteperiode}
+                  onTidsperioderChange={(periode) => {
+                    onChange(periode);
                   }}
-                  defaultValue={!_.isEmpty(skademelding.skadelidt.dekningsforhold) ? skademelding.skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte?.map(stilling => {
-                    return {value: stilling, label: (stillingstittelkoder && stillingstittelkoder[stilling]?.verdi || '')};
-                  }) : []
-                  }
-                  onBlur={onBlur}
-                  onChange={(val) => onChange([val?.value])}
-                  options={Object.keys(stillingstittelkoder).map(kode => ({value: kode, label: stillingstittelkoder[kode]?.verdi || '' }))}
-                  menuIsOpen={openMenu}
-                  onInputChange={handleInputChange}
-                  className="injured-position"
                 />
               )}
             />
-            {(errors?.skadelidt?.dekningsforhold?.stillingstittelTilDenSkadelidte as unknown as FieldError)?.message && (
+            {errors?.skadelidt?.dekningsforhold?.tjenesteperiode && (
               <span className="navds-error-message navds-error-message--medium navds-label">
-                {
-                  (errors?.skadelidt?.dekningsforhold?.stillingstittelTilDenSkadelidte as unknown as FieldError)?.message
-                }
+                Periode er påkrevd
               </span>
             )}
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      )}
+      {roller[rolletype] && roller[rolletype].showServiceDepartment && (
+        <TextField
+          className="spacer"
+          {...register('hendelsesfakta.tjenestegjorendeavdeling', {
+            required: 'Dette feltet er påkrevd',
+          })}
+          label="Hva er den tjenestegjørende avdelingen?"
+          type="text"
+          error={
+            errors?.hendelsesfakta?.tjenestegjorendeavdeling &&
+            errors.hendelsesfakta.tjenestegjorendeavdeling.message
+          }
+          data-testid="injured-tjenestegjorende-avdeling"
+        />
       )}
     </>
   );

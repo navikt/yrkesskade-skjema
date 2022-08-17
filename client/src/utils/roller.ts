@@ -8,6 +8,8 @@ const rolletyper: any = {
     'showAccidentBackground': false,
     'showAbsence': false,
     'showAccidentPlacePage': true,
+    'showServicePeriode':false,
+    'showServiceDepartment': false,
   },
   'arbeidstaker': {
     'isArbeidstaker': true,
@@ -18,6 +20,8 @@ const rolletyper: any = {
     'showAccidentBackground': true,
     'showAbsence': true,
     'showAccidentPlacePage': true,
+    'showServicePeriode':false,
+    'showServiceDepartment': false,
   },
   'laerling': {
     'isArbeidstaker': true,
@@ -28,6 +32,8 @@ const rolletyper: any = {
     'showAccidentBackground': true,
     'showAbsence': true,
     'showAccidentPlacePage': true,
+    'showServicePeriode':false,
+    'showServiceDepartment': false,
   },
   'tiltaksdeltaker': {
     'showStillinger': false,
@@ -35,7 +41,21 @@ const rolletyper: any = {
     'showAccidentBackground': true,
     'showAbsence': false,
     'showAccidentPlacePage': true,
-  }
+    'showServicePeriode':false,
+    'showServiceDepartment': false,
+  },
+  'vernepliktigIFoerstegangstjenesten': {
+    'isArbeidstaker': false,
+    'isLaerling': false,
+    'isElevEllerStudent': true,
+    'showStillinger': false,
+    'showWorkplace': false,
+    'showAccidentBackground': false,
+    'showAbsence': false,
+    'showAccidentPlacePage': false,
+    'showServicePeriode':true,
+    'showServiceDepartment': true,
+  },
 }
 
 export default rolletyper;

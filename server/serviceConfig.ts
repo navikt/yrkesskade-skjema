@@ -4,7 +4,7 @@ let proxyUrls: { [key: string]: string } = {};
 if (process.env.ENV === 'local') {
   proxyUrls = {
     yrkesskade_kodeverk: 'https://yrkesskade-kodeverk.dev.intern.nav.no',
-    yrkesskade_melding_api: 'http://localhost:8080',
+    yrkesskade_melding_api: 'http://localhost:9080',
   };
 } else {
   const env = process.env.ENV === 'prod' ? '' : `.${process.env.ENV}`;

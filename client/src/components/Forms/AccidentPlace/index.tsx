@@ -44,7 +44,7 @@ const AccidentPlaceForm = () => {
 
   const [sammeSomVirksomhetensAdresse, setSammeSomVirksomhetensAdresse] =
     useState<string>(
-      skademelding.hendelsesfakta?.ulykkessted.sammeSomVirksomhetensAdresse.toString() ||
+      skademelding.hendelsesfakta?.ulykkessted?.sammeSomVirksomhetensAdresse.toString() ||
         'true'
     );
 
