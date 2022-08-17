@@ -52,7 +52,7 @@ export const pdfSkademeldingMapper = async (
     skadelidt: mapSkadelidt(skademelding.skadelidt, kodeverkLoader),
     skade: mapSkade(skademelding.skade, kodeverkLoader),
     hendelsesfakta: mapHendelsesfakta(skademelding.hendelsesfakta, erSykdom, kodeverkLoader),
-    dokumentInfo: hentDokumentinfo(skademelding),
+    dokumentInfo: hentDokumentinfo(skademelding, erSykdom),
   };
 };
 
@@ -208,23 +208,23 @@ const mapAdresse = (adresse: Adresse, kodeverk: KodeverkLoader): PdfAdresse => {
   }
 }
 
-const hentDokumentinfo = (skademelding: Skademelding): PdfDokumentInfo => {
+const hentDokumentinfo = (skademelding: Skademelding, erSykdom: boolean): PdfDokumentInfo => {
   return {
     dokumentnavn: 'Kopi av skademelding',
     dokumentDatoPrefix: 'Kopi generert',
     dokumentDato: formatDate(new Date(), DATO_FORMAT),
     dokumentnummer: 'Dette dokumenter er en oppsummering av det som er sendt til NAV',
-    tekster: hentDokumenttekster(),
+    tekster: hentDokumenttekster(erSykdom),
     annet: hentAnnet(skademelding)
   };
 };
 
-const hentDokumenttekster = (): PdfTekster => {
+const hentDokumenttekster = (erSykdom: boolean): PdfTekster => {
   return {
     innmelderSeksjonstittel: 'Om innmelder',
     omSkadenFlereSkader: 'Flere skader',
     omSkadenSeksjonstittel: 'Om skaden',
-    omUlykkenSeksjonstittel: 'Om ulykken',
+    omUlykkenSeksjonstittel: erSykdom ? 'Om den skadelige påvirkningen' : 'Ulykkessted og om ulykken',
     skadelidtSeksjonstittel: 'Den skadelidte',
     tidOgStedSeksjonstittel: 'Tid og sted',
   };
