@@ -70,7 +70,7 @@ const Landing = () => {
 
     if (!sjekkTilgangTilSkjema(roller)) {
       logMessage(
-        `Innlogget bruker har ikke nødvendige roller for valgt organisasjon`
+        `Innlogget bruker har ikke nødvendige roller for organisasjon ${organisasjon.organisasjonsnummer}. Bruker har følgende roller: ${roller}`
       );
       return false;
     }
