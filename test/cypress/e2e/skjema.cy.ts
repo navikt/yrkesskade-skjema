@@ -721,7 +721,7 @@ describe('Skjema innsending', (): void => {
     });
   });
 
-  it.only('Førstegangstjeneste - tidstype tidspunkt - ingen avvik', () => {
+  it('Førstegangstjeneste - tidstype tidspunkt - ingen avvik', () => {
     const injuryTime = førstegangstjeneste.tidspunkt;
     // vent til innlogget sjekk er fullført
     cy.wait('@getInnlogget').wait('@getOrganisasjon').wait('@getRoller');
