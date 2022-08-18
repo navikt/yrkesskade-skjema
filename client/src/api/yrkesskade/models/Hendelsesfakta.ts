@@ -15,5 +15,4 @@ export type Hendelsesfakta = {
     utfyllendeBeskrivelse?: string;
     stedsbeskrivelse?: string;
     paavirkningsform?: Array<string>;
-    tjenestegjorendeavdeling?: string;
 };

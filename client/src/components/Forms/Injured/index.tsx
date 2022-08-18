@@ -237,14 +237,14 @@ const InjuredForm = () => {
       {roller[rolletype] && roller[rolletype].showServiceDepartment && (
         <TextField
           className="spacer"
-          {...register('hendelsesfakta.tjenestegjorendeavdeling', {
+          {...register('skadelidt.dekningsforhold.tjenestegjoerendeAvdeling', {
             required: 'Dette feltet er påkrevd',
           })}
           label="Hva er den tjenestegjørende avdelingen?"
           type="text"
           error={
-            errors?.hendelsesfakta?.tjenestegjorendeavdeling &&
-            errors.hendelsesfakta.tjenestegjorendeavdeling.message
+            errors?.skadelidt?.dekningsforhold?.tjenestegjoerendeAvdeling &&
+            errors?.skadelidt?.dekningsforhold?.tjenestegjoerendeAvdeling.message
           }
           data-testid="injured-tjenestegjorende-avdeling"
         />
