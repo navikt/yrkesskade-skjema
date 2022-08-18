@@ -69,8 +69,9 @@ const Landing = () => {
     );
 
     if (!sjekkTilgangTilSkjema(roller)) {
+      const rollerSomStreng = roller ? roller.toString() : ''
       logMessage(
-        `Innlogget bruker har ikke nødvendige roller for organisasjon ${organisasjon.organisasjonsnummer}. Bruker har følgende roller: ${roller}`
+        `Innlogget bruker har ikke nødvendige roller for organisasjon ${organisasjon.organisasjonsnummer}. Bruker har følgende roller: ${rollerSomStreng}`
       );
       return false;
     }
