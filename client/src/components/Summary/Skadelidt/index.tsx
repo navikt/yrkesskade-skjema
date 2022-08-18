@@ -36,7 +36,7 @@ const SkadelidtSummary = ({ data }: IProps) => {
        {roller[rolletype] && roller[rolletype].showServiceDepartment && (
       <div className="answerContainer">
         <Label>Tjenestegjørende avdeling</Label>
-        <BodyShort>{data.hendelsesfakta.tjenestegjorendeavdeling}</BodyShort>
+        <BodyShort>{data.skadelidt.dekningsforhold.tjenestegjoerendeAvdeling}</BodyShort>
       </div>
       )}
     </div>
