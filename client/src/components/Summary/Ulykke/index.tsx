@@ -16,18 +16,32 @@ const UlykkeSummary = ({ data }: IProps) => {
     land: '',
   };
   const { selectedAddress } = useSelectedCompany();
-  const hvorSkjeddeUlykkenkoder = useAppSelector((state) => selectKodeverk(state, 'hvorSkjeddeUlykken'));
-  const typeArbeidsplasskoder = useAppSelector((state) => selectKodeverk(state, 'typeArbeidsplass'));
-  const aarsakOgBakgrunnkoder = useAppSelector((state) => selectKodeverk(state, 'aarsakOgBakgrunn'));
-  const bakgrunnForHendelsenkoder = useAppSelector((state) => selectKodeverk(state, 'bakgrunnForHendelsen'));
-  const paavirkningsformKoder = useAppSelector((state) => selectKodeverk(state, 'paavirkningsform'));
+  const hvorSkjeddeUlykkenkoder = useAppSelector((state) =>
+    selectKodeverk(state, 'hvorSkjeddeUlykken')
+  );
+  const typeArbeidsplasskoder = useAppSelector((state) =>
+    selectKodeverk(state, 'typeArbeidsplass')
+  );
+  const aarsakOgBakgrunnkoder = useAppSelector((state) =>
+    selectKodeverk(state, 'aarsakOgBakgrunn')
+  );
+  const bakgrunnForHendelsenkoder = useAppSelector((state) =>
+    selectKodeverk(state, 'bakgrunnForHendelsen')
+  );
+  const paavirkningsformKoder = useAppSelector((state) =>
+    selectKodeverk(state, 'paavirkningsform')
+  );
   const alvorlighetsgradkoder = useAppSelector((state) =>
     selectKodeverk(state, 'alvorlighetsgrad')
   );
-  const landkoder = useAppSelector((state) => selectKodeverk(state, 'landkoderISO2'));
+  const landkoder = useAppSelector((state) =>
+    selectKodeverk(state, 'landkoderISO2')
+  );
 
   const ulykkessted = data.hendelsesfakta.ulykkessted;
-  const sammeSomVirksomhetensAdresse = (ulykkessted.sammeSomVirksomhetens || ulykkessted.sammeSomVirksomhetens === 'true')
+  const sammeSomVirksomhetensAdresse =
+    ulykkessted.sammeSomVirksomhetens ||
+    ulykkessted.sammeSomVirksomhetens === 'true';
 
   if (!sammeSomVirksomhetensAdresse && ulykkessted.adresse) {
     adresse = ulykkessted.adresse;
@@ -41,47 +55,67 @@ const UlykkeSummary = ({ data }: IProps) => {
     };
   }
 
-  const rolletype =  data?.skadelidt?.dekningsforhold.rolletype;
+  const rolletype = data?.skadelidt?.dekningsforhold.rolletype;
   const isPeriod = data?.hendelsesfakta?.tid.tidstype === 'Periode';
 
   return (
     <div className="answerOuterContainer">
-      <div className="answerContainer">
-        <Label>Ulykken fant sted</Label>
-        <BodyShort>{adresse.adresselinje1}</BodyShort>
-        <BodyShort>
-          {`${adresse.adresselinje2} ${adresse.adresselinje3}`}
-        </BodyShort>
-        <BodyShort>{landkoder && landkoder[adresse.land || 'NO']?.verdi}</BodyShort>
-      </div>
+      {roller[rolletype] && roller[rolletype].showAccidentPlacePage && (
+        <div className="answerContainer">
+          <Label>Ulykken fant sted</Label>
+          <BodyShort>{adresse.adresselinje1}</BodyShort>
+          <BodyShort>
+            {`${adresse.adresselinje2} ${adresse.adresselinje3}`}
+          </BodyShort>
+          <BodyShort>
+            {landkoder && landkoder[adresse.land || 'NO']?.verdi}
+          </BodyShort>
+        </div>
+      )}
       {!isEmpty(data.skade.alvorlighetsgrad) && (
         <div className="answerContainer">
           <Label>Hvor Alvorlig var hendelsen</Label>
-          <BodyShort>{alvorlighetsgradkoder && alvorlighetsgradkoder[data.skade.alvorlighetsgrad]?.verdi}</BodyShort>
+          <BodyShort>
+            {alvorlighetsgradkoder &&
+              alvorlighetsgradkoder[data.skade.alvorlighetsgrad]?.verdi}
+          </BodyShort>
         </div>
       )}
-      {get(data, ['hendelsesfakta', 'hvorSkjeddeUlykken']) !== 'undefined' && (
+      {get(data, ['hendelsesfakta', 'hvorSkjeddeUlykken']) !== 'undefined' && roller[rolletype] && roller[rolletype].showAccidentPlacePage && (
         <div className="answerContainer">
           <Label>Hvor skjedde ulykken</Label>
-          <BodyShort>{hvorSkjeddeUlykkenkoder && hvorSkjeddeUlykkenkoder[data.hendelsesfakta.hvorSkjeddeUlykken]?.verdi}</BodyShort>
+          <BodyShort>
+            {hvorSkjeddeUlykkenkoder &&
+              hvorSkjeddeUlykkenkoder[data.hendelsesfakta.hvorSkjeddeUlykken]
+                ?.verdi}
+          </BodyShort>
         </div>
       )}
-      {get(data, ['hendelsesfakta', 'stedsbeskrivelse']) !==
-        'undefined' && roller[rolletype] && !roller[rolletype].isElevEllerStudent && !isPeriod && (
-        <div className="answerContainer">
-          <Label>Type arbeidsplass</Label>
-          <BodyShort>{typeArbeidsplasskoder && typeArbeidsplasskoder[data.hendelsesfakta.stedsbeskrivelse]?.verdi}</BodyShort>
-        </div>
-      )}
+      {get(data, ['hendelsesfakta', 'stedsbeskrivelse']) !== 'undefined' &&
+        roller[rolletype] &&
+        !roller[rolletype].isElevEllerStudent &&
+        !isPeriod && (
+          <div className="answerContainer">
+            <Label>Type arbeidsplass</Label>
+            <BodyShort>
+              {typeArbeidsplasskoder &&
+                typeArbeidsplasskoder[data.hendelsesfakta.stedsbeskrivelse]
+                  ?.verdi}
+            </BodyShort>
+          </div>
+        )}
       {!isEmpty(data.hendelsesfakta.aarsakUlykke) && (
         <div className="answerContainer">
           <Label>Årsak og bakgrunn for hendelsen</Label>
           <BodyShort>
-            {data.hendelsesfakta.aarsakUlykke.map(
-              (background: string) => {
-                return `${aarsakOgBakgrunnkoder && aarsakOgBakgrunnkoder[background]?.verdi}`;
-              }
-            ).join(', ')}
+            {data.hendelsesfakta.aarsakUlykke
+              .map((background: string) => {
+                return `${
+                  aarsakOgBakgrunnkoder &&
+                  aarsakOgBakgrunnkoder[background]?.verdi
+                }`;
+              })
+              .join(', ')}
           </BodyShort>
         </div>
       )}
@@ -89,23 +123,31 @@ const UlykkeSummary = ({ data }: IProps) => {
         <div className="answerContainer">
           <Label>Bakgrunn for hendelsen</Label>
           <BodyShort>
-            {data.hendelsesfakta.bakgrunnsaarsak.map(
-              (background: string) => {
-                return `${bakgrunnForHendelsenkoder && bakgrunnForHendelsenkoder[background]?.verdi}`;
-              }
-            ).join(', ')}
+            {data.hendelsesfakta.bakgrunnsaarsak
+              .map((background: string) => {
+                return `${
+                  bakgrunnForHendelsenkoder &&
+                  bakgrunnForHendelsenkoder[background]?.verdi
+                }`;
+              })
+              .join(', ')}
           </BodyShort>
         </div>
       )}
       {!isEmpty(data.hendelsesfakta.paavirkningsform) && (
         <div className="answerContainer">
-          <Label>Hvilken skadelig påvirkning har personen vært utsatt for?</Label>
+          <Label>
+            Hvilken skadelig påvirkning har personen vært utsatt for?
+          </Label>
           <BodyShort data-testid="oppsummering-paavirkningsformer">
-            {data.hendelsesfakta.paavirkningsform.map(
-              (paavirkning: string) => {
-                return `${paavirkningsformKoder && paavirkningsformKoder[paavirkning]?.verdi}`;
-              }
-            ).join(', ')}
+            {data.hendelsesfakta.paavirkningsform
+              .map((paavirkning: string) => {
+                return `${
+                  paavirkningsformKoder &&
+                  paavirkningsformKoder[paavirkning]?.verdi
+                }`;
+              })
+              .join(', ')}
           </BodyShort>
         </div>
       )}
