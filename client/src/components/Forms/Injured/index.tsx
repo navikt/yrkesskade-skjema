@@ -1,6 +1,11 @@
 /* eslint-disable no-mixed-operators */
 import { useEffect, useState } from 'react';
-import { TextField, Label, Select as NAVSelect } from '@navikt/ds-react';
+import {
+  TextField,
+  Label,
+  Select as NAVSelect,
+  BodyLong,
+} from '@navikt/ds-react';
 import { Controller, FieldError, useFormContext } from 'react-hook-form';
 import Select from 'react-select';
 import validator from '@navikt/fnrvalidator';
@@ -209,7 +214,13 @@ const InjuredForm = () => {
       )}
       {roller[rolletype] && roller[rolletype].showServicePeriode && (
         <>
-          <Label>Legg til periode for tjenesten</Label>
+          <>
+            <Label>Legg til periode for tjenesten</Label>
+            <BodyLong>
+              Om førstegangstjenesten ikke er avsluttet, legg inn dato for
+              planlagt dimittering.
+            </BodyLong>
+          </>
           <div className="spacer">
             <Controller
               name="skadelidt.dekningsforhold.tjenesteperiode"
@@ -219,7 +230,9 @@ const InjuredForm = () => {
               }}
               render={({ field: { onChange } }) => (
                 <Tidsperiode
-                  periode={skademelding.skadelidt.dekningsforhold.tjenesteperiode}
+                  periode={
+                    skademelding.skadelidt.dekningsforhold.tjenesteperiode
+                  }
                   onTidsperioderChange={(periode) => {
                     onChange(periode);
                   }}
@@ -244,7 +257,8 @@ const InjuredForm = () => {
           type="text"
           error={
             errors?.skadelidt?.dekningsforhold?.tjenestegjoerendeAvdeling &&
-            errors?.skadelidt?.dekningsforhold?.tjenestegjoerendeAvdeling.message
+            errors?.skadelidt?.dekningsforhold?.tjenestegjoerendeAvdeling
+              .message
           }
           data-testid="injured-tjenestegjorende-avdeling"
         />
