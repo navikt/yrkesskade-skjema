@@ -101,6 +101,7 @@ const Tidsperiode = (props: IProps) => {
             format={FORMAT}
             parseDate={parseDate}
             dayPickerProps={{
+              firstDayOfWeek: 1,
               toMonth: specificToDay,
               disabledDays: {
                 after: new Date(),
@@ -122,6 +123,7 @@ const Tidsperiode = (props: IProps) => {
             formatDate={formatDate}
             format={FORMAT}
             dayPickerProps={{
+              firstDayOfWeek: 1,
               month: specificFromDay,
               fromMonth: specificFromDay,
               disabledDays: { before: specificFromDay as Date },
