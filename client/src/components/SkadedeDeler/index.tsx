@@ -99,7 +99,6 @@ const SkadedeDeler = (props: IProps) => {
 
   const sykdomSkadeKoder = { ...skadetypekoder, ...sykdomstypekoder };
 
-
   return (
     <>
       <Select
@@ -144,8 +143,8 @@ const SkadedeDeler = (props: IProps) => {
         >
           Ved enkelte sykdomstyper vil det være en hjelp å vite hvilken
           kroppsdel som er berørt. Dersom det ikke er naturlig å spesifisere
-          hvor på kroppen sykdommen er, kan du velge alternativene «hele
-          kroppen» eller «alternativene passer ikke».
+          hvor på kroppen sykdommen sitter, kan du velge alternativet «hele
+          kroppen».
         </ReadMore>
       )}
       <Select
