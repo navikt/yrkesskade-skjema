@@ -8,15 +8,15 @@ import { Periode } from '../../api/yrkesskade';
 import { formatDate, handleDateValue } from '../../utils/date';
 import { DateUtils } from 'react-day-picker';
 import dateFnsParse from 'date-fns/parse';
-import {isEmpty} from 'ramda';
+import { isEmpty } from 'ramda';
 
 interface IProps {
-  onTidsperioderChange: (perioder: Periode ) => void;
+  onTidsperioderChange: (perioder: Periode) => void;
   periode: Periode | undefined;
 }
 const Tidsperiode = (props: IProps) => {
   const FORMAT: string = 'dd.MM.yyyy';
-  const { onTidsperioderChange, periode} = props;
+  const { onTidsperioderChange, periode } = props;
 
   const [toDayInput, setToDayInput] = useState<DayPickerInput | null>();
   const [specificFromDay, setSpecificFromDay] = useState<Date | undefined>();
@@ -27,7 +27,7 @@ const Tidsperiode = (props: IProps) => {
       setSpecificFromDay(handleDateValue(periode.fra!));
       setSpecificToDay(handleDateValue(periode.til!));
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (
@@ -124,11 +124,8 @@ const Tidsperiode = (props: IProps) => {
             dayPickerProps={{
               month: specificFromDay,
               fromMonth: specificFromDay,
+              disabledDays: { before: specificFromDay as Date },
               modifiers,
-              disabledDays: {
-                after: new Date(),
-                before: specificFromDay,
-              },
             }}
           />
         </div>
