@@ -20,6 +20,7 @@ export type { Skadelidt } from './models/Skadelidt';
 export type { Skademelding } from './models/Skademelding';
 export type { SkadetDel } from './models/SkadetDel';
 export { Tid } from './models/Tid';
+export type { Ulykkesadresse } from './models/Ulykkesadresse';
 export type { Ulykkessted } from './models/Ulykkessted';
 export type { Unit } from './models/Unit';
 
