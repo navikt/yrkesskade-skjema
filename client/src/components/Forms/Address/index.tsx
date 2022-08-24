@@ -16,20 +16,27 @@ const Address = ({ sammeSomVirksomhetensAdresse, adresse }: IProps) => {
   const {
     register,
     formState: { errors },
-    setValue
+    setValue,
   } = useFormContext<Skademelding>();
-  const selectedAddress = useAppSelector((state) => selectOrganisasjonsAdresse(state));
+  const selectedAddress = useAppSelector((state) =>
+    selectOrganisasjonsAdresse(state)
+  );
 
   const landkoder = useAppSelector((state) =>
     selectKodeverk(state, 'landkoderISO2')
   );
 
-  const [skalBrukeValgtAdresse, setSkalBrukeValgtAdresse] = useState<boolean>(false);
+  const [skalBrukeValgtAdresse, setSkalBrukeValgtAdresse] =
+    useState<boolean>(false);
 
   useEffect(() => {
-    console.log(adresse);
-    setSkalBrukeValgtAdresse(sammeSomVirksomhetensAdresse === 'true' && adresse !== null && adresse !== undefined && adresse?.adresser[0] !== null );
-  }, [sammeSomVirksomhetensAdresse, adresse])
+    setSkalBrukeValgtAdresse(
+      sammeSomVirksomhetensAdresse === 'true' &&
+        adresse !== null &&
+        adresse !== undefined &&
+        adresse?.adresser[0] !== null
+    );
+  }, [sammeSomVirksomhetensAdresse, adresse]);
 
   useEffect(() => {
     if (skalBrukeValgtAdresse) {
@@ -49,12 +56,18 @@ const Address = ({ sammeSomVirksomhetensAdresse, adresse }: IProps) => {
         'hendelsesfakta.ulykkessted.adresse.land',
         selectedAddress?.landkode || ''
       );
+    } else {
+      setValue('hendelsesfakta.ulykkessted.adresse.adresselinje1', '');
+      setValue('hendelsesfakta.ulykkessted.adresse.adresselinje2', '');
+      setValue('hendelsesfakta.ulykkessted.adresse.adresselinje3', '');
+      setValue('hendelsesfakta.ulykkessted.adresse.land', '');
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [skalBrukeValgtAdresse]);
 
-
-  return skalBrukeValgtAdresse ? (<></>) : (
+  return skalBrukeValgtAdresse ? (
+    <></>
+  ) : (
     <Fieldset legend="Fyll ut adressen hvor ulykken skjedde">
       <TextField
         className=""
