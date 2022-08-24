@@ -31,7 +31,6 @@ const Address = ({ sammeSomVirksomhetensAdresse, adresse, erPeriode }: IProps) =
     useState<boolean>(false);
 
   useEffect(() => {
-    console.log(adresse);
     setSkalBrukeValgtAdresse(
       sammeSomVirksomhetensAdresse === 'true' &&
         adresse !== null &&
