@@ -2,8 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type Adresse = {
-    adresselinje1?: string;
+export type Ulykkesadresse = {
+    adresselinje1: string;
     adresselinje2?: string;
     adresselinje3?: string;
     land?: string;

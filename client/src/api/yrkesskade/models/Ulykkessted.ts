@@ -2,9 +2,9 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { Adresse } from './Adresse';
+import type { Ulykkesadresse } from './Ulykkesadresse';
 
 export type Ulykkessted = {
     sammeSomVirksomhetensAdresse: boolean;
-    adresse: Adresse;
+    adresse: Ulykkesadresse;
 };
