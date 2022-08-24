@@ -83,7 +83,15 @@ const mapSkadelidt = (skadelidt: Skadelidt, kodeverk: KodeverkLoader): PdfSkadel
       rolletype: { label: 'Rolle', verdi: mapRolletype(skadelidt.dekningsforhold.rolletype, kodeverk) },
       stillingstittelTilDenSkadelidte: { label: 'Stilling', verdi: kodeverk.mapKoderTilVerdier(skadelidt.dekningsforhold.stillingstittelTilDenSkadelidte, 'stillingstittel') },
       navnPaaVirksomheten: { label: 'Bedrift', verdi: skadelidt.dekningsforhold.navnPaaVirksomheten },
-      virksomhetensAdresse: { label: 'Virksomhetens adresse', verdi: mapAdresse(skadelidt.dekningsforhold.virksomhetensAdresse, kodeverk) }
+      virksomhetensAdresse: { label: 'Virksomhetens adresse', verdi: mapAdresse(skadelidt.dekningsforhold.virksomhetensAdresse, kodeverk) },
+      tjenesteperiode: {
+        label: 'Periode for tjenesten',
+        verdi: {
+          fra: skadelidt.dekningsforhold.tjenesteperiode?.fra ? skadelidt.dekningsforhold.tjenesteperiode?.fra : '',
+          til: skadelidt.dekningsforhold.tjenesteperiode?.til ? skadelidt.dekningsforhold.tjenesteperiode?.til : ''
+        }
+      },
+      tjenestegjoerendeAvdeling: { label: 'Tjenestegjørende avdeling', verdi: skadelidt.dekningsforhold.tjenestegjoerendeAvdeling }
     }
    }
 }
