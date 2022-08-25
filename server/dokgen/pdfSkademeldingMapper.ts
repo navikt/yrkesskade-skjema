@@ -87,8 +87,8 @@ const mapSkadelidt = (skadelidt: Skadelidt, kodeverk: KodeverkLoader): PdfSkadel
       tjenesteperiode: {
         label: 'Periode for tjenesten',
         verdi: {
-          fra: skadelidt.dekningsforhold.tjenesteperiode?.fra ? skadelidt.dekningsforhold.tjenesteperiode?.fra : '',
-          til: skadelidt.dekningsforhold.tjenesteperiode?.til ? skadelidt.dekningsforhold.tjenesteperiode?.til : ''
+          fra: skadelidt.dekningsforhold.tjenesteperiode?.fra ? formatDate(parseISO(skadelidt.dekningsforhold.tjenesteperiode?.fra), DATO_FORMAT) : '',
+          til: skadelidt.dekningsforhold.tjenesteperiode?.til ? formatDate(parseISO(skadelidt.dekningsforhold.tjenesteperiode?.til), DATO_FORMAT) : ''
         }
       },
       tjenestegjoerendeAvdeling: { label: 'Tjenestegjørende avdeling', verdi: skadelidt.dekningsforhold.tjenestegjoerendeAvdeling }
