@@ -78,6 +78,8 @@ describe('Skjema innsending', (): void => {
 
   };
 
+  const felleskoder = ['landkoderISO2', 'rolletype', 'paavirkningsform', 'sykdomstype'];
+
   beforeEach(() => {
     network.intercept(endpointUrls.toggle, 'toggles/enabled.json').as('toggles');
     network.intercept(endpointUrls.innlogget, 'brukerinfo/brukerinfo.json').as('getInnlogget');
@@ -89,7 +91,7 @@ describe('Skjema innsending', (): void => {
     network.intercept(endpointUrls.log, 'logResult.json').as('postLog');
     network.intercept(endpointUrls.amplitude, 'amplitude.json').as('amplitude');
 
-    ['landkoderISO2', 'rolletype', 'paavirkningsform', 'sykdomstype'].forEach((kodeverk) => {
+    felleskoder.forEach((kodeverk) => {
       network
         .intercept(
           endpointUrls.kodeverkUtenKategori(kodeverk),
@@ -120,6 +122,8 @@ describe('Skjema innsending', (): void => {
       win.sessionStorage.removeItem('persist:root');
       cy.visit('');
       cy.location().should('to.be', 'http://localhost:3001/yrkesskade/');
+
+      felleskoder.forEach((kodeverk) => cy.wait(`@${kodeverk}`));
     });
   });
 
