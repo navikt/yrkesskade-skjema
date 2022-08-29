@@ -24,6 +24,8 @@ export interface PdfDekningsforhold {
   stillingstittelTilDenSkadelidte: Soknadsfelt<string[]>;
   rolletype: Soknadsfelt<PdfRolletype>;
   virksomhetensAdresse?: Soknadsfelt<PdfAdresse>;
+  tjenesteperiode?: Soknadsfelt<PdfPeriode>;
+  tjenestegjoerendeAvdeling?: Soknadsfelt<string>;
 }
 
 export interface PdfRolletype {
