@@ -26,11 +26,12 @@ import { useState } from 'react';
 import {
   SkademeldingApiControllerService,
 } from '../../api/yrkesskade';
-import { logErrorMessage, logMessage } from '../../utils/logging';
+import { logErrorMessage, logMessage, logWarningMessage } from '../../utils/logging';
 import { logAmplitudeEvent } from '../../utils/analytics/amplitude';
 import { useAppDispatch, useAppSelector } from '../../core/hooks/state.hooks';
 import { reset, selectSkademelding } from '../../core/reducers/skademelding.reducer';
 import { useCheckIfReloaded } from '../../core/hooks/reloadCheck.hooks';
+import axios, { AxiosError } from 'axios';
 
 const Summary = () => {
   useCheckIfReloaded();
@@ -50,11 +51,21 @@ const Summary = () => {
       logMessage('Skademelding innsendt');
       logAmplitudeEvent('skademelding.innmelding', { status: 'fullfort' });
       navigate('/yrkesskade/skjema/kvittering',  { state: data });
-      dispatch(reset());;
+      dispatch(reset());
     } catch (error: any) {
-      logErrorMessage(`Innsending av skademelding feilet: ${error.message}`);
-      logAmplitudeEvent('skademelding.innmelding', { status: 'feilet', feilmelding: error.message});
-      navigate('/yrkesskade/skjema/feilmelding', { state: 'Det skjedde en feil med innsendingen. Vi jobber med å løse problemet. Prøv igjen senere.'});
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError;
+        if (axiosError.response?.status === 401) {
+          logWarningMessage(`Innsending ikke fullført. Brukeren sin autorisasjon er utgått og blir sendt tilbake til pålogging`);
+          // ikke utfør resten av koden
+          return
+        }
+      }
+
+        logErrorMessage(`Innsending av skademelding feilet: ${error.message}`);
+        logAmplitudeEvent('skademelding.innmelding', { status: 'feilet', feilmelding: error.message});
+        navigate('/yrkesskade/skjema/feilmelding', { state: 'Det skjedde en feil med innsendingen. Vi jobber med å løse problemet. Prøv igjen senere.'});
+
     }
   };
 
