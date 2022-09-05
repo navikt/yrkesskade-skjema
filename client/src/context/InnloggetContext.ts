@@ -29,7 +29,7 @@ const [InnloggetProvider, useInnloggetContext] = createUseContext(() => {
   ) => {
     return axios.get<Brukerinfo>(`/user/profile`)
       .then((ressurs) => {
-        if (ressurs.status === 200) {
+        if (ressurs && ressurs.status === 200) {
             setInnloggetBruker(ressurs.data);
             setInnloggetStatus(InnloggetStatus.INNLOGGET);
         } else {
