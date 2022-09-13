@@ -1,7 +1,6 @@
 /* tslint:disable no-console */
 /* eslint-disable no-console */
 import axios, { AxiosError } from "axios";
-import { logErrorMessage } from "./logging";
 
 // interne hjelpe metoder
 const er401Feil = (error: AxiosError) => (error?.response?.status === 401);
