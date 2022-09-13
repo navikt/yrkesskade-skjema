@@ -1,3 +1,6 @@
+/* tslint:disable no-console */
+/* eslint-disable no-console */
+
 import './summary.less';
 import {
   Heading,
@@ -53,6 +56,10 @@ const Summary = () => {
       navigate('/yrkesskade/skjema/kvittering',  { state: data });
       dispatch(reset());
     } catch (error: any) {
+
+      console.log('er axios feil: ', axios.isAxiosError(error));
+      console.log('error som json: ', JSON.stringify(error));
+
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError;
         if (axiosError.response?.status === 401) {
