@@ -601,10 +601,10 @@
     prop-types "^15.7.2"
     react "^17.0.2"
 
-"@navikt/yrkesskade-backend@^0.1.6":
-  version "0.1.6"
-  resolved "https://npm.pkg.github.com/download/@navikt/yrkesskade-backend/0.1.6/799e67731f02538aeb4498b2a321e32455817157e43cbac8ab9b4cfe091e4078#c3a6695ba28060f22859c577fc00ea173e33aab1"
-  integrity sha512-51/nTO7BA7BfnSxN2C7w43E+Am/mAYqkha+gJWWOrI3GM1Fpz4f3InBbL4fFKKEgRfQt1HcMLfHpMPrAVk0Q6g==
+"@navikt/yrkesskade-backend@^0.1.11":
+  version "0.1.13"
+  resolved "https://npm.pkg.github.com/download/@navikt/yrkesskade-backend/0.1.13/c1b5b47abdf1d13693f72789944c0942bab8e914#c1b5b47abdf1d13693f72789944c0942bab8e914"
+  integrity sha512-vS+wwfhN0+D1yRYq0+xE5IC43RDc6QazcoijasGWA5DTsswsrkx43s3Mbz3HkNJ5BGZKavJCPFztA/iOZcnO3A==
   dependencies:
     "@navikt/yrkesskade-logging" "^0.0.5"
     "@types/cookie-parser" "^1.4.3"

@@ -60,13 +60,17 @@ const Summary = () => {
       console.log('er axios feil: ', axios.isAxiosError(error));
       console.log('error som json: ', JSON.stringify(error));
 
+      const melding = `Innsending ikke fullført. Brukeren sin autorisasjon er utgått og blir sendt tilbake til pålogging`;
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError;
         if (axiosError.response?.status === 401) {
-          logWarningMessage(`Innsending ikke fullført. Brukeren sin autorisasjon er utgått og blir sendt tilbake til pålogging`);
+          logWarningMessage(melding);
           // ikke utfør resten av koden
-          return
+          return;
         }
+      } else if (error.status === 401) {
+        logWarningMessage(melding);
+        return;
       }
 
         logErrorMessage(`Innsending av skademelding feilet: ${error.message}`);
