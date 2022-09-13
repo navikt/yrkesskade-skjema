@@ -30,9 +30,9 @@ export const autentiseringsInterceptor = () => {
 
             if (er401Feil(error)) {
                 window.location.href = getLoginUrl();
-            } else {
-                throw error;
             }
+
+            return Promise.reject(error);
         }
     );
 };
