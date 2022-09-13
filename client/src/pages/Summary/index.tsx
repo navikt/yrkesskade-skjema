@@ -48,17 +48,15 @@ const Summary = () => {
   const navigate = useNavigate();
   const handleSending = async () => {
     setClicked(true);
-    try {
-      await SkademeldingApiControllerService.sendSkademelding(data);
-
+    SkademeldingApiControllerService.sendSkademelding(data).then((response) => {
       logMessage('Skademelding innsendt');
       logAmplitudeEvent('skademelding.innmelding', { status: 'fullfort' });
       navigate('/yrkesskade/skjema/kvittering',  { state: data });
       dispatch(reset());
-    } catch (error: any) {
-
+    }).catch((error) => {
       console.log('er axios feil: ', axios.isAxiosError(error));
       console.log('error som json: ', JSON.stringify(error));
+      console.log('status: ', error.response?.status);
 
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError;
@@ -67,13 +65,12 @@ const Summary = () => {
           // ikke utfør resten av koden
           return
         }
-      }
-
+      } else {
         logErrorMessage(`Innsending av skademelding feilet: ${error.message}`);
         logAmplitudeEvent('skademelding.innmelding', { status: 'feilet', feilmelding: error.message});
         navigate('/yrkesskade/skjema/feilmelding', { state: 'Det skjedde en feil med innsendingen. Vi jobber med å løse problemet. Prøv igjen senere.'});
-
-    }
+      }
+    });
   };
 
   const isPeriod = skademelding?.hendelsesfakta?.tid?.tidstype === 'Periode';
