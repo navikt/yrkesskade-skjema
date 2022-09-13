@@ -1,3 +1,5 @@
+/* tslint:disable no-console */
+/* eslint-disable no-console */
 import axios, { AxiosError } from "axios";
 
 // interne hjelpe metoder
@@ -24,6 +26,8 @@ export const autentiseringsInterceptor = () => {
             return response;
         },
         (error: AxiosError) => {
+          console.log('interceptor error: ', error);
+
             if (er401Feil(error)) {
                 window.location.href = getLoginUrl();
             } else {
