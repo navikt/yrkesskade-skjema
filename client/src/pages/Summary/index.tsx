@@ -65,12 +65,9 @@ const Summary = () => {
         const axiosError = error as AxiosError;
         if (axiosError.response?.status === 401) {
           logWarningMessage(melding);
-          // ikke utfør resten av koden
-          return;
         }
       } else if (error.status === 401) {
         logWarningMessage(melding);
-        return;
       } else {
         logErrorMessage(`Innsending av skademelding feilet: ${error.message}`);
         logAmplitudeEvent('skademelding.innmelding', { status: 'feilet', feilmelding: error.message});

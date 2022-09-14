@@ -7,8 +7,10 @@ import {
 } from '../utils/autentisering';
 import axios from 'axios';
 import { Brukerinfo } from '../types/brukerinfo';
+import { logErrorMessage } from '../utils/logging';
 
 const [InnloggetProvider, useInnloggetContext] = createUseContext(() => {
+
   const [innloggetStatus, setInnloggetStatus] = useState<InnloggetStatus>(
     InnloggetStatus.IKKE_VERIFISERT
   );
@@ -40,6 +42,10 @@ const [InnloggetProvider, useInnloggetContext] = createUseContext(() => {
       .catch((error) => {
         setInnloggetStatus(InnloggetStatus.FEILET);
         setInnloggetBruker(null);
+        if (error.status !== 401) {
+          logErrorMessage(`Status: ${error.status}. Det har oppstått en feil ved henting av /user/profile. Melding: ${error.data.melding.message}`);
+        }
+
       });
   };
 

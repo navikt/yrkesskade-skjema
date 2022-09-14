@@ -29,13 +29,14 @@ import { logAmplitudeEvent } from '../../utils/analytics/amplitude';
 import { addOrganisasjon, selectOrganisasjon } from '../../core/reducers/app.reducer';
 import { useAppDispatch, useAppSelector } from '../../core/hooks/state.hooks';
 import {
-  oppdaterSkademelding,
+  oppdaterSkademelding, selectSkademelding,
 } from '../../core/reducers/skademelding.reducer';
 import { useFormContext } from 'react-hook-form';
 
 const Info = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const skademelding = useAppSelector((state) => selectSkademelding(state));
 
   const {
     handleSubmit,
@@ -43,9 +44,11 @@ const Info = () => {
   } = useFormContext<Skademelding>();
 
   const handleForward = (data: Skademelding) => {
+      const skjemastatus = skademelding.innmelder.norskIdentitetsnummer ? 'gjenopptatt' : 'startet';
+
       dispatch(oppdaterSkademelding(data));
       logMessage('Bruker har startet innmelding');
-      logAmplitudeEvent('skademelding.innmelding', { status: 'startet' });
+      logAmplitudeEvent('skademelding.innmelding', { status: skjemastatus });
       navigate('/yrkesskade/skjema/skadelidt');
   };
 
