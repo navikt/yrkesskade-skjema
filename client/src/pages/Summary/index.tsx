@@ -1,3 +1,6 @@
+/* tslint:disable no-console */
+/* eslint-disable no-console */
+
 import './summary.less';
 import {
   Heading,
@@ -53,19 +56,23 @@ const Summary = () => {
       navigate('/yrkesskade/skjema/kvittering',  { state: data });
       dispatch(reset());
     } catch (error: any) {
+
+      console.log('er axios feil: ', axios.isAxiosError(error));
+      console.log('error som json: ', JSON.stringify(error));
+
+      const melding = `Innsending ikke fullført. Brukeren sin autorisasjon er utgått og blir sendt tilbake til pålogging`;
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError;
         if (axiosError.response?.status === 401) {
-          logWarningMessage(`Innsending ikke fullført. Brukeren sin autorisasjon er utgått og blir sendt tilbake til pålogging`);
-          // ikke utfør resten av koden
-          return
+          logWarningMessage(melding);
         }
-      }
-
+      } else if (error.status === 401) {
+        logWarningMessage(melding);
+      } else {
         logErrorMessage(`Innsending av skademelding feilet: ${error.message}`);
         logAmplitudeEvent('skademelding.innmelding', { status: 'feilet', feilmelding: error.message});
         navigate('/yrkesskade/skjema/feilmelding', { state: 'Det skjedde en feil med innsendingen. Vi jobber med å løse problemet. Prøv igjen senere.'});
-
+      }
     }
   };
 
