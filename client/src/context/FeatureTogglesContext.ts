@@ -30,7 +30,6 @@ const [FeatureTogglesProvider, useFeatureToggles] = createUseContext(() => {
         setToggles(response.data);
       }
     }).catch(error => {
-      console.log('error', error);
       if (innloggetStatus !== InnloggetStatus.IKKE_VERIFISERT) {
         navigate('/yrkesskade/feilmelding', { state: error.message})
       }
