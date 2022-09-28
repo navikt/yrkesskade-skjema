@@ -70,7 +70,37 @@ const rolletyper: any = {
     'showAccidentPlacePage': true,
     'showServicePeriode':false,
     'showServiceDepartment': false,
-  }
+  },
+  'personIVaretekt': {
+    'showStillinger': false,
+    'showWorkplace': false,
+    'showAccidentBackground': true,
+    'showAccidentPlace': true,
+    'showAbsence': false,
+    'showAccidentPlacePage': true,
+    'showServicePeriode':false,
+    'showServiceDepartment': false,
+  },
+  'innsatt': {
+    'showStillinger': false,
+    'showWorkplace': false,
+    'showAccidentBackground': true,
+    'showAccidentPlace': true,
+    'showAbsence': false,
+    'showAccidentPlacePage': true,
+    'showServicePeriode':false,
+    'showServiceDepartment': false,
+  },
+  'personSomUtfoererSamfunnsstraff': {
+    'showStillinger': false,
+    'showWorkplace': false,
+    'showAccidentBackground': true,
+    'showAccidentPlace': true,
+    'showAbsence': false,
+    'showAccidentPlacePage': true,
+    'showServicePeriode':false,
+    'showServiceDepartment': false,
+  },
 }
 
 export default rolletyper;
