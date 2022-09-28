@@ -117,7 +117,7 @@ const AccidentPlaceForm = () => {
         adresse={selectedAddress}
         erPeriode={isPeriod}
       />
-
+      {roller[rolletype] && roller[rolletype].showAccidentPlace && (
       <NAVSelect
         className="spacer"
         label="Hvor skjedde hendelsen?"
@@ -140,6 +140,7 @@ const AccidentPlaceForm = () => {
             );
           })}
       </NAVSelect>
+      )}
       {roller[rolletype] && roller[rolletype].showWorkplace && !isPeriod && (
         <NAVSelect
           className="spacer"

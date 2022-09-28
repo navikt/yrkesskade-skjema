@@ -6,6 +6,7 @@ const rolletyper: any = {
     'showStillinger': false,
     'showWorkplace': false,
     'showAccidentBackground': false,
+    'showAccidentPlace': true,
     'showAbsence': false,
     'showAccidentPlacePage': true,
     'showServicePeriode':false,
@@ -17,6 +18,7 @@ const rolletyper: any = {
     'isElevEllerStudent': false,
     'showStillinger': true,
     'showWorkplace': true,
+    'showAccidentPlace': true,
     'showAccidentBackground': true,
     'showAbsence': true,
     'showAccidentPlacePage': true,
@@ -31,6 +33,7 @@ const rolletyper: any = {
     'showWorkplace': true,
     'showAccidentBackground': true,
     'showAbsence': true,
+    'showAccidentPlace': true,
     'showAccidentPlacePage': true,
     'showServicePeriode':false,
     'showServiceDepartment': false,
@@ -40,6 +43,7 @@ const rolletyper: any = {
     'showWorkplace': true,
     'showAccidentBackground': true,
     'showAbsence': false,
+    'showAccidentPlace': true,
     'showAccidentPlacePage': true,
     'showServicePeriode':false,
     'showServiceDepartment': false,
@@ -52,10 +56,21 @@ const rolletyper: any = {
     'showWorkplace': false,
     'showAccidentBackground': false,
     'showAbsence': false,
+    'showAccidentPlace': true,
     'showAccidentPlacePage': false,
     'showServicePeriode':true,
     'showServiceDepartment': true,
   },
+  'redningsEllerBranntjenesteUtenforArbeidsforhold': {
+    'showStillinger': false,
+    'showWorkplace': false,
+    'showAccidentBackground': true,
+    'showAccidentPlace': false,
+    'showAbsence': false,
+    'showAccidentPlacePage': true,
+    'showServicePeriode':false,
+    'showServiceDepartment': false,
+  }
 }
 
 export default rolletyper;

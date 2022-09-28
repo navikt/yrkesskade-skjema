@@ -56,10 +56,6 @@ const Summary = () => {
       navigate('/yrkesskade/skjema/kvittering',  { state: data });
       dispatch(reset());
     } catch (error: any) {
-
-      console.log('er axios feil: ', axios.isAxiosError(error));
-      console.log('error som json: ', JSON.stringify(error));
-
       const melding = `Innsending ikke fullført. Brukeren sin autorisasjon er utgått og blir sendt tilbake til pålogging`;
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError;
