@@ -10,7 +10,6 @@ import {
 import Select from 'react-select';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useState } from 'react';
-// import Address from '../Address';
 import _ from 'lodash';
 import { useAppDispatch, useAppSelector } from '../../../core/hooks/state.hooks';
 import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
@@ -18,11 +17,9 @@ import { oppdaaterBakgrunnsaarsak, oppdaterAarsakUlykke, oppdaterPaavirkningsfor
 import { Skademelding } from '../../../api/yrkesskade';
 
 import roller from '../../../utils/roller';
-// import { selectOrganisasjonsAdresse } from '../../../core/reducers/app.reducer';
 
 const AccidentForm = () => {
   const dispatch = useAppDispatch();
-  // const selectedAddress = useAppSelector((state) => selectOrganisasjonsAdresse(state));
   const {
     register,
     formState: { errors },
@@ -33,12 +30,7 @@ const AccidentForm = () => {
     selectKodeverk(state, 'alvorlighetsgrad')
   );
   const skademelding = useAppSelector((state) => selectSkademelding(state));
-  // const hvorSkjeddeUlykkenkoder = useAppSelector((state) =>
-  //   selectKodeverk(state, 'hvorSkjeddeUlykken')
-  // );
-  // const typeArbeidsplasskoder = useAppSelector((state) =>
-  //   selectKodeverk(state, 'typeArbeidsplass')
-  // );
+
   const aarsakOgBakgrunnkoder = useAppSelector((state) =>
     selectKodeverk(state, 'aarsakOgBakgrunn')
   );
@@ -49,11 +41,7 @@ const AccidentForm = () => {
     selectKodeverk(state, 'paavirkningsform')
   );
 
-  // const [sammeSomVirksomhetensAdresse, setSammeSomVirksomhetensAdresse] =
-  //   useState<string>(
-  //     skademelding.hendelsesfakta?.ulykkessted.sammeSomVirksomhetensAdresse.toString() ||
-  //       'true'
-  //   );
+
 
   const [alvorlighetsgrad, setAlvorlighetsgrad] = useState<string>(
     skademelding.skade?.alvorlighetsgrad || ''

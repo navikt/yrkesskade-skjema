@@ -5,6 +5,7 @@ import { Skademelding } from '../../../api/yrkesskade';
 import { useAppSelector } from '../../../core/hooks/state.hooks';
 import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
 import PeriodeSammendrag from './PeriodeSammendrag';
+import roller from '../../../utils/roller';
 // import { handleDateValue } from '../../../utils/date';
 interface IProps {
   data: Skademelding;
@@ -16,15 +17,22 @@ const TidsromSummary = ({ data }: IProps) => {
   );
   let accidentTime: React.ReactElement | undefined;
   const timetype = data.hendelsesfakta.tid.tidstype.toLowerCase();
+  const rolletype = data?.skadelidt?.dekningsforhold.rolletype;
 
   if (timetype === 'tidspunkt') {
     // force the date to a string with +''. Dum hack
-    accidentTime = <span>{format(
-      parseISO(data.hendelsesfakta.tid.tidspunkt!),
-      `${FORMAT} HH:mm`
-    )}</span>;
+    accidentTime = (
+      <span>
+        {format(
+          parseISO(data.hendelsesfakta.tid.tidspunkt!),
+          `${FORMAT} HH:mm`
+        )}
+      </span>
+    );
   } else if (timetype === 'periode') {
-    accidentTime = <PeriodeSammendrag perioder={data.hendelsesfakta.tid.perioder!} />
+    accidentTime = (
+      <PeriodeSammendrag perioder={data.hendelsesfakta.tid.perioder!} />
+    );
   } else {
     accidentTime = <span>{'Ukjent'}</span>;
   }
@@ -45,13 +53,26 @@ const TidsromSummary = ({ data }: IProps) => {
           )}`}</BodyShort>
         </div>
       )}
-      <div className="answerContainer">
-        <Label>Innenfor hvilket tidsrom inntraff skaden</Label>
-        <BodyShort>
-          {tidsromkoder &&
-            tidsromkoder[data.hendelsesfakta.naarSkjeddeUlykken]?.verdi}
-        </BodyShort>
-      </div>
+      { roller[rolletype] &&
+        roller[rolletype].showOrderManeuver && (
+          <div className="answerContainer">
+            <Label>Skjedde hendelsen under en order om manøver?</Label>
+            <BodyShort>
+              {data.skadelidt.dekningsforhold.underOrdreOmManoever ? 'Ja' : 'Nei'}
+            </BodyShort>
+          </div>
+        )}
+      {timetype !== 'periode' &&
+        roller[rolletype] &&
+        !roller[rolletype].showTimeframeWhenInjuredPeriod && (
+          <div className="answerContainer">
+            <Label>Innenfor hvilket tidsrom inntraff skaden</Label>
+            <BodyShort>
+              {tidsromkoder &&
+                tidsromkoder[data.hendelsesfakta.naarSkjeddeUlykken]?.verdi}
+            </BodyShort>
+          </div>
+        )}
     </div>
   );
 };

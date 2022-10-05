@@ -72,6 +72,11 @@ const AppContent = () => {
     dispatch(hentKodeverk('rolletype'));
     dispatch(hentKodeverk('sykdomstype'));
     dispatch(hentKodeverk('paavirkningsform'));
+    dispatch(hentKodeverk('alvorlighetsgrad'));
+    dispatch(hentKodeverk('aarsakOgBakgrunn'));
+    dispatch(hentKodeverk('skadetKroppsdel'));
+    dispatch(hentKodeverk('skadetype'));
+    dispatch(hentKodeverk('sykdomstype'));
 
     // preload av stillingstitler
     dispatch(
