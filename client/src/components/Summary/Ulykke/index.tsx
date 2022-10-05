@@ -60,7 +60,7 @@ const UlykkeSummary = ({ data }: IProps) => {
 
   return (
     <div className="answerOuterContainer">
-      {roller[rolletype] && roller[rolletype].showAccidentPlacePage && (
+      {roller[rolletype] && roller[rolletype].showAccidentPlacePage && roller[rolletype].showAdress && (
         <div className="answerContainer">
           <Label>Ulykken fant sted</Label>
           <BodyShort>{adresse.adresselinje1}</BodyShort>
@@ -93,7 +93,7 @@ const UlykkeSummary = ({ data }: IProps) => {
       )}
       {get(data, ['hendelsesfakta', 'stedsbeskrivelse']) !== 'undefined' &&
         roller[rolletype] &&
-        !roller[rolletype].isElevEllerStudent && roller[rolletype].showWorkplace &&
+        roller[rolletype].showWorkplace &&
         !isPeriod && (
           <div className="answerContainer">
             <Label>Type arbeidsplass</Label>

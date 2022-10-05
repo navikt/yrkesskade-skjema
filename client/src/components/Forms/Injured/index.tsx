@@ -25,11 +25,27 @@ import { selectSkademelding } from '../../../core/reducers/skademelding.reducer'
 import { Skademelding } from '../../../api/yrkesskade';
 import Tidsperiode from '../../Tidsperiode';
 
+import DayPickerInput from 'react-day-picker/DayPickerInput';
+import { InputClassNames } from 'react-day-picker/types/ClassNames';
+import {
+  handleDateValue,
+  // handleTimeValue,
+  // isKlokkeslett,
+} from '../../../utils/date';
+import dateFnsFormat from 'date-fns/format';
+import dateFnsParse from 'date-fns/parse';
+import { DateUtils } from 'react-day-picker';
+
 import roller from '../../../utils/roller';
+
+function formatDate(date: number | Date, format: string) {
+  return dateFnsFormat(date, format);
+}
 
 const InjuredForm = () => {
   const {
     register,
+    setValue,
     formState: { errors },
     control,
   } = useFormContext<Skademelding>();
@@ -55,7 +71,6 @@ const InjuredForm = () => {
       setOpenMenu(false);
     }
   };
-
   const handleRolletypeEndring = (event: any) => {
     setRolletype(event.target.value);
   };
@@ -68,14 +83,10 @@ const InjuredForm = () => {
     const rolletypeverdi = rolletype.toLocaleLowerCase();
     [
       'tidsrom',
-      'alvorlighetsgrad',
       'hvorSkjeddeUlykken',
       'typeArbeidsplass',
-      'aarsakOgBakgrunn',
       'bakgrunnForHendelsen',
       'harSkadelidtHattFravaer',
-      'skadetKroppsdel',
-      'skadetype',
       'stillingstittel',
     ].forEach((typenavn) =>
       dispatch(
@@ -87,6 +98,53 @@ const InjuredForm = () => {
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rolletype]);
+
+  const dayPickerClassNames = {
+    container: 'nav-day-picker',
+    overlay: '',
+    overlayWrapper: '',
+  } as InputClassNames;
+
+  const whenDayPickerClassNames = {
+    ...dayPickerClassNames,
+    container: `${dayPickerClassNames.container}`,
+  };
+
+  const FORMAT: string = 'dd.MM.yyyy';
+
+  const [utdanningStartDato, setUtdanningStartDato] = useState<
+    Date | undefined
+  >(handleDateValue(skademelding.skadelidt.dekningsforhold.utdanningStart));
+
+  const parseDate = (str: string, format: string) => {
+    // sjekk at vi har skrevet noe og at noe er 10 tegn
+    if (!str || str.length !== 10) {
+      return undefined;
+    }
+
+    // parse noe til dato om mulig
+    const parsed = dateFnsParse(str, format, new Date());
+    if (DateUtils.isDate(parsed)) {
+      return parsed;
+    }
+
+    // ikke dato
+    return undefined;
+  };
+
+  useEffect(() => {
+    setValue(
+      'skadelidt.dekningsforhold.utdanningStart',
+      utdanningStartDato?.toISOString()
+    );
+  }, [utdanningStartDato, setValue]);
+
+  let utdanningStartLabel = 'Når startet lærlingperioden?';
+  switch (rolletype) {
+    case 'militaerElev':
+      utdanningStartLabel = 'Når startet utdanningen?';
+      break;
+  }
 
   return (
     <>
@@ -220,7 +278,7 @@ const InjuredForm = () => {
           </>
           <div className="spacer">
             <Controller
-              name="skadelidt.dekningsforhold.tjenesteperiode"
+              name="skadelidt.dekningsforhold.tjenesteperiodeEllerManoever"
               control={control}
               rules={{
                 required: 'Dette feltet er påkrevd',
@@ -228,7 +286,8 @@ const InjuredForm = () => {
               render={({ field: { onChange } }) => (
                 <Tidsperiode
                   periode={
-                    skademelding.skadelidt.dekningsforhold.tjenesteperiode
+                    skademelding.skadelidt.dekningsforhold
+                      .tjenesteperiodeEllerManoever
                   }
                   onTidsperioderChange={(periode) => {
                     onChange(periode);
@@ -236,7 +295,8 @@ const InjuredForm = () => {
                 />
               )}
             />
-            {errors?.skadelidt?.dekningsforhold?.tjenesteperiode && (
+            {errors?.skadelidt?.dekningsforhold
+              ?.tjenesteperiodeEllerManoever && (
               <span className="navds-error-message navds-error-message--medium navds-label">
                 Periode er påkrevd
               </span>
@@ -244,17 +304,49 @@ const InjuredForm = () => {
           </div>
         </>
       )}
+      {roller[rolletype] && roller[rolletype].showEducationStarted && (
+        <div className="spacer">
+          <Label>{utdanningStartLabel}</Label>
+          <Controller
+            name="skadelidt.dekningsforhold.utdanningStart"
+            control={control}
+            render={({ field }) => (
+              <DayPickerInput
+                {...field}
+                classNames={{ ...whenDayPickerClassNames }}
+                placeholder="DD.MM.ÅÅÅÅ"
+                value={utdanningStartDato}
+                onDayChange={setUtdanningStartDato}
+                formatDate={formatDate}
+                format={FORMAT}
+                parseDate={parseDate}
+                dayPickerProps={{
+                  firstDayOfWeek: 1,
+                  disabledDays: {
+                    after: new Date(),
+                  },
+                }}
+              />
+            )}
+          />
+        </div>
+      )}
       {roller[rolletype] && roller[rolletype].showServiceDepartment && (
         <TextField
           className="spacer"
-          {...register('skadelidt.dekningsforhold.tjenestegjoerendeAvdeling', {
-            required: 'Dette feltet er påkrevd',
-          })}
+          {...register(
+            'skadelidt.dekningsforhold.navnPaatjenestegjoerendeavdelingEllerFartoeyEllerStudiested',
+            {
+              required: 'Dette feltet er påkrevd',
+            }
+          )}
           label="Hva er den tjenestegjørende avdelingen?"
           type="text"
           error={
-            errors?.skadelidt?.dekningsforhold?.tjenestegjoerendeAvdeling &&
-            errors?.skadelidt?.dekningsforhold?.tjenestegjoerendeAvdeling
+            errors?.skadelidt?.dekningsforhold
+              ?.navnPaatjenestegjoerendeavdelingEllerFartoeyEllerStudiested &&
+            errors?.skadelidt?.dekningsforhold
+              ?.navnPaatjenestegjoerendeavdelingEllerFartoeyEllerStudiested
               .message
           }
           data-testid="injured-tjenestegjorende-avdeling"

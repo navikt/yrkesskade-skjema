@@ -87,11 +87,11 @@ const mapSkadelidt = (skadelidt: Skadelidt, kodeverk: KodeverkLoader): PdfSkadel
       tjenesteperiode: {
         label: 'Periode for tjenesten',
         verdi: {
-          fra: skadelidt.dekningsforhold.tjenesteperiode?.fra ? formatDate(parseISO(skadelidt.dekningsforhold.tjenesteperiode?.fra), DATO_FORMAT) : '',
-          til: skadelidt.dekningsforhold.tjenesteperiode?.til ? formatDate(parseISO(skadelidt.dekningsforhold.tjenesteperiode?.til), DATO_FORMAT) : ''
+          fra: skadelidt.dekningsforhold.tjenesteperiodeEllerManoever?.fra ? formatDate(parseISO(skadelidt.dekningsforhold.tjenesteperiodeEllerManoever?.fra), DATO_FORMAT) : '',
+          til: skadelidt.dekningsforhold.tjenesteperiodeEllerManoever?.til ? formatDate(parseISO(skadelidt.dekningsforhold.tjenesteperiodeEllerManoever?.til), DATO_FORMAT) : ''
         }
       },
-      tjenestegjoerendeAvdeling: { label: 'Tjenestegjørende avdeling', verdi: skadelidt.dekningsforhold.tjenestegjoerendeAvdeling }
+      tjenestegjoerendeAvdeling: { label: 'Tjenestegjørende avdeling', verdi: skadelidt.dekningsforhold.navnPaatjenestegjoerendeavdelingEllerFartoeyEllerStudiested }
     }
    }
 }

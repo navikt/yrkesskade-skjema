@@ -53,92 +53,96 @@ const AccidentPlaceForm = () => {
 
   return (
     <>
-      {selectedAddress && (
+      {roller[rolletype] && roller[rolletype].showAdress && (
         <>
-          <div>
-            <Label spacing>Adresse</Label>
+          {selectedAddress && (
+            <>
+              <div>
+                <Label spacing>Adresse</Label>
 
-            <BodyShort data-testid="injury-street-address">
-              {selectedAddress.adresser && selectedAddress.adresser[0]}
-            </BodyShort>
-            <BodyShort data-testid="injury-postal-code-place">
-              {selectedAddress.postnummer} {selectedAddress.poststed}
-            </BodyShort>
-          </div>
+                <BodyShort data-testid="injury-street-address">
+                  {selectedAddress.adresser && selectedAddress.adresser[0]}
+                </BodyShort>
+                <BodyShort data-testid="injury-postal-code-place">
+                  {selectedAddress.postnummer} {selectedAddress.poststed}
+                </BodyShort>
+              </div>
 
-          <Controller
-            name="hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse"
-            control={control}
-            render={({
-              field: { onChange, onBlur, value, name, ref },
-              fieldState: { invalid, isTouched, isDirty, error },
-              formState,
-            }) => (
-              <RadioGroup
-                className="spacer"
-                legend="Ble personen utsatt for den skadelige påvirkningen på samme adresse?"
-                value={sammeSomVirksomhetensAdresse}
-                onChange={(val) => {
-                  setSammeSomVirksomhetensAdresse(val);
-                  onChange(val === 'true');
-                }}
-                onBlur={onBlur}
-                error={
-                  errors?.hendelsesfakta?.ulykkessted
-                    ?.sammeSomVirksomhetensAdresse &&
-                  errors?.hendelsesfakta?.ulykkessted
-                    ?.sammeSomVirksomhetensAdresse.message
-                }
-              >
-                <Radio
-                  value="true"
-                  {...register(
-                    'hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse'
-                  )}
-                >
-                  Ja
-                </Radio>
-                <Radio
-                  value="false"
-                  {...register(
-                    'hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse'
-                  )}
-                >
-                  Nei
-                </Radio>
-              </RadioGroup>
-            )}
+              <Controller
+                name="hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse"
+                control={control}
+                render={({
+                  field: { onChange, onBlur, value, name, ref },
+                  fieldState: { invalid, isTouched, isDirty, error },
+                  formState,
+                }) => (
+                  <RadioGroup
+                    className="spacer"
+                    legend="Ble personen utsatt for den skadelige påvirkningen på samme adresse?"
+                    value={sammeSomVirksomhetensAdresse}
+                    onChange={(val) => {
+                      setSammeSomVirksomhetensAdresse(val);
+                      onChange(val === 'true');
+                    }}
+                    onBlur={onBlur}
+                    error={
+                      errors?.hendelsesfakta?.ulykkessted
+                        ?.sammeSomVirksomhetensAdresse &&
+                      errors?.hendelsesfakta?.ulykkessted
+                        ?.sammeSomVirksomhetensAdresse.message
+                    }
+                  >
+                    <Radio
+                      value="true"
+                      {...register(
+                        'hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse'
+                      )}
+                    >
+                      Ja
+                    </Radio>
+                    <Radio
+                      value="false"
+                      {...register(
+                        'hendelsesfakta.ulykkessted.sammeSomVirksomhetensAdresse'
+                      )}
+                    >
+                      Nei
+                    </Radio>
+                  </RadioGroup>
+                )}
+              />
+            </>
+          )}
+
+          <Address
+            sammeSomVirksomhetensAdresse={sammeSomVirksomhetensAdresse}
+            adresse={selectedAddress}
           />
         </>
       )}
-
-      <Address
-        sammeSomVirksomhetensAdresse={sammeSomVirksomhetensAdresse}
-        adresse={selectedAddress}
-      />
       {roller[rolletype] && roller[rolletype].showAccidentPlace && (
-      <NAVSelect
-        className="spacer"
-        label="Hvor skjedde hendelsen?"
-        {...register('hendelsesfakta.hvorSkjeddeUlykken', {
-          required: 'Dette feltet er påkrevd',
-        })}
-        data-testid="accident-place"
-        error={
-          errors?.hendelsesfakta?.hvorSkjeddeUlykken &&
-          errors?.hendelsesfakta?.hvorSkjeddeUlykken.message
-        }
-      >
-        <option hidden value=""></option>
-        {hvorSkjeddeUlykkenkoder &&
-          Object.keys(hvorSkjeddeUlykkenkoder).map((kode: string) => {
-            return (
-              <option key={encodeURI(kode)} value={kode}>
-                {hvorSkjeddeUlykkenkoder[kode]?.verdi}
-              </option>
-            );
+        <NAVSelect
+          className="spacer"
+          label="Hvor skjedde hendelsen?"
+          {...register('hendelsesfakta.hvorSkjeddeUlykken', {
+            required: 'Dette feltet er påkrevd',
           })}
-      </NAVSelect>
+          data-testid="accident-place"
+          error={
+            errors?.hendelsesfakta?.hvorSkjeddeUlykken &&
+            errors?.hendelsesfakta?.hvorSkjeddeUlykken.message
+          }
+        >
+          <option hidden value=""></option>
+          {hvorSkjeddeUlykkenkoder &&
+            Object.keys(hvorSkjeddeUlykkenkoder).map((kode: string) => {
+              return (
+                <option key={encodeURI(kode)} value={kode}>
+                  {hvorSkjeddeUlykkenkoder[kode]?.verdi}
+                </option>
+              );
+            })}
+        </NAVSelect>
       )}
       {roller[rolletype] && roller[rolletype].showWorkplace && !isPeriod && (
         <NAVSelect

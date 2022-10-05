@@ -11,6 +11,8 @@ export type Dekningsforhold = {
     navnPaaVirksomheten?: string;
     virksomhetensAdresse?: Adresse;
     stillingstittelTilDenSkadelidte?: Array<string>;
-    tjenesteperiode?: Periode;
-    tjenestegjoerendeAvdeling?: string;
+    tjenesteperiodeEllerManoever?: Periode;
+    underOrdreOmManoever?: boolean;
+    navnPaatjenestegjoerendeavdelingEllerFartoeyEllerStudiested?: string;
+    utdanningStart?: string;
 };

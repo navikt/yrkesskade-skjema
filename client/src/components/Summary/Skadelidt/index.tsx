@@ -3,6 +3,7 @@ import { Label, BodyShort } from '@navikt/ds-react';
 import { useAppSelector } from '../../../core/hooks/state.hooks';
 import { selectKodeverk } from '../../../core/reducers/kodeverk.reducer';
 import PeriodeSammendrag from '../Tidsrom/PeriodeSammendrag';
+import { format, parseISO } from 'date-fns'
 import roller from '../../../utils/roller';
 interface IProps {
   data: any;
@@ -11,6 +12,12 @@ const SkadelidtSummary = ({ data }: IProps) => {
   const rolletypekoder = useAppSelector((state) => selectKodeverk(state, 'rolletype'));
   const stillingstittelkoder = useAppSelector((state) => selectKodeverk(state, 'stillingstittel'));
   const rolletype =  data?.skadelidt?.dekningsforhold.rolletype;
+  let utdanningStartLabel = 'Når startet lærlingperioden?';
+  switch (rolletype) {
+    case 'militaerElev':
+      utdanningStartLabel = 'Når startet utdanningen?';
+      break;
+  }
   return (
     <div className="answerOuterContainer">
       {roller[rolletype] && roller[rolletype].showStillinger && (
@@ -30,13 +37,22 @@ const SkadelidtSummary = ({ data }: IProps) => {
       {roller[rolletype] && roller[rolletype].showServicePeriode && (
       <div className="answerContainer">
         <Label>Periode for tjenesten</Label>
-        <PeriodeSammendrag perioder={data.skadelidt.dekningsforhold.tjenesteperiode!} />
+        <PeriodeSammendrag perioder={data.skadelidt.dekningsforhold.tjenesteperiodeEllerManoever!} />
+      </div>
+      )}
+      {roller[rolletype] && roller[rolletype].showEducationStarted && (
+      <div className="answerContainer">
+        <Label>{utdanningStartLabel}</Label>
+        <BodyShort>{`${format(
+            parseISO(data.skadelidt.dekningsforhold.utdanningStart!),
+            'dd.MM.yyyy'
+          )}`}</BodyShort>
       </div>
       )}
        {roller[rolletype] && roller[rolletype].showServiceDepartment && (
       <div className="answerContainer">
         <Label>Tjenestegjørende avdeling</Label>
-        <BodyShort>{data.skadelidt.dekningsforhold.tjenestegjoerendeAvdeling}</BodyShort>
+        <BodyShort>{data.skadelidt.dekningsforhold.navnPaatjenestegjoerendeavdelingEllerFartoeyEllerStudiested}</BodyShort>
       </div>
       )}
     </div>
