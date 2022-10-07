@@ -49,6 +49,7 @@ const rolletyper: any = {
   },
   'branntjenesteUtenforArbeidsforhold': {
     'showAbsence': false,
+    'showAdress': true,
     'showAccidentBackground': true,
     'showAccidentPlace': false,
     'showAccidentPlacePage': true,
@@ -60,6 +61,7 @@ const rolletyper: any = {
   },
   'privatpersonSomUtfoererLivredningEllerAvvergerMaterielleTap': {
     'showAbsence': false,
+    'showAdress': true,
     'showAccidentBackground': true,
     'showAccidentPlace': false,
     'showAccidentPlacePage': true,
@@ -71,6 +73,7 @@ const rolletyper: any = {
   },
   'redningspersonellIOrganisasjonerOgForeninger': {
     'showAbsence': false,
+    'showAdress': true,
     'showAccidentBackground': true,
     'showAccidentPlace': false,
     'showAccidentPlacePage': true,
