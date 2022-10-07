@@ -26,13 +26,18 @@ import ExitButton from '../../components/ExitButton';
 
 import { useState } from 'react';
 
+import { SkademeldingApiControllerService } from '../../api/yrkesskade';
 import {
-  SkademeldingApiControllerService,
-} from '../../api/yrkesskade';
-import { logErrorMessage, logMessage, logWarningMessage } from '../../utils/logging';
+  logErrorMessage,
+  logMessage,
+  logWarningMessage,
+} from '../../utils/logging';
 import { logAmplitudeEvent } from '../../utils/analytics/amplitude';
 import { useAppDispatch, useAppSelector } from '../../core/hooks/state.hooks';
-import { reset, selectSkademelding } from '../../core/reducers/skademelding.reducer';
+import {
+  reset,
+  selectSkademelding,
+} from '../../core/reducers/skademelding.reducer';
 import { useCheckIfReloaded } from '../../core/hooks/reloadCheck.hooks';
 import axios, { AxiosError } from 'axios';
 
@@ -53,7 +58,7 @@ const Summary = () => {
 
       logMessage('Skademelding innsendt');
       logAmplitudeEvent('skademelding.innmelding', { status: 'fullfort' });
-      navigate('/yrkesskade/skjema/kvittering',  { state: data });
+      navigate('/yrkesskade/skjema/kvittering', { state: data });
       dispatch(reset());
     } catch (error: any) {
       const melding = `Innsending ikke fullført. Brukeren sin autorisasjon er utgått og blir sendt tilbake til pålogging`;
@@ -66,8 +71,14 @@ const Summary = () => {
         logWarningMessage(melding);
       } else {
         logErrorMessage(`Innsending av skademelding feilet: ${error.message}`);
-        logAmplitudeEvent('skademelding.innmelding', { status: 'feilet', feilmelding: error.message});
-        navigate('/yrkesskade/skjema/feilmelding', { state: 'Det skjedde en feil med innsendingen. Vi jobber med å løse problemet. Prøv igjen senere.'});
+        logAmplitudeEvent('skademelding.innmelding', {
+          status: 'feilet',
+          feilmelding: error.message,
+        });
+        navigate('/yrkesskade/skjema/feilmelding', {
+          state:
+            'Det skjedde en feil med innsendingen. Vi jobber med å løse problemet. Prøv igjen senere.',
+        });
       }
     }
   };
@@ -89,18 +100,27 @@ const Summary = () => {
             Oppsummering
           </Heading>
           <BodyLong className="spacer">
-            Les gjennom oppsummeringen før du sender inn og bekrefter opplysningene du har oppgitt.
-            Hvis du trenger å gjøre endringer kan du gjøre det helt frem til du har fullført innsendingen.
+            Les gjennom oppsummeringen før du sender inn og bekrefter
+            opplysningene du har oppgitt. Hvis du trenger å gjøre endringer kan
+            du gjøre det helt frem til du har fullført innsendingen.
+          </BodyLong>
+          <BodyLong className="spacer">
+            På neste side vil du ha mulighet til å laste ned og skrive ut en
+            kopi av den innsendte skademeldingen. Dette kan først gjøres etter
+            at innsendingen er fullført.
           </BodyLong>
           <Label>Vi stoler på deg</Label>
           <BodyLong spacing>
-            Dersom du med viten og vilje oppgir uriktige opplysninger,
-            eller holder tilbake informasjon som kan ha betydning for utbetalinger fra NAV,
-            kan dette medføre en politianmeldelse.
+            Dersom du med viten og vilje oppgir uriktige opplysninger, eller
+            holder tilbake informasjon som kan ha betydning for utbetalinger fra
+            NAV, kan dette medføre en politianmeldelse.
           </BodyLong>
 
           <Accordion className="spacer">
-            <Accordion.Item renderContentWhenClosed={true} data-testid="oppsummering-accordian-innmelder">
+            <Accordion.Item
+              renderContentWhenClosed={true}
+              data-testid="oppsummering-accordian-innmelder"
+            >
               <Accordion.Header>Om deg</Accordion.Header>
               <Accordion.Content>
                 <InnmelderSummary data={data} />
@@ -112,19 +132,32 @@ const Summary = () => {
                 <SkadelidtSummary data={data} />
               </Accordion.Content>
             </Accordion.Item>
-            <Accordion.Item renderContentWhenClosed={true} data-testid="oppsummering-accordian-tid-og-sted">
+            <Accordion.Item
+              renderContentWhenClosed={true}
+              data-testid="oppsummering-accordian-tid-og-sted"
+            >
               <Accordion.Header>Tid og sted</Accordion.Header>
               <Accordion.Content>
                 <TidsromSummary data={data} />
               </Accordion.Content>
             </Accordion.Item>
-            <Accordion.Item renderContentWhenClosed={true} data-testid="oppsummering-hendelsen">
-              <Accordion.Header>{isPeriod ? 'Om den skadelige påvirkningen' : 'Ulykkessted og om ulykken'}</Accordion.Header>
+            <Accordion.Item
+              renderContentWhenClosed={true}
+              data-testid="oppsummering-hendelsen"
+            >
+              <Accordion.Header>
+                {isPeriod
+                  ? 'Om den skadelige påvirkningen'
+                  : 'Ulykkessted og om ulykken'}
+              </Accordion.Header>
               <Accordion.Content>
                 <UlykkeSummary data={data} />
               </Accordion.Content>
             </Accordion.Item>
-            <Accordion.Item renderContentWhenClosed={true} data-testid="oppsummering-accordian-skade">
+            <Accordion.Item
+              renderContentWhenClosed={true}
+              data-testid="oppsummering-accordian-skade"
+            >
               <Accordion.Header>Om skaden</Accordion.Header>
               <Accordion.Content>
                 <SkadeSummary data={data} />
@@ -143,8 +176,9 @@ const Summary = () => {
               onClick={handleSending}
               data-testid="send-injuryform"
               loading={clicked}
-              disabled={clicked}>
-                Send inn
+              disabled={clicked}
+            >
+              Send inn
             </Button>
           </div>
         </Cell>
