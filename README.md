@@ -1,3 +1,5 @@
+Dette repoet er flyttet til https://github.com/navikt/yrkesskade
+
 # yrkeskade-skjema
 
 ## Lokal kjøring fra kommando linje
